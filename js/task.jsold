@@ -1,0 +1,686 @@
+function reply(id)
+{
+	divid = 'reply_teeme'+id;
+	//alert ('divid= ' + divid);
+	document.getElementById(divid).style.display='';
+	detailId	= 'detail'+id;
+	document.getElementById(detailId).style.display='none';
+	//parent.frames[id].gk.EditingArea.focus();
+	rameid=id;	
+	chnage_textarea_to_editor('replyDiscussion','simple');
+	tinymce.execCommand('mceFocus',false,'replyDiscussion');
+}
+function addTask(id, nodeId)
+{	
+	divid='add_task'+id;
+	document.getElementById(divid).style.display='';
+	if(nodeId == 0)
+	{
+		detailId='detail'+id;
+		document.getElementById(detailId).style.display='none';		
+	}
+	else
+	{		
+		detailId='normalView'+nodeId;
+		document.getElementById(detailId).style.display='none';
+	}
+	
+	frameid=id;	
+	chnage_textarea_to_editor('newTask'+nodeId,'simple');
+	tinymce.execCommand('mceFocus',false,'newTask'+nodeId);
+
+}
+function addTaskFrame(id, nodeId,workSpaceId,workSpaceType, treeId, position)
+{	
+
+	var iframeid= 'iframeIdTask'+id;
+	var spanTaskView = 'spanTaskView'+id;
+
+	document.getElementById(iframeid).src = baseUrl+'new_task/new_task1/'+nodeId+'/index/'+workSpaceId+'/type/'+workSpaceType+'/'+treeId+'/'+position;
+	document.getElementById(iframeid).style.display = '';
+	
+	document.getElementById(spanTaskView).style.display='';
+}
+
+
+var leafOrder1;
+var treeId1;
+var nodeId1;
+var xmlHttp;
+var xmlHttpTree;
+var workSpaceId1;
+var workSpaceType1;
+var position1;
+var iframeid1;
+var spanTaskView1;
+
+function editthisFrame(id, nodeId,workSpaceId,workSpaceType, treeId, position)
+{	
+
+	 //leafId1=leafId;
+	 //leafId2=leafId;
+	// leafOrder1=leafOrder;
+	 treeId1=treeId;
+	 nodeId1=nodeId;
+	 workSpaceId1=workSpaceId;
+	 workSpaceType1=workSpaceType;
+	 position1=position;
+
+	// alert(nodeId);
+	var temp=editLeafTask(nodeId1,position1,treeId1,nodeId1);
+	
+	 iframeid= 'iframeIdTaskEdit'+id;
+	 spanTaskView = 'spanTaskEditView'+id;
+	 iframeid1=iframeid;
+	 spanTaskView1=spanTaskView;
+	 
+/*
+	
+*/	
+	
+}
+
+function editLeafTask(leafId, leafOrder,treeId,nodeId) 
+{  
+	//alert ('leafId= ' + leafId + 'leafOrder= ' + leafOrder + 'treeId= ' + treeId + 'nodeId= ' +nodeId);
+	//alert (document.getElementById('editStatus').value);
+	if(document.getElementById('editStatus').value == 1)
+	{
+		alert('Please save or close the current leaf before accessing another leaf');
+		return false;
+	}
+
+	
+	 initialleafcontentId='initialleafcontent'+leafOrder1;
+	 hideall();
+	 //alert(document.getElementById(initialleafcontentId).value);
+	 
+	 
+	 
+/*	xmlHttp=GetXmlHttpObject2();
+	var url =baseUrl+'lock_leaf'+"/index/leafId/"+leafId1;
+	xmlHttp.onreadystatechange = handleLockLeafEdit;				
+	xmlHttp.open("GET", url, true);
+	xmlHttp.send(null);*/
+	
+	
+			xmlHttpTree=GetXmlHttpObject2();
+			var url =baseUrl+'lock_leaf/checkTreeLatestVersion/'+treeId;
+			xmlHttpTree.onreadystatechange = handleTaskTreeVersion;
+	
+			xmlHttpTree.open("GET", url, true);
+			xmlHttpTree.send(null);
+}
+function handleTaskTreeVersion(){
+	if(xmlHttpTree.readyState == 4) 
+	{			
+		if(xmlHttpTree.status == 200) 
+		{									
+			isLatest = xmlHttpTree.responseText;
+					//alert (isLatest);
+					if(isLatest==0)
+					{
+						alert ('This leaf can not be edited because new version of this tree has been created.');
+						return false;
+						
+						
+					}
+					else
+					{
+						//document.frmEditLeaf.submit();
+						//return true;
+						xmlHttp=GetXmlHttpObject2();
+						var url =baseUrl+'lock_leaf'+"/index/leafId/"+nodeId1;
+						xmlHttp.onreadystatechange = handleTaskLockLeafEdit;				
+						xmlHttp.open("GET", url, true);
+						xmlHttp.send(null);
+					}
+
+		}					
+	}
+}	
+function handleTaskLockLeafEdit(){
+	if(xmlHttp.readyState == 4) 
+	{			
+		if(xmlHttp.status == 200) 
+		{									
+			strResponseText = xmlHttp.responseText;		
+			
+			if(strResponseText == 0)
+			{
+				
+				
+				document.getElementById(iframeid).src = baseUrl+'new_task/leaf_edit_Task/'+nodeId1+'/index/'+workSpaceId1+'/type/'+workSpaceType1+'/'+treeId1+'/'+position1;
+	document.getElementById(iframeid).style.display = 'block';
+	
+	document.getElementById(spanTaskView).style.display='block';
+				/* Fetching last version of leaf */
+             /* comment By arun */
+				xmlHttpLast=GetXmlHttpObject2();
+				var url =baseUrl+'current_leaf'+"/index/leafId/"+nodeId1;
+				
+					xmlHttpLast.onreadystatechange=function() {
+						if (xmlHttpLast.readyState==4) {
+							
+							
+								
+								
+								//alert (url);
+								
+								// editing new leaf
+								
+								document.getElementById('editStatus').value = 1;
+								
+								
+								
+								 
+								
+						}
+					}
+						
+				xmlHttpLast.open("GET", url, true);
+				xmlHttpLast.send(null);
+				
+				
+				
+				
+			}else{	
+				alert(strResponseText);					
+			}					
+		}
+	}
+}
+
+
+function addSubTask(id, nodeId)
+{	
+	var divid='add_sub_task'+id;
+
+	document.getElementById(divid).style.display='';
+
+	if(nodeId == 0)
+	{
+		detailId='detail'+id;
+		document.getElementById(detailId).style.display='none';		
+	}
+	else
+	{		
+		detailId='normalView'+nodeId;
+		document.getElementById(detailId).style.display='none';
+	}
+	rameid=id;	
+
+}
+function hideTaskView (id)
+{
+	//location.reload(true);
+	location.href = location.href;
+}
+function hideTaskViewEditor (id,nodeId)
+{  
+	
+	//alert(nodeId);
+	// document.getElementById('iframeIdTaskEdit'+id).src="none";
+//	document.getElementById('spanTaskView'+id).style.display="";
+	document.getElementById('editStatus').value= 0;		
+	var url = baseUrl+'unlock_leaf';		  
+		xmlHttp1=GetXmlHttpObject2();
+		queryString =   url; 
+		queryString = queryString + '/index/leafId/'+nodeId;
+		
+		
+		
+		//divId = 'editLeaf';
+		xmlHttp1.open("GET", queryString, false);
+		xmlHttp1.send(null);
+		xmlHttp1.onreadystatechange = function(){}
+	
+	//location.reload(true);
+	location.href = location.href;
+}
+
+
+function addSubTaskFrame(id, nodeId,workSpaceId,workSpaceType, treeId)
+{	
+	
+	var iframeid= 'iframeIdSubTask'+id;
+	var spanSubTaskView = 'spanSubTaskView'+id;
+
+	document.getElementById(iframeid).src = baseUrl+'new_task/start_sub_task/'+nodeId+'/index/'+workSpaceId+'/type/'+workSpaceType+'/'+treeId;
+	document.getElementById(iframeid).style.display = 'block';
+	
+	document.getElementById(spanSubTaskView).style.display='block';
+}
+
+function hideSubTaskView (id)
+{
+	//location.reload(true);
+	location.href = location.href;
+}
+function cancelSubTask(id, nodeId)
+{
+	divid='add_sub_task'+id;
+	document.getElementById(divid).style.display='none';
+}
+function addTaskClose(id, nodeId)
+{
+	divid='add_task'+id;
+	document.getElementById(divid).style.display='none';
+	detailId='normalView'+nodeId;
+	document.getElementById(detailId).style.display='';
+	
+}
+function reply_close(id){
+	divid='reply_teeme'+id;
+ 	document.getElementById(divid).style.display='none';
+}
+
+function vksfun(id){
+	var fId=id;
+	rameid=fId;
+}
+
+function showdetail(id, curNodeId)
+{	
+	var curNode		= 'detail'+id;
+	var added		= 'add'+id;
+	var allNodes 	= document.getElementById('totalNodes').value;
+	var arrNodes 	= new Array();
+	arrNodes 		= allNodes.split(',');
+	for(var i = 0;i<arrNodes.length;i++)
+	{		
+		var nodeId = 'detail'+arrNodes[i];	
+		var curAddId = 'add'+arrNodes[i]; 	
+		if(id != arrNodes[i])
+		{			
+			document.getElementById(nodeId).style.display='none';	
+			document.getElementById(curAddId).style.display='none';	
+		}
+	} 
+	if(document.getElementById(curNode).style.display=='')		
+	{
+		document.getElementById(curNode).style.display='none';
+		document.getElementById(added).style.display='none';	
+		if(curNodeId == 0)
+		{
+			detailId='detail'+curNodeId;
+			document.getElementById(detailId).style.display='none';		
+		}
+		else
+		{		
+			detailId='normalView'+curNodeId;
+			document.getElementById(detailId).style.display='none';
+		}
+	}
+	else
+	{
+		document.getElementById(curNode).style.display='';
+		document.getElementById(added).style.display='';
+		if(curNodeId == 0)
+		{
+			detailId='detail'+curNodeId;
+			document.getElementById(detailId).style.display='';		
+		}
+		else
+		{		
+			detailId='normalView'+curNodeId;
+			document.getElementById(detailId).style.display='';
+		}
+	}
+}
+function showHideSubTaskdetail(id, curNodeId)
+{	
+	var curNode		= 'detail'+id;
+	var added		= 'add'+id;
+
+	if(document.getElementById(curNode).style.display=='')		
+	{
+		document.getElementById(curNode).style.display='none';
+		document.getElementById(added).style.display='none';	
+		if(curNodeId == 0)
+		{
+			detailId='detail'+curNodeId;
+			document.getElementById(detailId).style.display='none';		
+		}
+		else
+		{		
+			detailId='normalView'+curNodeId;
+			document.getElementById(detailId).style.display='none';
+		}
+	}
+	else
+	{
+		document.getElementById(curNode).style.display='';
+		document.getElementById(added).style.display='';
+		if(curNodeId == 0)
+		{
+			detailId='detail'+curNodeId;
+			document.getElementById(detailId).style.display='';		
+		}
+		else
+		{		
+			detailId='normalView'+curNodeId;
+			document.getElementById(detailId).style.display='';
+		}
+	}
+}
+function editthis(lid, nodeId){
+
+	var spanId='latestcontent'+lid;
+	var editorId='editThis'+lid;
+	//document.getElementById(spanId).style.display='none';
+	document.getElementById(editorId).style.display='';
+	detailId	= 'normalView'+nodeId;
+	document.getElementById(detailId).style.display='none';
+	chnage_textarea_to_editor('edittask'+lid,'simple');
+	tinymce.execCommand('mceFocus',false,'edittask'+lid);
+}
+
+function editthis1(lid)
+{	
+	var editorId='editThis'+lid;
+
+	document.getElementById(editorId).style.display='';
+	detailId	= 'detail'+lid;
+	document.getElementById(detailId).style.display='none';
+ }
+function edit_close(lid, nodeId){
+var spanId='latestcontent'+lid;
+var editorId='editThis'+lid;
+var detailId='normalView'+lid;
+
+document.getElementById(spanId).style.display='';
+document.getElementById(editorId).style.display='none';
+//document.getElementById(detailId).style.display='';
+}
+function edit_close1(lid){
+var editorId='editThis'+lid;
+document.getElementById(editorId).style.display='none';
+detailId	= 'detail'+lid;
+document.getElementById(detailId).style.display='';
+}
+
+function ajax_request(url,id)
+{
+	var xmlHttp;
+	try
+	{
+	// Firefox, Opera 8.0+, Safari
+	xmlHttp=new XMLHttpRequest();
+	}
+	catch (e)
+	{
+	  // Internet Explorer
+	try
+	{
+		xmlHttp=new ActiveXObject("Msxml2.XMLHTTP");
+	}
+	catch (e)
+	{
+		try
+		{
+			xmlHttp=new ActiveXObject("Microsoft.XMLHTTP");
+		}
+		catch (e)
+		{
+			alert("Your browser does not support AJAX!");
+			return false;
+		}
+	}
+}
+ 
+xmlHttp.onreadystatechange=function()
+{
+	if(xmlHttp.readyState==4)
+	{
+		document.getElementById(id).innerHTML=xmlHttp.responseText; 
+	}
+}
+xmlHttp.open("GET", url, true); 
+//xmlHttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+xmlHttp.send(null);
+}
+//this function used to hide the bottom menu when accessing other manus
+function hideBottomMenus(nodeId)
+{
+	if(nodeId == 0)
+	{
+		detailId='detail'+nodeId;
+		document.getElementById(detailId).style.display='none';		
+	}
+	else
+	{		
+		detailId='normalView'+nodeId;
+		document.getElementById(detailId).style.display='none';
+	}	
+}
+function calStartCheck(thisVal, pos, formName, currentTime)
+{
+	//alert ('pos= ' +pos);
+	var callStartId = 'calStart'+pos;
+	if(thisVal.checked == true)
+	{			
+		document.getElementById(callStartId).style.display = "";	
+		formName.starttime.style.color = "#000000";	
+		formName.starttime.style.backgroundColor = "#FFFFFF";
+			
+		document.getElementById('mark_calender'+pos).style.display = "";
+	}
+	else
+	{		
+		document.getElementById(callStartId).style.display = 'none';
+		formName.starttime.style.color = "#626262";	
+		formName.starttime.style.backgroundColor = "#CCCCCC";	
+		formName.starttime.value = currentTime;
+		
+		if (formName.endCheck.checked!=true)
+		{
+			document.getElementById('mark_calender'+pos).style.display = "none";
+		}
+	}
+}
+function calEndCheck(thisVal, pos, formName, currentTime)
+{
+	var callEndId = 'calEnd'+pos;	
+	if(thisVal.checked == true)
+	{		
+		document.getElementById(callEndId).style.display = '';
+		formName.endtime.style.color = "#000000";	
+		formName.endtime.style.backgroundColor = "#FFFFFF";	
+		document.getElementById('mark_calender'+pos).style.display = "";
+	}
+	else
+	{		
+		document.getElementById(callEndId).style.display = 'none';
+		formName.endtime.style.color	 = "#626262";	
+		formName.endtime.style.backgroundColor = "#CCCCCC";	
+		formName.endtime.value = currentTime;
+		if (formName.startCheck.checked!=true)
+		{
+			document.getElementById('mark_calender'+pos).style.display = "none";
+		}
+	}
+}
+	var lastframeid=0;
+	var rameid=0;
+	function compareDates (dat1, dat2) {
+   		var date1, date2;
+   		var month1, month2;
+   		var year1, year2;
+	 	value1 = dat1.substring (0, dat1.indexOf (" "));
+	  	value2 = dat2.substring (0, dat2.indexOf (" "));
+	  	time1= dat1.substring (16, dat1.indexOf (" "));
+	  	time2= dat2.substring (16, dat2.indexOf (" "));
+	  
+	  	hours1= time1.substring (0, time1.indexOf (":"));
+	  	minites1= time1.substring (1, time1.indexOf (":"));
+	  
+	  	hours2= time2.substring (0, time2.indexOf (":"));
+	 	minites2= time2.substring (1, time2.indexOf (":"));
+	  
+   		year1 = value1.substring (0, value1.indexOf ("-"));
+   		month1 = value1.substring (value1.indexOf ("-")+1, value1.lastIndexOf ("-"));
+   		date1 = value1.substring (value1.lastIndexOf ("-")+1, value1.length);
+
+   		year2 = value2.substring (0, value2.indexOf ("-"));
+   		month2 = value2.substring (value2.indexOf ("-")+1, value2.lastIndexOf ("-"));
+   		date2 = value2.substring (value2.lastIndexOf ("-")+1, value2.length);
+	
+
+   if (year1 > year2) return 1;
+   else if (year1 < year2) return -1;
+   else if (month1 > month2) return 1;
+   else if (month1 < month2) return -1;
+   else if (date1 > date2) return 1;
+   else if (date1 < date2) return -1;
+   else if (hours1 > hours2) return 1;
+   else if (hours1 < hours2) return -1;
+   else if (minites1 > minites2) return 1;
+   else if (minites1 < minites2) return -1;
+   else return 0;
+} 
+	function blinkIt() {
+	 if (!document.all) return;
+	 else {
+	   for(i=0;i<document.all.tags('blink').length;i++){
+		  s=document.all.tags('blink')[i];
+		  s.style.visibility=(s.style.visibility=='visible')?'hidden':'visible';
+	   }
+	 }
+	}
+	function showFocus()
+	{
+		setInterval('blinkIt()',500);
+	}
+	function validate_title(replyDiscussion,formname)
+	{
+		//alert (replyDiscussion.id);
+		var error=''	
+		if(getvaluefromEditor(replyDiscussion,'simple') == '')
+		{
+			alert('Please enter the title');
+			formname.title.focus();		
+			return false;	
+		}
+		else		
+		{
+			formname.submit();
+		}	
+	}
+	function validate_dis(replyDiscussion,formname){
+		var error='';
+
+			if(getvaluefromEditor(replyDiscussion,'simple') == '' )
+			{
+				alert('Please enter the title');
+				formname.title.focus();	
+				return false;	
+			}
+			else		
+			{
+					if(formname.startCheck.checked==true && formname.endCheck.checked==true ){
+						if(compareDates(formname.starttime.value,formname.endtime.value) == 1){
+							
+							error+=' Please check start time and end time.';
+							alert (error);
+							return false;
+						}
+						else
+						{
+							formname.submit();
+						}
+					}
+					else
+					{
+						formname.submit();
+					}
+			}	
+	}
+	function validate_subTask(replyDiscussion,formname){
+	var error='';
+	replyDiscussion1=replyDiscussion+'1';
+	if(getvaluefromEditor(replyDiscussion,'simple') == ''){
+		error+='Please Enter SubTask \n';
+	}
+	var val = getvaluefromEditor(replyDiscussion,'simple');
+	//alert ('Val= ' + val);
+	if(formname.editStatus.value == 0)
+	{
+		if(formname.starttime.value!='' && formname.endtime.value!='' ){
+			if(compareDates(formname.starttime.value,formname.endtime.value) == 1){
+				error+=' Please check start time and end time.';
+			}
+		}
+	}
+	if(error==''){
+		formname.submit();
+	}else{
+		alert(error);
+	}	
+	}
+	function validateSubTaskEdit(replyDiscussion,formname){
+	var error=''
+//	alert(document.getElementById('replyDiscussion1').value + '\n'+'<DIV id="11-span"><P>&nbsp;</P> <BR /><P>&nbsp;</P></DIV>');
+	replyDiscussion1=replyDiscussion+'1';
+	if(getvaluefromEditor(replyDiscussion,'simple') == ''){
+		error+='Please Enter SubTask Title \n';
+	}
+	
+	
+	if(formname.editStatus.value == 0)
+	{
+					if(formname.startCheck.checked==true && formname.endCheck.checked==true ){
+						if(compareDates(formname.starttime.value,formname.endtime.value) == 1){
+							
+							error+=' Please check start time and end time.';
+						}
+					}
+	}
+	if(error==''){
+		formname.submit();
+	}else{
+		alert(error);
+	}
+	
+	}
+function validate_task(newTask,formname){
+	var error='';
+		if(getvaluefromEditor(newTask,'simple') == '')
+		{
+			alert('Please enter the task');
+			formname.title.focus();			
+		}
+
+		if(formname.startCheck.checked==true && formname.endCheck.checked==true ){
+			if(compareDates(formname.starttime.value,formname.endtime.value) == 1){
+				error+=' Please check start time and end time.';
+			}
+		}
+		
+		if(error==''){
+			formname.submit();
+		}else{
+			alert(error);
+		}
+}	
+function addMoreSubTasks(leafId,nodeId,workSpaceId,workSpaceType,treeId,treeStatus,formname)
+{
+	var subTaskTitle = getvaluefromEditor('title'+leafId,'simple');
+	var subTaskContents = getvaluefromEditor('replyDiscussion'+leafId,'simple');
+}
+
+function showHideSubTasks (nodeId)
+{
+	if (document.getElementById('subTasks'+nodeId).style.display=='none')
+	{
+		document.getElementById('subTasks'+nodeId).style.display='';
+		document.getElementById('expandSubTasks'+nodeId).style.display='none';
+		document.getElementById('collapseSubTasks'+nodeId).style.display='';
+	}
+	else
+	{
+		document.getElementById('subTasks'+nodeId).style.display='none';
+		document.getElementById('expandSubTasks'+nodeId).style.display='';
+		document.getElementById('collapseSubTasks'+nodeId).style.display='none';
+	}
+}

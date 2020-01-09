@@ -1,0 +1,340 @@
+<?php 
+
+$tagId 	= $this->uri->segment(8);
+$nodeId = $this->uri->segment(9);
+//$tagType = $this->uri->segment(11);
+//unset($_SESSION["tagLeaves"]);die;
+$usr=$this->uri->segment(11);
+if(!isset($tagType))unset($_SESSION['tagLeaves']);
+
+//if(array_key_exists($nodeId,$_SESSION['tagLeaves'])){
+	if(isset($_GET['rem']) && $_GET['rem']==1){
+		unset($_SESSION['tagLeaves'][$tagId]);
+	}
+//}
+else if((!isset($_GET['rem']) || $_GET['rem']!=1) && $tagId){
+	$_SESSION['tagLeaves'][$tagId] = $tagId;
+}
+
+if($usr!='' && !$_GET['remUsr']){
+	$_SESSION['usrLeaves'][$usr]=$usr; 
+}
+
+if(isset($_GET['remUsr']) && $_GET['remUsr']!=0){
+	unset($_SESSION['usrLeaves'][$usr]);
+}
+
+
+//print_r($_SESSION['tagLeaves']);
+
+
+
+if($tagId)
+{
+		$checkTags=$_SESSION['tagLeaves'][$nodeId];
+		$attachedTags 		= $this->tag_db_manager->getLeafTagsByLeafIds($nodeId, 1);
+		//echo "<pre>";print_r($attachedTags);die;
+		$arrTag=array();
+		foreach($attachedTags as $val){
+			foreach($val as $v1){
+				$arrTag[]=	$v1['tag'];
+			}
+		}//echo "<pre>";print_r($arrTag);
+		$diff=array_diff($_SESSION['tagLeaves'],$arrTag);
+		if (empty($diff) && !empty($_SESSION['tagLeaves'])){
+			$nodeBgColor = 'seedBgColor';
+		}
+		else{
+			$nodeBgColor = '';
+		}
+			
+		//print_r(array_diff($_SESSION['tagLeaves'],$arrTag));
+		//print_r($arrTag);die;
+		//echo "<pre>";print_r($_SESSION['tagLeaves']);print_r($arrTag);
+		
+		/*foreach($_SESSION['tagLeaves'] as $v){
+			if (in_array($v,$arrTag))
+				$nodeBgColor = 'seedBgColor';
+			else
+				$nodeBgColor = '';break;
+		}*/
+		//	echo $nodeBgColor."here";
+		
+			
+		if (!empty($nodeBgColor))
+		{										
+		?>
+			<table width="100%" border="0" cellspacing="0" cellpadding="0">
+				<tr class="<?php echo $nodeBgColor;?>">
+				<td id="<?php echo $position++;?>" class="handCursor"><?php //echo stripslashes($arrDiscussionDetails['name']); 
+							echo '<a href='.base_url().'view_chat/chat_view/'.$treeId.'/'.$workSpaceId.'/type/'.$workSpaceType.'/1/'.$treeId.' style="text-decoration:none; color:#000;">'.$this->identity_db_manager->formatContent($arrDiscussionDetails['name'],250,1).'</a>';
+							
+				?>
+                 </td>
+                 </tr>
+			</table>
+			<?php
+		}
+?>
+    <table width="100%" border="0" cellspacing="0" cellpadding="0">
+          <?php
+	$totalNodes = array();
+	$nodeBgColor = '';
+	if(count($arrDiscussions) > 0)
+	{		//print_r($arrDiscussions);					 
+		foreach($arrDiscussions as $keyVal=>$arrVal)
+		{
+			//echo "<li>nodeId= " .$arrVal['nodeId'];
+			//print_r ($arrVal);
+			$attachedTags1 		= $this->tag_db_manager->getLeafTagsByLeafIds($arrVal['nodeId'], 2);
+			$count = 0;
+			foreach($attachedTags1  as $key => $arrTagData)
+			{																	
+				foreach($arrTagData  as $key1 => $tagData)
+				{	
+					// 2= simple tags
+					// 3 = response tags
+					// 5= contact tags
+					if ($tagData['tagTypeId']==3 && $tagData['tagTypeId']==$tagType) // if response tag
+					{
+						//if ($tagData['tagId'] == $this->uri->segment(10))
+						//$count++;		
+						$tagComment = $this->tag_db_manager->getTagCommentByTagId($this->uri->segment(10));
+						if ($tagData['comments']==$tagComment)
+							$count++;				
+					}
+					else if ($tagData['tag'] == $tagId && $tagData['tagTypeId']==$tagType) // if simple or contact tag
+					{	
+						$count++;
+					}
+
+				}
+			}		
+			$nodeBgColor = '';
+			$arrTag=array();
+			foreach($attachedTags1 as $val){
+				foreach($val as $v1){
+					$arrTag[]=	$v1['tag'];
+				}
+			}//echo "<pre>";print_r($arrTag);
+			
+			$diff=array_diff($_SESSION['tagLeaves'],$arrTag);
+				if (empty($diff) && !empty($_SESSION['tagLeaves'])){
+					$nodeBgColor = 'seedBgColor';
+				}
+				else{
+					$nodeBgColor = '';
+				}
+			
+			
+			$totalNodes[] = $arrVal['nodeId'];
+			$userDetails1	= 	$this->chat_db_manager->getUserDetailsByUserId($arrVal['userId']);	
+
+			$checksucc 		=	$this->chat_db_manager->checkSuccessors($arrVal['nodeId']);
+			
+			$this->chat_db_manager->insertDiscussionLeafView($arrVal['nodeId'],$_SESSION['userId']);
+			
+			$viewCheck=$this->chat_db_manager->checkDiscussionLeafView($arrVal['nodeId'],$_SESSION['userId']);
+			
+			//if (!empty($nodeBgColor))
+			//{
+		?>
+          <tr>
+        <td colspan="5" align="left" valign="top" bgcolor="#FFFFFF"><table width="100%" border="0" cellspacing="0" cellpadding="0">
+            <?php
+			if (!empty($nodeBgColor))
+			{
+			?>
+            <tr class="<?php echo $nodeBgColor;?>">
+              <td colspan="3" id="<?php echo $position++;?>" class="handCursor"><?php 
+					$viewTags 	= $this->tag_db_manager->getTags(2, $_SESSION['userId'], $arrVal['nodeId'], 2);
+					$actTags 	= $this->tag_db_manager->getTags(3, $_SESSION['userId'], $arrVal['nodeId'], 2);
+					$contactTags= $this->tag_db_manager->getTags(5, $_SESSION['userId'], $arrVal['nodeId'], 2);
+					$userTags	= $this->tag_db_manager->getTags(6, $_SESSION['userId'], $arrVal['nodeId'], 2);
+
+					$docTrees1 	=$this->identity_db_manager->getLinkedTreesByArtifactNodeId($arrVal['nodeId'], 1, 2);
+					$docTrees2 	=$this->identity_db_manager->getLinkedTreesByArtifactNodeId($arrVal['nodeId'], 2, 2);
+					$docTrees3 	=$this->identity_db_manager->getLinkedTreesByArtifactNodeId($arrVal['nodeId'], 3, 2);
+					$docTrees4 	=$this->identity_db_manager->getLinkedTreesByArtifactNodeId($arrVal['nodeId'], 4, 2);
+					$docTrees5 	=$this->identity_db_manager->getLinkedTreesByArtifactNodeId($arrVal['nodeId'], 5, 2);
+					$docTrees6 	=$this->identity_db_manager->getLinkedTreesByArtifactNodeId($arrVal['nodeId'], 6, 2);
+					$docTrees7 	=$this->identity_db_manager->getLinkedExternalDocsByArtifactNodeId($arrVal['nodeId'], 2);		
+
+				?>
+                <?php //echo stripslashes($arrVal['contents']); 
+					echo '<a href='.base_url().'view_chat/chat_view/'.$treeId.'/'.$workSpaceId.'/type/'.$workSpaceType.'/1/'.$arrVal["nodeId"].' style="text-decoration:none; color:#000;">'.$this->identity_db_manager->formatContent($arrVal['contents'],250).'</a>';
+				?>
+                <br></td>
+            </tr>
+            <?php
+			}
+            ?>
+          </table>
+              <div style="padding-left:20px;">
+            <?php
+			 //echo $arrVal['nodeId']; 
+			 $arrparent=  $this->chat_db_manager->getPerentInfo($arrVal['nodeId']);
+			 // print_r($arrparent);
+				
+		if($arrparent['successors'])
+		{
+			$sArray=array();
+			$sArray=explode(',',$arrparent['successors']);
+			$counter=0;
+			while($counter < count($sArray))
+			{
+				$arrDiscussions	= $this->chat_db_manager->getPerentInfo($sArray[$counter]);		
+				$totalNodes[] = $arrDiscussions['nodeId'];	 
+				$userDetails	= $this->chat_db_manager->getUserDetailsByUserId($arrDiscussions['userId']);
+				$checksucc 		= $this->chat_db_manager->checkSuccessors($arrDiscussions['nodeId']);				
+				$this->chat_db_manager->insertDiscussionLeafView($arrDiscussions['nodeId'],$_SESSION['userId']);				 
+				$viewCheck=$this->chat_db_manager->checkDiscussionLeafView($arrDiscussions['nodeId'],$_SESSION['userId']);
+				
+				$attachedTags2 		= $this->tag_db_manager->getLeafTagsByLeafIds($arrDiscussions['nodeId'], 2);
+				$count = 0;
+				foreach($attachedTags2  as $key => $arrTagData)
+				{																	
+					foreach($arrTagData  as $key1 => $tagData)
+					{	
+						// 2= simple tags
+						// 3 = response tags
+						// 5= contact tags
+						if ($tagData['tagTypeId']==3 && $tagData['tagTypeId']==$tagType) // if response tag
+						{
+							$tagComment = $this->tag_db_manager->getTagCommentByTagId($this->uri->segment(10));
+							if ($tagData['comments']==$tagComment)
+								$count++;				
+						}
+						else if ($tagData['tag'] == $tagId && $tagData['tagTypeId']==$tagType) // if simple or contact tag
+						{	
+							$count++;
+						}
+					}
+				}	
+				/*if ($count != 0)
+					$nodeBgColor = 'seedBgColor';
+				else
+					$nodeBgColor = '';*/
+				$nodeBgColor = '';	
+				$arrTag=array();//print_r($arrTag);
+				foreach($attachedTags2 as $val){
+					foreach($val as $v1){
+						$arrTag[]=	$v1['tag'];
+					}
+				}
+				//echo "<pre>";print_r($arrTag);
+				//print_r();
+				
+				$diff=array_diff($_SESSION['tagLeaves'],$arrTag);
+				if (empty($diff) && !empty($_SESSION['tagLeaves'])){
+					$nodeBgColor = 'seedBgColor';
+				}
+				else{
+					$nodeBgColor = '';
+				}
+							
+				?>
+            
+             <tr>
+                <td colspan="5" align="left" valign="top" bgcolor="#FFFFFF"><table width="90%" border="0" cellspacing="0" cellpadding="0" align="right">
+                    <?php
+			if (!empty($nodeBgColor))
+			{
+			?>
+                <tr class="<?php echo $nodeBgColor; ?>">
+                  <td id="<?php echo $position++;?>" colspan="3" class="handCursor"><?php
+                $viewTags 	= $this->tag_db_manager->getTags(2, $_SESSION['userId'], $arrDiscussions['nodeId'], 2);
+                $actTags 	= $this->tag_db_manager->getTags(3, $_SESSION['userId'], $arrDiscussions['nodeId'], 2);
+                $contactTags= $this->tag_db_manager->getTags(5, $_SESSION['userId'], $arrDiscussions['nodeId'], 2);
+                $userTags	= $this->tag_db_manager->getTags(6, $_SESSION['userId'], $arrDiscussions['nodeId'], 2);
+            
+                $docTrees1 	=$this->identity_db_manager->getLinkedTreesByArtifactNodeId($arrDiscussions['nodeId'], 1, 2);
+                $docTrees2 	=$this->identity_db_manager->getLinkedTreesByArtifactNodeId($arrDiscussions['nodeId'], 2, 2);
+                $docTrees3 	=$this->identity_db_manager->getLinkedTreesByArtifactNodeId($arrDiscussions['nodeId'], 3, 2);
+                $docTrees4 	=$this->identity_db_manager->getLinkedTreesByArtifactNodeId($arrDiscussions['nodeId'], 4, 2);
+                $docTrees5 	=$this->identity_db_manager->getLinkedTreesByArtifactNodeId($arrDiscussions['nodeId'], 5, 2);
+                $docTrees6 	=$this->identity_db_manager->getLinkedTreesByArtifactNodeId($arrDiscussions['nodeId'], 6, 2);
+                $docTrees7 	=$this->identity_db_manager->getLinkedExternalDocsByArtifactNodeId($arrDiscussions['nodeId'], 2);		
+                
+                
+                ?>
+                <?php //echo stripslashes($arrDiscussions['contents']);
+                echo '<a href='.base_url().'view_chat/chat_view/'.$treeId.'/'.$workSpaceId.'/type/'.$workSpaceType.'/1/'.$arrDiscussions["nodeId"].' style="text-decoration:none; color:#000;">'.$this->identity_db_manager->formatContent($arrDiscussions['contents'],250).'</a>';
+                ?>
+                    <br></td>
+                </tr>
+                <?php
+			}
+			?>
+                  </table></td>
+              </tr>
+                  <?php
+				$counter++;
+			}			
+		}		
+		?>
+              </div></td>
+      </tr>
+          <?php
+		}
+	}
+	
+	}
+	else{
+	
+	if(!empty($_SESSION['usrLeaves']) && !$tagId){
+		if(in_array($arrDocumentDetails['userId'],$_SESSION['usrLeaves']))
+		{
+		?>
+			<table width="100%" border="0" cellspacing="0" cellpadding="0">
+				<tr class="<?php echo $nodeBgColor;?>">
+				<td id="<?php echo $position++;?>" class="handCursor"><?php //echo stripslashes($arrDiscussionDetails['name']); 
+							echo '<a href="'.base_url().'view_chat/chat_view/'.$treeId.'/'.$workSpaceId.'/type/'.$workSpaceType.'/1/'.$treeId.'" style="text-decoration:none; color:#000;">'.$this->identity_db_manager->formatContent($arrDiscussionDetails['name'],250,1).'</a>';
+							
+				?>
+                 </td>
+                 </tr>
+			</table>
+	<?php	
+		}
+	
+		foreach($arrDiscussions as $keyVal=>$arrVal)
+		{
+			if(in_array($arrVal['userId'],$_SESSION['usrLeaves'])){
+				?>
+				<tr class="<?php echo $nodeBgColor;?>">
+              <td colspan="3" id="<?php echo $position++;?>" class="handCursor"><?php 
+					$viewTags 	= $this->tag_db_manager->getTags(2, $_SESSION['userId'], $arrVal['nodeId'], 2);
+					$actTags 	= $this->tag_db_manager->getTags(3, $_SESSION['userId'], $arrVal['nodeId'], 2);
+					$contactTags= $this->tag_db_manager->getTags(5, $_SESSION['userId'], $arrVal['nodeId'], 2);
+					$userTags	= $this->tag_db_manager->getTags(6, $_SESSION['userId'], $arrVal['nodeId'], 2);
+
+					$docTrees1 	=$this->identity_db_manager->getLinkedTreesByArtifactNodeId($arrVal['nodeId'], 1, 2);
+					$docTrees2 	=$this->identity_db_manager->getLinkedTreesByArtifactNodeId($arrVal['nodeId'], 2, 2);
+					$docTrees3 	=$this->identity_db_manager->getLinkedTreesByArtifactNodeId($arrVal['nodeId'], 3, 2);
+					$docTrees4 	=$this->identity_db_manager->getLinkedTreesByArtifactNodeId($arrVal['nodeId'], 4, 2);
+					$docTrees5 	=$this->identity_db_manager->getLinkedTreesByArtifactNodeId($arrVal['nodeId'], 5, 2);
+					$docTrees6 	=$this->identity_db_manager->getLinkedTreesByArtifactNodeId($arrVal['nodeId'], 6, 2);
+					$docTrees7 	=$this->identity_db_manager->getLinkedExternalDocsByArtifactNodeId($arrVal['nodeId'], 2);		
+
+				?>
+                <?php //echo stripslashes($arrVal['contents']); 
+					echo '<a href='.base_url().'view_chat/chat_view/'.$treeId.'/'.$workSpaceId.'/type/'.$workSpaceType.'/1/'.$arrVal["nodeId"].' style="text-decoration:none; color:#000;">'.$this->identity_db_manager->formatContent($arrVal['contents'],250).'</a>';
+				?>
+                <br></td>
+            </tr>
+				
+				
+				
+				<?php
+			}
+		}
+	}
+	
+	  
+?>
+        
+  
+      <?php
+	}
+?></table>

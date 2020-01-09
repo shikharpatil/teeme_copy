@@ -1,0 +1,1 @@
+function mobile_detect(e,o,t){var a=/iphone|ipod|android|blackberry|opera|mini|windows\sce|palm|smartphone|iemobile/i.test(navigator.userAgent.toLowerCase()),i=/ipad|android|android 3.0|xoom|sch-i800|playbook|tablet|kindle/i.test(navigator.userAgent.toLowerCase());return 1==t&&alert(navigator.userAgent),a&&1==e?"mobile":i&&1==o?"tablet":0}

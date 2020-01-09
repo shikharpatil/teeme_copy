@@ -1,0 +1,530 @@
+[21-Sep-2012 13:25:58] PHP Warning:  require_once(Auth/OpenID/Consumer.php) [<a href='function.require-once'>function.require-once</a>]: failed to open stream: No such file or directory in /home/alphatee/public_html/images/openId/openid/openid/index.php on line 9
+[21-Sep-2012 13:25:58] PHP Fatal error:  require_once() [<a href='function.require'>function.require</a>]: Failed opening required 'Auth/OpenID/Consumer.php' (include_path='.:/usr/lib/php:/usr/local/lib/php') in /home/alphatee/public_html/images/openId/openid/openid/index.php on line 9
+[21-Sep-2012 13:26:22] PHP Warning:  Unterminated comment starting line 387 in /home/alphatee/public_html/images/openId/openid/openid/Auth/OpenID/Consumer.php on line 387
+[21-Sep-2012 13:26:22] PHP Parse error:  syntax error, unexpected $end, expecting T_FUNCTION in /home/alphatee/public_html/images/openId/openid/openid/Auth/OpenID/Consumer.php on line 402
+[21-Sep-2012 13:28:18] Successfully fetched 'https://www.google.com/accounts/o8/.well-known/host-meta?hd=http://me.yahoo.com': GET response code 400
+[21-Sep-2012 13:28:19] Successfully fetched 'https://me.yahoo.com/': GET response code 200
+[21-Sep-2012 13:28:19] Successfully fetched 'https://open.login.yahooapis.com/openid20/www.yahoo.com/xrds': GET response code 200
+[21-Sep-2012 13:28:21] Successfully fetched 'https://open.login.yahooapis.com/openid/op/auth': POST response code 200
+[21-Sep-2012 13:28:44] Successfully fetched 'https://www.google.com/accounts/o8/.well-known/host-meta?hd=me.yahoo.com': GET response code 400
+[21-Sep-2012 13:28:44] Successfully fetched 'https://me.yahoo.com/a/ti4xEGwph5cCFYMwcaR2paF.OsgQQpY1Aykg': GET response code 200
+[21-Sep-2012 13:28:44] Successfully fetched 'https://open.login.yahooapis.com/openid20/user_profile/xrds': GET response code 200
+[21-Sep-2012 13:28:53] Successfully fetched 'https://www.google.com/accounts/o8/.well-known/host-meta?hd=me.yahoo.com': GET response code 400
+[21-Sep-2012 13:28:54] Successfully fetched 'https://me.yahoo.com/a/ti4xEGwph5cCFYMwcaR2paF.OsgQQpY1Aykg': GET response code 200
+[21-Sep-2012 13:28:54] Successfully fetched 'https://open.login.yahooapis.com/openid20/user_profile/xrds': GET response code 200
+[21-Sep-2012 13:28:57] Successfully fetched 'https://www.google.com/accounts/o8/.well-known/host-meta?hd=www.google.com': GET response code 400
+[21-Sep-2012 13:28:58] Successfully fetched 'https://www.google.com/accounts/o8/id': GET response code 200
+[21-Sep-2012 13:28:59] Successfully fetched 'https://www.google.com/accounts/o8/ud': POST response code 200
+[21-Sep-2012 13:29:44] Successfully fetched 'https://www.google.com/accounts/o8/.well-known/host-meta?hd=www.google.com': GET response code 400
+[21-Sep-2012 13:29:44] Successfully fetched 'https://www.google.com/accounts/o8/id?id=AItOawnrBiVWZVt3aJj_fVJE15jKUkjzsipF0gs': GET response code 200
+[21-Sep-2012 13:31:48] Successfully fetched 'https://www.google.com/accounts/o8/.well-known/host-meta?hd=www.google.com': GET response code 400
+[21-Sep-2012 13:31:48] Successfully fetched 'https://www.google.com/accounts/o8/id?id=AItOawnrBiVWZVt3aJj_fVJE15jKUkjzsipF0gs': GET response code 200
+[24-Sep-2012 06:53:56] Successfully fetched 'https://www.google.com/accounts/o8/.well-known/host-meta?hd=http://me.yahoo.com': GET response code 400
+[24-Sep-2012 06:53:57] Successfully fetched 'https://me.yahoo.com/': GET response code 200
+[24-Sep-2012 06:53:57] Successfully fetched 'https://open.login.yahooapis.com/openid20/www.yahoo.com/xrds': GET response code 200
+[24-Sep-2012 06:53:59] Successfully fetched 'https://open.login.yahooapis.com/openid/op/auth': POST response code 200
+[24-Sep-2012 12:49:05] Successfully fetched 'https://www.google.com/accounts/o8/.well-known/host-meta?hd=http://me.yahoo.com': GET response code 400
+[24-Sep-2012 12:49:06] Successfully fetched 'https://me.yahoo.com/': GET response code 200
+[24-Sep-2012 12:49:07] Successfully fetched 'https://open.login.yahooapis.com/openid20/www.yahoo.com/xrds': GET response code 200
+[24-Sep-2012 12:49:08] Successfully fetched 'https://open.login.yahooapis.com/openid/op/auth': POST response code 200
+[24-Sep-2012 12:49:39] Successfully fetched 'https://www.google.com/accounts/o8/.well-known/host-meta?hd=me.yahoo.com': GET response code 400
+[24-Sep-2012 12:49:40] Successfully fetched 'https://me.yahoo.com/a/ti4xEGwph5cCFYMwcaR2paF.OsgQQpY1Aykg': GET response code 200
+[24-Sep-2012 12:49:40] Successfully fetched 'https://open.login.yahooapis.com/openid20/user_profile/xrds': GET response code 200
+[24-Sep-2012 13:13:50] Successfully fetched 'https://www.google.com/accounts/o8/.well-known/host-meta?hd=me.yahoo.com': GET response code 400
+[24-Sep-2012 13:13:51] Successfully fetched 'https://me.yahoo.com/a/ti4xEGwph5cCFYMwcaR2paF.OsgQQpY1Aykg': GET response code 200
+[24-Sep-2012 13:13:51] Successfully fetched 'https://open.login.yahooapis.com/openid20/user_profile/xrds': GET response code 200
+[24-Sep-2012 13:14:37] Successfully fetched 'https://www.google.com/accounts/o8/.well-known/host-meta?hd=http://me.yahoo.com': GET response code 400
+[24-Sep-2012 13:14:37] Successfully fetched 'https://me.yahoo.com/': GET response code 200
+[24-Sep-2012 13:14:37] Successfully fetched 'https://open.login.yahooapis.com/openid20/www.yahoo.com/xrds': GET response code 200
+[24-Sep-2012 13:14:43] Successfully fetched 'https://www.google.com/accounts/o8/.well-known/host-meta?hd=me.yahoo.com': GET response code 400
+[24-Sep-2012 13:14:44] Successfully fetched 'https://me.yahoo.com/a/ti4xEGwph5cCFYMwcaR2paF.OsgQQpY1Aykg': GET response code 200
+[24-Sep-2012 13:14:45] Successfully fetched 'https://open.login.yahooapis.com/openid20/user_profile/xrds': GET response code 200
+[24-Sep-2012 13:17:22] Successfully fetched 'https://www.google.com/accounts/o8/.well-known/host-meta?hd=www.google.com': GET response code 400
+[24-Sep-2012 13:17:23] Successfully fetched 'https://www.google.com/accounts/o8/id': GET response code 200
+[24-Sep-2012 13:17:24] Successfully fetched 'https://www.google.com/accounts/o8/ud': POST response code 200
+[24-Sep-2012 13:17:28] Successfully fetched 'https://www.google.com/accounts/o8/.well-known/host-meta?hd=www.google.com': GET response code 400
+[24-Sep-2012 13:17:28] Successfully fetched 'https://www.google.com/accounts/o8/id?id=AItOawnrBiVWZVt3aJj_fVJE15jKUkjzsipF0gs': GET response code 200
+[25-Sep-2012 07:54:36] Successfully fetched 'https://www.google.com/accounts/o8/.well-known/host-meta?hd=www.google.com': GET response code 400
+[25-Sep-2012 07:54:36] Successfully fetched 'https://www.google.com/accounts/o8/id': GET response code 200
+[25-Sep-2012 07:54:38] Successfully fetched 'https://www.google.com/accounts/o8/ud': POST response code 200
+[25-Sep-2012 07:54:44] Successfully fetched 'https://www.google.com/accounts/o8/.well-known/host-meta?hd=www.google.com': GET response code 400
+[25-Sep-2012 07:54:44] Successfully fetched 'https://www.google.com/accounts/o8/id?id=AItOawnrBiVWZVt3aJj_fVJE15jKUkjzsipF0gs': GET response code 200
+[25-Sep-2012 07:54:55] Successfully fetched 'https://www.google.com/accounts/o8/.well-known/host-meta?hd=http://me.yahoo.com': GET response code 400
+[25-Sep-2012 07:54:57] Successfully fetched 'https://me.yahoo.com/': GET response code 200
+[25-Sep-2012 07:54:57] Successfully fetched 'https://open.login.yahooapis.com/openid20/www.yahoo.com/xrds': GET response code 200
+[25-Sep-2012 07:54:59] Successfully fetched 'https://open.login.yahooapis.com/openid/op/auth': POST response code 200
+[25-Sep-2012 07:55:11] Successfully fetched 'https://www.google.com/accounts/o8/.well-known/host-meta?hd=me.yahoo.com': GET response code 400
+[25-Sep-2012 07:55:12] Successfully fetched 'https://me.yahoo.com/a/ti4xEGwph5cCFYMwcaR2paF.OsgQQpY1Aykg': GET response code 200
+[25-Sep-2012 07:55:13] Successfully fetched 'https://open.login.yahooapis.com/openid20/user_profile/xrds': GET response code 200
+[25-Sep-2012 09:06:18] PHP Parse error:  syntax error, unexpected '<' in /home/alphatee/public_html/openId/index.php on line 148
+[25-Sep-2012 09:06:40] PHP Parse error:  syntax error, unexpected '<' in /home/alphatee/public_html/openId/index.php on line 148
+[25-Sep-2012 09:08:32] Successfully fetched 'https://www.google.com/accounts/o8/.well-known/host-meta?hd=www.google.com': GET response code 400
+[25-Sep-2012 09:08:32] Successfully fetched 'https://www.google.com/accounts/o8/id': GET response code 200
+[25-Sep-2012 09:08:43] Successfully fetched 'https://www.google.com/accounts/o8/.well-known/host-meta?hd=www.google.com': GET response code 400
+[25-Sep-2012 09:08:43] Successfully fetched 'https://www.google.com/accounts/o8/id?id=AItOawnrBiVWZVt3aJj_fVJE15jKUkjzsipF0gs': GET response code 200
+[25-Sep-2012 09:08:43] PHP Fatal error:  Cannot use object of type Auth_OpenID_AX_FetchResponse as array in /home/alphatee/public_html/openId/index.php on line 147
+[25-Sep-2012 09:09:42] Successfully fetched 'https://www.google.com/accounts/o8/.well-known/host-meta?hd=www.google.com': GET response code 400
+[25-Sep-2012 09:09:42] Successfully fetched 'https://www.google.com/accounts/o8/id?id=AItOawnrBiVWZVt3aJj_fVJE15jKUkjzsipF0gs': GET response code 200
+[25-Sep-2012 09:09:51] Successfully fetched 'https://www.google.com/accounts/o8/.well-known/host-meta?hd=www.google.com': GET response code 400
+[25-Sep-2012 09:09:51] Successfully fetched 'https://www.google.com/accounts/o8/id': GET response code 200
+[25-Sep-2012 09:09:53] Successfully fetched 'https://www.google.com/accounts/o8/.well-known/host-meta?hd=www.google.com': GET response code 400
+[25-Sep-2012 09:09:53] Successfully fetched 'https://www.google.com/accounts/o8/id?id=AItOawnrBiVWZVt3aJj_fVJE15jKUkjzsipF0gs': GET response code 200
+[25-Sep-2012 09:17:53] Successfully fetched 'https://www.google.com/accounts/o8/.well-known/host-meta?hd=www.google.com': GET response code 400
+[25-Sep-2012 09:17:53] Successfully fetched 'https://www.google.com/accounts/o8/id': GET response code 200
+[25-Sep-2012 09:17:55] Successfully fetched 'https://www.google.com/accounts/o8/.well-known/host-meta?hd=www.google.com': GET response code 400
+[25-Sep-2012 09:17:55] Successfully fetched 'https://www.google.com/accounts/o8/id?id=AItOawnrBiVWZVt3aJj_fVJE15jKUkjzsipF0gs': GET response code 200
+[25-Sep-2012 09:17:55] PHP Fatal error:  Call to undefined function redirect() in /home/alphatee/public_html/openId/index.php on line 148
+[25-Sep-2012 09:20:57] Successfully fetched 'https://www.google.com/accounts/o8/.well-known/host-meta?hd=http://me.yahoo.com': GET response code 400
+[25-Sep-2012 09:20:58] Successfully fetched 'https://me.yahoo.com/': GET response code 200
+[25-Sep-2012 09:20:58] Successfully fetched 'https://open.login.yahooapis.com/openid20/www.yahoo.com/xrds': GET response code 200
+[25-Sep-2012 09:21:06] Successfully fetched 'https://www.google.com/accounts/o8/.well-known/host-meta?hd=me.yahoo.com': GET response code 400
+[25-Sep-2012 09:21:06] Successfully fetched 'https://me.yahoo.com/a/ti4xEGwph5cCFYMwcaR2paF.OsgQQpY1Aykg': GET response code 200
+[25-Sep-2012 09:21:07] Successfully fetched 'https://open.login.yahooapis.com/openid20/user_profile/xrds': GET response code 200
+[25-Sep-2012 09:21:24] Successfully fetched 'https://www.google.com/accounts/o8/.well-known/host-meta?hd=www.google.com': GET response code 400
+[25-Sep-2012 09:21:24] Successfully fetched 'https://www.google.com/accounts/o8/id': GET response code 200
+[25-Sep-2012 09:21:27] Successfully fetched 'https://www.google.com/accounts/o8/.well-known/host-meta?hd=www.google.com': GET response code 400
+[25-Sep-2012 09:21:27] Successfully fetched 'https://www.google.com/accounts/o8/id?id=AItOawkqSSxGmeWlbCDs_1YakC2XxqZ2eT7DXQI': GET response code 200
+[25-Sep-2012 09:22:57] Successfully fetched 'https://www.google.com/accounts/o8/.well-known/host-meta?hd=www.google.com': GET response code 400
+[25-Sep-2012 09:22:57] Successfully fetched 'https://www.google.com/accounts/o8/id': GET response code 200
+[25-Sep-2012 09:22:58] Successfully fetched 'https://www.google.com/accounts/o8/.well-known/host-meta?hd=www.google.com': GET response code 400
+[25-Sep-2012 09:22:59] Successfully fetched 'https://www.google.com/accounts/o8/id?id=AItOawkqSSxGmeWlbCDs_1YakC2XxqZ2eT7DXQI': GET response code 200
+[25-Sep-2012 09:24:21] Successfully fetched 'https://www.google.com/accounts/o8/.well-known/host-meta?hd=www.google.com': GET response code 400
+[25-Sep-2012 09:24:21] Successfully fetched 'https://www.google.com/accounts/o8/id': GET response code 200
+[25-Sep-2012 09:24:22] Successfully fetched 'https://www.google.com/accounts/o8/.well-known/host-meta?hd=www.google.com': GET response code 400
+[25-Sep-2012 09:24:22] Successfully fetched 'https://www.google.com/accounts/o8/id?id=AItOawkqSSxGmeWlbCDs_1YakC2XxqZ2eT7DXQI': GET response code 200
+[25-Sep-2012 09:34:13] Successfully fetched 'https://www.google.com/accounts/o8/.well-known/host-meta?hd=www.google.com': GET response code 400
+[25-Sep-2012 09:34:13] Successfully fetched 'https://www.google.com/accounts/o8/id': GET response code 200
+[25-Sep-2012 09:34:16] Successfully fetched 'https://www.google.com/accounts/o8/.well-known/host-meta?hd=www.google.com': GET response code 400
+[25-Sep-2012 09:34:19] Successfully fetched 'https://www.google.com/accounts/o8/id?id=AItOawkqSSxGmeWlbCDs_1YakC2XxqZ2eT7DXQI': GET response code 200
+[25-Sep-2012 09:37:28] Successfully fetched 'https://www.google.com/accounts/o8/.well-known/host-meta?hd=www.google.com': GET response code 400
+[25-Sep-2012 09:37:29] Successfully fetched 'https://www.google.com/accounts/o8/id': GET response code 200
+[25-Sep-2012 09:37:31] Successfully fetched 'https://www.google.com/accounts/o8/.well-known/host-meta?hd=www.google.com': GET response code 400
+[25-Sep-2012 09:37:31] Successfully fetched 'https://www.google.com/accounts/o8/id?id=AItOawkqSSxGmeWlbCDs_1YakC2XxqZ2eT7DXQI': GET response code 200
+[25-Sep-2012 09:43:18] Successfully fetched 'https://www.google.com/accounts/o8/.well-known/host-meta?hd=www.google.com': GET response code 400
+[25-Sep-2012 09:43:19] Successfully fetched 'https://www.google.com/accounts/o8/id': GET response code 200
+[25-Sep-2012 09:43:21] Successfully fetched 'https://www.google.com/accounts/o8/.well-known/host-meta?hd=www.google.com': GET response code 400
+[25-Sep-2012 09:43:21] Successfully fetched 'https://www.google.com/accounts/o8/id?id=AItOawkqSSxGmeWlbCDs_1YakC2XxqZ2eT7DXQI': GET response code 200
+[25-Sep-2012 09:44:50] Successfully fetched 'https://www.google.com/accounts/o8/.well-known/host-meta?hd=www.google.com': GET response code 400
+[25-Sep-2012 09:44:50] Successfully fetched 'https://www.google.com/accounts/o8/id': GET response code 200
+[25-Sep-2012 09:44:52] Successfully fetched 'https://www.google.com/accounts/o8/.well-known/host-meta?hd=www.google.com': GET response code 400
+[25-Sep-2012 09:44:52] Successfully fetched 'https://www.google.com/accounts/o8/id?id=AItOawkqSSxGmeWlbCDs_1YakC2XxqZ2eT7DXQI': GET response code 200
+[25-Sep-2012 09:53:16] Successfully fetched 'https://www.google.com/accounts/o8/.well-known/host-meta?hd=www.google.com': GET response code 400
+[25-Sep-2012 09:53:16] Successfully fetched 'https://www.google.com/accounts/o8/id': GET response code 200
+[25-Sep-2012 09:53:28] Successfully fetched 'https://www.google.com/accounts/o8/.well-known/host-meta?hd=www.google.com': GET response code 400
+[25-Sep-2012 09:53:28] Successfully fetched 'https://www.google.com/accounts/o8/id?id=AItOawkqSSxGmeWlbCDs_1YakC2XxqZ2eT7DXQI': GET response code 200
+[25-Sep-2012 09:54:32] Successfully fetched 'https://www.google.com/accounts/o8/.well-known/host-meta?hd=www.google.com': GET response code 400
+[25-Sep-2012 09:54:32] Successfully fetched 'https://www.google.com/accounts/o8/id': GET response code 200
+[25-Sep-2012 09:54:33] Successfully fetched 'https://www.google.com/accounts/o8/.well-known/host-meta?hd=www.google.com': GET response code 400
+[25-Sep-2012 09:54:34] Successfully fetched 'https://www.google.com/accounts/o8/id?id=AItOawkqSSxGmeWlbCDs_1YakC2XxqZ2eT7DXQI': GET response code 200
+[25-Sep-2012 10:04:51] Successfully fetched 'https://www.google.com/accounts/o8/.well-known/host-meta?hd=www.google.com': GET response code 400
+[25-Sep-2012 10:04:52] Successfully fetched 'https://www.google.com/accounts/o8/id': GET response code 200
+[25-Sep-2012 10:04:55] Successfully fetched 'https://www.google.com/accounts/o8/.well-known/host-meta?hd=www.google.com': GET response code 400
+[25-Sep-2012 10:04:55] Successfully fetched 'https://www.google.com/accounts/o8/id?id=AItOawkqSSxGmeWlbCDs_1YakC2XxqZ2eT7DXQI': GET response code 200
+[25-Sep-2012 10:06:14] Successfully fetched 'https://www.google.com/accounts/o8/.well-known/host-meta?hd=www.google.com': GET response code 400
+[25-Sep-2012 10:06:14] Successfully fetched 'https://www.google.com/accounts/o8/id': GET response code 200
+[25-Sep-2012 10:06:15] Successfully fetched 'https://www.google.com/accounts/o8/.well-known/host-meta?hd=www.google.com': GET response code 400
+[25-Sep-2012 10:06:15] Successfully fetched 'https://www.google.com/accounts/o8/id?id=AItOawkqSSxGmeWlbCDs_1YakC2XxqZ2eT7DXQI': GET response code 200
+[25-Sep-2012 10:07:04] Successfully fetched 'https://www.google.com/accounts/o8/.well-known/host-meta?hd=www.google.com': GET response code 400
+[25-Sep-2012 10:07:05] Successfully fetched 'https://www.google.com/accounts/o8/id': GET response code 200
+[25-Sep-2012 10:07:06] Successfully fetched 'https://www.google.com/accounts/o8/.well-known/host-meta?hd=www.google.com': GET response code 400
+[25-Sep-2012 10:07:07] Successfully fetched 'https://www.google.com/accounts/o8/id?id=AItOawkqSSxGmeWlbCDs_1YakC2XxqZ2eT7DXQI': GET response code 200
+[25-Sep-2012 10:09:13] Successfully fetched 'https://www.google.com/accounts/o8/.well-known/host-meta?hd=www.google.com': GET response code 400
+[25-Sep-2012 10:09:13] Successfully fetched 'https://www.google.com/accounts/o8/id': GET response code 200
+[25-Sep-2012 10:09:16] Successfully fetched 'https://www.google.com/accounts/o8/.well-known/host-meta?hd=www.google.com': GET response code 400
+[25-Sep-2012 10:09:16] Successfully fetched 'https://www.google.com/accounts/o8/id?id=AItOawkqSSxGmeWlbCDs_1YakC2XxqZ2eT7DXQI': GET response code 200
+[25-Sep-2012 10:09:53] Successfully fetched 'https://www.google.com/accounts/o8/.well-known/host-meta?hd=www.google.com': GET response code 400
+[25-Sep-2012 10:09:53] Successfully fetched 'https://www.google.com/accounts/o8/id?id=AItOawkqSSxGmeWlbCDs_1YakC2XxqZ2eT7DXQI': GET response code 200
+[25-Sep-2012 10:09:59] Successfully fetched 'https://www.google.com/accounts/o8/.well-known/host-meta?hd=www.google.com': GET response code 400
+[25-Sep-2012 10:10:00] Successfully fetched 'https://www.google.com/accounts/o8/id': GET response code 200
+[25-Sep-2012 10:10:01] Successfully fetched 'https://www.google.com/accounts/o8/.well-known/host-meta?hd=www.google.com': GET response code 400
+[25-Sep-2012 10:10:01] Successfully fetched 'https://www.google.com/accounts/o8/id?id=AItOawkqSSxGmeWlbCDs_1YakC2XxqZ2eT7DXQI': GET response code 200
+[25-Sep-2012 10:24:16] Successfully fetched 'https://www.google.com/accounts/o8/.well-known/host-meta?hd=www.google.com': GET response code 400
+[25-Sep-2012 10:24:16] Successfully fetched 'https://www.google.com/accounts/o8/id': GET response code 200
+[25-Sep-2012 10:24:18] Successfully fetched 'https://www.google.com/accounts/o8/.well-known/host-meta?hd=www.google.com': GET response code 400
+[25-Sep-2012 10:24:18] Successfully fetched 'https://www.google.com/accounts/o8/id?id=AItOawkqSSxGmeWlbCDs_1YakC2XxqZ2eT7DXQI': GET response code 200
+[25-Sep-2012 10:25:15] Successfully fetched 'https://www.google.com/accounts/o8/.well-known/host-meta?hd=www.google.com': GET response code 400
+[25-Sep-2012 10:25:15] Successfully fetched 'https://www.google.com/accounts/o8/id': GET response code 200
+[25-Sep-2012 10:25:17] Successfully fetched 'https://www.google.com/accounts/o8/.well-known/host-meta?hd=www.google.com': GET response code 400
+[25-Sep-2012 10:25:17] Successfully fetched 'https://www.google.com/accounts/o8/id?id=AItOawkqSSxGmeWlbCDs_1YakC2XxqZ2eT7DXQI': GET response code 200
+[25-Sep-2012 10:26:49] PHP Warning:  array_key_exists() expects parameter 2 to be array, null given in /home/alphatee/public_html/openId/Auth/Yadis/Manager.php on line 40
+[25-Sep-2012 10:26:49] PHP Warning:  array_key_exists() expects parameter 2 to be array, null given in /home/alphatee/public_html/openId/Auth/Yadis/Manager.php on line 40
+[25-Sep-2012 10:26:49] PHP Warning:  array_key_exists() expects parameter 2 to be array, null given in /home/alphatee/public_html/openId/Auth/Yadis/Manager.php on line 40
+[25-Sep-2012 10:26:49] PHP Warning:  file_get_contents(/home/alphatee/public_html/openId/tmp/google.tmp) [<a href='function.file-get-contents'>function.file-get-contents</a>]: failed to open stream: No such file or directory in /home/alphatee/public_html/openId/index.php on line 164
+[25-Sep-2012 10:26:49] Successfully fetched 'https://www.google.com/accounts/o8/.well-known/host-meta?hd=www.google.com': GET response code 400
+[25-Sep-2012 10:26:49] PHP Notice:  Received 400 when fetching https://www.google.com/accounts/o8/.well-known/host-meta?hd=www.google.com in /home/alphatee/public_html/openId/Auth/OpenID/google_discovery.php on line 189
+[25-Sep-2012 10:26:49] Successfully fetched 'https://www.google.com/accounts/o8/id': GET response code 200
+[25-Sep-2012 10:26:49] PHP Warning:  array_key_exists() expects parameter 2 to be array, null given in /home/alphatee/public_html/openId/Auth/Yadis/Manager.php on line 40
+[25-Sep-2012 10:26:49] PHP Warning:  Cannot modify header information - headers already sent by (output started at /home/alphatee/public_html/openId/Auth/Yadis/Manager.php:40) in /home/alphatee/public_html/openId/index.php on line 108
+[25-Sep-2012 10:28:13] PHP Warning:  array_key_exists() expects parameter 2 to be array, null given in /home/alphatee/public_html/openId/Auth/Yadis/Manager.php on line 40
+[25-Sep-2012 10:28:13] PHP Warning:  array_key_exists() expects parameter 2 to be array, null given in /home/alphatee/public_html/openId/Auth/Yadis/Manager.php on line 40
+[25-Sep-2012 10:28:13] PHP Warning:  array_key_exists() expects parameter 2 to be array, null given in /home/alphatee/public_html/openId/Auth/Yadis/Manager.php on line 40
+[25-Sep-2012 10:28:13] PHP Warning:  file_get_contents(/home/alphatee/public_html/openId/tmp/google.tmp) [<a href='function.file-get-contents'>function.file-get-contents</a>]: failed to open stream: No such file or directory in /home/alphatee/public_html/openId/index.php on line 164
+[25-Sep-2012 10:28:13] Successfully fetched 'https://www.google.com/accounts/o8/.well-known/host-meta?hd=www.google.com': GET response code 400
+[25-Sep-2012 10:28:13] PHP Notice:  Received 400 when fetching https://www.google.com/accounts/o8/.well-known/host-meta?hd=www.google.com in /home/alphatee/public_html/openId/Auth/OpenID/google_discovery.php on line 189
+[25-Sep-2012 10:28:13] Successfully fetched 'https://www.google.com/accounts/o8/id': GET response code 200
+[25-Sep-2012 10:28:13] PHP Warning:  array_key_exists() expects parameter 2 to be array, null given in /home/alphatee/public_html/openId/Auth/Yadis/Manager.php on line 40
+[25-Sep-2012 10:28:13] PHP Warning:  Cannot modify header information - headers already sent by (output started at /home/alphatee/public_html/openId/Auth/Yadis/Manager.php:40) in /home/alphatee/public_html/openId/index.php on line 108
+[25-Sep-2012 10:30:59] PHP Warning:  array_key_exists() expects parameter 2 to be array, null given in /home/alphatee/public_html/openId/Auth/Yadis/Manager.php on line 40
+[25-Sep-2012 10:30:59] PHP Warning:  array_key_exists() expects parameter 2 to be array, null given in /home/alphatee/public_html/openId/Auth/Yadis/Manager.php on line 40
+[25-Sep-2012 10:30:59] PHP Warning:  array_key_exists() expects parameter 2 to be array, null given in /home/alphatee/public_html/openId/Auth/Yadis/Manager.php on line 40
+[25-Sep-2012 10:30:59] PHP Warning:  file_get_contents(/home/alphatee/public_html/openId/tmp/google.tmp) [<a href='function.file-get-contents'>function.file-get-contents</a>]: failed to open stream: No such file or directory in /home/alphatee/public_html/openId/index.php on line 165
+[25-Sep-2012 10:30:59] Successfully fetched 'https://www.google.com/accounts/o8/.well-known/host-meta?hd=www.google.com': GET response code 400
+[25-Sep-2012 10:30:59] PHP Notice:  Received 400 when fetching https://www.google.com/accounts/o8/.well-known/host-meta?hd=www.google.com in /home/alphatee/public_html/openId/Auth/OpenID/google_discovery.php on line 189
+[25-Sep-2012 10:30:59] Successfully fetched 'https://www.google.com/accounts/o8/id': GET response code 200
+[25-Sep-2012 10:30:59] PHP Warning:  array_key_exists() expects parameter 2 to be array, null given in /home/alphatee/public_html/openId/Auth/Yadis/Manager.php on line 40
+[25-Sep-2012 10:31:02] PHP Warning:  array_key_exists() expects parameter 2 to be array, null given in /home/alphatee/public_html/openId/Auth/Yadis/Manager.php on line 40
+[25-Sep-2012 10:31:02] PHP Warning:  file_get_contents(/home/alphatee/public_html/openId/tmp/google.tmp) [<a href='function.file-get-contents'>function.file-get-contents</a>]: failed to open stream: No such file or directory in /home/alphatee/public_html/openId/index.php on line 165
+[25-Sep-2012 10:31:02] Successfully fetched 'https://www.google.com/accounts/o8/.well-known/host-meta?hd=www.google.com': GET response code 400
+[25-Sep-2012 10:31:02] PHP Notice:  Received 400 when fetching https://www.google.com/accounts/o8/.well-known/host-meta?hd=www.google.com in /home/alphatee/public_html/openId/Auth/OpenID/google_discovery.php on line 189
+[25-Sep-2012 10:31:02] Successfully fetched 'https://www.google.com/accounts/o8/id?id=AItOawkqSSxGmeWlbCDs_1YakC2XxqZ2eT7DXQI': GET response code 200
+[25-Sep-2012 10:31:02] PHP Warning:  array_key_exists() expects parameter 2 to be array, null given in /home/alphatee/public_html/openId/Auth/Yadis/Manager.php on line 40
+[25-Sep-2012 10:31:42] PHP Warning:  array_key_exists() expects parameter 2 to be array, null given in /home/alphatee/public_html/openId/Auth/Yadis/Manager.php on line 40
+[25-Sep-2012 10:31:42] PHP Warning:  array_key_exists() expects parameter 2 to be array, null given in /home/alphatee/public_html/openId/Auth/Yadis/Manager.php on line 40
+[25-Sep-2012 10:31:42] PHP Warning:  array_key_exists() expects parameter 2 to be array, null given in /home/alphatee/public_html/openId/Auth/Yadis/Manager.php on line 40
+[25-Sep-2012 10:31:42] PHP Warning:  file_get_contents(/home/alphatee/public_html/openId/tmp/google.tmp) [<a href='function.file-get-contents'>function.file-get-contents</a>]: failed to open stream: No such file or directory in /home/alphatee/public_html/openId/index.php on line 165
+[25-Sep-2012 10:31:43] Successfully fetched 'https://www.google.com/accounts/o8/.well-known/host-meta?hd=www.google.com': GET response code 400
+[25-Sep-2012 10:31:43] PHP Notice:  Received 400 when fetching https://www.google.com/accounts/o8/.well-known/host-meta?hd=www.google.com in /home/alphatee/public_html/openId/Auth/OpenID/google_discovery.php on line 189
+[25-Sep-2012 10:31:43] Successfully fetched 'https://www.google.com/accounts/o8/id': GET response code 200
+[25-Sep-2012 10:31:43] PHP Warning:  array_key_exists() expects parameter 2 to be array, null given in /home/alphatee/public_html/openId/Auth/Yadis/Manager.php on line 40
+[25-Sep-2012 10:31:46] PHP Warning:  array_key_exists() expects parameter 2 to be array, null given in /home/alphatee/public_html/openId/Auth/Yadis/Manager.php on line 40
+[25-Sep-2012 10:31:46] PHP Warning:  file_get_contents(/home/alphatee/public_html/openId/tmp/google.tmp) [<a href='function.file-get-contents'>function.file-get-contents</a>]: failed to open stream: No such file or directory in /home/alphatee/public_html/openId/index.php on line 165
+[25-Sep-2012 10:31:46] Successfully fetched 'https://www.google.com/accounts/o8/.well-known/host-meta?hd=www.google.com': GET response code 400
+[25-Sep-2012 10:31:46] PHP Notice:  Received 400 when fetching https://www.google.com/accounts/o8/.well-known/host-meta?hd=www.google.com in /home/alphatee/public_html/openId/Auth/OpenID/google_discovery.php on line 189
+[25-Sep-2012 10:31:46] Successfully fetched 'https://www.google.com/accounts/o8/id?id=AItOawkqSSxGmeWlbCDs_1YakC2XxqZ2eT7DXQI': GET response code 200
+[25-Sep-2012 10:31:46] PHP Warning:  array_key_exists() expects parameter 2 to be array, null given in /home/alphatee/public_html/openId/Auth/Yadis/Manager.php on line 40
+[25-Sep-2012 10:32:23] PHP Warning:  array_key_exists() expects parameter 2 to be array, null given in /home/alphatee/public_html/openId/Auth/Yadis/Manager.php on line 40
+[25-Sep-2012 10:32:23] PHP Warning:  array_key_exists() expects parameter 2 to be array, null given in /home/alphatee/public_html/openId/Auth/Yadis/Manager.php on line 40
+[25-Sep-2012 10:32:23] PHP Warning:  array_key_exists() expects parameter 2 to be array, null given in /home/alphatee/public_html/openId/Auth/Yadis/Manager.php on line 40
+[25-Sep-2012 10:32:23] PHP Warning:  file_get_contents(/home/alphatee/public_html/openId/tmp/google.tmp) [<a href='function.file-get-contents'>function.file-get-contents</a>]: failed to open stream: No such file or directory in /home/alphatee/public_html/openId/index.php on line 165
+[25-Sep-2012 10:32:23] Successfully fetched 'https://www.google.com/accounts/o8/.well-known/host-meta?hd=www.google.com': GET response code 400
+[25-Sep-2012 10:32:23] PHP Notice:  Received 400 when fetching https://www.google.com/accounts/o8/.well-known/host-meta?hd=www.google.com in /home/alphatee/public_html/openId/Auth/OpenID/google_discovery.php on line 189
+[25-Sep-2012 10:32:23] Successfully fetched 'https://www.google.com/accounts/o8/id': GET response code 200
+[25-Sep-2012 10:32:23] PHP Warning:  array_key_exists() expects parameter 2 to be array, null given in /home/alphatee/public_html/openId/Auth/Yadis/Manager.php on line 40
+[25-Sep-2012 10:32:25] PHP Warning:  array_key_exists() expects parameter 2 to be array, null given in /home/alphatee/public_html/openId/Auth/Yadis/Manager.php on line 40
+[25-Sep-2012 10:32:25] PHP Warning:  file_get_contents(/home/alphatee/public_html/openId/tmp/google.tmp) [<a href='function.file-get-contents'>function.file-get-contents</a>]: failed to open stream: No such file or directory in /home/alphatee/public_html/openId/index.php on line 165
+[25-Sep-2012 10:32:26] Successfully fetched 'https://www.google.com/accounts/o8/.well-known/host-meta?hd=www.google.com': GET response code 400
+[25-Sep-2012 10:32:26] PHP Notice:  Received 400 when fetching https://www.google.com/accounts/o8/.well-known/host-meta?hd=www.google.com in /home/alphatee/public_html/openId/Auth/OpenID/google_discovery.php on line 189
+[25-Sep-2012 10:32:26] Successfully fetched 'https://www.google.com/accounts/o8/id?id=AItOawkqSSxGmeWlbCDs_1YakC2XxqZ2eT7DXQI': GET response code 200
+[25-Sep-2012 10:32:26] PHP Warning:  array_key_exists() expects parameter 2 to be array, null given in /home/alphatee/public_html/openId/Auth/Yadis/Manager.php on line 40
+[25-Sep-2012 10:33:21] PHP Warning:  array_key_exists() expects parameter 2 to be array, null given in /home/alphatee/public_html/openId/Auth/Yadis/Manager.php on line 40
+[25-Sep-2012 10:33:21] PHP Warning:  array_key_exists() expects parameter 2 to be array, null given in /home/alphatee/public_html/openId/Auth/Yadis/Manager.php on line 40
+[25-Sep-2012 10:33:21] PHP Warning:  array_key_exists() expects parameter 2 to be array, null given in /home/alphatee/public_html/openId/Auth/Yadis/Manager.php on line 40
+[25-Sep-2012 10:33:21] PHP Warning:  file_get_contents(/home/alphatee/public_html/openId/tmp/google.tmp) [<a href='function.file-get-contents'>function.file-get-contents</a>]: failed to open stream: No such file or directory in /home/alphatee/public_html/openId/index.php on line 165
+[25-Sep-2012 10:33:21] Successfully fetched 'https://www.google.com/accounts/o8/.well-known/host-meta?hd=www.google.com': GET response code 400
+[25-Sep-2012 10:33:21] PHP Notice:  Received 400 when fetching https://www.google.com/accounts/o8/.well-known/host-meta?hd=www.google.com in /home/alphatee/public_html/openId/Auth/OpenID/google_discovery.php on line 189
+[25-Sep-2012 10:33:22] Successfully fetched 'https://www.google.com/accounts/o8/id': GET response code 200
+[25-Sep-2012 10:33:22] PHP Warning:  array_key_exists() expects parameter 2 to be array, null given in /home/alphatee/public_html/openId/Auth/Yadis/Manager.php on line 40
+[25-Sep-2012 10:33:22] PHP Warning:  array_key_exists() expects parameter 2 to be array, null given in /home/alphatee/public_html/openId/Auth/Yadis/Manager.php on line 40
+[25-Sep-2012 10:33:22] PHP Warning:  file_get_contents(/home/alphatee/public_html/openId/tmp/google.tmp) [<a href='function.file-get-contents'>function.file-get-contents</a>]: failed to open stream: No such file or directory in /home/alphatee/public_html/openId/index.php on line 165
+[25-Sep-2012 10:33:23] Successfully fetched 'https://www.google.com/accounts/o8/.well-known/host-meta?hd=www.google.com': GET response code 400
+[25-Sep-2012 10:33:23] PHP Notice:  Received 400 when fetching https://www.google.com/accounts/o8/.well-known/host-meta?hd=www.google.com in /home/alphatee/public_html/openId/Auth/OpenID/google_discovery.php on line 189
+[25-Sep-2012 10:33:23] Successfully fetched 'https://www.google.com/accounts/o8/id?id=AItOawkqSSxGmeWlbCDs_1YakC2XxqZ2eT7DXQI': GET response code 200
+[25-Sep-2012 10:33:23] PHP Warning:  array_key_exists() expects parameter 2 to be array, null given in /home/alphatee/public_html/openId/Auth/Yadis/Manager.php on line 40
+[25-Sep-2012 10:34:25] PHP Warning:  array_key_exists() expects parameter 2 to be array, null given in /home/alphatee/public_html/openId/Auth/Yadis/Manager.php on line 40
+[25-Sep-2012 10:34:25] PHP Warning:  array_key_exists() expects parameter 2 to be array, null given in /home/alphatee/public_html/openId/Auth/Yadis/Manager.php on line 40
+[25-Sep-2012 10:34:25] PHP Warning:  array_key_exists() expects parameter 2 to be array, null given in /home/alphatee/public_html/openId/Auth/Yadis/Manager.php on line 40
+[25-Sep-2012 10:34:25] PHP Warning:  file_get_contents(/home/alphatee/public_html/openId/tmp/google.tmp) [<a href='function.file-get-contents'>function.file-get-contents</a>]: failed to open stream: No such file or directory in /home/alphatee/public_html/openId/index.php on line 165
+[25-Sep-2012 10:34:25] Successfully fetched 'https://www.google.com/accounts/o8/.well-known/host-meta?hd=http://me.yahoo.com': GET response code 400
+[25-Sep-2012 10:34:25] PHP Notice:  Received 400 when fetching https://www.google.com/accounts/o8/.well-known/host-meta?hd=http://me.yahoo.com in /home/alphatee/public_html/openId/Auth/OpenID/google_discovery.php on line 189
+[25-Sep-2012 10:34:26] Successfully fetched 'https://me.yahoo.com/': GET response code 200
+[25-Sep-2012 10:34:26] Successfully fetched 'https://open.login.yahooapis.com/openid20/www.yahoo.com/xrds': GET response code 200
+[25-Sep-2012 10:34:26] PHP Warning:  array_key_exists() expects parameter 2 to be array, null given in /home/alphatee/public_html/openId/Auth/Yadis/Manager.php on line 40
+[25-Sep-2012 10:34:34] PHP Warning:  array_key_exists() expects parameter 2 to be array, null given in /home/alphatee/public_html/openId/Auth/Yadis/Manager.php on line 40
+[25-Sep-2012 10:34:34] PHP Warning:  file_get_contents(/home/alphatee/public_html/openId/tmp/google.tmp) [<a href='function.file-get-contents'>function.file-get-contents</a>]: failed to open stream: No such file or directory in /home/alphatee/public_html/openId/index.php on line 165
+[25-Sep-2012 10:34:35] Successfully fetched 'https://www.google.com/accounts/o8/.well-known/host-meta?hd=me.yahoo.com': GET response code 400
+[25-Sep-2012 10:34:35] PHP Notice:  Received 400 when fetching https://www.google.com/accounts/o8/.well-known/host-meta?hd=me.yahoo.com in /home/alphatee/public_html/openId/Auth/OpenID/google_discovery.php on line 189
+[25-Sep-2012 10:34:35] Successfully fetched 'https://me.yahoo.com/a/ti4xEGwph5cCFYMwcaR2paF.OsgQQpY1Aykg': GET response code 200
+[25-Sep-2012 10:34:35] Successfully fetched 'https://open.login.yahooapis.com/openid20/user_profile/xrds': GET response code 200
+[25-Sep-2012 10:34:35] PHP Warning:  array_key_exists() expects parameter 2 to be array, null given in /home/alphatee/public_html/openId/Auth/Yadis/Manager.php on line 40
+[25-Sep-2012 11:26:42] PHP Warning:  array_key_exists() expects parameter 2 to be array, null given in /home/alphatee/public_html/openId/Auth/Yadis/Manager.php on line 40
+[25-Sep-2012 11:26:42] PHP Warning:  file_get_contents(/home/alphatee/public_html/openId/tmp/google.tmp) [<a href='function.file-get-contents'>function.file-get-contents</a>]: failed to open stream: No such file or directory in /home/alphatee/public_html/openId/index.php on line 165
+[25-Sep-2012 11:26:42] Successfully fetched 'https://www.google.com/accounts/o8/.well-known/host-meta?hd=me.yahoo.com': GET response code 400
+[25-Sep-2012 11:26:42] PHP Notice:  Received 400 when fetching https://www.google.com/accounts/o8/.well-known/host-meta?hd=me.yahoo.com in /home/alphatee/public_html/openId/Auth/OpenID/google_discovery.php on line 189
+[25-Sep-2012 11:26:43] Successfully fetched 'https://me.yahoo.com/a/ti4xEGwph5cCFYMwcaR2paF.OsgQQpY1Aykg': GET response code 200
+[25-Sep-2012 11:26:43] Successfully fetched 'https://open.login.yahooapis.com/openid20/user_profile/xrds': GET response code 200
+[25-Sep-2012 11:30:52] PHP Warning:  array_key_exists() expects parameter 2 to be array, null given in /home/alphatee/public_html/openId/Auth/Yadis/Manager.php on line 40
+[25-Sep-2012 11:30:52] PHP Warning:  array_key_exists() expects parameter 2 to be array, null given in /home/alphatee/public_html/openId/Auth/Yadis/Manager.php on line 40
+[25-Sep-2012 11:30:52] PHP Warning:  array_key_exists() expects parameter 2 to be array, null given in /home/alphatee/public_html/openId/Auth/Yadis/Manager.php on line 40
+[25-Sep-2012 11:30:52] PHP Warning:  file_get_contents(/home/alphatee/public_html/openId/tmp/google.tmp) [<a href='function.file-get-contents'>function.file-get-contents</a>]: failed to open stream: No such file or directory in /home/alphatee/public_html/openId/index.php on line 165
+[25-Sep-2012 11:30:52] Successfully fetched 'https://www.google.com/accounts/o8/.well-known/host-meta?hd=www.google.com': GET response code 400
+[25-Sep-2012 11:30:52] PHP Notice:  Received 400 when fetching https://www.google.com/accounts/o8/.well-known/host-meta?hd=www.google.com in /home/alphatee/public_html/openId/Auth/OpenID/google_discovery.php on line 189
+[25-Sep-2012 11:30:52] Successfully fetched 'https://www.google.com/accounts/o8/id': GET response code 200
+[25-Sep-2012 11:30:52] PHP Warning:  array_key_exists() expects parameter 2 to be array, null given in /home/alphatee/public_html/openId/Auth/Yadis/Manager.php on line 40
+[25-Sep-2012 11:31:00] PHP Warning:  array_key_exists() expects parameter 2 to be array, null given in /home/alphatee/public_html/openId/Auth/Yadis/Manager.php on line 40
+[25-Sep-2012 11:31:00] PHP Warning:  file_get_contents(/home/alphatee/public_html/openId/tmp/google.tmp) [<a href='function.file-get-contents'>function.file-get-contents</a>]: failed to open stream: No such file or directory in /home/alphatee/public_html/openId/index.php on line 165
+[25-Sep-2012 11:31:00] Successfully fetched 'https://www.google.com/accounts/o8/.well-known/host-meta?hd=www.google.com': GET response code 400
+[25-Sep-2012 11:31:00] PHP Notice:  Received 400 when fetching https://www.google.com/accounts/o8/.well-known/host-meta?hd=www.google.com in /home/alphatee/public_html/openId/Auth/OpenID/google_discovery.php on line 189
+[25-Sep-2012 11:31:01] Successfully fetched 'https://www.google.com/accounts/o8/id?id=AItOawkqSSxGmeWlbCDs_1YakC2XxqZ2eT7DXQI': GET response code 200
+[25-Sep-2012 11:31:01] PHP Warning:  array_key_exists() expects parameter 2 to be array, null given in /home/alphatee/public_html/openId/Auth/Yadis/Manager.php on line 40
+[25-Sep-2012 11:32:25] PHP Warning:  array_key_exists() expects parameter 2 to be array, null given in /home/alphatee/public_html/openId/Auth/Yadis/Manager.php on line 40
+[25-Sep-2012 11:32:25] PHP Warning:  file_get_contents(/home/alphatee/public_html/openId/tmp/google.tmp) [<a href='function.file-get-contents'>function.file-get-contents</a>]: failed to open stream: No such file or directory in /home/alphatee/public_html/openId/index.php on line 165
+[25-Sep-2012 11:32:25] Successfully fetched 'https://www.google.com/accounts/o8/.well-known/host-meta?hd=www.google.com': GET response code 400
+[25-Sep-2012 11:32:25] PHP Notice:  Received 400 when fetching https://www.google.com/accounts/o8/.well-known/host-meta?hd=www.google.com in /home/alphatee/public_html/openId/Auth/OpenID/google_discovery.php on line 189
+[25-Sep-2012 11:32:25] Successfully fetched 'https://www.google.com/accounts/o8/id?id=AItOawkqSSxGmeWlbCDs_1YakC2XxqZ2eT7DXQI': GET response code 200
+[25-Sep-2012 11:32:25] PHP Warning:  array_key_exists() expects parameter 2 to be array, null given in /home/alphatee/public_html/openId/Auth/Yadis/Manager.php on line 40
+[25-Sep-2012 11:32:38] PHP Warning:  array_key_exists() expects parameter 2 to be array, null given in /home/alphatee/public_html/openId/Auth/Yadis/Manager.php on line 40
+[25-Sep-2012 11:32:38] PHP Warning:  array_key_exists() expects parameter 2 to be array, null given in /home/alphatee/public_html/openId/Auth/Yadis/Manager.php on line 40
+[25-Sep-2012 11:32:38] PHP Warning:  array_key_exists() expects parameter 2 to be array, null given in /home/alphatee/public_html/openId/Auth/Yadis/Manager.php on line 40
+[25-Sep-2012 11:32:38] PHP Warning:  file_get_contents(/home/alphatee/public_html/openId/tmp/google.tmp) [<a href='function.file-get-contents'>function.file-get-contents</a>]: failed to open stream: No such file or directory in /home/alphatee/public_html/openId/index.php on line 165
+[25-Sep-2012 11:32:38] Successfully fetched 'https://www.google.com/accounts/o8/.well-known/host-meta?hd=www.google.com': GET response code 400
+[25-Sep-2012 11:32:38] PHP Notice:  Received 400 when fetching https://www.google.com/accounts/o8/.well-known/host-meta?hd=www.google.com in /home/alphatee/public_html/openId/Auth/OpenID/google_discovery.php on line 189
+[25-Sep-2012 11:32:38] Successfully fetched 'https://www.google.com/accounts/o8/id': GET response code 200
+[25-Sep-2012 11:32:38] PHP Warning:  array_key_exists() expects parameter 2 to be array, null given in /home/alphatee/public_html/openId/Auth/Yadis/Manager.php on line 40
+[25-Sep-2012 11:32:43] PHP Warning:  array_key_exists() expects parameter 2 to be array, null given in /home/alphatee/public_html/openId/Auth/Yadis/Manager.php on line 40
+[25-Sep-2012 11:32:43] PHP Warning:  file_get_contents(/home/alphatee/public_html/openId/tmp/google.tmp) [<a href='function.file-get-contents'>function.file-get-contents</a>]: failed to open stream: No such file or directory in /home/alphatee/public_html/openId/index.php on line 165
+[25-Sep-2012 11:32:43] Successfully fetched 'https://www.google.com/accounts/o8/.well-known/host-meta?hd=www.google.com': GET response code 400
+[25-Sep-2012 11:32:43] PHP Notice:  Received 400 when fetching https://www.google.com/accounts/o8/.well-known/host-meta?hd=www.google.com in /home/alphatee/public_html/openId/Auth/OpenID/google_discovery.php on line 189
+[25-Sep-2012 11:32:43] Successfully fetched 'https://www.google.com/accounts/o8/id?id=AItOawkqSSxGmeWlbCDs_1YakC2XxqZ2eT7DXQI': GET response code 200
+[25-Sep-2012 11:32:43] PHP Warning:  array_key_exists() expects parameter 2 to be array, null given in /home/alphatee/public_html/openId/Auth/Yadis/Manager.php on line 40
+[25-Sep-2012 11:37:01] PHP Warning:  array_key_exists() expects parameter 2 to be array, null given in /home/alphatee/public_html/openId/Auth/Yadis/Manager.php on line 40
+[25-Sep-2012 11:37:01] PHP Warning:  array_key_exists() expects parameter 2 to be array, null given in /home/alphatee/public_html/openId/Auth/Yadis/Manager.php on line 40
+[25-Sep-2012 11:37:01] PHP Warning:  array_key_exists() expects parameter 2 to be array, null given in /home/alphatee/public_html/openId/Auth/Yadis/Manager.php on line 40
+[25-Sep-2012 11:37:01] PHP Warning:  file_get_contents(/home/alphatee/public_html/openId/tmp/google.tmp) [<a href='function.file-get-contents'>function.file-get-contents</a>]: failed to open stream: No such file or directory in /home/alphatee/public_html/openId/index.php on line 165
+[25-Sep-2012 11:37:01] Successfully fetched 'https://www.google.com/accounts/o8/.well-known/host-meta?hd=www.google.com': GET response code 400
+[25-Sep-2012 11:37:01] PHP Notice:  Received 400 when fetching https://www.google.com/accounts/o8/.well-known/host-meta?hd=www.google.com in /home/alphatee/public_html/openId/Auth/OpenID/google_discovery.php on line 189
+[25-Sep-2012 11:37:02] Successfully fetched 'https://www.google.com/accounts/o8/id': GET response code 200
+[25-Sep-2012 11:37:02] PHP Warning:  array_key_exists() expects parameter 2 to be array, null given in /home/alphatee/public_html/openId/Auth/Yadis/Manager.php on line 40
+[25-Sep-2012 11:37:04] PHP Warning:  array_key_exists() expects parameter 2 to be array, null given in /home/alphatee/public_html/openId/Auth/Yadis/Manager.php on line 40
+[25-Sep-2012 11:37:04] PHP Warning:  file_get_contents(/home/alphatee/public_html/openId/tmp/google.tmp) [<a href='function.file-get-contents'>function.file-get-contents</a>]: failed to open stream: No such file or directory in /home/alphatee/public_html/openId/index.php on line 165
+[25-Sep-2012 11:37:05] Successfully fetched 'https://www.google.com/accounts/o8/.well-known/host-meta?hd=www.google.com': GET response code 400
+[25-Sep-2012 11:37:05] PHP Notice:  Received 400 when fetching https://www.google.com/accounts/o8/.well-known/host-meta?hd=www.google.com in /home/alphatee/public_html/openId/Auth/OpenID/google_discovery.php on line 189
+[25-Sep-2012 11:37:05] Successfully fetched 'https://www.google.com/accounts/o8/id?id=AItOawkqSSxGmeWlbCDs_1YakC2XxqZ2eT7DXQI': GET response code 200
+[25-Sep-2012 11:37:05] PHP Warning:  array_key_exists() expects parameter 2 to be array, null given in /home/alphatee/public_html/openId/Auth/Yadis/Manager.php on line 40
+[25-Sep-2012 11:39:49] PHP Warning:  array_key_exists() expects parameter 2 to be array, null given in /home/alphatee/public_html/openId/Auth/Yadis/Manager.php on line 40
+[25-Sep-2012 11:39:49] PHP Warning:  array_key_exists() expects parameter 2 to be array, null given in /home/alphatee/public_html/openId/Auth/Yadis/Manager.php on line 40
+[25-Sep-2012 11:39:49] PHP Warning:  array_key_exists() expects parameter 2 to be array, null given in /home/alphatee/public_html/openId/Auth/Yadis/Manager.php on line 40
+[25-Sep-2012 11:39:49] PHP Warning:  file_get_contents(/home/alphatee/public_html/openId/tmp/google.tmp) [<a href='function.file-get-contents'>function.file-get-contents</a>]: failed to open stream: No such file or directory in /home/alphatee/public_html/openId/index.php on line 165
+[25-Sep-2012 11:39:49] Successfully fetched 'https://www.google.com/accounts/o8/.well-known/host-meta?hd=www.google.com': GET response code 400
+[25-Sep-2012 11:39:49] PHP Notice:  Received 400 when fetching https://www.google.com/accounts/o8/.well-known/host-meta?hd=www.google.com in /home/alphatee/public_html/openId/Auth/OpenID/google_discovery.php on line 189
+[25-Sep-2012 11:39:49] Successfully fetched 'https://www.google.com/accounts/o8/id': GET response code 200
+[25-Sep-2012 11:39:49] PHP Warning:  array_key_exists() expects parameter 2 to be array, null given in /home/alphatee/public_html/openId/Auth/Yadis/Manager.php on line 40
+[25-Sep-2012 11:39:51] PHP Warning:  array_key_exists() expects parameter 2 to be array, null given in /home/alphatee/public_html/openId/Auth/Yadis/Manager.php on line 40
+[25-Sep-2012 11:39:51] PHP Warning:  file_get_contents(/home/alphatee/public_html/openId/tmp/google.tmp) [<a href='function.file-get-contents'>function.file-get-contents</a>]: failed to open stream: No such file or directory in /home/alphatee/public_html/openId/index.php on line 165
+[25-Sep-2012 11:39:51] Successfully fetched 'https://www.google.com/accounts/o8/.well-known/host-meta?hd=www.google.com': GET response code 400
+[25-Sep-2012 11:39:51] PHP Notice:  Received 400 when fetching https://www.google.com/accounts/o8/.well-known/host-meta?hd=www.google.com in /home/alphatee/public_html/openId/Auth/OpenID/google_discovery.php on line 189
+[25-Sep-2012 11:39:51] Successfully fetched 'https://www.google.com/accounts/o8/id?id=AItOawkqSSxGmeWlbCDs_1YakC2XxqZ2eT7DXQI': GET response code 200
+[25-Sep-2012 11:39:51] PHP Warning:  array_key_exists() expects parameter 2 to be array, null given in /home/alphatee/public_html/openId/Auth/Yadis/Manager.php on line 40
+[25-Sep-2012 11:39:53] PHP Warning:  array_key_exists() expects parameter 2 to be array, null given in /home/alphatee/public_html/openId/Auth/Yadis/Manager.php on line 40
+[25-Sep-2012 11:39:53] PHP Warning:  array_key_exists() expects parameter 2 to be array, null given in /home/alphatee/public_html/openId/Auth/Yadis/Manager.php on line 40
+[25-Sep-2012 11:39:53] PHP Warning:  array_key_exists() expects parameter 2 to be array, null given in /home/alphatee/public_html/openId/Auth/Yadis/Manager.php on line 40
+[25-Sep-2012 11:39:53] PHP Warning:  file_get_contents(/home/alphatee/public_html/openId/tmp/google.tmp) [<a href='function.file-get-contents'>function.file-get-contents</a>]: failed to open stream: No such file or directory in /home/alphatee/public_html/openId/index.php on line 165
+[25-Sep-2012 11:39:54] Successfully fetched 'https://www.google.com/accounts/o8/.well-known/host-meta?hd=www.google.com': GET response code 400
+[25-Sep-2012 11:39:54] PHP Notice:  Received 400 when fetching https://www.google.com/accounts/o8/.well-known/host-meta?hd=www.google.com in /home/alphatee/public_html/openId/Auth/OpenID/google_discovery.php on line 189
+[25-Sep-2012 11:39:54] Successfully fetched 'https://www.google.com/accounts/o8/id': GET response code 200
+[25-Sep-2012 11:39:54] PHP Warning:  array_key_exists() expects parameter 2 to be array, null given in /home/alphatee/public_html/openId/Auth/Yadis/Manager.php on line 40
+[25-Sep-2012 11:39:55] PHP Warning:  array_key_exists() expects parameter 2 to be array, null given in /home/alphatee/public_html/openId/Auth/Yadis/Manager.php on line 40
+[25-Sep-2012 11:39:55] PHP Warning:  file_get_contents(/home/alphatee/public_html/openId/tmp/google.tmp) [<a href='function.file-get-contents'>function.file-get-contents</a>]: failed to open stream: No such file or directory in /home/alphatee/public_html/openId/index.php on line 165
+[25-Sep-2012 11:39:55] Successfully fetched 'https://www.google.com/accounts/o8/.well-known/host-meta?hd=www.google.com': GET response code 400
+[25-Sep-2012 11:39:55] PHP Notice:  Received 400 when fetching https://www.google.com/accounts/o8/.well-known/host-meta?hd=www.google.com in /home/alphatee/public_html/openId/Auth/OpenID/google_discovery.php on line 189
+[25-Sep-2012 11:39:56] Successfully fetched 'https://www.google.com/accounts/o8/id?id=AItOawkqSSxGmeWlbCDs_1YakC2XxqZ2eT7DXQI': GET response code 200
+[25-Sep-2012 11:39:56] PHP Warning:  array_key_exists() expects parameter 2 to be array, null given in /home/alphatee/public_html/openId/Auth/Yadis/Manager.php on line 40
+[25-Sep-2012 11:40:05] PHP Warning:  array_key_exists() expects parameter 2 to be array, null given in /home/alphatee/public_html/openId/Auth/Yadis/Manager.php on line 40
+[25-Sep-2012 11:40:05] PHP Warning:  array_key_exists() expects parameter 2 to be array, null given in /home/alphatee/public_html/openId/Auth/Yadis/Manager.php on line 40
+[25-Sep-2012 11:40:05] PHP Warning:  array_key_exists() expects parameter 2 to be array, null given in /home/alphatee/public_html/openId/Auth/Yadis/Manager.php on line 40
+[25-Sep-2012 11:40:05] PHP Warning:  file_get_contents(/home/alphatee/public_html/openId/tmp/google.tmp) [<a href='function.file-get-contents'>function.file-get-contents</a>]: failed to open stream: No such file or directory in /home/alphatee/public_html/openId/index.php on line 165
+[25-Sep-2012 11:40:05] Successfully fetched 'https://www.google.com/accounts/o8/.well-known/host-meta?hd=www.google.com': GET response code 400
+[25-Sep-2012 11:40:05] PHP Notice:  Received 400 when fetching https://www.google.com/accounts/o8/.well-known/host-meta?hd=www.google.com in /home/alphatee/public_html/openId/Auth/OpenID/google_discovery.php on line 189
+[25-Sep-2012 11:40:05] Successfully fetched 'https://www.google.com/accounts/o8/id': GET response code 200
+[25-Sep-2012 11:40:05] PHP Warning:  array_key_exists() expects parameter 2 to be array, null given in /home/alphatee/public_html/openId/Auth/Yadis/Manager.php on line 40
+[25-Sep-2012 11:40:06] PHP Warning:  array_key_exists() expects parameter 2 to be array, null given in /home/alphatee/public_html/openId/Auth/Yadis/Manager.php on line 40
+[25-Sep-2012 11:40:06] PHP Warning:  file_get_contents(/home/alphatee/public_html/openId/tmp/google.tmp) [<a href='function.file-get-contents'>function.file-get-contents</a>]: failed to open stream: No such file or directory in /home/alphatee/public_html/openId/index.php on line 165
+[25-Sep-2012 11:40:07] Successfully fetched 'https://www.google.com/accounts/o8/.well-known/host-meta?hd=www.google.com': GET response code 400
+[25-Sep-2012 11:40:07] PHP Notice:  Received 400 when fetching https://www.google.com/accounts/o8/.well-known/host-meta?hd=www.google.com in /home/alphatee/public_html/openId/Auth/OpenID/google_discovery.php on line 189
+[25-Sep-2012 11:40:07] Successfully fetched 'https://www.google.com/accounts/o8/id?id=AItOawkqSSxGmeWlbCDs_1YakC2XxqZ2eT7DXQI': GET response code 200
+[25-Sep-2012 11:40:07] PHP Warning:  array_key_exists() expects parameter 2 to be array, null given in /home/alphatee/public_html/openId/Auth/Yadis/Manager.php on line 40
+[25-Sep-2012 11:40:08] PHP Warning:  array_key_exists() expects parameter 2 to be array, null given in /home/alphatee/public_html/openId/Auth/Yadis/Manager.php on line 40
+[25-Sep-2012 11:40:08] PHP Warning:  array_key_exists() expects parameter 2 to be array, null given in /home/alphatee/public_html/openId/Auth/Yadis/Manager.php on line 40
+[25-Sep-2012 11:40:08] PHP Warning:  array_key_exists() expects parameter 2 to be array, null given in /home/alphatee/public_html/openId/Auth/Yadis/Manager.php on line 40
+[25-Sep-2012 11:40:08] PHP Warning:  file_get_contents(/home/alphatee/public_html/openId/tmp/google.tmp) [<a href='function.file-get-contents'>function.file-get-contents</a>]: failed to open stream: No such file or directory in /home/alphatee/public_html/openId/index.php on line 165
+[25-Sep-2012 11:40:08] Successfully fetched 'https://www.google.com/accounts/o8/.well-known/host-meta?hd=www.google.com': GET response code 400
+[25-Sep-2012 11:40:08] PHP Notice:  Received 400 when fetching https://www.google.com/accounts/o8/.well-known/host-meta?hd=www.google.com in /home/alphatee/public_html/openId/Auth/OpenID/google_discovery.php on line 189
+[25-Sep-2012 11:40:08] Successfully fetched 'https://www.google.com/accounts/o8/id': GET response code 200
+[25-Sep-2012 11:40:08] PHP Warning:  array_key_exists() expects parameter 2 to be array, null given in /home/alphatee/public_html/openId/Auth/Yadis/Manager.php on line 40
+[25-Sep-2012 11:40:09] PHP Warning:  array_key_exists() expects parameter 2 to be array, null given in /home/alphatee/public_html/openId/Auth/Yadis/Manager.php on line 40
+[25-Sep-2012 11:40:09] PHP Warning:  array_key_exists() expects parameter 2 to be array, null given in /home/alphatee/public_html/openId/Auth/Yadis/Manager.php on line 40
+[25-Sep-2012 11:40:09] PHP Warning:  array_key_exists() expects parameter 2 to be array, null given in /home/alphatee/public_html/openId/Auth/Yadis/Manager.php on line 40
+[25-Sep-2012 11:40:09] PHP Warning:  file_get_contents(/home/alphatee/public_html/openId/tmp/google.tmp) [<a href='function.file-get-contents'>function.file-get-contents</a>]: failed to open stream: No such file or directory in /home/alphatee/public_html/openId/index.php on line 165
+[25-Sep-2012 11:40:09] Successfully fetched 'https://www.google.com/accounts/o8/.well-known/host-meta?hd=www.google.com': GET response code 400
+[25-Sep-2012 11:40:09] PHP Notice:  Received 400 when fetching https://www.google.com/accounts/o8/.well-known/host-meta?hd=www.google.com in /home/alphatee/public_html/openId/Auth/OpenID/google_discovery.php on line 189
+[25-Sep-2012 11:40:10] Successfully fetched 'https://www.google.com/accounts/o8/id': GET response code 200
+[25-Sep-2012 11:40:10] PHP Warning:  array_key_exists() expects parameter 2 to be array, null given in /home/alphatee/public_html/openId/Auth/Yadis/Manager.php on line 40
+[25-Sep-2012 11:40:11] PHP Warning:  array_key_exists() expects parameter 2 to be array, null given in /home/alphatee/public_html/openId/Auth/Yadis/Manager.php on line 40
+[25-Sep-2012 11:40:11] PHP Warning:  file_get_contents(/home/alphatee/public_html/openId/tmp/google.tmp) [<a href='function.file-get-contents'>function.file-get-contents</a>]: failed to open stream: No such file or directory in /home/alphatee/public_html/openId/index.php on line 165
+[25-Sep-2012 11:40:11] Successfully fetched 'https://www.google.com/accounts/o8/.well-known/host-meta?hd=www.google.com': GET response code 400
+[25-Sep-2012 11:40:11] PHP Notice:  Received 400 when fetching https://www.google.com/accounts/o8/.well-known/host-meta?hd=www.google.com in /home/alphatee/public_html/openId/Auth/OpenID/google_discovery.php on line 189
+[25-Sep-2012 11:40:12] Successfully fetched 'https://www.google.com/accounts/o8/id?id=AItOawkqSSxGmeWlbCDs_1YakC2XxqZ2eT7DXQI': GET response code 200
+[25-Sep-2012 11:40:12] PHP Warning:  array_key_exists() expects parameter 2 to be array, null given in /home/alphatee/public_html/openId/Auth/Yadis/Manager.php on line 40
+[25-Sep-2012 11:40:15] PHP Warning:  array_key_exists() expects parameter 2 to be array, null given in /home/alphatee/public_html/openId/Auth/Yadis/Manager.php on line 40
+[25-Sep-2012 11:40:15] PHP Warning:  array_key_exists() expects parameter 2 to be array, null given in /home/alphatee/public_html/openId/Auth/Yadis/Manager.php on line 40
+[25-Sep-2012 11:40:15] PHP Warning:  array_key_exists() expects parameter 2 to be array, null given in /home/alphatee/public_html/openId/Auth/Yadis/Manager.php on line 40
+[25-Sep-2012 11:40:15] PHP Warning:  file_get_contents(/home/alphatee/public_html/openId/tmp/google.tmp) [<a href='function.file-get-contents'>function.file-get-contents</a>]: failed to open stream: No such file or directory in /home/alphatee/public_html/openId/index.php on line 165
+[25-Sep-2012 11:40:15] Successfully fetched 'https://www.google.com/accounts/o8/.well-known/host-meta?hd=www.google.com': GET response code 400
+[25-Sep-2012 11:40:15] PHP Notice:  Received 400 when fetching https://www.google.com/accounts/o8/.well-known/host-meta?hd=www.google.com in /home/alphatee/public_html/openId/Auth/OpenID/google_discovery.php on line 189
+[25-Sep-2012 11:40:15] Successfully fetched 'https://www.google.com/accounts/o8/id': GET response code 200
+[25-Sep-2012 11:40:15] PHP Warning:  array_key_exists() expects parameter 2 to be array, null given in /home/alphatee/public_html/openId/Auth/Yadis/Manager.php on line 40
+[25-Sep-2012 11:40:16] PHP Warning:  array_key_exists() expects parameter 2 to be array, null given in /home/alphatee/public_html/openId/Auth/Yadis/Manager.php on line 40
+[25-Sep-2012 11:40:16] PHP Warning:  file_get_contents(/home/alphatee/public_html/openId/tmp/google.tmp) [<a href='function.file-get-contents'>function.file-get-contents</a>]: failed to open stream: No such file or directory in /home/alphatee/public_html/openId/index.php on line 165
+[25-Sep-2012 11:40:16] Successfully fetched 'https://www.google.com/accounts/o8/.well-known/host-meta?hd=www.google.com': GET response code 400
+[25-Sep-2012 11:40:16] PHP Notice:  Received 400 when fetching https://www.google.com/accounts/o8/.well-known/host-meta?hd=www.google.com in /home/alphatee/public_html/openId/Auth/OpenID/google_discovery.php on line 189
+[25-Sep-2012 11:40:17] Successfully fetched 'https://www.google.com/accounts/o8/id?id=AItOawkqSSxGmeWlbCDs_1YakC2XxqZ2eT7DXQI': GET response code 200
+[25-Sep-2012 11:40:17] PHP Warning:  array_key_exists() expects parameter 2 to be array, null given in /home/alphatee/public_html/openId/Auth/Yadis/Manager.php on line 40
+[25-Sep-2012 11:40:35] PHP Warning:  array_key_exists() expects parameter 2 to be array, null given in /home/alphatee/public_html/openId/Auth/Yadis/Manager.php on line 40
+[25-Sep-2012 11:40:35] PHP Warning:  array_key_exists() expects parameter 2 to be array, null given in /home/alphatee/public_html/openId/Auth/Yadis/Manager.php on line 40
+[25-Sep-2012 11:40:35] PHP Warning:  array_key_exists() expects parameter 2 to be array, null given in /home/alphatee/public_html/openId/Auth/Yadis/Manager.php on line 40
+[25-Sep-2012 11:40:35] PHP Warning:  file_get_contents(/home/alphatee/public_html/openId/tmp/google.tmp) [<a href='function.file-get-contents'>function.file-get-contents</a>]: failed to open stream: No such file or directory in /home/alphatee/public_html/openId/index.php on line 165
+[25-Sep-2012 11:40:35] Successfully fetched 'https://www.google.com/accounts/o8/.well-known/host-meta?hd=http://me.yahoo.com': GET response code 400
+[25-Sep-2012 11:40:35] PHP Notice:  Received 400 when fetching https://www.google.com/accounts/o8/.well-known/host-meta?hd=http://me.yahoo.com in /home/alphatee/public_html/openId/Auth/OpenID/google_discovery.php on line 189
+[25-Sep-2012 11:40:36] Successfully fetched 'https://me.yahoo.com/': GET response code 200
+[25-Sep-2012 11:40:36] Successfully fetched 'https://open.login.yahooapis.com/openid20/www.yahoo.com/xrds': GET response code 200
+[25-Sep-2012 11:40:36] PHP Warning:  array_key_exists() expects parameter 2 to be array, null given in /home/alphatee/public_html/openId/Auth/Yadis/Manager.php on line 40
+[25-Sep-2012 11:40:38] PHP Warning:  array_key_exists() expects parameter 2 to be array, null given in /home/alphatee/public_html/openId/Auth/Yadis/Manager.php on line 40
+[25-Sep-2012 11:40:38] PHP Warning:  array_key_exists() expects parameter 2 to be array, null given in /home/alphatee/public_html/openId/Auth/Yadis/Manager.php on line 40
+[25-Sep-2012 11:40:38] PHP Warning:  array_key_exists() expects parameter 2 to be array, null given in /home/alphatee/public_html/openId/Auth/Yadis/Manager.php on line 40
+[25-Sep-2012 11:40:38] PHP Warning:  file_get_contents(/home/alphatee/public_html/openId/tmp/google.tmp) [<a href='function.file-get-contents'>function.file-get-contents</a>]: failed to open stream: No such file or directory in /home/alphatee/public_html/openId/index.php on line 165
+[25-Sep-2012 11:40:38] Successfully fetched 'https://www.google.com/accounts/o8/.well-known/host-meta?hd=www.google.com': GET response code 400
+[25-Sep-2012 11:40:38] PHP Notice:  Received 400 when fetching https://www.google.com/accounts/o8/.well-known/host-meta?hd=www.google.com in /home/alphatee/public_html/openId/Auth/OpenID/google_discovery.php on line 189
+[25-Sep-2012 11:40:38] Successfully fetched 'https://www.google.com/accounts/o8/id': GET response code 200
+[25-Sep-2012 11:40:38] PHP Warning:  array_key_exists() expects parameter 2 to be array, null given in /home/alphatee/public_html/openId/Auth/Yadis/Manager.php on line 40
+[25-Sep-2012 11:40:39] PHP Warning:  array_key_exists() expects parameter 2 to be array, null given in /home/alphatee/public_html/openId/Auth/Yadis/Manager.php on line 40
+[25-Sep-2012 11:40:39] PHP Warning:  file_get_contents(/home/alphatee/public_html/openId/tmp/google.tmp) [<a href='function.file-get-contents'>function.file-get-contents</a>]: failed to open stream: No such file or directory in /home/alphatee/public_html/openId/index.php on line 165
+[25-Sep-2012 11:40:39] Successfully fetched 'https://www.google.com/accounts/o8/.well-known/host-meta?hd=www.google.com': GET response code 400
+[25-Sep-2012 11:40:39] PHP Notice:  Received 400 when fetching https://www.google.com/accounts/o8/.well-known/host-meta?hd=www.google.com in /home/alphatee/public_html/openId/Auth/OpenID/google_discovery.php on line 189
+[25-Sep-2012 11:40:40] Successfully fetched 'https://www.google.com/accounts/o8/id?id=AItOawkqSSxGmeWlbCDs_1YakC2XxqZ2eT7DXQI': GET response code 200
+[25-Sep-2012 11:40:40] PHP Warning:  array_key_exists() expects parameter 2 to be array, null given in /home/alphatee/public_html/openId/Auth/Yadis/Manager.php on line 40
+[25-Sep-2012 11:41:13] PHP Warning:  array_key_exists() expects parameter 2 to be array, null given in /home/alphatee/public_html/openId/Auth/Yadis/Manager.php on line 40
+[25-Sep-2012 11:41:13] PHP Warning:  array_key_exists() expects parameter 2 to be array, null given in /home/alphatee/public_html/openId/Auth/Yadis/Manager.php on line 40
+[25-Sep-2012 11:41:13] PHP Warning:  array_key_exists() expects parameter 2 to be array, null given in /home/alphatee/public_html/openId/Auth/Yadis/Manager.php on line 40
+[25-Sep-2012 11:41:13] PHP Warning:  file_get_contents(/home/alphatee/public_html/openId/tmp/google.tmp) [<a href='function.file-get-contents'>function.file-get-contents</a>]: failed to open stream: No such file or directory in /home/alphatee/public_html/openId/index.php on line 165
+[25-Sep-2012 11:41:13] Successfully fetched 'https://www.google.com/accounts/o8/.well-known/host-meta?hd=www.google.com': GET response code 400
+[25-Sep-2012 11:41:13] PHP Notice:  Received 400 when fetching https://www.google.com/accounts/o8/.well-known/host-meta?hd=www.google.com in /home/alphatee/public_html/openId/Auth/OpenID/google_discovery.php on line 189
+[25-Sep-2012 11:41:13] Successfully fetched 'https://www.google.com/accounts/o8/id': GET response code 200
+[25-Sep-2012 11:41:13] PHP Warning:  array_key_exists() expects parameter 2 to be array, null given in /home/alphatee/public_html/openId/Auth/Yadis/Manager.php on line 40
+[25-Sep-2012 11:41:14] PHP Warning:  array_key_exists() expects parameter 2 to be array, null given in /home/alphatee/public_html/openId/Auth/Yadis/Manager.php on line 40
+[25-Sep-2012 11:41:14] PHP Warning:  file_get_contents(/home/alphatee/public_html/openId/tmp/google.tmp) [<a href='function.file-get-contents'>function.file-get-contents</a>]: failed to open stream: No such file or directory in /home/alphatee/public_html/openId/index.php on line 165
+[25-Sep-2012 11:41:14] PHP Warning:  array_key_exists() expects parameter 2 to be array, null given in /home/alphatee/public_html/openId/Auth/Yadis/Manager.php on line 40
+[25-Sep-2012 11:41:14] PHP Warning:  array_key_exists() expects parameter 2 to be array, null given in /home/alphatee/public_html/openId/Auth/Yadis/Manager.php on line 40
+[25-Sep-2012 11:41:14] PHP Warning:  array_key_exists() expects parameter 2 to be array, null given in /home/alphatee/public_html/openId/Auth/Yadis/Manager.php on line 40
+[25-Sep-2012 11:41:14] PHP Warning:  file_get_contents(/home/alphatee/public_html/openId/tmp/google.tmp) [<a href='function.file-get-contents'>function.file-get-contents</a>]: failed to open stream: No such file or directory in /home/alphatee/public_html/openId/index.php on line 165
+[25-Sep-2012 11:41:14] Successfully fetched 'https://www.google.com/accounts/o8/.well-known/host-meta?hd=www.google.com': GET response code 400
+[25-Sep-2012 11:41:14] PHP Notice:  Received 400 when fetching https://www.google.com/accounts/o8/.well-known/host-meta?hd=www.google.com in /home/alphatee/public_html/openId/Auth/OpenID/google_discovery.php on line 189
+[25-Sep-2012 11:41:14] Successfully fetched 'https://www.google.com/accounts/o8/.well-known/host-meta?hd=www.google.com': GET response code 400
+[25-Sep-2012 11:41:14] PHP Notice:  Received 400 when fetching https://www.google.com/accounts/o8/.well-known/host-meta?hd=www.google.com in /home/alphatee/public_html/openId/Auth/OpenID/google_discovery.php on line 189
+[25-Sep-2012 11:41:14] Successfully fetched 'https://www.google.com/accounts/o8/id?id=AItOawkqSSxGmeWlbCDs_1YakC2XxqZ2eT7DXQI': GET response code 200
+[25-Sep-2012 11:41:14] PHP Warning:  array_key_exists() expects parameter 2 to be array, null given in /home/alphatee/public_html/openId/Auth/Yadis/Manager.php on line 40
+[25-Sep-2012 11:41:15] Successfully fetched 'https://www.google.com/accounts/o8/id': GET response code 200
+[25-Sep-2012 11:41:15] PHP Warning:  array_key_exists() expects parameter 2 to be array, null given in /home/alphatee/public_html/openId/Auth/Yadis/Manager.php on line 40
+[25-Sep-2012 11:41:15] PHP Warning:  array_key_exists() expects parameter 2 to be array, null given in /home/alphatee/public_html/openId/Auth/Yadis/Manager.php on line 40
+[25-Sep-2012 11:41:15] PHP Warning:  file_get_contents(/home/alphatee/public_html/openId/tmp/google.tmp) [<a href='function.file-get-contents'>function.file-get-contents</a>]: failed to open stream: No such file or directory in /home/alphatee/public_html/openId/index.php on line 165
+[25-Sep-2012 11:41:16] Successfully fetched 'https://www.google.com/accounts/o8/.well-known/host-meta?hd=www.google.com': GET response code 400
+[25-Sep-2012 11:41:16] PHP Notice:  Received 400 when fetching https://www.google.com/accounts/o8/.well-known/host-meta?hd=www.google.com in /home/alphatee/public_html/openId/Auth/OpenID/google_discovery.php on line 189
+[25-Sep-2012 11:41:16] Successfully fetched 'https://www.google.com/accounts/o8/id?id=AItOawkqSSxGmeWlbCDs_1YakC2XxqZ2eT7DXQI': GET response code 200
+[25-Sep-2012 11:41:16] PHP Warning:  array_key_exists() expects parameter 2 to be array, null given in /home/alphatee/public_html/openId/Auth/Yadis/Manager.php on line 40
+[25-Sep-2012 11:42:25] PHP Warning:  array_key_exists() expects parameter 2 to be array, null given in /home/alphatee/public_html/openId/Auth/Yadis/Manager.php on line 40
+[25-Sep-2012 11:42:25] PHP Warning:  array_key_exists() expects parameter 2 to be array, null given in /home/alphatee/public_html/openId/Auth/Yadis/Manager.php on line 40
+[25-Sep-2012 11:42:25] PHP Warning:  array_key_exists() expects parameter 2 to be array, null given in /home/alphatee/public_html/openId/Auth/Yadis/Manager.php on line 40
+[25-Sep-2012 11:42:25] PHP Warning:  file_get_contents(/home/alphatee/public_html/openId/tmp/google.tmp) [<a href='function.file-get-contents'>function.file-get-contents</a>]: failed to open stream: No such file or directory in /home/alphatee/public_html/openId/index.php on line 165
+[25-Sep-2012 11:42:25] Successfully fetched 'https://www.google.com/accounts/o8/.well-known/host-meta?hd=www.google.com': GET response code 400
+[25-Sep-2012 11:42:25] PHP Notice:  Received 400 when fetching https://www.google.com/accounts/o8/.well-known/host-meta?hd=www.google.com in /home/alphatee/public_html/openId/Auth/OpenID/google_discovery.php on line 189
+[25-Sep-2012 11:42:25] Successfully fetched 'https://www.google.com/accounts/o8/id': GET response code 200
+[25-Sep-2012 11:42:25] PHP Warning:  array_key_exists() expects parameter 2 to be array, null given in /home/alphatee/public_html/openId/Auth/Yadis/Manager.php on line 40
+[25-Sep-2012 11:42:26] PHP Warning:  array_key_exists() expects parameter 2 to be array, null given in /home/alphatee/public_html/openId/Auth/Yadis/Manager.php on line 40
+[25-Sep-2012 11:42:26] PHP Warning:  file_get_contents(/home/alphatee/public_html/openId/tmp/google.tmp) [<a href='function.file-get-contents'>function.file-get-contents</a>]: failed to open stream: No such file or directory in /home/alphatee/public_html/openId/index.php on line 165
+[25-Sep-2012 11:42:26] Successfully fetched 'https://www.google.com/accounts/o8/.well-known/host-meta?hd=www.google.com': GET response code 400
+[25-Sep-2012 11:42:26] PHP Notice:  Received 400 when fetching https://www.google.com/accounts/o8/.well-known/host-meta?hd=www.google.com in /home/alphatee/public_html/openId/Auth/OpenID/google_discovery.php on line 189
+[25-Sep-2012 11:42:26] Successfully fetched 'https://www.google.com/accounts/o8/id?id=AItOawkqSSxGmeWlbCDs_1YakC2XxqZ2eT7DXQI': GET response code 200
+[25-Sep-2012 11:42:26] PHP Warning:  array_key_exists() expects parameter 2 to be array, null given in /home/alphatee/public_html/openId/Auth/Yadis/Manager.php on line 40
+[25-Sep-2012 11:43:08] PHP Warning:  array_key_exists() expects parameter 2 to be array, null given in /home/alphatee/public_html/openId/Auth/Yadis/Manager.php on line 40
+[25-Sep-2012 11:43:08] PHP Warning:  array_key_exists() expects parameter 2 to be array, null given in /home/alphatee/public_html/openId/Auth/Yadis/Manager.php on line 40
+[25-Sep-2012 11:43:08] PHP Warning:  array_key_exists() expects parameter 2 to be array, null given in /home/alphatee/public_html/openId/Auth/Yadis/Manager.php on line 40
+[25-Sep-2012 11:43:08] PHP Warning:  file_get_contents(/home/alphatee/public_html/openId/tmp/google.tmp) [<a href='function.file-get-contents'>function.file-get-contents</a>]: failed to open stream: No such file or directory in /home/alphatee/public_html/openId/index.php on line 165
+[25-Sep-2012 11:43:08] Successfully fetched 'https://www.google.com/accounts/o8/.well-known/host-meta?hd=www.google.com': GET response code 400
+[25-Sep-2012 11:43:08] PHP Notice:  Received 400 when fetching https://www.google.com/accounts/o8/.well-known/host-meta?hd=www.google.com in /home/alphatee/public_html/openId/Auth/OpenID/google_discovery.php on line 189
+[25-Sep-2012 11:43:08] Successfully fetched 'https://www.google.com/accounts/o8/id': GET response code 200
+[25-Sep-2012 11:43:08] PHP Warning:  array_key_exists() expects parameter 2 to be array, null given in /home/alphatee/public_html/openId/Auth/Yadis/Manager.php on line 40
+[25-Sep-2012 11:43:09] PHP Warning:  array_key_exists() expects parameter 2 to be array, null given in /home/alphatee/public_html/openId/Auth/Yadis/Manager.php on line 40
+[25-Sep-2012 11:43:09] PHP Warning:  file_get_contents(/home/alphatee/public_html/openId/tmp/google.tmp) [<a href='function.file-get-contents'>function.file-get-contents</a>]: failed to open stream: No such file or directory in /home/alphatee/public_html/openId/index.php on line 165
+[25-Sep-2012 11:43:10] Successfully fetched 'https://www.google.com/accounts/o8/.well-known/host-meta?hd=www.google.com': GET response code 400
+[25-Sep-2012 11:43:10] PHP Notice:  Received 400 when fetching https://www.google.com/accounts/o8/.well-known/host-meta?hd=www.google.com in /home/alphatee/public_html/openId/Auth/OpenID/google_discovery.php on line 189
+[25-Sep-2012 11:43:10] Successfully fetched 'https://www.google.com/accounts/o8/id?id=AItOawkqSSxGmeWlbCDs_1YakC2XxqZ2eT7DXQI': GET response code 200
+[25-Sep-2012 11:43:10] PHP Warning:  array_key_exists() expects parameter 2 to be array, null given in /home/alphatee/public_html/openId/Auth/Yadis/Manager.php on line 40
+[25-Sep-2012 11:44:02] PHP Warning:  array_key_exists() expects parameter 2 to be array, null given in /home/alphatee/public_html/openId/Auth/Yadis/Manager.php on line 40
+[25-Sep-2012 11:44:02] PHP Warning:  array_key_exists() expects parameter 2 to be array, null given in /home/alphatee/public_html/openId/Auth/Yadis/Manager.php on line 40
+[25-Sep-2012 11:44:02] PHP Warning:  array_key_exists() expects parameter 2 to be array, null given in /home/alphatee/public_html/openId/Auth/Yadis/Manager.php on line 40
+[25-Sep-2012 11:44:02] PHP Warning:  file_get_contents(/home/alphatee/public_html/openId/tmp/google.tmp) [<a href='function.file-get-contents'>function.file-get-contents</a>]: failed to open stream: No such file or directory in /home/alphatee/public_html/openId/index.php on line 165
+[25-Sep-2012 11:44:03] Successfully fetched 'https://www.google.com/accounts/o8/.well-known/host-meta?hd=www.google.com': GET response code 400
+[25-Sep-2012 11:44:03] PHP Notice:  Received 400 when fetching https://www.google.com/accounts/o8/.well-known/host-meta?hd=www.google.com in /home/alphatee/public_html/openId/Auth/OpenID/google_discovery.php on line 189
+[25-Sep-2012 11:44:03] Successfully fetched 'https://www.google.com/accounts/o8/id': GET response code 200
+[25-Sep-2012 11:44:03] PHP Warning:  array_key_exists() expects parameter 2 to be array, null given in /home/alphatee/public_html/openId/Auth/Yadis/Manager.php on line 40
+[25-Sep-2012 11:44:05] PHP Warning:  array_key_exists() expects parameter 2 to be array, null given in /home/alphatee/public_html/openId/Auth/Yadis/Manager.php on line 40
+[25-Sep-2012 11:44:05] PHP Warning:  file_get_contents(/home/alphatee/public_html/openId/tmp/google.tmp) [<a href='function.file-get-contents'>function.file-get-contents</a>]: failed to open stream: No such file or directory in /home/alphatee/public_html/openId/index.php on line 165
+[25-Sep-2012 11:44:06] Successfully fetched 'https://www.google.com/accounts/o8/.well-known/host-meta?hd=www.google.com': GET response code 400
+[25-Sep-2012 11:44:06] PHP Notice:  Received 400 when fetching https://www.google.com/accounts/o8/.well-known/host-meta?hd=www.google.com in /home/alphatee/public_html/openId/Auth/OpenID/google_discovery.php on line 189
+[25-Sep-2012 11:44:06] Successfully fetched 'https://www.google.com/accounts/o8/id?id=AItOawkqSSxGmeWlbCDs_1YakC2XxqZ2eT7DXQI': GET response code 200
+[25-Sep-2012 11:44:06] PHP Warning:  array_key_exists() expects parameter 2 to be array, null given in /home/alphatee/public_html/openId/Auth/Yadis/Manager.php on line 40
+[25-Sep-2012 11:44:56] PHP Warning:  array_key_exists() expects parameter 2 to be array, null given in /home/alphatee/public_html/openId/Auth/Yadis/Manager.php on line 40
+[25-Sep-2012 11:44:56] PHP Warning:  array_key_exists() expects parameter 2 to be array, null given in /home/alphatee/public_html/openId/Auth/Yadis/Manager.php on line 40
+[25-Sep-2012 11:44:56] PHP Warning:  array_key_exists() expects parameter 2 to be array, null given in /home/alphatee/public_html/openId/Auth/Yadis/Manager.php on line 40
+[25-Sep-2012 11:44:56] PHP Warning:  file_get_contents(/home/alphatee/public_html/openId/tmp/google.tmp) [<a href='function.file-get-contents'>function.file-get-contents</a>]: failed to open stream: No such file or directory in /home/alphatee/public_html/openId/index.php on line 165
+[25-Sep-2012 11:44:56] Successfully fetched 'https://www.google.com/accounts/o8/.well-known/host-meta?hd=www.google.com': GET response code 400
+[25-Sep-2012 11:44:56] PHP Notice:  Received 400 when fetching https://www.google.com/accounts/o8/.well-known/host-meta?hd=www.google.com in /home/alphatee/public_html/openId/Auth/OpenID/google_discovery.php on line 189
+[25-Sep-2012 11:44:56] Successfully fetched 'https://www.google.com/accounts/o8/id': GET response code 200
+[25-Sep-2012 11:44:56] PHP Warning:  array_key_exists() expects parameter 2 to be array, null given in /home/alphatee/public_html/openId/Auth/Yadis/Manager.php on line 40
+[25-Sep-2012 11:44:57] PHP Warning:  array_key_exists() expects parameter 2 to be array, null given in /home/alphatee/public_html/openId/Auth/Yadis/Manager.php on line 40
+[25-Sep-2012 11:44:57] PHP Warning:  file_get_contents(/home/alphatee/public_html/openId/tmp/google.tmp) [<a href='function.file-get-contents'>function.file-get-contents</a>]: failed to open stream: No such file or directory in /home/alphatee/public_html/openId/index.php on line 165
+[25-Sep-2012 11:44:58] Successfully fetched 'https://www.google.com/accounts/o8/.well-known/host-meta?hd=www.google.com': GET response code 400
+[25-Sep-2012 11:44:58] PHP Notice:  Received 400 when fetching https://www.google.com/accounts/o8/.well-known/host-meta?hd=www.google.com in /home/alphatee/public_html/openId/Auth/OpenID/google_discovery.php on line 189
+[25-Sep-2012 11:44:58] Successfully fetched 'https://www.google.com/accounts/o8/id?id=AItOawkqSSxGmeWlbCDs_1YakC2XxqZ2eT7DXQI': GET response code 200
+[25-Sep-2012 11:44:58] PHP Warning:  array_key_exists() expects parameter 2 to be array, null given in /home/alphatee/public_html/openId/Auth/Yadis/Manager.php on line 40
+[25-Sep-2012 11:50:19] PHP Warning:  array_key_exists() expects parameter 2 to be array, null given in /home/alphatee/public_html/openId/Auth/Yadis/Manager.php on line 40
+[25-Sep-2012 11:50:19] PHP Warning:  array_key_exists() expects parameter 2 to be array, null given in /home/alphatee/public_html/openId/Auth/Yadis/Manager.php on line 40
+[25-Sep-2012 11:50:19] PHP Warning:  array_key_exists() expects parameter 2 to be array, null given in /home/alphatee/public_html/openId/Auth/Yadis/Manager.php on line 40
+[25-Sep-2012 11:50:19] PHP Warning:  file_get_contents(/home/alphatee/public_html/openId/tmp/google.tmp) [<a href='function.file-get-contents'>function.file-get-contents</a>]: failed to open stream: No such file or directory in /home/alphatee/public_html/openId/index.php on line 165
+[25-Sep-2012 11:50:19] Successfully fetched 'https://www.google.com/accounts/o8/.well-known/host-meta?hd=www.google.com': GET response code 400
+[25-Sep-2012 11:50:19] PHP Notice:  Received 400 when fetching https://www.google.com/accounts/o8/.well-known/host-meta?hd=www.google.com in /home/alphatee/public_html/openId/Auth/OpenID/google_discovery.php on line 189
+[25-Sep-2012 11:50:19] Successfully fetched 'https://www.google.com/accounts/o8/id': GET response code 200
+[25-Sep-2012 11:50:19] PHP Warning:  array_key_exists() expects parameter 2 to be array, null given in /home/alphatee/public_html/openId/Auth/Yadis/Manager.php on line 40
+[25-Sep-2012 11:50:23] PHP Warning:  array_key_exists() expects parameter 2 to be array, null given in /home/alphatee/public_html/openId/Auth/Yadis/Manager.php on line 40
+[25-Sep-2012 11:50:23] PHP Warning:  file_get_contents(/home/alphatee/public_html/openId/tmp/google.tmp) [<a href='function.file-get-contents'>function.file-get-contents</a>]: failed to open stream: No such file or directory in /home/alphatee/public_html/openId/index.php on line 165
+[25-Sep-2012 11:50:23] Successfully fetched 'https://www.google.com/accounts/o8/.well-known/host-meta?hd=www.google.com': GET response code 400
+[25-Sep-2012 11:50:23] PHP Notice:  Received 400 when fetching https://www.google.com/accounts/o8/.well-known/host-meta?hd=www.google.com in /home/alphatee/public_html/openId/Auth/OpenID/google_discovery.php on line 189
+[25-Sep-2012 11:50:23] Successfully fetched 'https://www.google.com/accounts/o8/id?id=AItOawkqSSxGmeWlbCDs_1YakC2XxqZ2eT7DXQI': GET response code 200
+[25-Sep-2012 11:50:23] PHP Warning:  array_key_exists() expects parameter 2 to be array, null given in /home/alphatee/public_html/openId/Auth/Yadis/Manager.php on line 40
+[25-Sep-2012 12:05:42] Successfully fetched 'https://www.google.com/accounts/o8/.well-known/host-meta?hd=www.google.com': GET response code 400
+[25-Sep-2012 12:05:42] Successfully fetched 'https://www.google.com/accounts/o8/id': GET response code 200
+[25-Sep-2012 12:05:51] Successfully fetched 'https://www.google.com/accounts/o8/.well-known/host-meta?hd=www.google.com': GET response code 400
+[25-Sep-2012 12:05:51] Successfully fetched 'https://www.google.com/accounts/o8/id?id=AItOawkqSSxGmeWlbCDs_1YakC2XxqZ2eT7DXQI': GET response code 200
+[25-Sep-2012 12:08:07] PHP Warning:  require(fblogin/facebook.php) [<a href='function.require'>function.require</a>]: failed to open stream: No such file or directory in /home/alphatee/public_html/openId/facebook.php on line 2
+[25-Sep-2012 12:08:07] PHP Warning:  require(fblogin/facebook.php) [<a href='function.require'>function.require</a>]: failed to open stream: No such file or directory in /home/alphatee/public_html/openId/facebook.php on line 2
+[25-Sep-2012 12:08:07] PHP Fatal error:  require() [<a href='function.require'>function.require</a>]: Failed opening required 'fblogin/facebook.php' (include_path='.:/usr/lib/php:/usr/local/lib/php') in /home/alphatee/public_html/openId/facebook.php on line 2
+[25-Sep-2012 12:26:05] Successfully fetched 'https://www.google.com/accounts/o8/.well-known/host-meta?hd=www.google.com': GET response code 400
+[25-Sep-2012 12:26:05] Successfully fetched 'https://www.google.com/accounts/o8/id': GET response code 200
+[25-Sep-2012 12:26:08] Successfully fetched 'https://www.google.com/accounts/o8/.well-known/host-meta?hd=www.google.com': GET response code 400
+[25-Sep-2012 12:26:08] Successfully fetched 'https://www.google.com/accounts/o8/id?id=AItOawkqSSxGmeWlbCDs_1YakC2XxqZ2eT7DXQI': GET response code 200
+[25-Sep-2012 13:28:29] Successfully fetched 'https://www.google.com/accounts/o8/.well-known/host-meta?hd=www.google.com': GET response code 400
+[25-Sep-2012 13:28:29] Successfully fetched 'https://www.google.com/accounts/o8/id': GET response code 200
+[25-Sep-2012 13:28:45] Successfully fetched 'https://www.google.com/accounts/o8/.well-known/host-meta?hd=www.google.com': GET response code 400
+[25-Sep-2012 13:28:46] Successfully fetched 'https://www.google.com/accounts/o8/id?id=AItOawkqSSxGmeWlbCDs_1YakC2XxqZ2eT7DXQI': GET response code 200
+[27-Sep-2012 12:35:32] Successfully fetched 'https://www.google.com/accounts/o8/.well-known/host-meta?hd=www.google.com': GET response code 400
+[27-Sep-2012 12:35:32] Successfully fetched 'https://www.google.com/accounts/o8/id': GET response code 200
+[27-Sep-2012 12:35:34] Successfully fetched 'https://www.google.com/accounts/o8/ud': POST response code 200
+[27-Sep-2012 12:36:08] Successfully fetched 'https://www.google.com/accounts/o8/.well-known/host-meta?hd=www.google.com': GET response code 400
+[27-Sep-2012 12:36:08] Successfully fetched 'https://www.google.com/accounts/o8/id?id=AItOawkqSSxGmeWlbCDs_1YakC2XxqZ2eT7DXQI': GET response code 200
+[28-Sep-2012 14:28:42] Successfully fetched 'https://www.google.com/accounts/o8/.well-known/host-meta?hd=www.google.com': GET response code 400
+[28-Sep-2012 14:28:42] Successfully fetched 'https://www.google.com/accounts/o8/id': GET response code 200
+[28-Sep-2012 14:28:44] Successfully fetched 'https://www.google.com/accounts/o8/ud': POST response code 200
+[28-Sep-2012 14:29:09] Successfully fetched 'https://www.google.com/accounts/o8/.well-known/host-meta?hd=www.google.com': GET response code 400
+[28-Sep-2012 14:29:10] Successfully fetched 'https://www.google.com/accounts/o8/id?id=AItOawkqSSxGmeWlbCDs_1YakC2XxqZ2eT7DXQI': GET response code 200
+[28-Sep-2012 14:30:56] Successfully fetched 'https://www.google.com/accounts/o8/.well-known/host-meta?hd=www.google.com': GET response code 400
+[28-Sep-2012 14:30:56] Successfully fetched 'https://www.google.com/accounts/o8/id': GET response code 200
+[28-Sep-2012 14:31:06] Successfully fetched 'https://www.google.com/accounts/o8/.well-known/host-meta?hd=www.google.com': GET response code 400
+[28-Sep-2012 14:31:06] Successfully fetched 'https://www.google.com/accounts/o8/id?id=AItOawkqSSxGmeWlbCDs_1YakC2XxqZ2eT7DXQI': GET response code 200
+[28-Sep-2012 14:32:59] Successfully fetched 'https://www.google.com/accounts/o8/.well-known/host-meta?hd=www.google.com': GET response code 400
+[28-Sep-2012 14:32:59] Successfully fetched 'https://www.google.com/accounts/o8/id': GET response code 200
+[28-Sep-2012 14:33:03] Successfully fetched 'https://www.google.com/accounts/o8/.well-known/host-meta?hd=www.google.com': GET response code 400
+[28-Sep-2012 14:33:03] Successfully fetched 'https://www.google.com/accounts/o8/id?id=AItOawkqSSxGmeWlbCDs_1YakC2XxqZ2eT7DXQI': GET response code 200
+[28-Sep-2012 14:34:52] Successfully fetched 'https://www.google.com/accounts/o8/.well-known/host-meta?hd=www.google.com': GET response code 400
+[28-Sep-2012 14:34:52] Successfully fetched 'https://www.google.com/accounts/o8/id': GET response code 200
+[28-Sep-2012 14:35:16] Successfully fetched 'https://www.google.com/accounts/o8/.well-known/host-meta?hd=www.google.com': GET response code 400
+[28-Sep-2012 14:35:16] Successfully fetched 'https://www.google.com/accounts/o8/id?id=AItOawmWy-qJpYBlsvX5SE0SeDG_9RiSKykz89s': GET response code 200
+[28-Sep-2012 14:38:25] Successfully fetched 'https://www.google.com/accounts/o8/.well-known/host-meta?hd=www.google.com': GET response code 400
+[28-Sep-2012 14:38:25] Successfully fetched 'https://www.google.com/accounts/o8/id': GET response code 200

@@ -1,0 +1,235 @@
+/*
+Stylish Select 0.4.1 - $ plugin to replace a select drop down box with a stylable unordered list
+http://scottdarby.com/
+
+Copyright (c) 2009 Scott Darby
+
+Requires: jQuery 1.3 or newer
+
+Dual licensed under the MIT and GPL licenses.
+
+*/
+
+
+/*==================================
+Hide lists on page load
+====================================*/
+
+.stylish-select ul.newList {left:-9999px;}
+
+/*==================================
+red curvy example
+====================================*/
+ul.newList * {margin:0; padding:0;}
+ul.newList a {color: #000; text-decoration:none; display:block;}
+ul.newList {margin:0; padding:0; list-style:none; color:#000;  background:#fff; position:absolute;  border:1px solid #ccc; top:22px; left:0; overflow:auto; z-index:9999;}
+.newListSelected { color:#000;  height:19px; padding:0 0 0 0; float:left; background-image:url(../images/select-arrow.png);background-repeat:no-repeat;}
+.newListSelected span {width:284px; display:block;}
+ul.newList li a {padding:1px 4px 3px 7px; display: block;}
+ul.newList li a:focus {-moz-outline-style: none;}
+.selectedTxt {  height:16px; padding:0 30px 0 0;}
+.hiLite {background:#650101!important; color:#fff!important;}
+.hiLite a {background:#650101!important; color:#fff!important;}
+.newListHover {background:#ccc!important; color:#000!important; cursor:default;}
+.newListSelHover, .newListSelFocus {background-position:0 -22px; cursor:default;}
+.newListOptionTitle {font-weight:bold;}
+.newListOptionTitle ul {margin:3px 0 0;}
+.newListOptionTitle li {font-weight:normal; border-left:1px solid #ccc;}
+
+/*======================================
+windows xp style - div that contains the 
+<select> has been given an id of #win-xp
+(for the purposes of this example
+========================================*/
+#win-xp .newListSelected {background:#FFF url(dropdown.gif) no-repeat scroll 155px 1px; border:1px solid #A5ACB2; color:#000; height:17px; margin-bottom:10px; padding:0; width:173px;}
+#win-xp .newListSelected div {display:block; font-size:0.85em; padding:2px 21px 2px 4px; text-align:left !important; width:149px;}
+#win-xp ul.newList {list-style:none; color:#000; width:172px; background:#fff; border:1px solid #000; top:22px; left:0; height:auto; overflow:auto; font-size: 0.85em; text-align:left!important; position:absolute; z-index:9999;}
+#win-xp ul.newList li {padding:2px 5px!important; border-bottom: 1px solid #cccccc;}
+#win-xp .hiLite {background:#316ac5!important; color:#fff!important;}
+#win-xp .newListHover {background:#ccc!important; color:#000!important; cursor:default;}
+#win-xp .newListSelHover {cursor:default;}
+#win-xp .newListSelHover, #win-xp .newListSelFocus {background-position:auto;}
+#win-xp .newListSelHover div, #win-xp .newListSelFocus div {font-weight:bold;}
+
+.comment-actions .yt-uix-button-group .yt-uix-button {
+    margin-left: 0;
+}
+.comment-actions .yt-uix-button-group, .comment-actions .yt-uix-button {
+    margin-left: 3px;
+}
+.comment-actions .yt-uix-button {
+    height: 21px;
+    padding: 0 4px;
+}
+www-co...ozX.css (line 1)
+.yt-uix-button-group .start {
+    border-bottom-left-radius: 3px;
+    border-top-left-radius: 3px;
+}
+www-co...ozX.css (line 1)
+.yt-uix-button-group .yt-uix-button {
+    border-radius: 0 0 0 0;
+    border-right-style: none;
+}
+www-co...ozX.css (line 1)
+.yt-uix-button-default, a.yt-uix-button-default .yt-uix-button-content {
+    color: #555555;
+}
+www-co...ozX.css (line 1)
+.yt-uix-button-default, body .yt-uix-button-default[disabled] {
+    background-color: #E0E0E0;
+    background-image: -moz-linear-gradient(center top , #FFFFFF 0pt, #E0E0E0 100%);
+    border-color: #CCCCCC #CCCCCC #AAAAAA;
+    box-shadow: 0 0 1px #FFFFFF inset;
+    text-shadow: 0 1px 0 #FFFFFF;
+}
+www-co...ozX.css (line 1)
+.yt-uix-button {
+    border: 1px solid;
+    border-radius: 3px 3px 3px 3px;
+    cursor: pointer;
+    font-size: 11px;
+    font-weight: bold;
+    height: 2.95em;
+    outline: 0 none;
+    padding: 0 0.91em;
+    vertical-align: middle;
+    white-space: nowrap;
+    word-wrap: normal;
+}
+www-co...ozX.css (line 1)
+body, button, input, textarea {
+    font: 12px arial,sans-serif;
+}
+www-co...ozX.css (line 1)
+a, abbr, acronym, address, applet, b, big, blockquote, button, canvas, caption, center, cite, code, dd, del, dfn, div, dl, dt, em, embed, fieldset, font, form, h1, h2, h3, h4, h5, h6, hr, html, i, iframe, img, ins, kbd, label, legend, li, menu, object, ol, p, pre, q, s, samp, small, span, strike, strong, sub, sup, table, tbody, td, tfoot, th, thead, tr, tt, u, ul, var {
+    background: none repeat scroll 0 0 transparent;
+    border: 0 none;
+    font-size: 100%;
+    margin: 0;
+    padding: 0;
+}
+www-co...ozX.css (line 1)
+Inherited fromspan.yt-uix-button-group
+.yt-uix-button-group {
+    white-space: nowrap;
+}
+www-co...ozX.css (line 1)
+a, abbr, acronym, address, applet, b, big, blockquote, button, canvas, caption, center, cite, code, dd, del, dfn, div, dl, dt, em, embed, fieldset, font, form, h1, h2, h3, h4, h5, h6, hr, html, i, iframe, img, ins, kbd, label, legend, li, menu, object, ol, p, pre, q, s, samp, small, span, strike, strong, sub, sup, table, tbody, td, tfoot, th, thead, tr, tt, u, ul, var {
+    font-size: 100%;
+}
+www-co...ozX.css (line 1)
+Inherited fromdiv.comment-actions
+a, abbr, acronym, address, applet, b, big, blockquote, button, canvas, caption, center, cite, code, dd, del, dfn, div, dl, dt, em, embed, fieldset, font, form, h1, h2, h3, h4, h5, h6, hr, html, i, iframe, img, ins, kbd, label, legend, li, menu, object, ol, p, pre, q, s, samp, small, span, strike, strong, sub, sup, table, tbody, td, tfoot, th, thead, tr, tt, u, ul, var {
+    font-size: 100%;
+}
+www-co...ozX.css (line 1)
+Inherited fromdiv.content-container
+a, abbr, acronym, address, applet, b, big, blockquote, button, canvas, caption, center, cite, code, dd, del, dfn, div, dl, dt, em, embed, fieldset, font, form, h1, h2, h3, h4, h5, h6, hr, html, i, iframe, img, ins, kbd, label, legend, li, menu, object, ol, p, pre, q, s, samp, small, span, strike, strong, sub, sup, table, tbody, td, tfoot, th, thead, tr, tt, u, ul, var {
+    font-size: 100%;
+}
+www-co...ozX.css (line 1)
+Inherited fromdiv.comment-body
+a, abbr, acronym, address, applet, b, big, blockquote, button, canvas, caption, center, cite, code, dd, del, dfn, div, dl, dt, em, embed, fieldset, font, form, h1, h2, h3, h4, h5, h6, hr, html, i, iframe, img, ins, kbd, label, legend, li, menu, object, ol, p, pre, q, s, samp, small, span, strike, strong, sub, sup, table, tbody, td, tfoot, th, thead, tr, tt, u, ul, var {
+    font-size: 100%;
+}
+www-co...ozX.css (line 1)
+Inherited fromli.comment
+.yt-tile-default, .yt-tile-default a, .yt-tile-visible, .yt-tile-visible a {
+    color: #333333;
+}
+www-co...ozX.css (line 1)
+.yt-tile-default, .yt-tile-static, .yt-tile-visible {
+    color: #666666;
+    font-size: 11px;
+}
+www-co...ozX.css (line 1)
+a, abbr, acronym, address, applet, b, big, blockquote, button, canvas, caption, center, cite, code, dd, del, dfn, div, dl, dt, em, embed, fieldset, font, form, h1, h2, h3, h4, h5, h6, hr, html, i, iframe, img, ins, kbd, label, legend, li, menu, object, ol, p, pre, q, s, samp, small, span, strike, strong, sub, sup, table, tbody, td, tfoot, th, thead, tr, tt, u, ul, var {
+    font-size: 100%;
+}
+www-co...ozX.css (line 1)
+Inherited fromul#live_comments.comment-list
+a, abbr, acronym, address, applet, b, big, blockquote, button, canvas, caption, center, cite, code, dd, del, dfn, div, dl, dt, em, embed, fieldset, font, form, h1, h2, h3, h4, h5, h6, hr, html, i, iframe, img, ins, kbd, label, legend, li, menu, object, ol, p, pre, q, s, samp, small, span, strike, strong, sub, sup, table, tbody, td, tfoot, th, thead, tr, tt, u, ul, var {
+    font-size: 100%;
+}
+www-co...ozX.css (line 1)
+menu, ol, ul {
+    list-style: none outside none;
+}
+www-co...ozX.css (line 1)
+Inherited fromdiv.comments-section
+a, abbr, acronym, address, applet, b, big, blockquote, button, canvas, caption, center, cite, code, dd, del, dfn, div, dl, dt, em, embed, fieldset, font, form, h1, h2, h3, h4, h5, h6, hr, html, i, iframe, img, ins, kbd, label, legend, li, menu, object, ol, p, pre, q, s, samp, small, span, strike, strong, sub, sup, table, tbody, td, tfoot, th, thead, tr, tt, u, ul, var {
+    font-size: 100%;
+}
+www-co...ozX.css (line 1)
+Inherited fromdiv#comments-view
+a, abbr, acronym, address, applet, b, big, blockquote, button, canvas, caption, center, cite, code, dd, del, dfn, div, dl, dt, em, embed, fieldset, font, form, h1, h2, h3, h4, h5, h6, hr, html, i, iframe, img, ins, kbd, label, legend, li, menu, object, ol, p, pre, q, s, samp, small, span, strike, strong, sub, sup, table, tbody, td, tfoot, th, thead, tr, tt, u, ul, var {
+    font-size: 100%;
+}
+www-co...ozX.css (line 1)
+Inherited fromdiv#watch-discussion
+a, abbr, acronym, address, applet, b, big, blockquote, button, canvas, caption, center, cite, code, dd, del, dfn, div, dl, dt, em, embed, fieldset, font, form, h1, h2, h3, h4, h5, h6, hr, html, i, iframe, img, ins, kbd, label, legend, li, menu, object, ol, p, pre, q, s, samp, small, span, strike, strong, sub, sup, table, tbody, td, tfoot, th, thead, tr, tt, u, ul, var {
+    font-size: 100%;
+}
+www-co...ozX.css (line 1)
+Inherited fromdiv#watch-panel
+a, abbr, acronym, address, applet, b, big, blockquote, button, canvas, caption, center, cite, code, dd, del, dfn, div, dl, dt, em, embed, fieldset, font, form, h1, h2, h3, h4, h5, h6, hr, html, i, iframe, img, ins, kbd, label, legend, li, menu, object, ol, p, pre, q, s, samp, small, span, strike, strong, sub, sup, table, tbody, td, tfoot, th, thead, tr, tt, u, ul, var {
+    font-size: 100%;
+}
+www-co...ozX.css (line 1)
+Inherited fromdiv#watch-main
+a, abbr, acronym, address, applet, b, big, blockquote, button, canvas, caption, center, cite, code, dd, del, dfn, div, dl, dt, em, embed, fieldset, font, form, h1, h2, h3, h4, h5, h6, hr, html, i, iframe, img, ins, kbd, label, legend, li, menu, object, ol, p, pre, q, s, samp, small, span, strike, strong, sub, sup, table, tbody, td, tfoot, th, thead, tr, tt, u, ul, var {
+    font-size: 100%;
+}
+www-co...ozX.css (line 1)
+Inherited fromdiv#watch-main-container
+a, abbr, acronym, address, applet, b, big, blockquote, button, canvas, caption, center, cite, code, dd, del, dfn, div, dl, dt, em, embed, fieldset, font, form, h1, h2, h3, h4, h5, h6, hr, html, i, iframe, img, ins, kbd, label, legend, li, menu, object, ol, p, pre, q, s, samp, small, span, strike, strong, sub, sup, table, tbody, td, tfoot, th, thead, tr, tt, u, ul, var {
+    font-size: 100%;
+}
+www-co...ozX.css (line 1)
+Inherited fromdiv#watch-container
+a, abbr, acronym, address, applet, b, big, blockquote, button, canvas, caption, center, cite, code, dd, del, dfn, div, dl, dt, em, embed, fieldset, font, form, h1, h2, h3, h4, h5, h6, hr, html, i, iframe, img, ins, kbd, label, legend, li, menu, object, ol, p, pre, q, s, samp, small, span, strike, strong, sub, sup, table, tbody, td, tfoot, th, thead, tr, tt, u, ul, var {
+    font-size: 100%;
+}
+www-co...ozX.css (line 1)
+Inherited fromdiv#content
+a, abbr, acronym, address, applet, b, big, blockquote, button, canvas, caption, center, cite, code, dd, del, dfn, div, dl, dt, em, embed, fieldset, font, form, h1, h2, h3, h4, h5, h6, hr, html, i, iframe, img, ins, kbd, label, legend, li, menu, object, ol, p, pre, q, s, samp, small, span, strike, strong, sub, sup, table, tbody, td, tfoot, th, thead, tr, tt, u, ul, var {
+    font-size: 100%;
+}
+www-co...ozX.css (line 1)
+Inherited fromdiv#content-container
+a, abbr, acronym, address, applet, b, big, blockquote, button, canvas, caption, center, cite, code, dd, del, dfn, div, dl, dt, em, embed, fieldset, font, form, h1, h2, h3, h4, h5, h6, hr, html, i, iframe, img, ins, kbd, label, legend, li, menu, object, ol, p, pre, q, s, samp, small, span, strike, strong, sub, sup, table, tbody, td, tfoot, th, thead, tr, tt, u, ul, var {
+    font-size: 100%;
+}
+www-co...ozX.css (line 1)
+Inherited fromdiv#page.
+a, abbr, acronym, address, applet, b, big, blockquote, button, canvas, caption, center, cite, code, dd, del, dfn, div, dl, dt, em, embed, fieldset, font, form, h1, h2, h3, h4, h5, h6, hr, html, i, iframe, img, ins, kbd, label, legend, li, menu, object, ol, p, pre, q, s, samp, small, span, strike, strong, sub, sup, table, tbody, td, tfoot, th, thead, tr, tt, u, ul, var {
+    font-size: 100%;
+}
+www-co...ozX.css (line 1)
+Inherited frombody.date-20120427
+body {
+    color: #333333;
+}
+www-co...ozX.css (line 1)
+body, button, input, textarea {
+    font: 12px arial,sans-serif;
+}
+www-co...ozX.css (line 1)
+body {
+    word-wrap: break-word;
+}
+www-co...ozX.css (line 1)
+body {
+    font-size: 100%;
+}
+www-co...ozX.css (line 1)
+body {
+    line-height: 1;
+    text-align: left;
+}
+www-co...ozX.css (line 1)
+Inherited fromhtml
+a, abbr, acronym, address, applet, b, big, blockquote, button, canvas, caption, center, cite, code, dd, del, dfn, div, dl, dt, em, embed, fieldset, font, form, h1, h2, h3, h4, h5, h6, hr, html, i, iframe, img, ins, kbd, label, legend, li, menu, object, ol, p, pre, q, s, samp, small, span, strike, strong, sub, sup, table, tbody, td, tfoot, th, thead, tr, tt, u, ul, var {
+    font-size: 100%;
+}

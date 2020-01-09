@@ -1,0 +1,158 @@
+<?php /*Copyrights  2008-2009 B3 Technologies Pty Ltd. All rights reserved.*/ ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Document > New</title>
+<?php $this->load->view('common/view_head');?>
+<?php $this->load->view('editor/editor_js.php');?>
+<script>
+var workPlace_name='<?php echo $_SESSION['workPlaceId'];?>'; 
+var workSpace_name='<?php echo $workSpaceId;?>';
+var workSpace_user='<?php echo $_SESSION['userId'];?>';
+</script>
+<script language="javascript">
+var baseUrl 		= '<?php echo base_url();?>';	
+var workSpaceId		= '<?php echo $workSpaceId;?>';
+var workSpaceType	= '<?php echo $workSpaceType;?>';
+</script>
+
+
+</head>
+<body >
+<div id="wrap1">
+  <div id="header-wrap">
+    <?php $this->load->view('common/header_for_mobile'); ?>
+    <?php $this->load->view('common/wp_header'); ?>
+    <?php $this->load->view('common/artifact_tabs_for_mobile', $details); ?>
+  </div>
+</div>
+<div id="container" style="width:87.3%" >
+  <div id="content"> 
+    <!-- Main menu -->
+    <?php
+			$workSpaces 				= $this->identity_db_manager->getWorkSpacesByWorkPlaceId( $_SESSION['workPlaceId'],$_SESSION['userId'] );
+			$workSpaceDetails			= $this->identity_db_manager->getWorkSpaceDetailsByWorkSpaceId($workSpaceId);	
+			$details['workSpaces']		= $workSpaces;
+			$details['workSpaceId'] 	= $workSpaceId;
+			if($workSpaceId > 0)
+			{				
+				$details['workSpaceName'] 	= $workSpaceDetails['workSpaceName'];
+			}
+			else
+			{
+				$details['workSpaceName'] 	= $this->lang->line('txt_Me');	
+			}
+			?>
+    <!-- Main Body -->
+    <form action="<?php echo base_url();?>process_document" name="frmDocument" id="frmDocument" method="post" enctype="multipart/form-data">
+      <table width="100%" border="0" cellpadding="0" cellspacing="0">
+         <tr>
+                <td width="32%" align="left" valign="top" class="tdSpace"><span class="docLabel"><?php echo $this->lang->line('txt_Version');?></span>: 1 </td></tr>
+                <tr> <td width="38%" align="left" valign="middle"><span class="docLabel"><?php echo $this->lang->line('txt_Originator');?></span>: <?php echo $_SESSION['userTagName'];//echo $_SESSION['userFirstName'].' '.$_SESSION['userLastName'];?></td></tr>
+                <tr> 
+                <td width="30%" align="left" valign="middle"><span class="docLabel"><?php echo $this->lang->line('txt_Date');?></span>: <?php echo $this->time_manager->getUserTimeFromGMTTime($this->time_manager->getGMTTime(),'m-d-Y h:i A');?></td>
+              </tr>
+              <tr>
+                <td colspan="3" align="left" valign="top" class="tdSpace"><br>
+                  <span class="docLabel"><?php echo $this->lang->line('txt_Document_Title');?></span>: <span id="docTitle">
+                  <textarea name="documentTitle" id="documentTitle"  ></textarea>
+                  <!--<input type="text" name="documentTitle" value="" id="documentTitle" size="40">	--> 
+                  </span></a></td>
+              </tr>
+            </table></td>
+        </tr>
+        <?php
+	if(isset($_SESSION['errorMsg']) && $_SESSION['errorMsg'] !=	"")
+	{
+	?>
+        
+          <td height="18"><span class="errorMsg"><?php echo $_SESSION['errorMsg']; $_SESSION['errorMsg'] ='';?></span></td>
+          <?php
+	}
+	?>
+        <tr>
+          <td height="250" valign="top" bgcolor="#FFFFFF"><table width="100%" border="0" cellspacing="0" cellpadding="8">
+              <tr>
+                <td valign="top"><table width="100%" border="0" cellspacing="0" cellpadding="0">
+                    <tr>
+                      <td valign="top"><table width="92%" cellpadding="0" cellspacing="0" >
+                          <tr>
+                            <td class="tdSpace"><br>
+                              <span class="docLabel"><?php echo $this->lang->line('txt_Idea');?></span>:
+                              <input type="hidden" name="saveOption1" value="0" id="saveOption1">
+                              <input type="hidden" name="titleOption" value="0" id="titleOption">
+                              <input type="hidden" name="nextPage" value="exit" id="nextPage">
+                              <input type="hidden" name="workSpaceId" value="<?php echo $workSpaceId;?>" id="workSpaceId">
+                              <input type="hidden" name="workSpaceType" value="<?php echo $workSpaceType;?>" id="workSpaceType">
+                              <input type="hidden" name="nodeId" value="<?php echo $nodeId;?>" id="nodeId">
+                              <input type="hidden" name="nodeType" value="<?php echo $nodeType;?>" id="nodeType">
+                              <input type="hidden" name="linkType_vk" value="<?php echo $linkType_vk;?>" id="linkType_vk">
+                              <textarea id="editorContents2" name="editorContents2"></textarea>
+                              <input name="editorContents" id="editorContents" value='' type="hidden" />
+                              
+                              <!--script language="javascript">
+										document.write( '<iframe id="editorContents" name="editorContents" src="'+baseURL+'/editor/TeemeEditor.php?textAreaName=editorContents&id=0&idea=1" width="99%" height="100%" frameborder="0" scrolling="no" style="border:solid; border-color:#C4C6D0;" ></iframe></div><input name="editorContents" id="editorContents1" value=\'<div id=\"Idea#1-span\">&nbsp;</div>\' type="hidden" />');
+									</script-->
+                              
+                 <table width="90%" border="0" cellpadding="2" cellspacing="0">
+                <tbody>
+				<tr>
+                  	<?php
+				  	if($_SESSION['editor']==2)
+					{
+					?>
+                    	<td colspan="2" align="center">
+                        	<input type="button" value="<?php echo $this->lang->line('txt_Done');?>" onClick="return saveDocument2();" class="button01"/>
+                        </td>
+                    <?php 	
+					}
+					else
+					{
+					?>
+                    	<td colspan="2" align="center">
+                            <input type="button" value="<?php echo $this->lang->line('txt_Done');?>" onClick="return saveDocument();" class="button01"/>
+                        </td>
+                   	<?php
+					}
+					?>
+                  
+                    <td colspan="2" align="center">
+                        <input type="button" name="cancel" value="<?php echo $this->lang->line('txt_Cancel');?>" onClick="document.location='<?php echo base_url();?>document_home/index/1/type/1';" class="button01"/>
+                    </td>
+                  </tr>
+                 
+                  <tr>
+                    <td colspan="2" align="center">&nbsp;</td>
+                  </tr>
+
+                </tbody></table>
+                              </td>
+                          </tr>
+                        </table></td>
+                    </tr>
+                    <tr>
+                      <td>&nbsp;</td>
+                    </tr>
+                    <tr>
+                      <td valign="top">&nbsp;</td>
+                    </tr>
+                  </table></td>
+              </tr>
+            </table></td>
+        </tr>
+      </table>
+    </form>
+  </div>
+</div>
+<?php $this->load->view('common/foot_for_mobile');?>
+<?php $this->load->view('common/footer_for_mobile');?>
+</body>
+</html>
+<script>
+chnage_textarea_to_editor('editorContents2');
+chnage_textarea_to_editor('documentTitle','simple');
+//tinymce.execCommand('mceFocus',false,'documentTitle');
+//$("#editorContents2").tinymce().focus();
+//tinymce.execCommand('mceFocus',true,'documentTitle');
+</script>

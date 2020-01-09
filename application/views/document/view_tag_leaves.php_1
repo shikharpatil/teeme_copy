@@ -1,0 +1,345 @@
+<?php
+
+$tagId = ($_GET['tagId'])?$_GET['tagId']:0;//$this->uri->segment(8);//tag type id
+$treeId = ($_GET['treeId'])?$_GET['treeId']:0;//$this->uri->segment(3);
+$tagType = ($_GET['tagType'])?$_GET['tagType']:0;//$this->uri->segment(9);
+$usr = ($_GET['usr'])?$_GET['usr']:0;//$this->uri->segment(10);
+$curVersion=($_GET['curVersion'])?$_GET['curVersion']:0;//$this->uri->segment(11);
+
+if(!$tagType && !$usr)unset($_SESSION['tagLeaves']);
+
+//if(array_key_exists($nodeId,$_SESSION['tagLeaves'])){
+if(isset($_GET['rem']) && $_GET['rem']==1){
+	if($tagType==2){//simple tag
+		unset($_SESSION['tagLeaves'][1][$tagId]);
+		if(empty($_SESSION['tagLeaves'][1])){
+			unset($_SESSION['tagLeaves'][1]);
+		}
+	}
+	elseif($tagType==3){//action tag
+		unset($_SESSION['tagLeaves'][2][$tagId]);
+		if(empty($_SESSION['tagLeaves'][2])){
+			unset($_SESSION['tagLeaves'][2]);
+		}
+	}
+	else{
+		unset($_SESSION['tagLeaves'][3][$tagId]);
+		if(empty($_SESSION['tagLeaves'][3])){
+			unset($_SESSION['tagLeaves'][3]);
+		}
+	}
+}
+//}
+else if((!isset($_GET['rem']) || $_GET['rem']!=1) && $tagId){
+	if($tagType==2){//simple tag
+		$_SESSION['tagLeaves'][1][$tagId]=$tagId;
+	}
+	elseif($tagType==3){//action tag
+		$_SESSION['tagLeaves'][2][$tagId]=$tagId;
+	}
+	else{
+		$_SESSION['tagLeaves'][3][$tagId] = $tagId;
+	}
+	//unset($_SESSION['usrLeaves']);
+}
+if(empty($_SESSION['usrLeaves']) || $usr==''){
+	unset($_SESSION['usrLeaves']);
+}
+if($usr!=0 && !$_GET['remUsr']){
+	
+	//deselect other tags on selecting user tag
+	/*if(empty($_SESSION['usrLeaves'])){
+		unset($_SESSION['tagLeaves']);
+	}*/
+	//comment this line for multiple user select 
+	unset($_SESSION['usrLeaves']);
+	$_SESSION['usrLeaves'][$usr]=$usr;
+}
+
+if(isset($_GET['remUsr']) && $_GET['remUsr']!=0){
+	unset($_SESSION['usrLeaves'][$usr]);
+}
+
+	
+//print_r($_SESSION['usrLeaves']);
+//print_r($_SESSION['tagLeaves']);
+
+if(!empty($_SESSION['tagLeaves']))
+{
+	$attachedTags 		= $this->tag_db_manager->getLeafTagsByLeafIds($treeId, 1);
+	
+	$details=$this->chat_db_manager->getPerentInfo($treeId);
+	if(!empty($attachedTags) && (in_array($details['userId'],$_SESSION['usrLeaves']) || !$_SESSION['usrLeaves'])){
+		//print_r($_SESSION['tagLeaves'][1]);die;
+		$arrTag=array();
+		$flag=1;//for checking nonexistent tag in node
+		foreach($attachedTags['simple'] as $val){
+			$arrTag[]=$val['tag'];
+		}
+		$a = array_diff($_SESSION['tagLeaves'][1],$arrTag);
+		if(empty($a)){
+			$flag=0;	
+		}
+		
+		if($flag==0){
+			$arrTag=array();
+			foreach($attachedTags['response'] as $val){
+				$arrTag[]=$val['tagId'];
+			}
+			$a = array_diff($_SESSION['tagLeaves'][2],$arrTag);
+			if(empty($a)){
+				$flag=0;	
+			}
+			else{
+				$flag=1;
+			}
+		}
+		
+		if($flag==0){
+			$arrTag=array();
+			foreach($attachedTags['contact'] as $val){
+				$arrTag[]=$val['tag'];
+			}
+			$a = array_diff($_SESSION['tagLeaves'][3],$arrTag);
+			if(empty($a)){
+				$flag=0;	
+			}
+			else{
+				$flag=1;
+			}
+		}
+		
+		
+		if($flag==0){
+			?><div class="seedBgColor views_div">
+			<?php 
+                    echo '<a href="'.base_url().'view_document/index/'.$workSpaceId.'/type/'.$workSpaceType.'/&treeId='.$treeId.'&doc=exist&tagId='.$tagId.'&curVersion='.$curVersion.'&option=1" style="text-decoration:none; color:#000;">'.strip_tags($this->identity_db_manager->formatContent($arrDocumentDetails['name'],1000,1)).'</a>';
+            ?></div>
+            <?php
+		}
+	}
+	
+		
+	if(count($documentDetails) > 0)
+	{	
+		$i=1;
+		$sArray=array();
+		$nodes=array();
+		foreach($documentDetails as $keyVal=>$arrVal)
+		{
+			$attachedTags = $this->tag_db_manager->getLeafTagsByLeafIds($arrVal['nodeId'], 2);
+			$arrTag=array();
+			//echo "<pre>";print_r($attachedTags);print_r($_SESSION['tagLeaves']);die;
+			if(!empty($attachedTags) && (in_array($arrVal['userId'],$_SESSION['usrLeaves']) || !$_SESSION['usrLeaves'])){
+				$arrTag=array();
+				$flag=1;//for checking nonexistent tag in node
+				foreach($attachedTags['simple'] as $val){
+					$arrTag[]=$val['tag'];
+				}
+				$a = array_diff($_SESSION['tagLeaves'][1],$arrTag);
+				if(empty($a)){
+					$flag=0;	
+				}
+				
+				if($flag==0){
+					$arrTag=array();
+					foreach($attachedTags['response'] as $val){
+						$arrTag[]=$val['tagId'];
+					}
+					$a = array_diff($_SESSION['tagLeaves'][2],$arrTag);
+					if(empty($a)){
+						$flag=0;	
+					}
+					else{
+						$flag=1;
+					}
+				}
+				
+				if($flag==0){
+					$arrTag=array();
+					foreach($attachedTags['contact'] as $val){
+						$arrTag[]=$val['tag'];
+					}
+					$a = array_diff($_SESSION['tagLeaves'][3],$arrTag);
+					if(empty($a)){
+						$flag=0;	
+					}
+					else{
+						$flag=1;
+					}
+				}
+				//echo $flag;
+				
+				if($flag==0){
+					$nodes[]=$arrVal["nodeId"];
+					$nodeBgColor = ($i%2)?'row1':'row2';
+					$i++;?>
+					<div class="<?php echo $nodeBgColor;?> views_div">
+				
+					<?php
+					echo '<a href='.base_url().'view_document/index/'.$workSpaceId.'/type/'.$workSpaceType.'/&treeId='.$treeId.'&doc=exist&node='.$arrVal["nodeId"].'&tagId='.$tagId.'&curVersion='.$curVersion.'&option=1 style="text-decoration:none; color:#000;">'.strip_tags($this->identity_db_manager->formatContent($arrVal['contents'],1000)).'</a></div>';
+				}?>
+					
+			
+			<?php
+			}
+			?>
+		  	
+			 
+			<?php
+			$_SESSION['success'] = 0;
+			$checkSuccessor =  $this->document_db_manager->getSuccessors($arrVal['nodeId']);
+			//print_r($checkSuccessor);die;
+			
+			if ($checkSuccessor != 0)
+			{
+				$sArray=array_merge($sArray,array_unique(explode(',',$checkSuccessor)));
+				$sArray= array_diff($nodes,$sArray);
+				$counter=0;
+			}		?>
+		
+		  <?php
+		
+		}
+		
+		foreach($sArray as $val)
+		{
+			$arrDocuments	= $this->document_db_manager->getPerentInfo($val);
+			$totalNodes[] = $arrDocuments['nodeId'];	 
+
+			$userDetails	= $this->document_db_manager->getUserDetailsByUserId($arrDocuments['userId']);
+			$checksucc 		= $this->document_db_manager->checkSuccessors($arrDocuments['nodeId']);				
+			//$this->document_db_manager->insertDiscussionLeafView($arrDocuments['nodeId'],$_SESSION['userId']);				 
+			//$viewCheck=$this->document_db_manager->checkDiscussionLeafView($arrDocuments['nodeId'],$_SESSION['userId']);
+
+			$attachedTags 	= $this->tag_db_manager->getLeafTagsByLeafIds($arrDocuments['nodeId'], 2);
+			$arrTag=array();
+			//echo "<pre>";print_r($attachedTags);print_r($_SESSION['tagLeaves']);
+			if(!empty($attachedTags) && (in_array($arrDiscussions['userId'],$_SESSION['usrLeaves']) || !$_SESSION['usrLeaves'])){
+				$arrTag=array();
+				$flag=1;//for checking non-existent tag in node
+				foreach($attachedTags['simple'] as $val){
+					$arrTag[]=$val['tag'];
+				}
+				$a = array_diff($_SESSION['tagLeaves'][1],$arrTag);
+				if(empty($a)){
+					$flag=0;	
+				}
+				
+				if($flag==0){
+					$arrTag=array();
+					foreach($attachedTags['response'] as $val){
+						$arrTag[]=$val['tagId'];
+					}
+					$a = array_diff($_SESSION['tagLeaves'][2],$arrTag);
+					if(empty($a)){
+						$flag=0;	
+					}
+					else{
+						$flag=1;
+					}
+				}
+				
+				if($flag==0){
+					$arrTag=array();
+					foreach($attachedTags['contact'] as $val){
+						$arrTag[]=$val['tag'];
+					}
+					$a = array_diff($_SESSION['tagLeaves'][3],$arrTag);
+					if(empty($a)){
+						$flag=0;	
+					}
+					else{
+						$flag=1;
+					}
+				}
+					
+				if($flag==0){
+					$nodeBgColor = ($i%2)?'row1':'row2';
+					$i++;?><div class="<?php echo $nodeBgColor;?> views_div">
+					<?php 
+					echo '<a href='.base_url().'view_document/index/'.$workSpaceId.'/type/'.$workSpaceType.'/&treeId='.$treeId.'&doc=exist&node='.$arrDocuments["nodeId"].'&tagId='.$tagId.'&curVersion='.$curVersion.'&option=1 style="text-decoration:none; color:#000;">'.strip_tags($this->identity_db_manager->formatContent($arrDocuments['contents'],1000)).'</a>';
+				
+				?></div>
+				<?php
+				}
+			}			
+		}
+		
+	}
+		 
+	
+}
+else{
+	$details=$this->chat_db_manager->getPerentInfo($treeId);
+	if(in_array($details['userId'],$_SESSION['usrLeaves']))
+	{?>
+       <div class="seedBgColor views_div"> <?php 
+            echo '<a href="'.base_url().'view_document/index/'.$workSpaceId.'/type/'.$workSpaceType.'/&treeId='.$treeId.'&doc=exist&option=1 " style="text-decoration:none; color:#000;">'.strip_tags($this->identity_db_manager->formatContent($details['contents'],1000,1)).'</a>';
+        ?></div>
+	<?php
+	}
+	
+	if(count($documentDetails) > 0)
+	{	
+		$sArray=array();
+		$i=1;
+		foreach($documentDetails as $keyVal=>$arrVal)
+		{
+			//echo "<pre>";print_r($attachedTags);print_r($_SESSION['tagLeaves']);die;
+			if(in_array($arrVal['userId'],$_SESSION['usrLeaves'])){
+			$nodeBgColor = ($i%2)?'row1':'row2';
+			$i++;?>
+				<div class="<?php echo $nodeBgColor;?> views_div">
+					<?php
+					echo '<a href='.base_url().'view_document/index/'.$workSpaceId.'/type/'.$workSpaceType.'/&treeId='.$treeId.'&doc=exist&node='.$arrVal["nodeId"].'&tagId='.$tagId.'&curVersion='.$curVersion.'&option=1 style="text-decoration:none; color:#000;">'.strip_tags($this->identity_db_manager->formatContent($arrVal['contents'],1000)).'</a>';
+					?>
+				</div>
+			<?php
+			}
+			
+			$checkSuccessor =  $this->document_db_manager->getSuccessors($arrVal['nodeId']);
+			
+			if ($checkSuccessor != 0)
+			{
+				$sArray=array_merge($sArray,array_unique(explode(',',$checkSuccessor)));
+				$counter=0;
+			}
+				
+		}	
+		$sArray=array_unique($sArray);	
+		//print_r($sArray);die;
+		foreach($sArray as $val)
+		{
+			$arrDocuments	= $this->document_db_manager->getPerentInfo($val);
+			
+			$totalNodes[] = $arrDocuments['nodeId'];	 
+
+			$userDetails	= $this->document_db_manager->getUserDetailsByUserId($arrDocuments['userId']);
+			$checksucc 		= $this->document_db_manager->checkSuccessors($arrDocuments['nodeId']);				
+			//$this->document_db_manager->insertDiscussionLeafView($arrDocuments['nodeId'],$_SESSION['userId']);				 
+			//$viewCheck=$this->document_db_manager->checkDiscussionLeafView($arrDocuments['nodeId'],$_SESSION['userId']);
+
+			$attachedTags 	= $this->tag_db_manager->getLeafTagsByLeafIds($arrDocuments['nodeId'], 2);
+			$arrTag=array();
+				//echo "<pre>";print_r($attachedTags);print_r($_SESSION['tagLeaves']);die;
+			if(in_array($arrDocuments['userId'],$_SESSION['usrLeaves'])){
+				$nodeBgColor = ($i%2)?'row1':'row2';
+				$i++;?><div class="<?php echo $nodeBgColor;?> views_div">
+				<?php 
+					echo '<a href='.base_url().'view_document/index/'.$workSpaceId.'/type/'.$workSpaceType.'/&treeId='.$treeId.'&doc=exist&node='.$arrDocuments["nodeId"].'&tagId='.$tagId.'&curVersion='.$curVersion.'&option=1 style="text-decoration:none; color:#000;margin-left:3%;">'.strip_tags($this->identity_db_manager->formatContent($arrDocuments['contents'],1000)).'</a>';
+				
+				?></div>
+				<?php
+			}
+				
+		}			
+			
+		
+		?>
+		
+		  <?php
+		
+	}
+}
+?>
