@@ -80,13 +80,13 @@ $config['root_dir'] = dirname(dirname(dirname(dirname(__FILE__))));
 
 $config['hostname'] = base64_encode('localhost');
 
-$config['username'] = base64_encode('root');
+$config['username'] = base64_encode('tbb');
 
-$config['password'] = base64_encode('2015#tbb');
+$config['password'] = base64_encode('2019#Teeme');
 
-$config['instanceDb'] = 'alpha';
+$config['instanceDb'] = 'development_2020';
 
-$config['instanceName'] = 'alpha';
+$config['instanceName'] = 'development_2020';
 
 
 

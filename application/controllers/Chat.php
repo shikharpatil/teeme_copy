@@ -1,4 +1,4 @@
-<?php  /*Copyright © 2008-2014. Team Beyond Borders Pty Ltd. All rights reserved.*/?><?php
+<?php  /*Copyright ï¿½ 2008-2014. Team Beyond Borders Pty Ltd. All rights reserved.*/?><?php
 class Chat extends CI_Controller {
 
 	function Chat()
