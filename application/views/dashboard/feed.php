@@ -213,7 +213,8 @@
 											/*Added by Dashrath- trim task content*/
 											if (strlen($arrTagData['contents']) > 150) 
 		                                    {
-		                                        $arrTagData['contents'] = substr($arrTagData['contents'], 0, 150) . "..."; 
+											   // $arrTagData['contents'] = substr($arrTagData['contents'], 0, 150) . "..."; 
+											   $arrTagData['contents'] = $this->identity_db_manager->formatContent($arrTagData["contents"],15,1);
 		                                    }
 		                                    /*Dashrath- code end*/
 
@@ -251,7 +252,7 @@
 													// echo '<img border=0 style=cursor:hand src='.base_url().'images/'.$compImages[$nodeTaskStatus].'> <a class="" target="_blank" href='.base_url().'view_task/node/'.$arrTagData["treeId"].'/'.$workSpaceId.'/type/'.$workSpaceType.'/1/'.$arrTagData["id"].'>'.strip_tags($arrTagData['contents']).'</a>';
 
 													/*Changed by Dashrath- add #taskLeafContent818(node id) in url for task focus*/
-													echo '<img border=0 style=cursor:hand src='.base_url().'images/'.$compImages[$nodeTaskStatus].'> <a class="" target="_blank" href='.base_url().'view_task/node/'.$arrTagData["treeId"].'/'.$workSpaceId.'/type/'.$workSpaceType.'/1/'.$arrTagData["id"].'/#taskLeafContent'.$arrTagData["id"].'>'.strip_tags($arrTagData['contents']).'</a>';
+													echo '<img border=0 style=cursor:hand src='.base_url().'images/'.$compImages[$nodeTaskStatus].'> <a class="" target="_blank" href='.base_url().'view_task/node/'.$arrTagData["treeId"].'/'.$workSpaceId.'/type/'.$workSpaceType.'/1/'.$arrTagData["id"].'/#taskLeafContent'.$arrTagData["id"].'>'.$this->identity_db_manager->formatContent($arrTagData["contents"],15,1).'</a>';
 													/*Dashrath- code end*/
 												}
 												else
@@ -260,7 +261,7 @@
 													// echo '<img border=0 style=cursor:hand src='.base_url().'images/'.$compImages[$nodeTaskStatus].'> <a class="" target="_blank" href='.base_url().'view_task/node/'.$arrTagData["treeId"].'/'.$workSpaceId.'/type/'.$workSpaceType.'/1/'.$arrTagData["id"].'>'.strip_tags($arrTagData['contents']).'</a>';
 
 													/*Changed by Dashrath- add #taskLeafContent818(node id) in url for task focus*/
-													echo '<img border=0 style=cursor:hand src='.base_url().'images/'.$compImages[$nodeTaskStatus].'> <a class="" target="_blank" href='.base_url().'view_task/node/'.$arrTagData["treeId"].'/'.$workSpaceId.'/type/'.$workSpaceType.'/1/'.$arrTagData["id"].'/#taskLeafContent'.$arrTagData["id"].'>'.strip_tags($arrTagData['contents']).'</a>';
+													echo '<img border=0 style=cursor:hand src='.base_url().'images/'.$compImages[$nodeTaskStatus].'> <a class="" target="_blank" href='.base_url().'view_task/node/'.$arrTagData["treeId"].'/'.$workSpaceId.'/type/'.$workSpaceType.'/1/'.$arrTagData["id"].'/#taskLeafContent'.$arrTagData["id"].'>'.$this->identity_db_manager->formatContent($arrTagData["contents"],15,1).'</a>';
 													/*Dashrath- code end*/
 												}
 												?>	
@@ -298,7 +299,10 @@
 											            				<img src="<?php echo base_url();?>images/greennew.png" style=""  border="none" alt="<?php echo $this->lang->line('txt_Start_Time');?>"   />
 											            			</span>
 											            			<span>
-											            				<?php echo $arrTagData['starttime'];?> 
+																		<?php 
+																			// echo $arrTagData['starttime']; 
+																			 echo $this->time_manager->getUserTimeFromGMTTime($arrTagData['starttime'], $this->config->item('date_format'));
+																		?> 
 											            			</span>
 											            		</span>
 											            	<?php
@@ -312,7 +316,9 @@
 													            		<img src="<?php echo base_url();?>images/rednew.png" style=""  border="none" alt="<?php echo $this->lang->line('txt_End_Time');?>" /> 
 													            	</span>
 													            	<span>
-													            		<?php echo $arrTagData['endtime'];?>
+																		<?php //echo $arrTagData['endtime'];
+																		echo $this->time_manager->getUserTimeFromGMTTime($arrTagData['endtime'], $this->config->item('date_format'));
+																		?>
 													            	</span>
 													            </span>
 													        <?php
@@ -381,7 +387,8 @@
 											/*Added by Dashrath- trim task content*/
 											if (strlen($arrTagData['contents']) > 150) 
 		                                    {
-		                                        $arrTagData['contents'] = substr($arrTagData['contents'], 0, 150) . "..."; 
+												//$arrTagData['contents'] = substr($arrTagData['contents'], 0, 150) . "..."; 
+												$arrTagData['contents'] = $this->identity_db_manager->formatContent($arrTagData["contents"],15,1);
 		                                    }
 		                                    /*Dashrath- code end*/
 
@@ -418,7 +425,7 @@
 													// echo '<img border=0 style=cursor:hand src='.base_url().'images/'.$compImages[$nodeTaskStatus].'> <a class="red_link" target="_blank" href='.base_url().'view_task/node/'.$arrTagData["treeId"].'/'.$workSpaceId.'/type/'.$workSpaceType.'/1/'.$arrTagData["id"].'>'.strip_tags($arrTagData['contents']).'</a>';
 
 													/*Changed by Dashrath- add #taskLeafContent818(node id) in url for task focus*/
-													echo '<img border=0 style=cursor:hand src='.base_url().'images/'.$compImages[$nodeTaskStatus].'> <a class="red_link" target="_blank" href='.base_url().'view_task/node/'.$arrTagData["treeId"].'/'.$workSpaceId.'/type/'.$workSpaceType.'/1/'.$arrTagData["id"].'/#taskLeafContent'.$arrTagData["id"].'>'.strip_tags($arrTagData['contents']).'</a>';
+													echo '<img border=0 style=cursor:hand src='.base_url().'images/'.$compImages[$nodeTaskStatus].'> <a class="red_link" target="_blank" href='.base_url().'view_task/node/'.$arrTagData["treeId"].'/'.$workSpaceId.'/type/'.$workSpaceType.'/1/'.$arrTagData["id"].'/#taskLeafContent'.$arrTagData["id"].'>'.$this->identity_db_manager->formatContent($arrTagData["contents"],15,1).'</a>';
 													/*Dashrath- code end*/
 												?>	
 													<span class='clsLabel'>
@@ -456,7 +463,9 @@
 											            				<img src="<?php echo base_url();?>images/greennew.png" style=""  border="none" alt="<?php echo $this->lang->line('txt_Start_Time');?>"   />
 											            			</span>
 											            			<span>
-											            				<?php echo $arrTagData['starttime'];?> 
+																		<?php //echo $arrTagData['starttime'];
+																		 echo $this->time_manager->getUserTimeFromGMTTime($arrTagData['starttime'], $this->config->item('date_format'));
+																		?> 
 											            			</span>
 											            		</span>
 											            	<?php
@@ -470,7 +479,9 @@
 													            		<img src="<?php echo base_url();?>images/rednew.png" style=""  border="none" alt="<?php echo $this->lang->line('txt_End_Time');?>" /> 
 													            	</span>
 													            	<span>
-													            		<?php echo $arrTagData['endtime'];?>
+																		<?php //echo $arrTagData['endtime'];
+																		echo $this->time_manager->getUserTimeFromGMTTime($arrTagData['endtime'], $this->config->item('date_format'));
+																		?>
 													            	</span>
 													            </span>
 													        <?php
@@ -488,7 +499,7 @@
 													// echo '<img border=0 style=cursor:hand src='.base_url().'images/'.$compImages[$nodeTaskStatus].'> <a class="red_link" target="_blank" href='.base_url().'view_task/node/'.$arrTagData["treeId"].'/'.$workSpaceId.'/type/'.$workSpaceType.'/1/'.$arrTagData["id"].'>'.strip_tags($arrTagData['contents']).'</a>';
 
 													/*Changed by Dashrath- add #taskLeafContent818(node id) in url for task focus*/
-													echo '<img border=0 style=cursor:hand src='.base_url().'images/'.$compImages[$nodeTaskStatus].'> <a class="red_link" target="_blank" href='.base_url().'view_task/node/'.$arrTagData["treeId"].'/'.$workSpaceId.'/type/'.$workSpaceType.'/1/'.$arrTagData["id"].'/#taskLeafContent'.$arrTagData["id"].'>'.strip_tags($arrTagData['contents']).'</a>';
+													echo '<img border=0 style=cursor:hand src='.base_url().'images/'.$compImages[$nodeTaskStatus].'> <a class="red_link" target="_blank" href='.base_url().'view_task/node/'.$arrTagData["treeId"].'/'.$workSpaceId.'/type/'.$workSpaceType.'/1/'.$arrTagData["id"].'/#taskLeafContent'.$arrTagData["id"].'>'.$this->identity_db_manager->formatContent($arrTagData["contents"],15,1).'</a>';
 													/*Dashrath- code end*/
 												?>	
 													<span class='clsLabel'>
@@ -526,7 +537,9 @@
 											            				<img src="<?php echo base_url();?>images/greennew.png" style=""  border="none" alt="<?php echo $this->lang->line('txt_Start_Time');?>"   />
 											            			</span>
 											            			<span>
-											            				<?php echo $arrTagData['starttime'];?> 
+																		<?php //echo $arrTagData['starttime'];
+																		echo $this->time_manager->getUserTimeFromGMTTime($arrTagData['starttime'], $this->config->item('date_format'));
+																		?> 
 											            			</span>
 											            		</span>
 											            	<?php
@@ -540,7 +553,9 @@
 													            		<img src="<?php echo base_url();?>images/rednew.png" style=""  border="none" alt="<?php echo $this->lang->line('txt_End_Time');?>" /> 
 													            	</span>
 													            	<span>
-													            		<?php echo $arrTagData['endtime'];?>
+																		<?php //echo $arrTagData['endtime'];
+																			echo $this->time_manager->getUserTimeFromGMTTime($arrTagData['endtime'], $this->config->item('date_format'));
+																		?>
 													            	</span>
 													            </span>
 													        <?php
@@ -592,7 +607,9 @@
 											/*Added by Dashrath- trim task content*/
 											if (strlen($arrTagData['contents']) > 150) 
 		                                    {
-		                                        $arrTagData['contents'] = substr($arrTagData['contents'], 0, 150) . "..."; 
+												//$arrTagData['contents'] = substr($arrTagData['contents'], 0, 150) . "..."; 
+												$arrTagData['contents'] = $this->identity_db_manager->formatContent($arrTagData["contents"],15,1);
+												
 		                                    }
 		                                    /*Dashrath- code end*/
 
@@ -629,7 +646,7 @@
 													// echo '<img border=0 style=cursor:hand src='.base_url().'images/'.$compImages[$nodeTaskStatus].'> <a class="" target="_blank" href='.base_url().'view_task/node/'.$arrTagData["treeId"].'/'.$workSpaceId.'/type/'.$workSpaceType.'/1/'.$arrTagData["id"].'>'.strip_tags($arrTagData['contents']).'</a>';
 
 													/*Changed by Dashrath- add #taskLeafContent818(node id) in url for task focus*/
-													echo '<img border=0 style=cursor:hand src='.base_url().'images/'.$compImages[$nodeTaskStatus].'> <a class="" target="_blank" href='.base_url().'view_task/node/'.$arrTagData["treeId"].'/'.$workSpaceId.'/type/'.$workSpaceType.'/1/'.$arrTagData["id"].'/#taskLeafContent'.$arrTagData["id"].'>'.strip_tags($arrTagData['contents']).'</a>';
+													echo '<img border=0 style=cursor:hand src='.base_url().'images/'.$compImages[$nodeTaskStatus].'> <a class="" target="_blank" href='.base_url().'view_task/node/'.$arrTagData["treeId"].'/'.$workSpaceId.'/type/'.$workSpaceType.'/1/'.$arrTagData["id"].'/#taskLeafContent'.$arrTagData["id"].'>'.$this->identity_db_manager->formatContent($arrTagData["contents"],15,1).'</a>';
 													/*Dashrath- code end*/
 												}
 												else
@@ -637,7 +654,7 @@
 													// echo '<img border=0 style=cursor:hand src='.base_url().'images/'.$compImages[$nodeTaskStatus].'> <a class="red_link" target="_blank" href='.base_url().'view_task/node/'.$arrTagData["treeId"].'/'.$workSpaceId.'/type/'.$workSpaceType.'/1/'.$arrTagData["id"].'>'.strip_tags($arrTagData['contents']).'</a>';
 
 													/*Changed by Dashrath- add #taskLeafContent818(node id) in url for task focus*/
-													echo '<img border=0 style=cursor:hand src='.base_url().'images/'.$compImages[$nodeTaskStatus].'> <a class="red_link" target="_blank" href='.base_url().'view_task/node/'.$arrTagData["treeId"].'/'.$workSpaceId.'/type/'.$workSpaceType.'/1/'.$arrTagData["id"].'/#taskLeafContent'.$arrTagData["id"].'>'.strip_tags($arrTagData['contents']).'</a>';
+													echo '<img border=0 style=cursor:hand src='.base_url().'images/'.$compImages[$nodeTaskStatus].'> <a class="red_link" target="_blank" href='.base_url().'view_task/node/'.$arrTagData["treeId"].'/'.$workSpaceId.'/type/'.$workSpaceType.'/1/'.$arrTagData["id"].'/#taskLeafContent'.$arrTagData["id"].'>'.$this->identity_db_manager->formatContent($arrTagData["contents"],15,1).'</a>';
 													/*Dashrath- code end*/
 												}
 												?>	
@@ -678,7 +695,9 @@
 											            				<img src="<?php echo base_url();?>images/greennew.png" style=""  border="none" alt="<?php echo $this->lang->line('txt_Start_Time');?>"   />
 											            			</span>
 											            			<span>
-											            				<?php echo $arrTagData['starttime'];?> 
+																		<?php //echo $arrTagData['starttime'];
+																		echo $this->time_manager->getUserTimeFromGMTTime($arrTagData['starttime'], $this->config->item('date_format'));
+																		?> 
 											            			</span>
 											            		</span>
 											            	<?php
@@ -692,7 +711,9 @@
 													            		<img src="<?php echo base_url();?>images/rednew.png" style=""  border="none" alt="<?php echo $this->lang->line('txt_End_Time');?>" /> 
 													            	</span>
 													            	<span>
-													            		<?php echo $arrTagData['endtime'];?>
+																		<?php //echo $arrTagData['endtime'];
+																		echo $this->time_manager->getUserTimeFromGMTTime($arrTagData['endtime'], $this->config->item('date_format'));
+																		?>
 													            	</span>
 													            </span>
 													        <?php
@@ -775,7 +796,8 @@
 											/*Added by Dashrath- trim task content*/
 											if (strlen($arrTagData['contents']) > 150) 
 		                                    {
-		                                        $arrTagData['contents'] = substr($arrTagData['contents'], 0, 150) . "..."; 
+												//$arrTagData['contents'] = substr($arrTagData['contents'], 0, 150) . "..."; 
+												$arrTagData['contents'] = $this->identity_db_manager->formatContent($arrTagData["contents"],15,1);
 		                                    }
 		                                    /*Dashrath- code end*/
 
@@ -808,7 +830,7 @@
 													// echo '<img border=0 style=cursor:hand src='.base_url().'images/'.$compImages[$nodeTaskStatus].'> <a class="" target="_blank" href='.base_url().'view_task/node/'.$arrTagData["treeId"].'/'.$workSpaceId.'/type/'.$workSpaceType.'/1/'.$arrTagData["id"].'>'.strip_tags($arrTagData['contents']).'</a>';
 
 													/*Changed by Dashrath- add #taskLeafContent818(node id) in url for task focus*/
-													echo '<img border=0 style=cursor:hand src='.base_url().'images/'.$compImages[$nodeTaskStatus].'> <a class="" target="_blank" href='.base_url().'view_task/node/'.$arrTagData["treeId"].'/'.$workSpaceId.'/type/'.$workSpaceType.'/1/'.$arrTagData["id"].'/#taskLeafContent'.$arrTagData["id"].'>'.strip_tags($arrTagData['contents']).'</a>';
+													echo '<img border=0 style=cursor:hand src='.base_url().'images/'.$compImages[$nodeTaskStatus].'> <a class="" target="_blank" href='.base_url().'view_task/node/'.$arrTagData["treeId"].'/'.$workSpaceId.'/type/'.$workSpaceType.'/1/'.$arrTagData["id"].'/#taskLeafContent'.$arrTagData["id"].'>'.$this->identity_db_manager->formatContent($arrTagData["contents"],15,1).'</a>';
 													/*Dashrath- code end*/
 												}
 												else
@@ -817,7 +839,7 @@
 													// echo '<img border=0 style=cursor:hand src='.base_url().'images/'.$compImages[$nodeTaskStatus].'> <a class="" target="_blank" href='.base_url().'view_task/node/'.$arrTagData["treeId"].'/'.$workSpaceId.'/type/'.$workSpaceType.'/1/'.$arrTagData["id"].'>'.strip_tags($arrTagData['contents']).'</a>';
 
 													/*Changed by Dashrath- add #taskLeafContent818(node id) in url for task focus*/
-													echo '<img border=0 style=cursor:hand src='.base_url().'images/'.$compImages[$nodeTaskStatus].'> <a class="" target="_blank" href='.base_url().'view_task/node/'.$arrTagData["treeId"].'/'.$workSpaceId.'/type/'.$workSpaceType.'/1/'.$arrTagData["id"].'/#taskLeafContent'.$arrTagData["id"].'>'.strip_tags($arrTagData['contents']).'</a>';
+													echo '<img border=0 style=cursor:hand src='.base_url().'images/'.$compImages[$nodeTaskStatus].'> <a class="" target="_blank" href='.base_url().'view_task/node/'.$arrTagData["treeId"].'/'.$workSpaceId.'/type/'.$workSpaceType.'/1/'.$arrTagData["id"].'/#taskLeafContent'.$arrTagData["id"].'>'.$this->identity_db_manager->formatContent($arrTagData["contents"],15,1).'</a>';
 													/*Dashrath- code end*/
 													
 												}
@@ -857,7 +879,9 @@
 											            				<img src="<?php echo base_url();?>images/greennew.png" style=""  border="none" alt="<?php echo $this->lang->line('txt_Start_Time');?>"   />
 											            			</span>
 											            			<span>
-											            				<?php echo $arrTagData['starttime'];?> 
+																		<?php //echo $arrTagData['starttime'];
+																		echo $this->time_manager->getUserTimeFromGMTTime($arrTagData['starttime'], $this->config->item('date_format'));
+																		?> 
 											            			</span>
 											            		</span>
 											            	<?php
@@ -871,7 +895,9 @@
 													            		<img src="<?php echo base_url();?>images/rednew.png" style=""  border="none" alt="<?php echo $this->lang->line('txt_End_Time');?>" /> 
 													            	</span>
 													            	<span>
-													            		<?php echo $arrTagData['endtime'];?>
+																		<?php //echo $arrTagData['endtime'];
+																		echo $this->time_manager->getUserTimeFromGMTTime($arrTagData['endtime'], $this->config->item('date_format'));
+																		?>
 													            	</span>
 													            </span>
 													        <?php
@@ -939,7 +965,8 @@
 											/*Added by Dashrath- trim task content*/
 											if (strlen($arrTagData['contents']) > 150) 
 		                                    {
-		                                        $arrTagData['contents'] = substr($arrTagData['contents'], 0, 150) . "..."; 
+											   // $arrTagData['contents'] = substr($arrTagData['contents'], 0, 150) . "..."; 
+											   $arrTagData['contents'] = $this->identity_db_manager->formatContent($arrTagData["contents"],15,1);
 		                                    }
 		                                    /*Dashrath- code end*/
 
@@ -972,7 +999,7 @@
 													// echo '<img border=0 style=cursor:hand src='.base_url().'images/'.$compImages[$nodeTaskStatus].'> <a class="red_link" target="_blank" href='.base_url().'view_task/node/'.$arrTagData["treeId"].'/'.$workSpaceId.'/type/'.$workSpaceType.'/1/'.$arrTagData["id"].'>'.strip_tags($arrTagData['contents']).'</a>';
 
 													/*Changed by Dashrath- add #taskLeafContent818(node id) in url for task focus*/
-													echo '<img border=0 style=cursor:hand src='.base_url().'images/'.$compImages[$nodeTaskStatus].'> <a class="red_link" target="_blank" href='.base_url().'view_task/node/'.$arrTagData["treeId"].'/'.$workSpaceId.'/type/'.$workSpaceType.'/1/'.$arrTagData["id"].'/#taskLeafContent'.$arrTagData["id"].'>'.strip_tags($arrTagData['contents']).'</a>';
+													echo '<img border=0 style=cursor:hand src='.base_url().'images/'.$compImages[$nodeTaskStatus].'> <a class="red_link" target="_blank" href='.base_url().'view_task/node/'.$arrTagData["treeId"].'/'.$workSpaceId.'/type/'.$workSpaceType.'/1/'.$arrTagData["id"].'/#taskLeafContent'.$arrTagData["id"].'>'.$this->identity_db_manager->formatContent($arrTagData["contents"],15,1).'</a>';
 													/*Dashrath- code end*/
 												?>	
 													<span class='clsLabel'>
@@ -1010,7 +1037,9 @@
 											            				<img src="<?php echo base_url();?>images/greennew.png" style=""  border="none" alt="<?php echo $this->lang->line('txt_Start_Time');?>"   />
 											            			</span>
 											            			<span>
-											            				<?php echo $arrTagData['starttime'];?> 
+																		<?php //echo $arrTagData['starttime'];
+																		echo $this->time_manager->getUserTimeFromGMTTime($arrTagData['starttime'], $this->config->item('date_format'));
+																		?> 
 											            			</span>
 											            		</span>
 											            	<?php
@@ -1024,7 +1053,9 @@
 													            		<img src="<?php echo base_url();?>images/rednew.png" style=""  border="none" alt="<?php echo $this->lang->line('txt_End_Time');?>" /> 
 													            	</span>
 													            	<span>
-													            		<?php echo $arrTagData['endtime'];?>
+																		<?php //echo $arrTagData['endtime'];
+																		echo $this->time_manager->getUserTimeFromGMTTime($arrTagData['endtime'], $this->config->item('date_format'));
+																		?>
 													            	</span>
 													            </span>
 													        <?php
@@ -1044,7 +1075,7 @@
 													// echo '<img border=0 style=cursor:hand src='.base_url().'images/'.$compImages[$nodeTaskStatus].'> <a class="red_link" target="_blank" href='.base_url().'view_task/node/'.$arrTagData["treeId"].'/'.$workSpaceId.'/type/'.$workSpaceType.'/1/'.$arrTagData["id"].'>'.strip_tags($arrTagData['contents']).'</a>';
 
 													/*Changed by Dashrath- add #taskLeafContent818(node id) in url for task focus*/
-													echo '<img border=0 style=cursor:hand src='.base_url().'images/'.$compImages[$nodeTaskStatus].'> <a class="red_link" target="_blank" href='.base_url().'view_task/node/'.$arrTagData["treeId"].'/'.$workSpaceId.'/type/'.$workSpaceType.'/1/'.$arrTagData["id"].'/#taskLeafContent'.$arrTagData["id"].'>'.strip_tags($arrTagData['contents']).'</a>';
+													echo '<img border=0 style=cursor:hand src='.base_url().'images/'.$compImages[$nodeTaskStatus].'> <a class="red_link" target="_blank" href='.base_url().'view_task/node/'.$arrTagData["treeId"].'/'.$workSpaceId.'/type/'.$workSpaceType.'/1/'.$arrTagData["id"].'/#taskLeafContent'.$arrTagData["id"].'>'.$this->identity_db_manager->formatContent($arrTagData["contents"],15,1).'</a>';
 													/*Dashrath- code end*/
 												?>	
 													<span class='clsLabel'>
@@ -1082,7 +1113,9 @@
 											            				<img src="<?php echo base_url();?>images/greennew.png" style=""  border="none" alt="<?php echo $this->lang->line('txt_Start_Time');?>"   />
 											            			</span>
 											            			<span>
-											            				<?php echo $arrTagData['starttime'];?> 
+																		<?php //echo $arrTagData['starttime'];
+																		echo $this->time_manager->getUserTimeFromGMTTime($arrTagData['starttime'], $this->config->item('date_format'));
+																		?> 
 											            			</span>
 											            		</span>
 											            	<?php
@@ -1096,7 +1129,9 @@
 													            		<img src="<?php echo base_url();?>images/rednew.png" style=""  border="none" alt="<?php echo $this->lang->line('txt_End_Time');?>" /> 
 													            	</span>
 													            	<span>
-													            		<?php echo $arrTagData['endtime'];?>
+																		<?php //echo $arrTagData['endtime'];
+																		echo $this->time_manager->getUserTimeFromGMTTime($arrTagData['endtime'], $this->config->item('date_format'));
+																		?>
 													            	</span>
 													            </span>
 													        <?php
@@ -1147,7 +1182,9 @@
 											/*Added by Dashrath- trim task content*/
 											if (strlen($arrTagData['contents']) > 150) 
 		                                    {
-		                                        $arrTagData['contents'] = substr($arrTagData['contents'], 0, 150) . "..."; 
+											   // $arrTagData['contents'] = substr($arrTagData['contents'], 0, 150) . "..."; 
+											   $arrTagData['contents'] = $this->identity_db_manager->formatContent($arrTagData["contents"],15,1);
+											
 		                                    }
 		                                    /*Dashrath- code end*/
 
@@ -1181,7 +1218,7 @@
 													// echo '<img border=0 style=cursor:hand src='.base_url().'images/'.$compImages[$nodeTaskStatus].'> <a class="" target="_blank" href='.base_url().'view_task/node/'.$arrTagData["treeId"].'/'.$workSpaceId.'/type/'.$workSpaceType.'/1/'.$arrTagData["id"].'>'.strip_tags($arrTagData['contents']).'</a>';
 
 													/*Changed by Dashrath- add #taskLeafContent818(node id) in url for task focus*/
-													echo '<img border=0 style=cursor:hand src='.base_url().'images/'.$compImages[$nodeTaskStatus].'> <a class="" target="_blank" href='.base_url().'view_task/node/'.$arrTagData["treeId"].'/'.$workSpaceId.'/type/'.$workSpaceType.'/1/'.$arrTagData["id"].'/#taskLeafContent'.$arrTagData["id"].'>'.strip_tags($arrTagData['contents']).'</a>';
+													echo '<img border=0 style=cursor:hand src='.base_url().'images/'.$compImages[$nodeTaskStatus].'> <a class="" target="_blank" href='.base_url().'view_task/node/'.$arrTagData["treeId"].'/'.$workSpaceId.'/type/'.$workSpaceType.'/1/'.$arrTagData["id"].'/#taskLeafContent'.$arrTagData["id"].'>'.$this->identity_db_manager->formatContent($arrTagData["contents"],15,1).'</a>';
 													/*Dashrath- code end*/												
 												}
 												else
@@ -1189,7 +1226,7 @@
 													// echo '<img border=0 style=cursor:hand src='.base_url().'images/'.$compImages[$nodeTaskStatus].'> <a class="red_link" target="_blank" href='.base_url().'view_task/node/'.$arrTagData["treeId"].'/'.$workSpaceId.'/type/'.$workSpaceType.'/1/'.$arrTagData["id"].'>'.strip_tags($arrTagData['contents']).'</a>';
 
 													/*Changed by Dashrath- add #taskLeafContent818(node id) in url for task focus*/
-													echo '<img border=0 style=cursor:hand src='.base_url().'images/'.$compImages[$nodeTaskStatus].'> <a class="red_link" target="_blank" href='.base_url().'view_task/node/'.$arrTagData["treeId"].'/'.$workSpaceId.'/type/'.$workSpaceType.'/1/'.$arrTagData["id"].'/#taskLeafContent'.$arrTagData["id"].'>'.strip_tags($arrTagData['contents']).'</a>';
+													echo '<img border=0 style=cursor:hand src='.base_url().'images/'.$compImages[$nodeTaskStatus].'> <a class="red_link" target="_blank" href='.base_url().'view_task/node/'.$arrTagData["treeId"].'/'.$workSpaceId.'/type/'.$workSpaceType.'/1/'.$arrTagData["id"].'/#taskLeafContent'.$arrTagData["id"].'>'.$this->identity_db_manager->formatContent($arrTagData["contents"],15,1).'</a>';
 													/*Dashrath- code end*/
 												}
 												?>	
@@ -1228,7 +1265,9 @@
 											            				<img src="<?php echo base_url();?>images/greennew.png" style=""  border="none" alt="<?php echo $this->lang->line('txt_Start_Time');?>"   />
 											            			</span>
 											            			<span>
-											            				<?php echo $arrTagData['starttime'];?> 
+																		<?php //echo $arrTagData['starttime'];
+																		echo $this->time_manager->getUserTimeFromGMTTime($arrTagData['starttime'], $this->config->item('date_format'));
+																		?> 
 											            			</span>
 											            		</span>
 											            	<?php
@@ -1242,7 +1281,9 @@
 													            		<img src="<?php echo base_url();?>images/rednew.png" style=""  border="none" alt="<?php echo $this->lang->line('txt_End_Time');?>" /> 
 													            	</span>
 													            	<span>
-													            		<?php echo $arrTagData['endtime'];?>
+																		<?php //echo $arrTagData['endtime'];
+																		echo $this->time_manager->getUserTimeFromGMTTime($arrTagData['endtime'], $this->config->item('date_format'));
+																		?>
 													            	</span>
 													            </span>
 													        <?php
@@ -1279,14 +1320,15 @@
 							<span class="dashboard_fee_right_title">
 								<img src=<?php echo base_url(); ?>images/tab-icon/tag-view-sel.png alt='<?php echo $this->lang->line('txt_Action_Tags'); ?>' title='<?php echo $this->lang->line('txt_Action_Tags');?>' border=0> <?php echo $this->lang->line('txt_Action_Tags');?>
 							</span>
-							<span class="clsLabel"><?php echo ' ('.$this->lang->line('txt_Due_Within_15').')';?>
-							</span>
+							
+							
 							<span id="dashboardMyActionTagCollapseIcon" onclick="showHideFeedRightData('dashboardMyActionTagCollapseIcon', 'dashboardMyActionTagCollapseData')" class="feedRightCollapseIcon">
 								<img src="<?php echo base_url();?>images/expand_icon_new.png">
 							</span>
 						</div>
 
 						<div id="dashboardMyActionTagCollapseData" style="display: none;">
+							<div class="clsLabel"><?php echo ' ('.$this->lang->line('txt_Due_Within_15').')';?></div>
 							<div style="margin:8px 0;">
 								<div>
 					  				<?php       

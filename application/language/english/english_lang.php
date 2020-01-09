@@ -2402,7 +2402,7 @@ $lang['txt_maintenance_mode_enable_log'] = 'Maintenance mode enabled by {usernam
 
 $lang['txt_maintenance_mode_disable_log'] = 'Maintenance mode disabled by {username}';
 
-$lang['txt_users_in_space'] = 'User(s) in the current space';
+$lang['txt_users_in_space'] = 'User(s) in this space';
 
 $lang['txt_users_in_place'] = 'User(s) in the place';
 
