@@ -376,28 +376,11 @@ function showFilteredMembers()
 						</tr>
 						
 						<tr>
-					   		 <th width="100" height="15" align="left" valign="middle" class="text_gre1"></th>
+					   		 <th width="200" height="15" align="left" valign="middle" class="text_gre1"></th>
 						</tr>
 										   
-						
-						
-						<tr class="treeBtn" style="display:none;" >
-
-                         <td align="left" valign="top" class="text_gre1"><?php echo $this->lang->line('txt_Tree_Title');?><span class="text_red"></span></td>
-
-                         <td align="left" valign="top" class="text_gre"><strong>:</strong></td>
-
-                         <!--changed by Dashrath- add width:97% in textarea-->
-                         <td align="left" class="text_gre"><textarea id="treeTitle" name="treeTitle" class="new_tree_textarea" style="width:97% !important;"/></textarea></td>
-
-                         <!--Added by Dashrath- display message-->
-                         <td align="left" valign="top" class="tagStyleNew">(Maximum 255 characters)</td>
-                         <!--Dashrath- code end-->
-
-                       </tr> 
-					  
-					
 					<!--Added by Dashrath- Add number and position field-->   
+					<!--
 					<tr class="documentAddPosition" style="display: none;">
 				   		<td align="left" valign="top" class="text_gre1"><?php echo $this->lang->line('txt_Add_position');?></td>
 						<td align="left" valign="top" class="text_gre"><strong>:</strong></td>
@@ -408,13 +391,36 @@ function showFilteredMembers()
 								<option value="3"><?php echo $this->lang->line('txt_At_Bottom'); ?></option>
 							</select>     
 						</td>
-				   	</tr>
+				   	</tr>						
+					-->
+					<tr class="documentAddPosition" style="display: none;">
+				   		<td align="left" valign="top" class="text_gre1"><?php echo "Create this document as"?></td>
+						<td align="left" valign="top" class="text_gre"><strong>:</strong></td>
+						<td align="left" class="text_gre">  
+							<input type="radio" name="selDocumentPos" id="selDocumentPos" value="1" checked><?php echo "Document (Content can be added anywhere)" ?><br/>
+							<input type="radio" name="selDocumentPos" id="selDocumentPos" value="2"><?php echo "To-do list from top (Content can be added at the top only)" ?><br/>
+							<input type="radio" name="selDocumentPos" id="selDocumentPos" value="3"><?php echo "To-do list from bottom (Content can be added at the bottom only)" ?>
+						</td>
+				   	</tr>		
+						<tr class="treeBtn" style="display:none;" >
+
+                         <td align="left" valign="top" class="text_gre1"><?php echo $this->lang->line('txt_Tree_Title');?><span class="text_red"></span></td>
+
+                         <td align="left" valign="top" class="text_gre"><strong>:</strong></td>
+
+                         <!--changed by Dashrath- add width:97% in textarea-->
+                         <td align="left" class="text_gre"><textarea placeholder="Maximum 255 characters" id="treeTitle" name="treeTitle" class="new_tree_textarea" style="width:85% !important;"/></textarea></td>
+
+                       </tr> 
+					  
+					
+
 
 				   	<tr class="numberedDocument" style="display: none;">
-				   		<td align="left" valign="top" class="text_gre1 treeCreateTdLabel"><?php echo $this->lang->line('txt_Use_numbering');?></td>
+				   		<td align="left" valign="top" class="text_gre1 treeCreateTdLabel"><?php echo $this->lang->line('txt_Show_numbering');?></td>
 						<td align="left" valign="top" class="text_gre"><strong>:</strong></td>
 						<td align="left" class="text_gre">
-							<input type="checkbox" name="autonumbering"/>  
+							<input type="checkbox" name="autonumbering" checked/>  
 						</td>
 				   	</tr>
 					<!--Dashrath- code end-->

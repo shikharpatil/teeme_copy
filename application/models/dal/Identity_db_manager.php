@@ -19487,8 +19487,10 @@ $q = 'select * from(SELECT a.id, a.name, a.type, b.artifactId, b.artifactType ,b
                                 //8 for talk
                                 if($objectId==8)
                                 {
-                                    $treeId=$objectInstanceId;  
-                                    $talkContent = $this->notification_db_manager->getTreeNameByTreeId($treeId);
+									$treeId=$objectInstanceId;  
+									$parentTreeId=$this->identity_db_manager->getParentTreeIdByTreeId($treeId);
+									//$talkContent = $this->notification_db_manager->getTreeNameByTreeId($treeId);
+									$talkContent = $this->notification_db_manager->getTreeNameByTreeId($parentTreeId);
                                     $talkContent=strip_tags($talkContent);
                                     if(strlen($talkContent) > 25)
                                     {
@@ -19950,7 +19952,8 @@ $q = 'select * from(SELECT a.id, a.name, a.type, b.artifactId, b.artifactType ,b
 									/*add tree name in title*/
 									if($feedTitle!=$notificationContent['data'] && $treeContent!="" && $objectId!=1 && $objectId!=3 && $treeIcon1!='')
 									{
-										$feedTitle = $feedTitle.' in '.$treeIcon1.' <b><i>'.$treeContent.'</i></b>';
+										//$feedTitle = $feedTitle.' in '.$treeIcon1.' <b><i>'.$treeContent.'</i></b>';
+										$feedTitle = $treeIcon1.' <b><i>'.$treeContent.'</i>: </b>'.$feedTitle;
 									}
 									else if($feedTitle!=$notificationContent['data'] && $treeContent!="" && $objectId==1 && $treeIcon1!='')
 									{
@@ -20025,17 +20028,19 @@ $q = 'select * from(SELECT a.id, a.name, a.type, b.artifactId, b.artifactType ,b
 											//when talk added
 											$treeName2 = $talkContent;
 										}
-
+										
 										if($feedTitle!=$notificationContent['data'] && $treeName2!="")
 										{
 
 											if($treeIcon1!='')
 											{
-												$feedTitle = $feedTitle.' in '.$treeIcon1.' <b><i>'.$treeName2.'</i></b>';
+												//$feedTitle = $feedTitle.' in '.$treeIcon1.' <b><i>'.$treeName2.'</i></b>';
+												$feedTitle = $treeIcon1.' <b><i>'.$treeName2.'</i>: </b>'.$feedTitle;
 											}
 											else
 											{
-												$feedTitle = $feedTitle.' in <b><i>'.$treeName2.'</i></b>';
+												//$feedTitle = $feedTitle.' in <b><i>'.$treeName2.'</i></b>';
+												$feedTitle = '<b><i>'.$treeName2.'</i>: </b>'.$feedTitle;
 											}
 
 										}

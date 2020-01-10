@@ -27,7 +27,7 @@
 	<form name="frmAutonumbering" id="frmAutonumbering">	
 		<div id="spanMoveTree" style="display:block; margin-left:2%">
 			<div style="margin:5px 0 0 0;">
-				<div class="lblMoveTree"><?php echo $this->lang->line('txt_Use_numbering'); ?></div>
+				<div class="lblMoveTree"><?php echo $this->lang->line('txt_Show_numbering').':'; ?></div>
 				<div class="floatLeft">
 					<input type="checkbox" id="autonumbering" name="autonumbering" <?php  if($autonumbering==1) {echo 'checked';}?> onClick="autoNumberingUpdate(<?php echo $treeId; ?>);"/>   
 				</div>

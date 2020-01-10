@@ -172,7 +172,7 @@
 									?>
 
 									<?php /**************** MOVE TREE CODE CLOSE *******************/ ?>
-									<div style="float:left" >	<?php echo $this->lang->line('txt_Use_numbering');?>: 
+									<div style="float:left" >	<?php echo $this->lang->line('txt_Show_numbering');?>: 
 										<input type="checkbox" name="autonumbering" <?php  if($treeDetail['autonumbering']==1) {echo 'checked';}?> onClick="this.form.submit();"/>
 
 										<input type="hidden" name="autonumbering_submit" value="1" />
@@ -754,9 +754,9 @@
 					?>
 				
 					<li>
-						<!-- <a id="aNumbered" href="JavaScript:void(0);"  onclick="treeOperationsnew(this,'autoNumbering',<?php echo $treeId; ?>)"  onmouseout="operationOut(this)"  onmouseover="operationIn(this);" ><?php echo $this->lang->line('txt_Use_numbering');?></a> -->
+						<!-- <a id="aNumbered" href="JavaScript:void(0);"  onclick="treeOperationsnew(this,'autoNumbering',<?php echo $treeId; ?>)"  onmouseout="operationOut(this)"  onmouseover="operationIn(this);" ><?php echo $this->lang->line('txt_Show_numbering');?></a> -->
 
-						<a id="aNumbered" href="JavaScript:void(0);"  onclick="documentTreeOperations(this,'autoNumbering',<?php echo $treeId; ?>)"  onmouseout="operationOut(this)"  onmouseover="operationIn(this);" ><?php echo $this->lang->line('txt_Use_numbering')?>
+						<a id="aNumbered" href="JavaScript:void(0);"  onclick="documentTreeOperations(this,'autoNumbering',<?php echo $treeId; ?>)"  onmouseout="operationOut(this)"  onmouseover="operationIn(this);" ><?php echo $this->lang->line('txt_Show_numbering')?>
 							
 						</a>
 					</li>

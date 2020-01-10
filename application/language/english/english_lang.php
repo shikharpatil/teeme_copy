@@ -2969,6 +2969,8 @@ $lang['txt_At_Bottom']	= "At Bottom";
 
 $lang['txt_Use_numbering'] = "Use numbering";
 
+$lang['txt_Show_numbering'] = "Show numbering";
+
 $lang['txt_Add_using_folder']	= "Add using folder";
 
 $lang['txt_Create_version'] 	= 'Create version';
