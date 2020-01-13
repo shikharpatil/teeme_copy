@@ -420,7 +420,7 @@ function showFilteredMembers()
 				   		<td align="left" valign="top" class="text_gre1 treeCreateTdLabel"><?php echo $this->lang->line('txt_Show_numbering');?></td>
 						<td align="left" valign="top" class="text_gre"><strong>:</strong></td>
 						<td align="left" class="text_gre">
-							<input type="checkbox" id="autonumbering" name="autonumbering" checked/>  
+							<input type="checkbox" id="autonumbering" name="autonumbering" />  
 						</td>
 				   	</tr>
 					<!--Dashrath- code end-->
@@ -785,11 +785,11 @@ function setShowNumbering(thisVal)
 
 	if(thisVal.value==1)
 	{
-		$("#autonumbering").prop( "checked" ,true);
+		$("#autonumbering").prop( "checked" ,false);
 	}
 	else
 	{
-		$("#autonumbering").prop( "checked" ,false);
+		$("#autonumbering").prop( "checked" ,true);
 	}
 }
 
