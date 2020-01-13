@@ -362,14 +362,14 @@ function showFilteredMembers()
 					     	<strong>:</strong>
 
 					     	<span>
-					     		<span <?php if(!(in_array('1',$spaceTreeDetails)) && $treeTypeEnabled==1) { ?> style="display:none;" <?php } ?> ><input type="radio" name="treeType" id="treeType" value="document" onClick="getTreeTypeVal(this)"  ><?php echo $this->lang->line('txt_Document');?></span>
+					     		<span <?php if(!(in_array('1',$spaceTreeDetails)) && $treeTypeEnabled==1) { ?> style="display:none;" <?php } ?> ><input type="radio" name="treeType" id="treeType" value="document" onClick="getTreeTypeVal(this)"><?php echo $this->lang->line('txt_Document');?></span>
 							
-								<span <?php if(!(in_array('3',$spaceTreeDetails)) && $treeTypeEnabled==1) { ?> style="display:none;" <?php } ?>><input type="radio" name="treeType" id="treeType" value="discuss" onClick="getTreeTypeVal(this)"   ><?php echo $this->lang->line('disucssion');?></span>
-								<span <?php if(!(in_array('4',$spaceTreeDetails)) && $treeTypeEnabled==1) { ?> style="display:none;" <?php } ?>><input type="radio" name="treeType" id="treeType" value="task" onClick="getTreeTypeVal(this)"   ><?php echo $this->lang->line('txt_Task');?></span>
+								<span <?php if(!(in_array('3',$spaceTreeDetails)) && $treeTypeEnabled==1) { ?> style="display:none;" <?php } ?>><input type="radio" name="treeType" id="treeType" value="discuss" onClick="getTreeTypeVal(this)"><?php echo $this->lang->line('disucssion');?></span>
+								<span <?php if(!(in_array('4',$spaceTreeDetails)) && $treeTypeEnabled==1) { ?> style="display:none;" <?php } ?>><input type="radio" name="treeType" id="treeType" value="task" onClick="getTreeTypeVal(this)"><?php echo $this->lang->line('txt_Task');?></span>
 								<?php if($notesAllowStatus==1){ ?>
-								<span <?php if(!(in_array('6',$spaceTreeDetails)) && $treeTypeEnabled==1) { ?> style="display:none;" <?php } ?>><input type="radio" name="treeType" id="treeType" value="notes" onClick="getTreeTypeVal(this)"  ><?php echo $this->lang->line('txt_Notes');?></span>
+								<span <?php if(!(in_array('6',$spaceTreeDetails)) && $treeTypeEnabled==1) { ?> style="display:none;" <?php } ?>><input type="radio" name="treeType" id="treeType" value="notes" onClick="getTreeTypeVal(this)"><?php echo $this->lang->line('txt_Notes');?></span>
 								<?php } ?>
-								<span <?php if(!(in_array('5',$spaceTreeDetails)) && $treeTypeEnabled==1) { ?> style="display:none;" <?php } ?>><input type="radio" name="treeType" id="treeType" value="contact" onClick="getTreeTypeVal(this)"  ><?php echo $this->lang->line('txt_Contact');?></span>
+								<span <?php if(!(in_array('5',$spaceTreeDetails)) && $treeTypeEnabled==1) { ?> style="display:none;" <?php } ?>><input type="radio" name="treeType" id="treeType" value="contact" onClick="getTreeTypeVal(this)"><?php echo $this->lang->line('txt_Contact');?></span>
 					     	</span>
 					     </th>
 
@@ -394,12 +394,12 @@ function showFilteredMembers()
 				   	</tr>						
 					-->
 					<tr class="documentAddPosition" style="display: none;">
-				   		<td align="left" valign="top" class="text_gre1"><?php echo "Create this document as"?></td>
+				   		<td align="left" valign="top" class="text_gre1"><?php echo "This document will be used for"?></td>
 						<td align="left" valign="top" class="text_gre"><strong>:</strong></td>
 						<td align="left" class="text_gre">  
-							<input type="radio" name="selDocumentPos" id="selDocumentPos" value="1" checked><?php echo "Document (Content can be added anywhere)" ?><br/>
-							<input type="radio" name="selDocumentPos" id="selDocumentPos" value="2"><?php echo "To-do list from top (Content can be added at the top only)" ?><br/>
-							<input type="radio" name="selDocumentPos" id="selDocumentPos" value="3"><?php echo "To-do list from bottom (Content can be added at the bottom only)" ?>
+							<input type="radio" name="selDocumentPos" id="selDocumentPos" value="1" onClick="setShowNumbering(this)" checked><?php echo "Format free narratives where content can be added anywhere" ?><br/>
+							<input type="radio" name="selDocumentPos" id="selDocumentPos" value="2" onClick="setShowNumbering(this)"><?php echo "Ordered list where content is added from top" ?><br/>
+							<input type="radio" name="selDocumentPos" id="selDocumentPos" value="3" onClick="setShowNumbering(this)"><?php echo "Ordered list where content is added from bottom" ?>
 						</td>
 				   	</tr>		
 						<tr class="treeBtn" style="display:none;" >
@@ -420,7 +420,7 @@ function showFilteredMembers()
 				   		<td align="left" valign="top" class="text_gre1 treeCreateTdLabel"><?php echo $this->lang->line('txt_Show_numbering');?></td>
 						<td align="left" valign="top" class="text_gre"><strong>:</strong></td>
 						<td align="left" class="text_gre">
-							<input type="checkbox" name="autonumbering" checked/>  
+							<input type="checkbox" id="autonumbering" name="autonumbering" checked/>  
 						</td>
 				   	</tr>
 					<!--Dashrath- code end-->
@@ -769,12 +769,27 @@ var baseUrl 		= '<?php echo base_url();?>';
 var workSpaceId		= '<?php echo $workSpaceId;?>';
 var workSpaceType	= '<?php echo $workSpaceType;?>';
 
+
 function gotoDashboard()
 {
 	if (document.getElementById("spaceFinish")!=null)
 	{
 		location.href = "<?php echo base_url();?>dashboard/index/<?php echo $workSpaceId;?>/type/<?php echo $workSpaceType;?>/1";
 		return false;
+	}
+}
+
+function setShowNumbering(thisVal)
+{
+	//alert(thisVal.value);
+
+	if(thisVal.value==1)
+	{
+		$("#autonumbering").prop( "checked" ,true);
+	}
+	else
+	{
+		$("#autonumbering").prop( "checked" ,false);
 	}
 }
 
