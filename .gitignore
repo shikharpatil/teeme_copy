@@ -1,4 +1,3 @@
-.htaccess
 application/controllers/places/*
 application/config/config.php
 application/config/routes.php
