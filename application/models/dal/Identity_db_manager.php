@@ -10910,7 +10910,7 @@ $q = 'select * from(SELECT a.id, a.name, a.type, b.artifactId, b.artifactType ,b
 	//Manoj: code for create memcache object
 	function createMemcacheObject()
 	{
-		$objMemCache = new Memcache;
+		$objMemCache = new Memcached;
 		$objMemCache->addServer($this->config->item('memcache_host'),$this->config->item('port_no'));
 		//echo count($objMemCache->getServerList()).'test'; exit;
 		return $objMemCache;
@@ -18872,12 +18872,12 @@ $q = 'select * from(SELECT a.id, a.name, a.type, b.artifactId, b.artifactType ,b
 					/*if(count($objMemCache->getServerList())==0)
 					{
 						$objIdentity->displayMemcachedError($this->config->item('memcache_host'), $this->config->item('port_no'));
-					}*/
+					}*//*
 					if(!$objMemCache->getServerStatus($this->config->item('memcache_host'),$this->config->item('port_no')))
 					{
 						$objIdentity->displayMemcachedError($this->config->item('memcache_host'), $this->config->item('port_no'));
 					}
-					
+					*/
 
 					$memCacheId = 'wp'.$_SESSION['workPlaceId'].'user'.$_SESSION['userId'];
 					$value = $objMemCache->get($memCacheId);
