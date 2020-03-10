@@ -1500,7 +1500,7 @@ function firstLeafSaveNew(treeId, leafOrder,leafStatus, addStatus)
                 document.getElementById('SaveAsDraftLeafFirst').style.display = "inline";
 
                 /*Added by Dashrath- add for auto save feature*/
-                setInterval("checkDraftLeafLockDetailsByLeafId(0, 0)", 10000);
+                setInterval("checkDraftLeafLockDetailsByLeafId(0, 0)", 20000);
                 /*Dashrath- code end*/
 
                 // $('#displayDraftSaveMessage').html('Draft saved');
@@ -1508,7 +1508,7 @@ function firstLeafSaveNew(treeId, leafOrder,leafStatus, addStatus)
 
                 setTimeout(function(){
                     $('#displayDraftSaveMessageFirst').html('');
-                }, 3000);
+                }, 9000);
               }
             }
             else
@@ -2027,7 +2027,7 @@ function checktreeUpdateCount(treeId,workSpaceId,workSpaceType,talk,version){
         /*Dashrath- code end*/
 
 			  //Add SetTimeOut 
-			  setTimeout("checktreeUpdateCount('"+treeId+"','"+workSpaceId+"','"+workSpaceType+"','"+talk+"','"+version+"')", 10000);
+			  setTimeout("checktreeUpdateCount('"+treeId+"','"+workSpaceId+"','"+workSpaceType+"','"+talk+"','"+version+"')", 30000);
 		 }
 	 };
 
@@ -2052,7 +2052,7 @@ function checkTotalTreeCount(workSpaceId,workSpaceType){
 				//$('#updateImage').attr('src',baseUrl+'images/tab-icon/update-view-green.png');
 			 }
 			  //Add SetTimeOut 
-			 setTimeout("checkTotalTreeCount('"+workSpaceId+"','"+workSpaceType+"')", 10000);
+			 setTimeout("checkTotalTreeCount('"+workSpaceId+"','"+workSpaceType+"')", 30000);
 		 }
 	 };
 
@@ -2078,7 +2078,7 @@ function checkTotalFeedCount(workSpaceId,workSpaceType){
         //$('#updateImage').attr('src',baseUrl+'images/tab-icon/update-view-green.png');
        }
         //Add SetTimeOut 
-       setTimeout("checkTotalFeedCount('"+workSpaceId+"','"+workSpaceType+"')", 10000);
+       setTimeout("checkTotalFeedCount('"+workSpaceId+"','"+workSpaceType+"')", 30000);
      }
    };
 
@@ -2105,7 +2105,7 @@ function checkTotalMangeFilesCount(workSpaceId,workSpaceType){
         //$('#updateImage').attr('src',baseUrl+'images/tab-icon/update-view-green.png');
        }
         //Add SetTimeOut 
-       setTimeout("checkTotalMangeFilesCount('"+workSpaceId+"','"+workSpaceType+"')", 10000);
+       setTimeout("checkTotalMangeFilesCount('"+workSpaceId+"','"+workSpaceType+"')", 30000);
      }
    };
 
@@ -3184,7 +3184,7 @@ function handleTreeVersion1(getvalue,data,editorId,leafStatus,addStatus){
                 document.getElementById('saveAsDraftLeafNew_'+leafOrder1).style.display = "inline";
 
                 /*Added by Dashrath- add for auto save feature*/
-                setInterval("checkDraftLeafLockDetailsByLeafId(leafId1, leafOrder1)", 10000);
+                setInterval("checkDraftLeafLockDetailsByLeafId(leafId1, leafOrder1)", 20000);
                 /*Dashrath- code end*/
                 
 
@@ -3192,7 +3192,7 @@ function handleTreeVersion1(getvalue,data,editorId,leafStatus,addStatus){
 
                 setTimeout(function(){
                     $('#displayDraftSaveMessage_'+leafOrder1).html('');
-                }, 3000);
+                }, 9000);
               }
             }
             else
@@ -4971,7 +4971,7 @@ function checkTreeMove(treeId,workSpaceId,workSpaceType,talk,version)
 			handleTreeStateChange2(treeId,version);
 		 }
 		 //Add SetTimeOut 
-		 setTimeout("checkTreeMove('"+treeId+"','"+workSpaceId+"','"+workSpaceType+"','"+talk+"','"+version+"')", 10000);
+		 setTimeout("checkTreeMove('"+treeId+"','"+workSpaceId+"','"+workSpaceType+"','"+talk+"','"+version+"')", 30000);
 
 	  }
 
@@ -6006,6 +6006,8 @@ function editContentAutoSave()
 
             type: "POST",
 
+            async: true,
+
             data: data_user,
 
             dataType: "html",
@@ -6026,7 +6028,7 @@ function editContentAutoSave()
 
                 setTimeout(function(){
                     $('#displayDraftSaveMessageEdit_'+leafOrder).html('');
-                }, 3000);
+                }, 9000);
               }
             }
           });
@@ -6040,6 +6042,8 @@ function editContentAutoSave()
           var request = $.ajax({
 
             url: baseUrl+"edit_leaf_save/index/doc/exit",
+
+            async: true,
 
             type: "POST",
 
@@ -6072,7 +6076,7 @@ function editContentAutoSave()
 
                 setTimeout(function(){
                     $('#displayDraftSaveMessageEdit_'+leafOrder).html('');
-                }, 3000);
+                }, 9000);
 
               }
             }
@@ -6108,6 +6112,8 @@ function documentAddPosition(treeId, workSpaceId, workSpaceType)
       var request = $.ajax({
 
           url: baseUrl+"view_document/documentAddPositionSet",
+
+          async: true,
 
           type: "POST",
 
@@ -6730,6 +6736,8 @@ function updateDraftLeafContent(nodeId, getvalue, addDraftNodeOrder)
 
     url: baseUrl+"edit_leaf_save/updateDraftLeafDetails",
 
+    async: true,
+
     type: "POST",
 
     data: data_user,
@@ -6743,7 +6751,7 @@ function updateDraftLeafContent(nodeId, getvalue, addDraftNodeOrder)
 
         setTimeout(function(){
             $('#displayDraftSaveMessage_'+addDraftNodeOrder).html('');
-        }, 3000);
+        }, 9000);
       }
     }
   });
@@ -6756,6 +6764,8 @@ function updateDraftLeafStatus(nodeId, treeId)
   var request = $.ajax({
 
     url: baseUrl+"edit_leaf_save/updateDraftLeafStatus/"+nodeId,
+
+    async: true,
 
     type: "GET",
 
@@ -6942,6 +6952,8 @@ function discardDraftLeafByCancelButton(nodeId)
     var request = $.ajax({
 
       url: baseUrl+"edit_leaf_save/discardDraftLeaf/doc/exit",
+
+      async: true,
 
       type: "POST",
 
