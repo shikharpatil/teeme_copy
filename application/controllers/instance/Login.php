@@ -50,7 +50,7 @@ class Login extends CI_Controller {
 			$password = trim($this->input->post('userPassword'));
 
 			$_SESSION['timeDiff'] = $this->input->post('timeDiff');
-
+		
 			$query = $this->db->query('SELECT id, userName, password, superAdmin FROM teeme_admin WHERE userName=\''.$username.'\'');
 
 			if($query->num_rows() > 0)

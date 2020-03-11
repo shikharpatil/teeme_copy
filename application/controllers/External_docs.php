@@ -1,4 +1,4 @@
-<?php /*Copyright © 2008-2014. Team Beyond Borders Pty Ltd. All rights reserved.*/  ?><?php
+<?php /*Copyright ï¿½ 2008-2014. Team Beyond Borders Pty Ltd. All rights reserved.*/  ?><?php
 	/***********************************************************************************************************
 	*  *  *  *  *  *  *  *  *  *  *   I D E AV A T E   S O L U T I O N S   *  *  *  *  *  *  *  *   *
 	************************************************************************************************************
@@ -280,7 +280,7 @@ class External_docs extends CI_Controller
 						$filename = stripslashes($_FILES['workSpaceDoc']['name'][$i]);					
 						$extension = $objIdentity->getFileExtension($filename);
 						$extension = strtolower($extension);
-						$allowedExts = array("gif", "jpeg", "jpg", "png", "txt", "pdf", "csv", "doc", "docx", "xls", "xlsx", "ppt", "odt", "pptx", "xps", "docm", "dotm", "dotx", "dot", "xlsm", "xlsb", "xlw", "pot", "pptm", "pub", "rtf", "mp4", "avi","flv","wmv","mov", "mp3", "m4a", "aac", "oga"); 	
+						$allowedExts = array("gif", "jpeg", "jpg", "png", "txt", "pdf", "csv", "doc", "docx", "xls", "xlsx", "ppt", "odt", "pptx", "xps", "docm", "dotm", "dotx", "dot", "xlsm", "xlsb", "xlw", "pot", "pptm", "pub", "rtf", "mp4", "avi","flv","wmv","mov", "mp3", "m4a", "aac", "oga", "zip", "rar", "tar.gz"); 	
 						if(!(in_array($extension, $allowedExts))) 
 						{
 							//$_SESSION['errorMsg'] = $this->lang->line('Error_unknown_file_extension');
