@@ -207,7 +207,7 @@
         document.getElementById("last_modified_date").value = filesLastModifiedArray;
 
         totalfileSizeInMb = (totalFileSize/1024/1024);
-
+		//alert(totalfileSizeInMb);
         //when totalfileSizeInMb is greater than 128mb
         if(totalfileSizeInMb>128)
         {
@@ -283,13 +283,13 @@
 							}
 						}
 					}
-					uploadedFilesCount = filesData.files.length - alreadyExistsFilesCount;
-					
+					uploadedFilesCount = filesData.files.length - alreadyExistsFilesCount;					
 				}
 				else
 				{
 					uploadedFilesCount = filesData.files.length;
 				}
+				
 
 				//add popup for create new version
 				var createFileVersion = '';
@@ -324,7 +324,7 @@
 		  			document.getElementById("shortTitleMess").innerHTML = '<b>'+uploadTitle+'</b>';
 
 					uploadFiles1(workSpaceId, workSpaceType, formData, createFolderId, uploadedFilesCount,filesData, resFileData, createFileVersion);
-
+					
 					return true;
 
 				}
@@ -478,8 +478,9 @@
 				    xhr: function(){
 			    		
 						//upload Progress
-						var xhr = $.ajaxSettings.xhr();
-
+						var xhr = $.ajaxSettings.xhr();	
+						//alert (xhr.upload.status);
+						//return xhr;						
 						if (xhr.upload) {
 							xhr.upload.addEventListener('progress', function(event) {
 								
@@ -493,10 +494,8 @@
 								//update progressbar
 								document.getElementById("progressBar"+j).innerHTML = percent +"%";
 							}, true);
+							//alert (xhr.status);
 						}
-
-						
-						
 						return xhr;
 					}
 
@@ -511,7 +510,7 @@
 				    	var uploadedFileCount1 = resultData['uploadedFileCount'];
 				    	
 				    	var fileCount =  resultData['fileCount'];
-
+						
 				        if(result){
 				        	//location.reload();
 				          	//window.top.location.href = baseUrl+result; 
@@ -559,7 +558,7 @@
 
 				   //        	$('.otherarea').append('<div style="min-height:250px; max-height:600px; overflow:auto; margin-bottom: 12px;" class="file_folder_mesage abs" id="file_folder_mesage"><div class="abs_head talk_head"><div class="talktxtTitle"><span class="shortTitle"><b> '+successCount+' successful '+failureCount+' failed</b><span class="tooltip"></span></span></div><div class="talkChatMinClose"><span class="talk_chat_close" onclick="closeMessageWindow('+workSpaceId+','+workSpaceType+')"><b>x </b>&nbsp;</span><span class="talk_chat_close talk_chat_size" onclick="hideMessageWindow()"><b>_ </b>&nbsp;&nbsp;</span></div></div><div class="talk_content" style="margin-top: 20px;"><span><br/></span>'+data+'</div></div>');
 
-
+							
 				   			if(uploadedFileCount1==t)
 				         	{
 				         		var failureCount1 = localStorage.getItem("failureCount");
@@ -766,7 +765,9 @@
 
 						attachDragDrop();
 				    
-			    });
+			    }).fail(function()  {
+    				alert("Sorry. Server unavailable. ");
+				}); 
 	}
 
 	function closeMessageWindow(workSpaceId, workSpaceType)

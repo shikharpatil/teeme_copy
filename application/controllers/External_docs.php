@@ -182,7 +182,7 @@ class External_docs extends CI_Controller
 
 
 			$filesArray = $_FILES['workSpaceDoc']['name'];
-
+			
 
 			if(count($filesArray)>0 && $filesArray[0] != "")
 			{
@@ -305,6 +305,7 @@ class External_docs extends CI_Controller
 						
 						$filesize = $_FILES['workSpaceDoc']['size'][$i];
 						$filesize = round(($filesize/1024)/1024,2);
+
 						if($filesize>128) 
 						{
 							//$_SESSION['errorMsg'] = $this->lang->line('txt_import_file_size_error');
@@ -593,7 +594,8 @@ class External_docs extends CI_Controller
 
 						//Added by Dashrath- code start
 				        $allowedImageOrentExts = array("jpeg", "jpg");
-				        //check image extension
+						//check image extension
+						/*
 				        if(in_array(strtolower($extension), $allowedImageOrentExts)) {
 
 				            $this->load->model('dal/identity_db_manager');
@@ -611,7 +613,10 @@ class External_docs extends CI_Controller
 				        else
 				        {
 				            $moved = move_uploaded_file($fname, $desRoot);
-				        }
+						}
+						*/
+						$moved = move_uploaded_file($fname, $desRoot);
+
 				        //Dashrath- code end
 							
 							if (!$moved)
@@ -641,6 +646,8 @@ class External_docs extends CI_Controller
 						$objExtDocs->setDocCreatedDate( $this->time_manager->getGMTTime() );
 						$objExtDocs->setDocVersion( $docVersion );
 						
+						
+
 					    if($insertFileId=$objIdentity->insertImportedFile( $objExtDocs))
 						{				
 							$_SESSION['successMsg'] = $this->lang->line('msg_file_add_success');
@@ -1024,7 +1031,8 @@ class External_docs extends CI_Controller
 
 						//Added by Dashrath- code start
 				        $allowedImageOrentExts = array("jpeg", "jpg");
-				        //check image extension
+						//check image extension
+						/*
 				        if(in_array(strtolower($extension), $allowedImageOrentExts)) {
 
 				            $this->load->model('dal/identity_db_manager');
@@ -1042,7 +1050,10 @@ class External_docs extends CI_Controller
 				        else
 				        {
 				            $moved = move_uploaded_file($fname, $desRoot);
-				        }
+						}
+						*/
+						$moved = move_uploaded_file($fname, $desRoot);
+
 				        //Dashrath- code end
 							
 							if (!$moved)
@@ -1077,7 +1088,7 @@ class External_docs extends CI_Controller
 						//image extension
 						$imageAllowedExts = array("gif", "jpeg", "jpg", "png");
 						$videoAllowedExts = array("mp4", "avi","flv","wmv","mov");
-
+						
 						if(in_array($extension, $imageAllowedExts))
 						{
 							//generate thumbnail
@@ -1840,7 +1851,8 @@ class External_docs extends CI_Controller
 
 			//Added by Dashrath- code start
 	        $allowedImageOrentExts = array("jpeg", "jpg");
-	        //check image extension
+			//check image extension
+			/*
 	        if(in_array(strtolower($extension), $allowedImageOrentExts)) {
 
 	            $this->load->model('dal/identity_db_manager');
@@ -1858,7 +1870,10 @@ class External_docs extends CI_Controller
 	        else
 	        {
 	            $moved = move_uploaded_file($fname, $desRoot);
-	        }
+			}
+			*/
+			$moved = move_uploaded_file($fname, $desRoot);
+
 	        //Dashrath- code end
 				
 			if (!$moved)
