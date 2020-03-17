@@ -1,4 +1,4 @@
-<?php  /*Copyright © 2008-2014. Team Beyond Borders Pty Ltd. All rights reserved.*/?>
+<?php  /*Copyright ï¿½ 2008-2014. Team Beyond Borders Pty Ltd. All rights reserved.*/?>
 <?php
 /*echo '<pre>';
 print_r($value);

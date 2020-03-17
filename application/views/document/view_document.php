@@ -1074,15 +1074,15 @@
 </html>
 <?php $this->load->view('common/foot.php');?>
 <script>
-		// Keep Checking for tree updates every 5 second
+		// Keep Checking for tree updates every 60 second
 		<!--Updated by Surbhi IV-->
 		//setInterval("checktreeUpdateCount(<?php  echo $treeId; ?>,<?php  echo $workSpaceId;?>,<?php echo $workSpaceType;?>,'','<?php echo $arrDocumentDetails['version'] ?>')", 10000);
 		//Add SetTimeOut 
-		setTimeout("checktreeUpdateCount(<?php  echo $treeId; ?>,<?php  echo $workSpaceId;?>,<?php echo $workSpaceType;?>,'','<?php echo $arrDocumentDetails['version'] ?>')", 20000);
+		setTimeout("checktreeUpdateCount(<?php  echo $treeId; ?>,<?php  echo $workSpaceId;?>,<?php echo $workSpaceType;?>,'','<?php echo $arrDocumentDetails['version'] ?>')", 60000);
 		
 		//setInterval("checkTreeMove(<?php  echo $treeId; ?>,<?php  echo $workSpaceId;?>,<?php echo $workSpaceType;?>,'','<?php echo $arrDocumentDetails['version'] ?>')", 10000);
 		
-		setTimeout("checkTreeMove(<?php  echo $treeId; ?>,<?php  echo $workSpaceId;?>,<?php echo $workSpaceType;?>,'','<?php echo $arrDocumentDetails['version'] ?>')", 20000);
+		setTimeout("checkTreeMove(<?php  echo $treeId; ?>,<?php  echo $workSpaceId;?>,<?php echo $workSpaceType;?>,'','<?php echo $arrDocumentDetails['version'] ?>')", 30000);
 		<!--End of Updated by Surbhi IV-->	
 </script>
 <script type="text/javascript">

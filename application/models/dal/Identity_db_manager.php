@@ -17261,15 +17261,14 @@ $q = 'select * from(SELECT a.id, a.name, a.type, b.artifactId, b.artifactType ,b
 	//Dashrath : code end
 
 	//Added by Dashrath : code start
-	public function generateThumbnail($path, $fileGeneratedName, $type="", $fileNameWithoutExt)
+	public function generateThumbnail($path, $fileGeneratedName, $type="", $fileNameWithoutExt="")
 	{
 		if($type == "image")
 		{
-
 			$this->load->library('image_lib');
 
 			$source_path = $path.$fileGeneratedName;
-			$target_path = $path."thumbnail/";
+			$target_path = $path."thumbnail".DIRECTORY_SEPARATOR;
 
 			if(!is_dir($target_path))
 			{
@@ -17298,11 +17297,11 @@ $q = 'select * from(SELECT a.id, a.name, a.type, b.artifactId, b.artifactType ,b
 		else if($type == "video")
 		{
 			//used for server
-			$ffmpeg = "/usr/bin/ffmpeg";
+			$ffmpeg = DIRECTORY_SEPARATOR."usr".DIRECTORY_SEPARATOR."bin".DIRECTORY_SEPARATOR."ffmpeg";
 			//used for local
 			//$ffmpeg = "C:\\ffmpeg\\bin\\ffmpeg";
 			$source_path = $path.$fileGeneratedName;
-			$target_path = $path."thumbnail/".$fileNameWithoutExt.".jpg";
+			$target_path = $path."thumbnail".DIRECTORY_SEPARATOR.$fileNameWithoutExt.".jpg";
 
 			$interval = 5;
 
