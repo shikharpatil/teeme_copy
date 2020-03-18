@@ -1,4 +1,4 @@
-<?php /*Copyrights © 2008-2009 B3 Technologies Pty Ltd. All rights reserved.*/ ?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<?php /*Copyrights ï¿½ 2008-2009 B3 Technologies Pty Ltd. All rights reserved.*/ ?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
 <html xmlns="http://www.w3.org/1999/xhtml">
 
@@ -396,12 +396,13 @@ function addRemoteServerDetails() {
                     	
 						
 						
-						
+						<!--
 						<form method="post" action="" style="margin-top:0%">
 							
 							<input type="submit" name="backup" value="Create New Backup" style="margin-top:1%;" onclick="document.getElementById('please_wait').style.display='';"/>
 
                     	</form>
+						-->
                     <!--onclick="document.getElementById('please_wait').style.display='';"-->
 
                     	<span id="please_wait" style="display:none;">

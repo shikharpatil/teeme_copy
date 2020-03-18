@@ -72,8 +72,8 @@ class Home extends CI_Controller
 		}
 		else
 		{
-			ini_set('max_execution_time', 800);
-			ini_set('memory_limit','520M');
+			//ini_set('max_execution_time', 800);
+			//ini_set('memory_limit','520M');
 			
 			$this->load->model('dal/time_manager');
 			
@@ -266,8 +266,10 @@ class Home extends CI_Controller
 										$objBackup	 = $this->backup_manager;
 											//$data = array('upload_data' => $this->upload->data());
 											//$fullPath = $data['upload_data']['full_path'];
-											$newdir = $objBackup->extractZip($_FILES['restorePlace']['tmp_name']);
 
+											$newdir = $objBackup->extractZip($_FILES['restorePlace']['tmp_name']);
+											//echo "<li>tmp path= " .$_FILES['restorePlace']['tmp_name'];
+											//echo "<li>newdir= " .$newdir;exit;
 											if ($newdir!='failed')
 											{
 												$currentPath = $this->config->item('absolute_path').'uploads'.DIRECTORY_SEPARATOR.$newdir;

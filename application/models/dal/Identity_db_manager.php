@@ -2873,8 +2873,8 @@ teeme_leaf a,teeme_node b where a.id=b.leafId and b.treeIds='".$inserted_tree_id
 				$workPlaceData['companyOther'] 		= $row->companyOther;
 				$workPlaceData['companyCreatedDate']= $row->companyCreatedDate;
 				$workPlaceData['status'] 			= $row->status;		
-				$workPlaceData['securityQuestion'] 	= $row->securityQuestion;	
-				$workPlaceData['securityAnswer'] 	= $row->securityAnswer;
+				//$workPlaceData['securityQuestion'] 	= $row->securityQuestion;	
+				//$workPlaceData['securityAnswer'] 	= $row->securityAnswer;
 				$workPlaceData['companyLogo'] 		= $row->companyLogo;
 				$workPlaceData['server'] 			= $row->server;	
 				$workPlaceData['server_username'] 	= $row->server_username;
@@ -8323,7 +8323,7 @@ function split_sql_file($sql, $delimiter)
 				$placedb->trans_begin();
 				
 				//mysql_select_db( $place_db_name, $db );
-	
+				/*
 				$FP = fopen ( $place_db, 'r' );
 				$READ = fread ( $FP, filesize ( $place_db) );
 				 
@@ -8347,15 +8347,23 @@ function split_sql_file($sql, $delimiter)
 						}
 					}
 				}
-	
-				$placedb->query("UPDATE `teeme_tag_types` SET workPlaceId = '".$workPlaceId."'") or die($this->db->error());
+				*/
+				$command='mysql -h' .$server .' -u' .$server_username .' -p' .$server_password .' ' .$place_db_name .' < ' .$place_db;
 				
-				if ($migrate==1)
-				{
-					$placedb->query ("UPDATE teeme_users SET workPlaceId= '".$workPlaceId."'") or die($this->db->error());
-					$placedb->query ("UPDATE teeme_work_space SET workPlaceId= '".$workPlaceId."'") or die($this->db->error());
-					$placedb->query ("UPDATE teeme_contact_info SET workplaceId= '".$workPlaceId."'") or die($this->db->error());
-				}
+					if (exec($command)==0){
+						$placedb->query("UPDATE `teeme_tag_types` SET workPlaceId = '".$workPlaceId."'") or die($this->db->error());
+					
+						if ($migrate==1)
+						{
+							$placedb->query ("UPDATE teeme_users SET workPlaceId= '".$workPlaceId."'") or die($this->db->error());
+							$placedb->query ("UPDATE teeme_work_space SET workPlaceId= '".$workPlaceId."'") or die($this->db->error());
+							$placedb->query ("UPDATE teeme_contact_info SET workplaceId= '".$workPlaceId."'") or die($this->db->error());
+						}
+					}
+					else{
+						$placedb->query("DROP DATABASE IF EXISTS ".strtolower($place_db_name)."");
+					}
+
 				
 /*                $query1 = 'INSERT INTO 
 									teeme_work_place

@@ -1029,7 +1029,21 @@ return $test_conn;*/
     echo '</pre>';
 
 	}
-	
+  public function sendHeaders($file, $type, $name=NULL)
+  {
+      if (empty($name))
+      {
+          $name = basename($file);
+      }
+      header('Pragma: public');
+      header('Expires: 0');
+      header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
+      header('Cache-Control: private', false);
+      header('Content-Transfer-Encoding: binary');
+      header('Content-Disposition: attachment; filename="'.$name.'";');
+      header('Content-Type: ' . $type);
+      header('Content-Length: ' . filesize($file));
+  }
 	function downloadBackup ($filename='', $fullPath='')
 	{
 				if (headers_sent()) {
@@ -1046,14 +1060,28 @@ return $test_conn;*/
 					}	
 					else
 					{
+            /*
 						$this->load->helper('download');
-						$data = file_get_contents($fullPath); // Read the file's contents
+            $data = file_get_contents($fullPath); // Read the file's contents
 						ob_end_clean();
 						force_download($filename, $data);
 						exit;
-					}			
-				}	
-	}
+            */
+                  $this->sendHeaders($fullPath, mime_content_type($fullPath), $filename);
+                  $chunkSize = 1024 * 1024;
+                  $handle = fopen($fullPath, 'rb');
+                  while (!feof($handle))
+                  {
+                      $buffer = fread($handle, $chunkSize);
+                      echo $buffer;
+                      ob_flush();
+                      flush();
+                  }
+                  fclose($handle);
+                  exit;          			
+				  }	
+        }
+  }
 	
 	function extractZip ($fullPath='')
 	{
@@ -1165,10 +1193,91 @@ return $test_conn;*/
 		 reset($objects);
 		 rmdir($dir);
 	   }
-	} 
+  } 
+  
+  function zipWithoutMemoryLimit ($source=''){
+    if (!extension_loaded('zip') || !file_exists($source)) {
+      return false;
+    }
+    $zip = new ZipArchive();
 
+    $zip->open("" .$source. ".zip", ZipArchive::CREATE);
+
+    $files = scandir("" .$source. "");
+    unset($files[0], $files[1]);
+
+    foreach ($files as $file){
+        $zip->addFile("" .$source. "/{$file}");
+    }
+    $zip->close(); 
+  }
+
+  public function zip_files( $source, $destination ) 
+  {
+    $zip = new ZipArchive();
+    if($zip->open($destination, ZIPARCHIVE::CREATE) === true) {
+      $source = realpath($source);
+      if(is_dir($source)) {
+        
+        $iterator = new RecursiveDirectoryIterator($source);
+        $iterator->setFlags(RecursiveDirectoryIterator::SKIP_DOTS);
+        $files = new RecursiveIteratorIterator($iterator, RecursiveIteratorIterator::SELF_FIRST);
+      // $zip->addEmptyDir(basename($source));
+        foreach($files as $file) {
+          $file = realpath($file);
+          //echo "<li>File= " .$file;
+          if(is_dir($file)) {
+            $zip->addEmptyDir(str_replace($source . DIRECTORY_SEPARATOR, '', $file . DIRECTORY_SEPARATOR));
+          }elseif(is_file($file)) {
+            $zip->addFile($file,str_replace($source . DIRECTORY_SEPARATOR, '', $file));
+          }
+        }
+      }elseif(is_file($source)) {
+        $zip->addFile($source,basename($source));
+      }
+    }
+    exit;
+    return $zip->close();
+  }
+
+  public function folderToZip($folder, &$zipFile, $exclusiveLength) { 
+    $handle = opendir($folder); 
+    while (false !== $f = readdir($handle)) { 
+      if ($f != '.' && $f != '..') { 
+        $filePath = "$folder/$f"; 
+        // Remove prefix from file path before add to zip. 
+        $localPath = substr($filePath, $exclusiveLength); 
+        if (is_file($filePath)) { 
+          $zipFile->addFile($filePath, $localPath); 
+        } elseif (is_dir($filePath)) { 
+          // Add sub-directory. 
+          $zipFile->addEmptyDir($localPath); 
+          self::folderToZip($filePath, $zipFile, $exclusiveLength); 
+        } 
+      } 
+    } 
+    closedir($handle); 
+  } 
+
+  /** 
+   * Zip a folder (include itself). 
+   * Usage: 
+   *   HZip::zipDir('/path/to/sourceDir', '/path/to/out.zip'); 
+   * 
+   * @param string $sourcePath Path of directory to be zip. 
+   * @param string $outZipPath Path of output zip file. 
+   */ 
+  public function zipDir($sourcePath, $outZipPath,$configBackupDB='') 
+  { 
+    $pathInfo = pathInfo($sourcePath); 
+    $parentPath = $pathInfo['dirname']; 
+    $dirName = $pathInfo['basename']; 
+
+    $z = new ZipArchive(); 
+    $z->open($outZipPath, ZIPARCHIVE::CREATE); 
+    $z->addEmptyDir($dirName); 
+    self::folderToZip($sourcePath, $z, strlen("$parentPath/")); 
+    $z->close(); 
+  }
 }
-
-
-
 ?>

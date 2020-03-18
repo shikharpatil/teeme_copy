@@ -110,8 +110,8 @@ class Place_backup extends CI_Controller
 	{
 			//Manoj: code to allocate run time memory and time
 					
-				ini_set('max_execution_time', 500);
-				ini_set('memory_limit','300M');
+				//ini_set('max_execution_time', 500);
+				//ini_set('memory_limit','300M');
 				
 			//Manoj: code end	
 			
@@ -133,20 +133,20 @@ class Place_backup extends CI_Controller
 				
 				$workPlaceData = $objIdentity->getWorkPlaceDetails($workPlaceId);
 				$place_name = mb_strtolower($workPlaceData['companyName']);
-				
-				
+
+				// Which directory/files to backup ( directory should have trailing slash ) 	
+				$workPlaceDir = $this->config->item('absolute_path').'workplaces';	
+				$backupDir = 	$this->config->item('absolute_path').'backups';	
+				$configBackup = array($workPlaceDir.DIRECTORY_SEPARATOR.$place_name.DIRECTORY_SEPARATOR);
 				$backupName = "backup-".$place_name."-".date('d-m-y-H-i-s').'.zip';
-				// Which directory/files to backup ( directory should have trailing slash ) 			
-				$configBackup = array($this->config->item('absolute_path').'workplaces'.DIRECTORY_SEPARATOR.$place_name.DIRECTORY_SEPARATOR);
-				
 				// Put backups in which directory 
 				if($this->uri->segment(3)=='cron')
 				{
-					$configBackupDir = $this->config->item('absolute_path').'backups'.DIRECTORY_SEPARATOR.'autoPlaceBackups'.DIRECTORY_SEPARATOR;
+					$configBackupDir = $backupDir.DIRECTORY_SEPARATOR.'autoPlaceBackups'.DIRECTORY_SEPARATOR;
 				}
 				else
 				{
-					$configBackupDir = $this->config->item('absolute_path').'backups'.DIRECTORY_SEPARATOR;
+					$configBackupDir = $backupDir.DIRECTORY_SEPARATOR;
 				}
 				
 				// which directories to skip while backup 
@@ -155,13 +155,14 @@ class Place_backup extends CI_Controller
 				//  Databses you wish to backup , can be many ( tables array if contains table names only those tables will be backed up ) 
 				//$configBackupDB[] = array('server'=>$this->db->dbprefix('hostname'),'username'=>$this->db->dbprefix('username'),'password'=>$this->db->dbprefix('password'),'database'=>$this->db->dbprefix('database'),'tables'=>array());
 				$configBackupDB[] = array('server'=>$workPlaceData['server'],'username'=>$workPlaceData['server_username'],'password'=>$workPlaceData['server_password'],'database'=>$this->config->item('instanceDb').'_'.$place_name,'tables'=>array());
-				//echo "here"; exit;
+				
 					// Backup any files or folders if any
 					if (isset($configBackup) && is_array($configBackup) && count($configBackup)>0)
 					{
 					
 						foreach ($configBackup as $dir)
 						{
+							/*
 							$basename = basename($dir);
 					
 							// dir basename
@@ -209,11 +210,55 @@ class Place_backup extends CI_Controller
 									}
 								}
 							}
-					
+							*/
+							/*
+							$rootPath = realpath($dir);
+							$CreateNewZip = $this->backup_manager;
+							//$CreateNewZip->zip_files($rootPath,$configBackupDir.$backupName);
+							$CreateNewZip->zipDir($rootPath,$configBackupDir.$backupName,$configBackupDB);
+							*/
+							$dbBackupDone = 0;
+							$placeBackupDone = 0;
+							
+								foreach ($configBackupDB as $db)
+								{
+									$server   = $db['server'];
+									$username = $db['username'];
+									$password = $db['password'];
+									$database = $db['database'];
+									$dbBackupFileName = $database.'-sqldump.sql';
+									$dbBackupFilePath = $workPlaceDir.DIRECTORY_SEPARATOR.$dbBackupFileName;
+									//echo "mysqldump -u $username -p$password $database > $dbBackupFilePath"; exit;
+									if (exec("mysqldump -u $username -p$password $database > $dbBackupFilePath")==0){
+										$dbBackupDone = 1;
+										echo "<li>db backup done"; 
+									}
+									else{
+										echo "<li>database backup failed"; 
+									}
+								}		
+								if ($dbBackupDone){
+									$basename = basename($dir);
+									if(exec("cd $workPlaceDir;zip -r $backupName $basename $dbBackupFileName && mv $backupName $configBackupDir && rm $dbBackupFileName")) {
+										$placeBackupDone = 1;
+										//echo "<li>Place backup done"; 
+									}
+									else{
+										//echo "<li>Place backup failed"; 
+									}
+								}	
+								else {
+									echo "<li>database backup failed. Can't continue place backup"; 
+								}						
+
 						}			
 					}
-					//echo "now here"; exit;
+					if (!$dbBackupDone && !$placeBackupDone){
+						echo "<li>There were some error executing backups"; 
+					}				
+					
 					// Backup database
+					/*
 					if (isset($configBackupDB) && is_array($configBackupDB) && count($configBackupDB)>0)
 					{
 						foreach ($configBackupDB as $db)
@@ -236,9 +281,13 @@ class Place_backup extends CI_Controller
 							
 						}				
 					}
-				//echo "oho"; exit;
-				$zipfile=$createZip->getZippedfile();
+					*/
+				//$zipfile=$createZip->getZippedfile();
+
+				/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 				$fileName = $configBackupDir.$backupName;
+				/*
+				
 				$fd = fopen ($fileName, "wb");
 				//$out = fwrite ($fd, $zipfile);
 				if(!fwrite ($fd, $zipfile))
@@ -267,17 +316,44 @@ class Place_backup extends CI_Controller
 					$Place_Backup_Success = 1;
 				}
 				fclose ($fd);
+				*/
+				if ($dbBackupDone || $placeBackupDone){
+					$time_elapsed_secs = microtime(true) - $start;
+					$exec_time = round($time_elapsed_secs, 2);
+					//log application message start
+						if($this->uri->segment(3)=='cron')
+						{
+							$backupTemplate = $this->lang->line('txt_automatic_place_backup_log');
+						}
+						else
+						{
+							$backupTemplate = $this->lang->line('txt_manual_place_backup_log');
+						}
+						$var1 = array("{placename}", "{username}", "{exectime}");
+						$var2 = array($place_name, $_SESSION['userTagName'],$exec_time);
+						$logMsg = str_replace($var1,$var2,$backupTemplate);
+						log_message('MY_PLACE', $logMsg);
+					//log application message end
+				
+					$Place_Backup_Success = 1;
+				}
+				else
+				{
+					log_message('MY_PLACE', 'Manual place backup attempt failed from ' .$_SESSION['userTagName']);
+					$Place_Backup_Success = 0;
+				}
+
 				
 				//Manoj: Get the ftp credentials start
 				
-						$ftpDetails=array();
-						$ftp_host=$details['remoteServerDetails']['config_value']['ftp_host'];
-						$ftp_user=$details['remoteServerDetails']['config_value']['ftp_user'];
-						$ftp_password=$details['remoteServerDetails']['config_value']['ftp_password'];
-						$ftp_backup_path=$details['remoteServerDetails']['config_value']['ftp_backup_path'];
-						$manual_remote_backup_status=$details['backupChecksDetails']['config_value']['manual_remote_backup_status'];
-						$auto_remote_backup_status=$details['backupChecksDetails']['config_value']['auto_remote_backup_status'];
-						$ftpDetailsArray='';
+				$ftpDetails=array();
+				$ftp_host=$details['remoteServerDetails']['config_value']['ftp_host'];
+				$ftp_user=$details['remoteServerDetails']['config_value']['ftp_user'];
+				$ftp_password=$details['remoteServerDetails']['config_value']['ftp_password'];
+				$ftp_backup_path=$details['remoteServerDetails']['config_value']['ftp_backup_path'];
+				$manual_remote_backup_status=$details['backupChecksDetails']['config_value']['manual_remote_backup_status'];
+				$auto_remote_backup_status=$details['backupChecksDetails']['config_value']['auto_remote_backup_status'];
+				$ftpDetailsArray='';
 						
 				//Manoj: Get ftp credentials end
 				
@@ -298,17 +374,19 @@ class Place_backup extends CI_Controller
 						
 							//ssh2 connection start
 								$ftp_file_backup_path = $ftp_backup_path."/".$backupName;
+
 							
-								$resConnection = ssh2_connect($ftp_host);
+								$resConnection = ssh2_connect($ftp_host, 22);
 								
 								if(ssh2_auth_password($resConnection, $ftp_user, $ftp_password)){
 									//Initialize SFTP subsystem
+									/*
 									$resSFTP = ssh2_sftp($resConnection);  
 									 
 									$resFile = fopen("ssh2.sftp://".intval($resSFTP).$ftp_file_backup_path, 'w');
-									
-									//fwrite ($resFile, $zipfile);
-									if(!fwrite ($resFile, $zipfile))
+									*/
+									//if(!fwrite ($resFile, $zipfile)) 
+									if (ssh2_scp_send($resConnection, $fileName, $ftp_file_backup_path, 0777)==0)
 									{
 										$Remote_Backup_Fail='false';
 										$_SESSION['ftpErrorMsg'] = $this->lang->line('ftp_upload_failed');
