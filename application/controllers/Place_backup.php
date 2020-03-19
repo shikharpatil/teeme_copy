@@ -226,10 +226,10 @@ class Place_backup extends CI_Controller
 									$username = $db['username'];
 									$password = $db['password'];
 									$database = $db['database'];
-									$dbBackupFileName = $database.'-sqldump.sql';
+									$dbBackupFileName = $database.'-sqldump.sql.gz';
 									$dbBackupFilePath = $workPlaceDir.DIRECTORY_SEPARATOR.$dbBackupFileName;
-									//echo "mysqldump -u $username -p$password $database > $dbBackupFilePath"; exit;
-									if (exec("mysqldump -u $username -p$password $database > $dbBackupFilePath")==0){
+
+									if (exec("mysqldump -h $server -u $username -p$password $database > $dbBackupFilePath")==0){
 										$dbBackupDone = 1;
 										echo "<li>db backup done"; 
 									}
@@ -337,9 +337,14 @@ class Place_backup extends CI_Controller
 				
 					$Place_Backup_Success = 1;
 				}
+				else if ($dbBackupDone==0)
+				{
+					log_message('MY_PLACE', 'Manual place backup attempt failed due to database backup error from ' .$_SESSION['userTagName']);
+					$Place_Backup_Success = 0;
+				}
 				else
 				{
-					log_message('MY_PLACE', 'Manual place backup attempt failed from ' .$_SESSION['userTagName']);
+					log_message('MY_PLACE', 'Manual place backup attempt failed due to place files and folders backup error from ' .$_SESSION['userTagName']);
 					$Place_Backup_Success = 0;
 				}
 
@@ -552,9 +557,11 @@ class Place_backup extends CI_Controller
 
 			$objIdentity = $this->identity_db_manager;
 			
+			$backupDir = 	$this->config->item('absolute_path').'backups'.DIRECTORY_SEPARATOR;	
+
 			$filename = $this->uri->segment(3);
 
-			$objIdentity->deleteBackup ($filename);
+			$objIdentity->deleteBackup ($filename,$backupDir);
 			
 			redirect('place_backup','location');
 			exit;

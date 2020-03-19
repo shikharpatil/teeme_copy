@@ -1,4 +1,4 @@
-<?php /*Copyrights © 2008-2009 B3 Technologies Pty Ltd. All rights reserved.*/ ?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<?php /*Copyrights ï¿½ 2008-2009 B3 Technologies Pty Ltd. All rights reserved.*/ ?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
 <html xmlns="http://www.w3.org/1999/xhtml">
 
@@ -161,338 +161,340 @@
 				<!--Added by Dashrath- load notification side bar-->
 				<?php $this->load->view('common/notification_sidebar.php');?>
 				<!--Dashrath- code end-->
-			</div>
-					  
-<table border="0" align="center" cellpadding="0" cellspacing="0">
 
-  <tr>
+				<table border="0" align="center" cellpadding="0" cellspacing="0">
 
-    <td valign="top">
+<tr>
 
-        <table width="<?php //echo $this->config->item('page_width')-25;?>" border="0" align="center" cellpadding="0" cellspacing="0">
+  <td valign="top">
 
-          <tr>
+	  <table width="<?php //echo $this->config->item('page_width')-25;?>" border="0" align="center" cellpadding="0" cellspacing="0">
 
-            <td align="left" valign="top">
+		<tr>
 
-			<!-- header -->	
+		  <td align="left" valign="top">
 
-			
+		  <!-- header -->	
 
-			<!-- header -->	
+		  
 
-			</td>
+		  <!-- header -->	
 
-          </tr>
+		  </td>
 
-          <tr>
+		</tr>
 
-            <td align="left" valign="top">&nbsp;</td>
+		<tr>
 
-          </tr>
+		  <td align="left" valign="top">&nbsp;</td>
 
-        
+		</tr>
 
-          <tr>
+	  
 
-            <td align="left" valign="top"><table width="<?php //echo $this->config->item('page_width')+35;?>" border="0" align="center" cellpadding="0" cellspacing="0">
+		<tr>
 
-                <tr>
+		  <td align="left" valign="top"><table width="<?php //echo $this->config->item('page_width')+35;?>" border="0" align="center" cellpadding="0" cellspacing="0">
 
-                  <td align="left" valign="top">
+			  <tr>
 
-					<!-- Main Body -->
+				<td align="left" valign="top">
 
-					<table width="100%" border="0" cellpadding="6" cellspacing="6">
+				  <!-- Main Body -->
 
-                    
+				  <table width="100%" border="0" cellpadding="6" cellspacing="6">
 
-                    <tr>
+				  
 
-                		<td colspan="5" align="left">
+				  <tr>
 
-						<?php //echo $this->lang->line('msg_workplaces_not_available');?>
+					  <td colspan="5" align="left">
 
-                    	<form method="post" action="">
-													
-							<input type="submit" name="backup" value="Create New Backup" onclick="document.getElementById('please_wait').style.display='';" />
+					  <?php //echo $this->lang->line('msg_workplaces_not_available');?>
 
-                    	</form>
+					  <form method="post" action="">
+												  
+						  <input type="submit" name="backup" value="Create New Backup" onclick="document.getElementById('please_wait').style.display='';" />
 
-                    <!--onclick="document.getElementById('please_wait').style.display='';"-->
+					  </form>
 
-                    	<span id="please_wait" style="display:none;">
+				  <!--onclick="document.getElementById('please_wait').style.display='';"-->
 
-                    		<?php echo $this->lang->line('please_wait_txt'); ?>
+					  <span id="please_wait" style="display:none;">
 
-                    	</span>
+						  <?php echo $this->lang->line('please_wait_txt'); ?>
 
-                		</td>
+					  </span>
 
-              		</tr>
-				 <?php
-				//Manoj: code to show the status of backup
-				
-				
-				if( $Place_Backup_Fail!='false' && $Remote_Backup_Fail=='false')
-				{
-				?>
+					  </td>
 
-              	<tr>
-					<td colspan="5" class="tdSpace"><span class="successMsg"><?php echo  $this->lang->line('current_server_backup_success'); ?></span></td>
-				</tr>
+					</tr>
+			   <?php
+			  //Manoj: code to show the status of backup
+			  
+			  
+			  if( $Place_Backup_Fail!='false' && $Remote_Backup_Fail=='false')
+			  {
+			  ?>
+
 				<tr>
-					<td colspan="5" class="tdSpace"><span class="errorMsg"><?php echo $this->lang->line('Remote_backup_failed'); ?></span></td>
-				</tr>
+				  <td colspan="5" class="tdSpace"><span class="successMsg"><?php echo  $this->lang->line('current_server_backup_success'); ?></span></td>
+			  </tr>
+			  <tr>
+				  <td colspan="5" class="tdSpace"><span class="errorMsg"><?php echo $this->lang->line('Remote_backup_failed'); ?></span></td>
+			  </tr>
 
-              	<?php				
-				}
-				else if($Place_Backup_Fail=='false' && $Remote_Backup_Fail=='false')
+				<?php				
+			  }
+			  else if($Place_Backup_Fail=='false' && $Remote_Backup_Fail=='false')
 
-				{
+			  {
 
-				?>
+			  ?>
 
-              	<tr>
-
-                	<td colspan="5" class="tdSpace"><span class="errorMsg"><?php echo $this->lang->line('current_server_backup_failed'); ?></span></td>
-				</tr>
 				<tr>
-					<td colspan="5" class="tdSpace"><span class="errorMsg"><?php echo $this->lang->line('Remote_backup_failed'); ?></span></td>
-				</tr>
 
-              	<?php
+				  <td colspan="5" class="tdSpace"><span class="errorMsg"><?php echo $this->lang->line('current_server_backup_failed'); ?></span></td>
+			  </tr>
+			  <tr>
+				  <td colspan="5" class="tdSpace"><span class="errorMsg"><?php echo $this->lang->line('Remote_backup_failed'); ?></span></td>
+			  </tr>
 
-				}
-				else if($Place_Backup_Fail=='false')
-
-				{
-
-				?>
-
-              	<tr>
-					<td colspan="5" class="tdSpace"><span class="errorMsg"><?php echo $this->lang->line('current_server_backup_failed'); ?></span></td>
-				</tr>
-				
 				<?php
 
-				}
-				else if($Remote_Backup_Sucess==1 && $Place_Backup_Success==1)
-				{
-				?>
+			  }
+			  else if($Place_Backup_Fail=='false')
 
-              	<tr>
+			  {
 
-                	<td colspan="5" class="tdSpace"><span class="successMsg"><?php echo $this->lang->line('current_server_backup_success'); ?></span></td>
-				</tr>
+			  ?>
+
 				<tr>
-					<td colspan="5" class="tdSpace"><span class="successMsg"><?php echo $this->lang->line('Remote_backup_success'); ?></span></td>
+				  <td colspan="5" class="tdSpace"><span class="errorMsg"><?php echo $this->lang->line('current_server_backup_failed'); ?></span></td>
+			  </tr>
+			  
+			  <?php
 
-              	</tr>
+			  }
+			  else if($Remote_Backup_Sucess==1 && $Place_Backup_Success==1)
+			  {
+			  ?>
 
-              	<?php				
-				}
-				else if($Place_Backup_Success==1)
-				{
-				?>
+				<tr>
 
-              	<tr>
-					<td colspan="5" class="tdSpace"><span class="successMsg"><?php echo $this->lang->line('current_server_backup_success'); ?></span></td>
+				  <td colspan="5" class="tdSpace"><span class="successMsg"><?php echo $this->lang->line('current_server_backup_success'); ?></span></td>
+			  </tr>
+			  <tr>
+				  <td colspan="5" class="tdSpace"><span class="successMsg"><?php echo $this->lang->line('Remote_backup_success'); ?></span></td>
+
 				</tr>
-				
+
 				<?php				
-				}
-				
-				if(isset($_SESSION['ftpErrorMsg']) && $_SESSION['ftpErrorMsg'] !=	"")
+			  }
+			  else if($Place_Backup_Success==1)
+			  {
+			  ?>
 
-				{
+				<tr>
+				  <td colspan="5" class="tdSpace"><span class="successMsg"><?php echo $this->lang->line('current_server_backup_success'); ?></span></td>
+			  </tr>
+			  
+			  <?php				
+			  }
+			  
+			  if(isset($_SESSION['ftpErrorMsg']) && $_SESSION['ftpErrorMsg'] !=	"")
 
-				?>
+			  {
 
-              	<tr>
+			  ?>
 
-                	<td colspan="5" class="tdSpace"><span class="errorMsg"><?php echo $_SESSION['ftpErrorMsg']; $_SESSION['ftpErrorMsg'] ='';?></span></td>
+				<tr>
 
-              	</tr>
+				  <td colspan="5" class="tdSpace"><span class="errorMsg"><?php echo $_SESSION['ftpErrorMsg']; $_SESSION['ftpErrorMsg'] ='';?></span></td>
 
-              	<?php
+				</tr>
 
-				}
-				
-				//Manoj: showing backup status end
-				
-                if(isset($_SESSION['errorMsg']) && $_SESSION['errorMsg'] !=	"")
+				<?php
 
-				{
+			  }
+			  
+			  //Manoj: showing backup status end
+			  
+			  if(isset($_SESSION['errorMsg']) && $_SESSION['errorMsg'] !=	"")
 
-				?>
+			  {
 
-              	<?php /*?><tr>
+			  ?>
 
-                	<td colspan="5" class="tdSpace"><span class="errorMsg"><?php echo $_SESSION['errorMsg']; $_SESSION['errorMsg'] ='';?></span></td>
+				<?php /*?><tr>
 
-              	</tr><?php */?>
+				  <td colspan="5" class="tdSpace"><span class="errorMsg"><?php echo $_SESSION['errorMsg']; $_SESSION['errorMsg'] ='';?></span></td>
 
-              	<?php
+				</tr><?php */?>
 
-				}
+				<?php
 
-				if ($success==1)
+			  }
 
-				{
+			  if ($success==1)
+
+			  {
 
 /*					header('Content-Type: application/octet-stream');
 
-					header('Content-Length: '.$filesize);
+				  header('Content-Length: '.$filesize);
 
-					header('Content-Disposition: attachment; filename='.$filename);
+				  header('Content-Disposition: attachment; filename='.$filename);
 
-					header('Content-Transfer-Encoding: binary');
+				  header('Content-Transfer-Encoding: binary');
 
-					readfile($filename);*/
+				  readfile($filename);*/
 
-				?>
+			  ?>
 
-              	<?php /*?><tr>
+				<?php /*?><tr>
 
-                	<td colspan="5" class="tdSpace"><span class="errorMsg">Total size of the backup = <?php echo $filesize;?> MB</span></td>
+				  <td colspan="5" class="tdSpace"><span class="errorMsg">Total size of the backup = <?php echo $filesize;?> MB</span></td>
 
-              	</tr><?php */?>	
+				</tr><?php */?>	
 
-              	<?php
+				<?php
 
-				}
+			  }
 
-				?>
-				<tr>
-					<td colspan="5">
-                		<span class="formErrorMsg"></span>
-					</td>
-				</tr>
-            <?php
+			  ?>
+			  <tr>
+				  <td colspan="5">
+					  <span class="formErrorMsg"></span>
+				  </td>
+			  </tr>
+		  <?php
 
-			if(count($backupDetails) > 0)
+		  if(count($backupDetails) > 0)
 
-			{
+		  {
 
-			?>
+		  ?>
 
-              <tr>
+			<tr>
 
-                <td><strong><?php echo $this->lang->line('backup_id_txt'); ?></strong></td>
+			  <td><strong><?php echo $this->lang->line('backup_id_txt'); ?></strong></td>
 
-                <td><strong><?php echo $this->lang->line('backup_name_txt'); ?> </strong></td>
+			  <td><strong><?php echo $this->lang->line('backup_name_txt'); ?> </strong></td>
 
-                <td><strong><?php echo $this->lang->line('backup_size_txt'); ?> </strong></td>
+			  <td><strong><?php echo $this->lang->line('backup_size_txt'); ?> </strong></td>
 
-                <td><strong><?php echo $this->lang->line('backup_date_txt'); ?> </strong></td>
-				
-				<td><strong><?php echo $this->lang->line('backup_date_type'); ?> </strong></td>
-				
-				<td><strong><?php echo $this->lang->line('remote_server_txt'); ?> </strong></td>
+			  <td><strong><?php echo $this->lang->line('backup_date_txt'); ?> </strong></td>
+			  
+			  <td><strong><?php echo $this->lang->line('backup_date_type'); ?> </strong></td>
+			  
+			  <td><strong><?php echo $this->lang->line('remote_server_txt'); ?> </strong></td>
 
-                <td align="center"><strong><?php echo $this->lang->line('txt_Action');?></strong></td>
+			  <td align="center"><strong><?php echo $this->lang->line('txt_Action');?></strong></td>
 
-              </tr>
+			</tr>
 
-              <?php
+			<?php
 
-			$i = 1;
+		  $i = 1;
 
-			foreach($backupDetails as $keyVal=>$backupData)
+		  foreach($backupDetails as $keyVal=>$backupData)
 
-			{				
+		  {				
 
-			?>
+		  ?>
 
-              <tr>
+			<tr>
 
-                <td><?php echo $backupData['backupId'];?></td>
+			  <td><?php echo $backupData['backupId'];?></td>
 
-                <td><?php echo $backupData['filename'];?></td>
+			  <td><?php echo $backupData['filename'];?></td>
 
-                <td><?php echo $backupData['filesize'];?> MB</td>
+			  <td><?php echo $backupData['filesize'];?> MB</td>
 
-                <td><?php echo $this->time_manager->getUserTimeFromGMTTime($backupData['createdDate'], 'm-d-Y h:i A');?></td>
-				
-				<!--Manoj: Showing backup type-->
-				<td><?php 
-					$configBackupDir = $this->config->item('absolute_path').'backups'.DIRECTORY_SEPARATOR.'autoPlaceBackups'.DIRECTORY_SEPARATOR;
-					$path = $configBackupDir;
-					if ($handle = opendir($path)) {
-					
-						while (false !== ($file = readdir($handle))) { 
-							if($file==$backupData['filename'])
-							{
-								$val=$this->lang->line('automatic_txt');
-								break;
-							}
-							else
-							{
-								$val=$this->lang->line('manual_txt');
-							}	
-						}
-						echo $val;
-					
-						closedir($handle); 
-					} ?></td>
-					<td>
-					<?php 
-						echo $backupData['remoteServer']['ftp_host'];
-					?>
-					</td>
-					
-					<!--Manoj: code end-->
+			  <td><?php echo $this->time_manager->getUserTimeFromGMTTime($backupData['createdDate'], 'm-d-Y h:i A');?></td>
+			  
+			  <!--Manoj: Showing backup type-->
+			  <td><?php 
+				  $configBackupDir = $this->config->item('absolute_path').'backups'.DIRECTORY_SEPARATOR.'autoPlaceBackups'.DIRECTORY_SEPARATOR;
+				  $path = $configBackupDir;
+				  if ($handle = opendir($path)) {
+				  
+					  while (false !== ($file = readdir($handle))) { 
+						  if($file==$backupData['filename'])
+						  {
+							  $val=$this->lang->line('automatic_txt');
+							  break;
+						  }
+						  else
+						  {
+							  $val=$this->lang->line('manual_txt');
+						  }	
+					  }
+					  echo $val;
+				  
+					  closedir($handle); 
+				  } ?></td>
+				  <td>
+				  <?php 
+					  echo $backupData['remoteServer']['ftp_host'];
+				  ?>
+				  </td>
+				  
+				  <!--Manoj: code end-->
 
-                <td align="center">
+			  <td align="center">
 
-                	<a href="<?php echo base_url();?>place_backup/downloadBackup/<?php echo $backupData['filename'];?>"><img src="<?php echo base_url();?>images/download.gif" alt="<?php echo $this->lang->line('txt_Download');?>" title="<?php echo $this->lang->line('txt_Download');?>" border="0" style="cursor:pointer;"></a>
+				  <a href="<?php echo base_url();?>place_backup/downloadBackup/<?php echo $backupData['filename'];?>"><img src="<?php echo base_url();?>images/download.gif" alt="<?php echo $this->lang->line('txt_Download');?>" title="<?php echo $this->lang->line('txt_Download');?>" border="0" style="cursor:pointer;"></a>
 
-					&nbsp;<a href="<?php echo base_url();?>place_backup/deleteBackup/<?php echo $backupData['filename'];?>"><img src="<?php echo base_url();?>images/icon_delete.gif" alt="<?php echo $this->lang->line('txt_Delete');?>" title="<?php echo $this->lang->line('txt_Delete');?>" onClick="return confirmDelete()" border="0" style="cursor:pointer;"></a>
+				  &nbsp;<a href="<?php echo base_url();?>place_backup/deleteBackup/<?php echo $backupData['filename'];?>"><img src="<?php echo base_url();?>images/icon_delete.gif" alt="<?php echo $this->lang->line('txt_Delete');?>" title="<?php echo $this->lang->line('txt_Delete');?>" onClick="return confirmDelete()" border="0" style="cursor:pointer;"></a>
 
-                </td>
+			  </td>
 
-              </tr>
+			</tr>
 
-              <?php
+			<?php
 
-				$i++;					
+			  $i++;					
 
-			}
+		  }
 
-		}
+	  }
 
-		?>
-
-
+	  ?>
 
 
 
-            </table>
 
-				<!-- Main Body -->
 
-				
+		  </table>
 
-				</td>
+			  <!-- Main Body -->
 
-                </tr>
+			  
 
-            </table></td>
+			  </td>
 
-          </tr>
+			  </tr>
 
-          
+		  </table></td>
 
-          
+		</tr>
 
-        </table>
+		
 
-    </td>
+		
 
-  </tr>
+	  </table>
+
+  </td>
+
+</tr>
 
 </table>
+			</div> <!-- Container div end -->
+					  
+
 
 <?php //$this->load->view('common/footer');?>
 <?php $this->load->view('common/foot.php');?>

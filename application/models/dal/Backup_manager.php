@@ -1168,7 +1168,7 @@ return $test_conn;*/
 					} 
 					else {
 						$ext = pathinfo($file, PATHINFO_EXTENSION);
-						if ($ext != 'sql')
+						if ($ext != 'gz')
 						{
 							copy($source."/".$file, $dest."/".$file);
 						}

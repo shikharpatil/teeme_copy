@@ -274,7 +274,7 @@ class Home extends CI_Controller
 											{
 												$currentPath = $this->config->item('absolute_path').'uploads'.DIRECTORY_SEPARATOR.$newdir;
 												
-												$sqlfiles = glob($currentPath.DIRECTORY_SEPARATOR.'*.sql');
+												$sqlfiles = glob($currentPath.DIRECTORY_SEPARATOR.'*.sql.gz');
 												$sqlfilecount = 0;
 													foreach ($sqlfiles as $file) {
 														$place_db = $file;
@@ -335,6 +335,10 @@ class Home extends CI_Controller
 
 									$_SESSION['errorMsg'] = $this->lang->line('database_not_created_please_verify'); 
 									redirect('instance/home/create_work_place', 'location');
+								}
+								else if (is_dir($currentPath))
+								{
+									$objBackup->rrmdir ($currentPath);
 								}
                                 /* End Andy - Create new place database */	
                                 
@@ -1289,8 +1293,8 @@ class Home extends CI_Controller
 			$dbName = $this->config->item('instanceName')."_".strtolower($workPlaceDetails['companyName']);
 			
 			$conFileName = str_replace(' ','_',$arrDetails['workPlaceDetails']['companyName']);														
-			$ourFileName1 = $this->config->item('absolute_path').'application/controllers/places/'.$conFileName.'.php';
-			$ourFileName2 = $this->config->item('absolute_path').'workplaces/'.$conFileName;
+			$ourFileName1 = $this->config->item('absolute_path').'application'.DIRECTORY_SEPARATOR.'controllers'.DIRECTORY_SEPARATOR.'places'.DIRECTORY_SEPARATOR.ucfirst($conFileName).'.php';
+			$ourFileName2 = $this->config->item('absolute_path').'workplaces'.DIRECTORY_SEPARATOR.$conFileName;
 
 				if($this->input->post('Submit') == 'Confirm')
 				{			
@@ -1945,8 +1949,8 @@ class Home extends CI_Controller
 			//End
 			$details['workPlaceDetails'] 	= $objIdentity->getWorkPlaces();
 			
-			ini_set('max_execution_time', 500);
-			ini_set('memory_limit','300M');
+			//ini_set('max_execution_time', 500);
+			//ini_set('memory_limit','300M');
 			
 			$details['offline_mode'] = $objIdentity->get_maintenance_mode(); 
 			$details['remoteServerDetails'] = $objIdentity->GetRemoteServerDetails();
@@ -1960,7 +1964,7 @@ class Home extends CI_Controller
 				
 				//echo "db= " .$this->config->item('instanceDb'); exit;
 				
-				
+				$basepath = $this->config->item('absolute_path');
 				$backupName = "backup-".date('d-m-y-H-i-s').'.zip';
 				// Which directory/files to backup ( directory should have trailing slash ) 			
 				$configBackup = array($this->config->item('absolute_path').'workplaces'.DIRECTORY_SEPARATOR);
@@ -1987,12 +1991,91 @@ class Home extends CI_Controller
 						$place_database = $this->config->item('instanceDb').'_'.mb_strtolower($workPlaceData['companyName']);
 						$configBackupDB2[] = array('server'=>$workPlaceData['server'],'username'=>$workPlaceData['server_username'],'password'=>$workPlaceData['server_password'],'database'=>$place_database,'tables'=>array());
 					}
+
+
+					// Backup instance database
+					if (isset($configBackupDB1) && is_array($configBackupDB1) && count($configBackupDB1)>0)
+					{
+						exec("cd $configBackupDir;rm -rf instancedb;mkdir -m 777 -p instancedb");
+						foreach ($configBackupDB1 as $db)
+						{
+							/*
+							$backup  	 = $this->backup_manager;
+							$backup->server   = $db['server'];
+							$backup->username = $db['username'];
+							$backup->password = $db['password'];
+							$backup->database = $db['database'];
+							$backup->tables   = $db['tables'];
+						 
+							$backup->backup_dir = $configBackupDir;
+							$sqldump = $backup->Execute($MSB_STRING,"",FALSE);
+							//echo '<pre>';
+							//print_r($sqldump); exit;
+							//echo $sqldump;exit;
+								
+							$createZip->addFile($sqldump,'instancedb'.DIRECTORY_SEPARATOR.$db['database'].'-sqldump.sql');
+							*/
+							$instance_server = $db['server'];
+							$instance_username= $db['username'];
+							$instance_password = $db['password'];
+							$instance_database = $db['database'];
+							$instanceDbBackupFileName = 'instance-'.$db['database'].'-sqldump.sql.gz';
+							$instanceDbBackupFilePath = $configBackupDir.DIRECTORY_SEPARATOR.'instancedb'.DIRECTORY_SEPARATOR.$instanceDbBackupFileName;
+							$instanceDbBackupDone = 0;
+							if (exec("cd $basepath;mysqldump -h $instance_server -u $instance_username -p$instance_password $instance_database > $instanceDbBackupFilePath")==0){
+								$instanceDbBackupDone = 1;
+								//echo "<li>instance database backup done"; 
+							}
+							else{
+								//echo "<li>instance database backup failed"; 
+							}
+						}									
+					}
+
+					// Backup place databases
+					if (isset($configBackupDB2) && is_array($configBackupDB2) && count($configBackupDB2)>0)
+					{
+						exec("cd $configBackupDir;rm -rf placedb;mkdir -m 777 -p placedb");
+
+						foreach ($configBackupDB2 as $db)
+						{
+							/*
+							$backup  	 = $this->backup_manager;
+							$backup->server   = $db['server'];
+							$backup->username = $db['username'];
+							$backup->password = $db['password'];
+							$backup->database = $db['database'];
+							$backup->tables   = $db['tables'];
+						 
+							$backup->backup_dir = $configBackupDir;
+							$sqldump = $backup->Execute($MSB_STRING,"",FALSE);
+
+							$createZip->addFile($sqldump,'placedb'.DIRECTORY_SEPARATOR.$db['database'].'-sqldump.sql');
+							*/
+							$place_server = $db['server'];
+							$place_username= $db['username'];
+							$place_password = $db['password'];
+							$place_database = $db['database'];
+							$placeDbBackupFileName = 'place-'.$db['database'].'-sqldump.sql.gz';
+							$placeDbBackupFilePath = $configBackupDir.DIRECTORY_SEPARATOR.'placedb'.DIRECTORY_SEPARATOR.$placeDbBackupFileName;
+							$placeDbBackupDone = 0;	
+							if (exec("cd $configBackupDir;mysqldump -h $place_server -u $place_username -p$place_password $place_database > $placeDbBackupFilePath")==0){
+								$placeDbBackupDone = 1;
+								//echo "<li>place database backup for the place $place_database finished with success"; 
+							}
+							else{
+								//echo "<li>place database backup for the place $place_database finished with failure"; 
+							}
+						}									
+					}			
+
 	
 					// Backup any files or folders if any
 					if (isset($configBackup) && is_array($configBackup) && count($configBackup)>0)
 					{
 						foreach ($configBackup as $dir)
 						{
+							/*
 							$basename = basename($dir);
 					
 							// dir basename
@@ -2039,10 +2122,27 @@ class Home extends CI_Controller
 									}
 								}
 							}
-					
+							*/
+							$basename = basename($dir);
+							$instanceDbBackupPath = basename($configBackupDir.DIRECTORY_SEPARATOR.'instancedb');
+							$placeDbBackupPath = basename($configBackupDir.DIRECTORY_SEPARATOR.'placedb');
+							$workPlaceBackupDone = 0;
+							//if(exec("cd $basepath;zip -r $backupName $basename $instanceDbBackupPath $placeDbBackupPath && mv $backupName $configBackupDir && rm -rf $placeDbBackupPath")) {
+							if(exec("cd $basepath;zip -r $backupName $basename && mv $backupName $configBackupDir;cd $configBackupDir;zip -ur $backupName $instanceDbBackupPath $placeDbBackupPath")) {
+								$workPlaceBackupDone = 1;
+								//echo "<li>Place backup done"; 
+							}
+							else{
+								//echo "<li>Place backup failed"; 
+							}
 						}			
 					}
-	
+					exec("cd $configBackupDir;rm -rf instancedb");
+					exec("cd $configBackupDir;rm -rf placedb");
+					$fileName = $configBackupDir.$backupName;
+
+					//exit;
+					/*
 					// Backup instance database
 					if (isset($configBackupDB1) && is_array($configBackupDB1) && count($configBackupDB1)>0)
 					{
@@ -2066,6 +2166,7 @@ class Home extends CI_Controller
 						}									
 					}
 					
+					
 					// Backup place databases
 					if (isset($configBackupDB2) && is_array($configBackupDB2) && count($configBackupDB2)>0)
 					{
@@ -2086,11 +2187,12 @@ class Home extends CI_Controller
 							$createZip->addFile($sqldump,'placedb'.DIRECTORY_SEPARATOR.$db['database'].'-sqldump.sql');
 						}									
 					}
-				
+					*/
+				/*
 				$zipfile=$createZip->getZippedfile();
 				$fileName = $configBackupDir.$backupName;
 				$fd = fopen ($fileName, "wb");
-				//$out = fwrite ($fd, $zipfile);
+				
 				if(!fwrite ($fd, $zipfile))
 				{
 					$details['Instance_Backup_Fail']='false';
@@ -2116,6 +2218,43 @@ class Home extends CI_Controller
 					$details['Instance_Backup_Success'] = 1;
 				}
 				fclose ($fd);
+				*/
+
+				// Log results
+				if ($instanceDbBackupDone && $placeDbBackupDone && $workPlaceBackupDone) {
+					$time_elapsed_secs = microtime(true) - $start;
+					$exec_time = round($time_elapsed_secs, 2);
+					//log application message start
+						if($this->uri->segment(4)=='cron')
+						{
+							$backupTemplate = $this->lang->line('txt_automatic_backup_log');
+						}
+						else
+						{
+							$backupTemplate = $this->lang->line('txt_manual_backup_log');
+						}
+						$var1 = array("{username}", "{exectime}");
+						$var2 = array($_SESSION['adminUserName'],$exec_time);
+						$logMsg = str_replace($var1,$var2,$backupTemplate);
+						log_message('MY_INSTANCE', $logMsg);
+					//log application message end
+					$details['Instance_Backup_Success'] = 1;
+				}
+				else if ($instanceDbBackupDone==0)
+				{
+					log_message('MY_PLACE', 'Manual place backup attempt failed due to instance database backup error from ' .$_SESSION['adminUserName']);
+					$details['Instance_Backup_Fail']='false';
+				}
+				else if ($placeDbBackupDone==0)
+				{
+					log_message('MY_PLACE', 'Manual place backup attempt failed due to place database backup error from ' .$_SESSION['adminUserName']);
+					$details['Instance_Backup_Fail']='false';
+				}
+				else
+				{
+					log_message('MY_PLACE', 'Manual place backup attempt failed due to place files and folders backup error from ' .$_SESSION['adminUserName']);
+					$details['Instance_Backup_Fail']='false';
+				}
 				
 				//Manoj: Get the ftp credentials start
 				
@@ -2310,34 +2449,55 @@ class Home extends CI_Controller
 			$objBackup	 = $this->backup_manager;
 			
 			$filename = $this->uri->segment(4);
+			$fullPath = '';
 			
 			//Manoj: code for automatic backup file path
 			
-				$configBackupDir = $this->config->item('absolute_path').'backups'.DIRECTORY_SEPARATOR.'autoInstanceBackups'.DIRECTORY_SEPARATOR;
+			//$configBackupDir = $this->config->item('absolute_path').'backups'.DIRECTORY_SEPARATOR.'autoInstanceBackups'.DIRECTORY_SEPARATOR;
+			$configBackupDir = $this->config->item('absolute_path').'backups'.DIRECTORY_SEPARATOR;
 					//Manoj: code to download Backup 
-					$path = $configBackupDir;
-					if ($handle = opendir($path)) {
 					
+					// First look in backup directory
+					if ($handle = opendir($configBackupDir)) {
+						
 						while (false !== ($file = readdir($handle))) { 
+
+							
 							if($file==$filename)
 							{
-								$fullPath = $this->config->item('absolute_path').'backups'.DIRECTORY_SEPARATOR.'autoInstanceBackups'.DIRECTORY_SEPARATOR.$filename;
+								$fullPath = $this->config->item('absolute_path').'backups'.DIRECTORY_SEPARATOR.$filename;
 								break;
 							}
-							else
-							{
-								$fullPath = $this->config->item('absolute_path').'backups'.DIRECTORY_SEPARATOR.$filename;
-							}			
+	
 						}
 					
 						closedir($handle); 
 					}
+
+					// If not found in backup directory, look in autoInstanceBackups directory
+					if ($fullPath==''){
+						$configAutoBackupDir = $this->config->item('absolute_path').'backups'.DIRECTORY_SEPARATOR.'autoInstanceBackups'.DIRECTORY_SEPARATOR;
+						if ($handle = opendir($configAutoBackupDir)) {
+							
+							while (false !== ($file = readdir($handle))) { 
+
+								
+								if($file==$filename)
+								{
+									$fullPath = $this->config->item('absolute_path').'backups'.DIRECTORY_SEPARATOR.'autoInstanceBackups'.DIRECTORY_SEPARATOR.$filename;
+									break;
+								}
+			
+							}
+						
+							closedir($handle); 
+						}
+					}
 					
 			//Manoj: code end 
-			
-			//$fullPath = $this->config->item('absolute_path').'backups'.DIRECTORY_SEPARATOR.$filename;
-			
-			$objBackup->downloadBackup ($filename,$fullPath);
+			if ($fullPath!=''){
+				$objBackup->downloadBackup ($filename,$fullPath);
+			}
 		}
 	}
 	

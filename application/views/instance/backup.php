@@ -396,13 +396,13 @@ function addRemoteServerDetails() {
                     	
 						
 						
-						<!--
+						
 						<form method="post" action="" style="margin-top:0%">
 							
 							<input type="submit" name="backup" value="Create New Backup" style="margin-top:1%;" onclick="document.getElementById('please_wait').style.display='';"/>
 
                     	</form>
-						-->
+						
                     <!--onclick="document.getElementById('please_wait').style.display='';"-->
 
                     	<span id="please_wait" style="display:none;">

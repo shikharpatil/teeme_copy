@@ -7566,7 +7566,7 @@ teeme_leaf a,teeme_node b where a.id=b.leafId and b.treeIds='".$inserted_tree_id
 		return $backupDetails;	
 	}
 	
-	public function deleteBackup($filename)
+	public function deleteBackup($filename,$backupDir='')
 	{
 		$query = "UPDATE teeme_backups SET status=0 WHERE file_name='".$this->db->escape_str($filename)."' AND status=1";
 		$result = $this->db->query($query);
@@ -7574,6 +7574,10 @@ teeme_leaf a,teeme_node b where a.id=b.leafId and b.treeIds='".$inserted_tree_id
 	
 		if($result)
 		{
+			if(file_exists($backupDir.$filename)){
+				unlink($backupDir.$filename);
+			}
+			
 			return true;
 		}		
 		else
@@ -8348,7 +8352,8 @@ function split_sql_file($sql, $delimiter)
 					}
 				}
 				*/
-				$command='mysql -h' .$server .' -u' .$server_username .' -p' .$server_password .' ' .$place_db_name .' < ' .$place_db;
+				//$command='mysql -h' .$server .' -u' .$server_username .' -p' .$server_password .' ' .$place_db_name .' < ' .$place_db;				
+				$command='gunzip < '.$place_db.' | mysql -h' .$server .' -u' .$server_username .' -p' .$server_password .' ' .$place_db_name .' < ' .$place_db;
 				
 					if (exec($command)==0){
 						$placedb->query("UPDATE `teeme_tag_types` SET workPlaceId = '".$workPlaceId."'") or die($this->db->error());
