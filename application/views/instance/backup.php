@@ -593,7 +593,7 @@ function addRemoteServerDetails() {
 
                 <td><?php echo $backupData['filename'];?></td>
 
-                <td><?php echo $backupData['filesize'];?> MB</td>
+                <td><?php echo $backupData['filesize'];?></td>
 
                 <td><?php echo $this->time_manager->getUserTimeFromGMTTime($backupData['createdDate'], 'm-d-Y h:i A');?></td>
 			

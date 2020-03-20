@@ -7556,7 +7556,10 @@ teeme_leaf a,teeme_node b where a.id=b.leafId and b.treeIds='".$inserted_tree_id
 			{
 				$backupDetails[$i]['backupId'] 		= $row->id;
 				$backupDetails[$i]['filename'] 		= $row->file_name;
-				$backupDetails[$i]['filesize'] 		= $row->file_size;
+				//$backupDetails[$i]['filesize'] 		= $row->file_size;
+					if ($row->file_size!=0){
+						$backupDetails[$i]['filesize'] 		= $this->formatBytes($row->file_size);
+					}
 				$backupDetails[$i]['createdDate'] 	= $row->createdDate;
 				$backupDetails[$i]['status'] 		= $row->status;
 				$backupDetails[$i]['remoteServer'] 	= unserialize($row->remoteServer);
@@ -7568,6 +7571,7 @@ teeme_leaf a,teeme_node b where a.id=b.leafId and b.treeIds='".$inserted_tree_id
 	
 	public function deleteBackup($filename,$backupDir='')
 	{
+		
 		$query = "UPDATE teeme_backups SET status=0 WHERE file_name='".$this->db->escape_str($filename)."' AND status=1";
 		$result = $this->db->query($query);
 	
@@ -21700,4 +21704,20 @@ $q = 'select * from(SELECT a.id, a.name, a.type, b.artifactId, b.artifactType ,b
 		}				
 	}
 	/*Dashrath : code end*/
+
+	function formatBytes($bytes=0, $precision = 2) { 
+		
+		$units = array('B', 'KB', 'MB', 'GB', 'TB'); 
+	
+		$bytes = max($bytes, 0); 
+		$pow = floor(($bytes ? log($bytes) : 0) / log(1000)); 
+		$pow = min($pow, count($units) - 1); 
+	
+		// Uncomment one of the following alternatives
+		 $bytes /= pow(1000, $pow);
+		// $bytes /= (1 << (10 * $pow)); 
+	
+		return round($bytes, $precision) . ' ' . $units[$pow]; 
+	} 
+
 }

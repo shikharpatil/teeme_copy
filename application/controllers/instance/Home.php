@@ -1979,6 +1979,15 @@ class Home extends CI_Controller
 					$configBackupDir = $this->config->item('absolute_path').'backups'.DIRECTORY_SEPARATOR; 
 				}
 				
+				if (!is_dir($configBackupDir)){
+					exec("cd $basepath;mkdir -m 777 -p backups;");
+				}
+				$backupPath = $this->config->item('absolute_path').'backups'.DIRECTORY_SEPARATOR;
+				$autoBackupPath = $this->config->item('absolute_path').'backups'.DIRECTORY_SEPARATOR.'autoInstanceBackups'.DIRECTORY_SEPARATOR;
+				if (!is_dir($autoBackupPath)) {
+					exec("cd $backupPath;mkdir -m 777 -p autoInstanceBackups");
+				}
+				
 				// which directories to skip while backup 
 				$configSkip   = array('backups'.DIRECTORY_SEPARATOR,'.git'.DIRECTORY_SEPARATOR);  
 				
@@ -1991,8 +2000,8 @@ class Home extends CI_Controller
 						$place_database = $this->config->item('instanceDb').'_'.mb_strtolower($workPlaceData['companyName']);
 						$configBackupDB2[] = array('server'=>$workPlaceData['server'],'username'=>$workPlaceData['server_username'],'password'=>$workPlaceData['server_password'],'database'=>$place_database,'tables'=>array());
 					}
-
-
+					//echo "<li>count2= " .count($configBackupDB2);print_r($details['workPlaceDetails']);exit;
+					//echo "<li>countconfigbackup= " .count($configBackup); exit;
 					// Backup instance database
 					if (isset($configBackupDB1) && is_array($configBackupDB1) && count($configBackupDB1)>0)
 					{
@@ -2291,11 +2300,13 @@ class Home extends CI_Controller
 									if(ssh2_auth_password($resConnection, $ftp_user, $ftp_password))
 									{
 										//Initialize SFTP subsystem
+										/*
 										$resSFTP = ssh2_sftp($resConnection);    
 										
 										$resFile = fopen("ssh2.sftp://".intval($resSFTP).$ftp_file_backup_path, 'w');
-										//fwrite ($resFile, $zipfile);
-										if(!fwrite ($resFile, $zipfile))
+										*/
+										//if(!fwrite ($resFile, $zipfile))
+										if (ssh2_scp_send($resConnection, $fileName, $ftp_file_backup_path, 0777)==0)
 										{
 											$details['Remote_Backup_Fail']='false';
 											$_SESSION['ftpErrorMsg'] = $this->lang->line('ftp_upload_failed');
@@ -2353,7 +2364,7 @@ class Home extends CI_Controller
 						//$_SESSION['errorMsg'] = "Backup created successfully !!!!!";
 						$details['filename'] = $backupName;
 						$filesize = filesize ($fileName);
-						$filesize = round (intval($filesize) / (1024 * 1024),2);
+						//$filesize = round (intval($filesize) / (1024 * 1024),2);
 						$details['filesize'] = $filesize;
 						$details['success'] = 1;
 						
@@ -2421,7 +2432,8 @@ class Home extends CI_Controller
 				 	
 					
 					
-			}			
+			}	
+					
 			$details['backupDetails'] 	= $objIdentity->getBackupDetails();		
 			if($_COOKIE['ismobile'])
 			{																	
@@ -2512,10 +2524,21 @@ class Home extends CI_Controller
 			$this->load->model('dal/identity_db_manager');
 
 			$objIdentity = $this->identity_db_manager;
+
+			$backupDir = 	$this->config->item('absolute_path').'backups'.DIRECTORY_SEPARATOR;
+			$autoBackupDir = $this->config->item('absolute_path').'backups'.DIRECTORY_SEPARATOR.'autoInstanceBackups'.DIRECTORY_SEPARATOR;
 			
 			$filename = $this->uri->segment(4);
 
-			$objIdentity->deleteBackup ($filename);
+			if (file_exists($backupDir.$filename)){
+				$objIdentity->deleteBackup ($filename,$backupDir);					
+			}
+			else if (file_exists($autoBackupDir.$filename)){
+				$objIdentity->deleteBackup ($filename,$autoBackupDir);
+			}
+			else {
+				$objIdentity->deleteBackup ($filename);
+			}
 			
 			redirect('instance/home/backup','location');
 			exit;

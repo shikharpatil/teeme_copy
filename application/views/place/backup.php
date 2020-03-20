@@ -161,8 +161,8 @@
 				<!--Added by Dashrath- load notification side bar-->
 				<?php $this->load->view('common/notification_sidebar.php');?>
 				<!--Dashrath- code end-->
-
-				<table border="0" align="center" cellpadding="0" cellspacing="0">
+<div style="margin-left:210px;">				
+<table border="0" align="left" cellpadding="0" cellspacing="0">
 
 <tr>
 
@@ -211,7 +211,7 @@
 					  <td colspan="5" align="left">
 
 					  <?php //echo $this->lang->line('msg_workplaces_not_available');?>
-
+					
 					  <form method="post" action="">
 												  
 						  <input type="submit" name="backup" value="Create New Backup" onclick="document.getElementById('please_wait').style.display='';" />
@@ -410,7 +410,7 @@
 
 			  <td><?php echo $backupData['filename'];?></td>
 
-			  <td><?php echo $backupData['filesize'];?> MB</td>
+			  <td><?php echo $backupData['filesize'];?></td>
 
 			  <td><?php echo $this->time_manager->getUserTimeFromGMTTime($backupData['createdDate'], 'm-d-Y h:i A');?></td>
 			  
@@ -492,6 +492,7 @@
 </tr>
 
 </table>
+</div>
 			</div> <!-- Container div end -->
 					  
 

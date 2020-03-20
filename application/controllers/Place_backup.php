@@ -130,7 +130,7 @@ class Place_backup extends CI_Controller
 					$details['backupChecksDetails'] = $objIdentity->GetBackupChecksDetails('place');
 					//print_r($details['remoteServerDetails']); exit;
 				//Manoj: code end
-				
+				$basepath = $this->config->item('absolute_path');
 				$workPlaceData = $objIdentity->getWorkPlaceDetails($workPlaceId);
 				$place_name = mb_strtolower($workPlaceData['companyName']);
 
@@ -148,7 +148,14 @@ class Place_backup extends CI_Controller
 				{
 					$configBackupDir = $backupDir.DIRECTORY_SEPARATOR;
 				}
-				
+				if (!is_dir($configBackupDir)){
+					exec("cd $basepath;mkdir -m 777 -p backups;");
+				}
+				$backupPath = $this->config->item('absolute_path').'backups'.DIRECTORY_SEPARATOR;
+				$autoBackupPath = $this->config->item('absolute_path').'backups'.DIRECTORY_SEPARATOR.'autoPlaceBackups'.DIRECTORY_SEPARATOR;
+				if (!is_dir($autoBackupPath)) {
+					exec("cd $backupPath;mkdir -m 777 -p autoPlaceBackups");
+				}
 				// which directories to skip while backup 
 				$configSkip   = array('backups'.DIRECTORY_SEPARATOR,'.git'.DIRECTORY_SEPARATOR);  
 				
@@ -231,10 +238,10 @@ class Place_backup extends CI_Controller
 
 									if (exec("mysqldump -h $server -u $username -p$password $database > $dbBackupFilePath")==0){
 										$dbBackupDone = 1;
-										echo "<li>db backup done"; 
+										//echo "<li>db backup done"; 
 									}
 									else{
-										echo "<li>database backup failed"; 
+										//echo "<li>database backup failed"; 
 									}
 								}		
 								if ($dbBackupDone){
@@ -248,7 +255,7 @@ class Place_backup extends CI_Controller
 									}
 								}	
 								else {
-									echo "<li>database backup failed. Can't continue place backup"; 
+									//echo "<li>database backup failed. Can't continue place backup"; 
 								}						
 
 						}			
@@ -454,7 +461,7 @@ class Place_backup extends CI_Controller
 						$details['filename'] = $backupName;
 
 						$filesize = filesize ($fileName);
-						$filesize = round (intval($filesize) / (1024 * 1024),2);
+						//$filesize = round (intval($filesize) / (1024 * 1024),2);
 						$details['filesize'] = $filesize;
 						$details['success'] = 1;
 						
@@ -557,11 +564,19 @@ class Place_backup extends CI_Controller
 
 			$objIdentity = $this->identity_db_manager;
 			
-			$backupDir = 	$this->config->item('absolute_path').'backups'.DIRECTORY_SEPARATOR;	
-
+			$backupDir = 	$this->config->item('absolute_path').'backups'.DIRECTORY_SEPARATOR;
+			$autoBackupDir = $this->config->item('absolute_path').'backups'.DIRECTORY_SEPARATOR.'autoPlaceBackups'.DIRECTORY_SEPARATOR;
 			$filename = $this->uri->segment(3);
 
-			$objIdentity->deleteBackup ($filename,$backupDir);
+			if (file_exists($backupDir.$filename)){
+				$objIdentity->deleteBackup ($filename,$backupDir);					
+			}
+			else if (file_exists($autoBackupDir.$filename)){
+				$objIdentity->deleteBackup ($filename,$autoBackupDir);
+			}
+			else {
+				$objIdentity->deleteBackup ($filename);
+			}
 			
 			redirect('place_backup','location');
 			exit;
