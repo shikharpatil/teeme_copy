@@ -1,4 +1,4 @@
-<?php /*Copyright © 2008-2014. Team Beyond Borders Pty Ltd. All rights reserved.*/  ?><?php
+<?php /*Copyright ï¿½ 2008-2014. Team Beyond Borders Pty Ltd. All rights reserved.*/  ?><?php
 class Post extends CI_Controller {
 
 	function __Construct()
@@ -2779,5 +2779,309 @@ class Post extends CI_Controller {
 		
 	}
 	// Dashrath : code end
+
+	function web()
+	{
+		if(!isset($_SESSION['userName']) || $_SESSION['userName'] =='')
+		{
+			$_SESSION['errorMsg']	= 	$this->lang->line('msg_session_expire'); 
+			$this->load->model('dal/identity_db_manager');						
+			$objIdentity	= $this->identity_db_manager;	
+			$arrDetails['workPlaceDetails'] 	= $objIdentity->getWorkPlaces();	
+			$this->load->view('login', $arrDetails);
+		}
+		else
+		{		
+			$this->load->model('dal/chat_db_manager');
+			$this->load->model('dal/identity_db_manager');
+			$this->load->model('dal/timeline_db_manager');
+			$this->load->model('dal/profile_manager');
+			$this->load->model('dal/tag_db_manager');
+			$this->load->model('dal/time_manager');
+			$this->load->model('dal/discussion_db_manager');
+			$objIdentity	= $this->identity_db_manager;	
+			$treeId='0';
+			$workSpaceId = $this->uri->segment(3);			
+			$workSpaceType = $this->uri->segment(5);
+			$arrDetails['userPostSearch'] = '';
+			if(is_numeric($this->uri->segment(10)))
+			{
+				$user_id =  $this->uri->segment(10);   
+				$arrDetails['userPostSearch'] = $user_id;
+			}
+			if($user_id!='')
+			{
+				$userId	= $user_id;	
+			}
+			else
+			{
+				$userId	= $_SESSION['userId'];	
+			}
+				if ($workSpaceType==2)
+				{
+					$workSpaceDetails=$this->identity_db_manager->getSubWorkSpaceDetailsBySubWorkSpaceId($workSpaceId);
+					$arrDetails['workSpaceName'] = $workSpaceDetails['subWorkSpaceName'];
+				}
+				else
+				{
+					$workSpaceDetails=$this->identity_db_manager->getWorkSpaceDetailsByWorkSpaceId($workSpaceId);
+					$arrDetails['workSpaceName'] = $workSpaceDetails['workSpaceName'];
+				}
+			
+			$arrDetails['workSpaceType'] 	= $workSpaceType;	
+			$arrDetails['workSpaceId'] 		= $this->uri->segment(3);
+			//$arrDetails['arrTimeline']	= $this->timeline_db_manager->get_timeline($treeId,$arrDetails['workSpaceId'],$arrDetails['workSpaceType']);
+			$arrDetails['workPlaceDetails'] = $this->identity_db_manager->getWorkPlaceDetails($_SESSION['workPlaceId']);
+			
+			$arrDetails['Profiledetail'] = $this->profile_manager->getUserDetailsByUserId($userId);
+			
+			//All space post showing start
+			if($this->uri->segment(8)=='all')
+			{
+				$allSpace='1';
+				$arrDetails['arrTimeline']	= $this->timeline_db_manager->get_timeline($treeId,$arrDetails['workSpaceId'],$arrDetails['workSpaceType'],$allSpace);
+				//echo '<pre>';
+				//print_r($arrDetails['arrTimeline']);
+				//exit;
+			}
+			else if($this->uri->segment(8)=='public')
+			{
+				$allPublicSpace='2';
+				$arrDetails['arrTimeline']	= $this->timeline_db_manager->get_timeline($treeId,$arrDetails['workSpaceId'],$arrDetails['workSpaceType'],$allPublicSpace);
+			}
+			else if($this->uri->segment(8)=='bookmark')
+			{
+				$allBookmarkSpace='3';
+				$arrDetails['arrTimeline']	= $this->timeline_db_manager->get_timeline($treeId,$arrDetails['workSpaceId'],$arrDetails['workSpaceType'],$allBookmarkSpace);
+			}
+			else
+			{
+				$arrDetails['arrTimeline']	= $this->identity_db_manager->getPostsByWorkSpaceId($treeId,$arrDetails['workSpaceId'],$arrDetails['workSpaceType'],'',$userId);
+				//echo '<pre>';
+				//print_r($arrDetails['arrTimeline']); exit;
+			}
+			//All space post showing end
+			
+			
+			
+			//Online users code start here
+			/*if($user_id!='')
+			{
+				$userId	= $user_id;	
+			}
+			else
+			{
+				$userId	= $_SESSION['userId'];	
+			}*/
+			$workSpaceId_search_user= $this->uri->segment(3);	
+			$workSpaceType_search_user=$this->uri->segment(7);
+			
+			
+			$arrDetails['workSpaceId_search_user'] = $this->uri->segment(3);	
+			$arrDetails['workSpaceType_search_user'] = $this->uri->segment(7);
+			
+			$arrDetails['search']='';
+			
+			//$arrDetails['countAll'] = $this->profile_manager->getMessagesBySpaceIdAndType($this->uri->segment(3),true,$workSpaceType_search_user,$workSpaceId_search_user);
+			
+			
+			$placeType=$workSpaceType+2;
+			
+			$rs=$this->identity_db_manager->getManagerStatus($userId, $workSpaceId, $placeType);
+			
+			$arrDetails['profile_list'] = $this->profile_manager->getAllUsersByWorkPlaceId($_SESSION['workPlaceId']);	
+	
+			$arrDetails['manager']=$rs;
+			$arrDetails['workSpaceId'] = $this->uri->segment(3);	
+			$arrDetails['workSpaceType'] = $this->uri->segment(5);
+			
+				if ($workSpaceType==2)
+				{
+					$workSpaceDetails=$this->identity_db_manager->getSubWorkSpaceDetailsBySubWorkSpaceId($workSpaceId);
+					$arrDetails['workSpaceName'] = $workSpaceDetails['subWorkSpaceName'];
+				}
+				else
+				{
+					$workSpaceDetails=$this->identity_db_manager->getWorkSpaceDetailsByWorkSpaceId($workSpaceId);
+					$arrDetails['workSpaceName'] = $workSpaceDetails['workSpaceName'];
+				}
+			
+			
+			if($this->uri->segment(8)=='all' && $workSpaceDetails['workSpaceName']!="Try Teeme")
+			{
+				$_SESSION['allSpace']=1;
+				$_SESSION['all']=$this->uri->segment(8);
+			}
+			else{
+				unset($_SESSION['all']);
+				unset($_SESSION['allSpace']);
+			}	
+			
+			if($this->uri->segment(8)=='public')
+			{
+				$_SESSION['allPublicSpace']=1;
+				$_SESSION['public']=$this->uri->segment(8);
+			}
+			else{
+				unset($_SESSION['public']);
+				unset($_SESSION['allPublicSpace']);
+			}					
+			
+			$arrDetails['countAll'] = $this->profile_manager->getMessagesBySpaceIdAndType($userId,true,$workSpaceType_search_user,$workSpaceId_search_user);
+			
+			if ($this->input->post('search')!='')
+			{
+				$arrDetails['search']=$this->input->post('search',true);
+		
+				if( $this->uri->segment(5) == 2)
+				{
+					$arrDetails['workSpaceMembers']	= $objIdentity->getSubWorkSpaceMembersIdBySubWorkSpaceIdSearch($arrDetails['workSpaceId_search_user'],0,$this->input->post('search'));				
+				}
+				else
+				{ 
+					$arrDetails['workSpaceMembers']	= $objIdentity->getWorkSpaceMembersByWorkSpaceIdSearch($arrDetails['workSpaceId_search_user'],0,$this->input->post('search'));				
+				}
+				
+			}
+			else
+			{
+				if ($arrDetails['workSpaceId_search_user']==0)
+				{ 
+						$arrDetails['workSpaceMembers']	= $this->profile_manager->getAllUsersByWorkPlaceId($_SESSION['workPlaceId']);				
+				}
+				else
+				{
+					if( $this->uri->segment(5) == 2)
+					{
+						$arrDetails['workSpaceMembers']	= $objIdentity->getSubWorkSpaceMembersIdBySubWorkSpaceId($arrDetails['workSpaceId_search_user']);				
+					}
+					else
+					{
+						$arrDetails['workSpaceMembers']	= $objIdentity->getWorkSpaceMembersByWorkSpaceId($arrDetails['workSpaceId_search_user']);				
+					}			
+				}
+			}
+			
+			$workSpaceMembers = array();
+			if(count($arrDetails['workSpaceMembers']) > 0)
+			{		
+				foreach($arrDetails['workSpaceMembers'] as $arrVal)
+				{
+					$workSpaceMembers[]	= $arrVal['userId'];
+				}			
+				$workSpaceUsersId	= implode(',',$workSpaceMembers);			
+				$arrDetails['onlineUsers']	= $objIdentity->getOnlineUsersByPlaceId();
+			}	
+			else
+			{
+				$arrDetails['onlineUsers'] = array();
+			}		
+			
+			if ($this->input->post('search',true)!='')
+			{
+				if( $this->uri->segment(5) == 2)
+				{
+					$arrDetails['workSpaceMembers_search_user']	= $objIdentity->getSubWorkSpaceMembersIdBySubWorkSpaceIdSearch($arrDetails['workSpaceId_search_user'],0,$this->input->post('search',true));	
+				}
+				else
+				{
+					$arrDetails['workSpaceMembers_search_user']	= $objIdentity->getWorkSpaceMembersByWorkSpaceIdSearch($arrDetails['workSpaceId_search_user'],0,$this->input->post('search',true));				
+				}
+				
+				$arrDetails['search']=$this->input->post('search',true);
+			}
+			else
+			{
+				if ($arrDetails['workSpaceId_search_user']==0)
+				{
+						$arrDetails['workSpaceMembers_search_user']	= $this->profile_manager->getAllUsersByWorkPlaceId($_SESSION['workPlaceId']);				
+				}
+				else
+				{
+					if( $this->uri->segment(5) == 2)
+					{
+						$arrDetails['workSpaceMembers_search_user']	= $objIdentity->getSubWorkSpaceMembersIdBySubWorkSpaceId($arrDetails['workSpaceId_search_user']);				
+					}
+					else
+					{
+						$arrDetails['workSpaceMembers_search_user']	= $objIdentity->getWorkSpaceMembersByWorkSpaceId($arrDetails['workSpaceId_search_user']);				
+					}			
+				}
+			}
+			
+			$workSpaceMembers_search_user = array();
+			if(count($arrDetails['workSpaceMembers_search_user']) > 0)
+			{		
+				foreach($arrDetails['workSpaceMembers_search_user'] as $arrVal)
+				{
+					$workSpaceMembers_search_user[]	= $arrVal['userId'];
+				}			
+				$workSpaceUsersId_search_user	= implode(',',$workSpaceMembers_search_user);			
+				$arrDetails['onlineUsers_search_user']	= $objIdentity->getOnlineUsersByPlaceId();
+			}	
+			else
+			{
+				$arrDetails['onlineUsers_search_user'] = array();
+			}
+			
+			$arrDetails['treeId'] =$treeId;
+		
+			
+			$arrDetails['workSpaceManagers']	= $this->identity_db_manager->getTeemeManagersDetailsByWorkSpaceId($workSpaceId, 3);	
+			$arrDetails['managerIds']			= $this->identity_db_manager->getWorkSpaceManagersByWorkSpaceId($workSpaceId, 3);
+			$arrDetails['workPlaceMembers'] = $this->identity_db_manager->getWorkSpaceMembersByWorkSpaceId($workSpaceId);
+			
+			
+			$arrDetails['myProfileDetail']= $this->profile_manager->getUserDetailsByUserId($_SESSION['userId']);
+			
+			//Online users code end here
+			
+			$arrDetails['bookmarkedPosts']= $this->timeline_db_manager->get_bookmark_by_user($userId);
+			
+			
+			//For dashboard tag and link
+			
+			if($this->uri->segment(9) != '' && $this->uri->segment(9) != 0)
+			{
+				$arrDetails['selectedNodeId'] = $this->uri->segment(9);	
+			}		
+			
+			/*Added for checking device type start*/
+			$userAgent = $_SERVER["HTTP_USER_AGENT"];
+			$devicesTypes = array(
+				"tablet"   => array("tablet", "android", "android 3.0", "kindle", "ipad", "xoom", "sch-i800", "playbook", "tablet.*firefox"),
+				"mobile"   => array("mobile ", "android.*mobile", "iphone", "ipod", "opera mobi", "opera mini")
+			);
+			foreach($devicesTypes as $deviceType => $devices) {           
+				foreach($devices as $device) {
+					if(preg_match("/" . $device . "/i", $userAgent)) {
+						$deviceName = $deviceType;
+					}
+				}
+			}
+			/*Added for checking device type end*/	
+			
+			//Get group list
+			$arrDetails['groupList'] = $objIdentity->getUserGroupList();	
+			/*
+			if($_COOKIE['ismobile'])
+			{
+				$this->load->view('timeline_for_mobile',$arrDetails);	
+			}
+			else if($deviceName=='tablet')
+			{
+				// Commented by Dashrath- comment old load view 
+				// $this->load->view('timeline_for_tablet',$arrDetails);
+				$this->load->view('timeline_for_tablet_new',$arrDetails);	
+			}
+			else 
+			{
+				$this->load->view('timeline',$arrDetails);		
+			}
+			*/
+			$this->load->view('post/post_web',$arrDetails);
+
+		}		
+	}
 }
 ?>

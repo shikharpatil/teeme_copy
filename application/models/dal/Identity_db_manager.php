@@ -2205,60 +2205,61 @@ teeme_leaf a,teeme_node b where a.id=b.leafId and b.treeIds='".$inserted_tree_id
 	*/
 	public function getSubWorkSpaceMembersBySubWorkSpaceId($subWorkSpaceId)
 	{
-		$subWorkSpaceMembersData = array();	
-		
-		//Memcache code start here
-		$memc=$this->createMemcacheObject();
+		if ($subWorkSpaceId!=''){
+			$subWorkSpaceMembersData = array();	
+			
+			//Memcache code start here
+			$memc=$this->createMemcacheObject();
 
-		$memCacheId = 'wp'.$subWorkSpaceId.'users2'.'place'.$_SESSION['workPlaceId'];	
-			
-		$tree = $memc->get($memCacheId);
-			
-		if(!$tree)
-		{	
-	
-			$q = 'SELECT a.*,b.* FROM teeme_sub_work_space_members a, teeme_users b WHERE a.subWorkSpaceUserId = b.userId AND a.subWorkSpaceId='.$subWorkSpaceId.' ORDER BY b.firstName ASC';
-			$query = $this->db->query ($q);
-			
-				if($query->num_rows() > 0)
-				{
-					foreach ($query->result() as $row)
-					{	
-						$tree[] = $row;
-					}	
-					
-					$memc->set($memCacheId, $tree);	
-					$tree = $memc->get($memCacheId);
-								
-				}
+			$memCacheId = 'wp'.$subWorkSpaceId.'users2'.'place'.$_SESSION['workPlaceId'];	
+				
+			$tree = $memc->get($memCacheId);
+				
+			if(!$tree)
+			{	
+				
+				$q = 'SELECT a.*,b.* FROM teeme_sub_work_space_members a, teeme_users b WHERE a.subWorkSpaceUserId = b.userId AND a.subWorkSpaceId='.$subWorkSpaceId.' ORDER BY b.firstName ASC';
+				$query = $this->db->query ($q);
+				
+					if($query->num_rows() > 0)
+					{
+						foreach ($query->result() as $row)
+						{	
+							$tree[] = $row;
+						}	
+						
+						$memc->set($memCacheId, $tree);	
+						$tree = $memc->get($memCacheId);
+									
+					}
+			}
+			if(count($tree) > 0)
+			{
+				$i = 0;
+				foreach($tree as $row)
+				{										
+					$subWorkSpaceMembersData[$i]['subWorkSpaceMembersId']	= $row->subWorkSpaceMembersId;	
+					$subWorkSpaceMembersData[$i]['subWorkSpaceId']			= $row->subWorkSpaceId;		
+					$subWorkSpaceMembersData[$i]['subWorkSpaceUserId']		= $row->subWorkSpaceUserId;	
+					$subWorkSpaceMembersData[$i]['userId']					= $row->subWorkSpaceUserId;				
+					$subWorkSpaceMembersData[$i]['subWorkSpaceUserAccess']	= $row->subWorkSpaceUserAccess;
+					$subWorkSpaceMembersData[$i]['firstName']				= $row->firstName;
+					$subWorkSpaceMembersData[$i]['lastName']				= $row->lastName;	
+					$subWorkSpaceMembersData[$i]['registeredDate']			= $row->registeredDate;		
+					$subWorkSpaceMembersData[$i]['lastLoginTime']			= $row->lastLoginTime;	
+					if($row->nickName!='')
+					{
+						$subWorkSpaceMembersData[$i]['tagName']	= $row->nickName;	
+					}
+					else
+					{
+						$subWorkSpaceMembersData[$i]['tagName']	= $row->tagName;	
+					}					
+					$i++;													
+				}				
+			}					
+			return $subWorkSpaceMembersData;				
 		}
-		if(count($tree) > 0)
-		{
-			$i = 0;
-			foreach($tree as $row)
-			{										
-				$subWorkSpaceMembersData[$i]['subWorkSpaceMembersId']	= $row->subWorkSpaceMembersId;	
-				$subWorkSpaceMembersData[$i]['subWorkSpaceId']			= $row->subWorkSpaceId;		
-				$subWorkSpaceMembersData[$i]['subWorkSpaceUserId']		= $row->subWorkSpaceUserId;	
-				$subWorkSpaceMembersData[$i]['userId']					= $row->subWorkSpaceUserId;				
-				$subWorkSpaceMembersData[$i]['subWorkSpaceUserAccess']	= $row->subWorkSpaceUserAccess;
-				$subWorkSpaceMembersData[$i]['firstName']				= $row->firstName;
-				$subWorkSpaceMembersData[$i]['lastName']				= $row->lastName;	
-				$subWorkSpaceMembersData[$i]['registeredDate']			= $row->registeredDate;		
-				$subWorkSpaceMembersData[$i]['lastLoginTime']			= $row->lastLoginTime;	
-				if($row->nickName!='')
-				{
-					$subWorkSpaceMembersData[$i]['tagName']	= $row->nickName;	
-				}
-				else
-				{
-					$subWorkSpaceMembersData[$i]['tagName']	= $row->tagName;	
-				}					
-				$i++;													
-			}				
-		}					
-		return $subWorkSpaceMembersData;				
-
 
 
 	}	
@@ -2899,23 +2900,25 @@ teeme_leaf a,teeme_node b where a.id=b.leafId and b.treeIds='".$inserted_tree_id
 	*/
 	public function getWorkSpaceDetailsByWorkSpaceId($workSpaceId)
 	{
-		
-		$workSpaceData = array();		
-		$query = $this->db->query('SELECT * FROM teeme_work_space WHERE workSpaceId='.$workSpaceId);
-		if($query->num_rows() > 0)
-		{
-			foreach($query->result() as $row)
-			{										
-				$workSpaceData['workSpaceId']	 		= $row->workSpaceId;	
-				$workSpaceData['workSpaceName']			= $row->workSpaceName;		
-				$workSpaceData['workSpaceManagerId'] 	= $row->workSpaceManagerId;
-				$workSpaceData['treeAccess']			= $row->treeAccess;	
-				$workSpaceData['workSpaceCreatedDate']	= $row->workSpaceCreatedDate;	
-				$workSpaceData['status']				= $row->status;
-				$workSpaceData['workSpaceCreatorId']	= $row->workSpaceCreatorId;
+		if ($workSpaceId!='')
+		{	
+			$workSpaceData = array();		
+			$query = $this->db->query('SELECT * FROM teeme_work_space WHERE workSpaceId='.$workSpaceId);
+			if($query->num_rows() > 0)
+			{
+				foreach($query->result() as $row)
+				{										
+					$workSpaceData['workSpaceId']	 		= $row->workSpaceId;	
+					$workSpaceData['workSpaceName']			= $row->workSpaceName;		
+					$workSpaceData['workSpaceManagerId'] 	= $row->workSpaceManagerId;
+					$workSpaceData['treeAccess']			= $row->treeAccess;	
+					$workSpaceData['workSpaceCreatedDate']	= $row->workSpaceCreatedDate;	
+					$workSpaceData['status']				= $row->status;
+					$workSpaceData['workSpaceCreatorId']	= $row->workSpaceCreatorId;
+				}				
 			}				
-		}				
-		return $workSpaceData;				
+			return $workSpaceData;		
+		}		
 	}	
 	
 	 /**
@@ -2925,20 +2928,23 @@ teeme_leaf a,teeme_node b where a.id=b.leafId and b.treeIds='".$inserted_tree_id
 	*/
 	public function getWorkSpaceDetailsBySubWorkSpaceId($subWorkSpaceId)
 	{
-		$workSpaceData = array();		
-		$query = $this->db->query('SELECT a.* FROM teeme_work_space a, teeme_sub_work_space b WHERE a.workSpaceId = b.workSpaceId AND b.subWorkSpaceId='.$subWorkSpaceId);
-		if($query->num_rows() > 0)
-		{
-			foreach($query->result() as $row)
-			{										
-				$workSpaceData['workSpaceId']	 		= $row->workSpaceId;	
-				$workSpaceData['workSpaceName']			= $row->workSpaceName;		
-				$workSpaceData['workSpaceCreatedDate']	= $row->workSpaceCreatedDate;		
-				$workSpaceData['workSpaceManagerId'] 	= $row->workSpaceManagerId;		
-				$workSpaceData['status']				= $row->status;								
-			}				
-		}					
-		return $workSpaceData;		
+		if ($subWorkSpaceId!=''){
+			$workSpaceData = array();		
+			$query = $this->db->query('SELECT a.* FROM teeme_work_space a, teeme_sub_work_space b WHERE a.workSpaceId = b.workSpaceId AND b.subWorkSpaceId='.$subWorkSpaceId);
+			if($query->num_rows() > 0)
+			{
+				foreach($query->result() as $row)
+				{										
+					$workSpaceData['workSpaceId']	 		= $row->workSpaceId;	
+					$workSpaceData['workSpaceName']			= $row->workSpaceName;		
+					$workSpaceData['workSpaceCreatedDate']	= $row->workSpaceCreatedDate;		
+					$workSpaceData['workSpaceManagerId'] 	= $row->workSpaceManagerId;		
+					$workSpaceData['status']				= $row->status;								
+				}				
+			}					
+			return $workSpaceData;	
+		}
+	
 	}	
 
 	 /**
@@ -3042,21 +3048,24 @@ teeme_leaf a,teeme_node b where a.id=b.leafId and b.treeIds='".$inserted_tree_id
 	*/
 	public function getTeemeManagers($placeId, $placeType)
 	{
-		$managerData = array();		
-		$query = $this->db->query('SELECT * FROM teeme_managers WHERE placeId='.$placeId.' AND placeType='.$placeType);
-		if($query->num_rows() > 0)
-		{
-			$i = 0;
-			foreach($query->result() as $row)
-			{										
-				$managerData[$i]['placeId']		= $row->placeId;	
-				$managerData[$i]['managerId']	= $row->managerId;		
-				$managerData[$i]['placeType']	= $row->placeType;	
+		if ($placeId!='' && $placeType!=''){
+			$managerData = array();		
+			$query = $this->db->query('SELECT * FROM teeme_managers WHERE placeId='.$placeId.' AND placeType='.$placeType);
+			if($query->num_rows() > 0)
+			{
+				$i = 0;
+				foreach($query->result() as $row)
+				{										
+					$managerData[$i]['placeId']		= $row->placeId;	
+					$managerData[$i]['managerId']	= $row->managerId;		
+					$managerData[$i]['placeType']	= $row->placeType;	
+					
+					$i++;													
+				}				
+			}					
+			return $managerData;
+		}
 				
-				$i++;													
-			}				
-		}					
-		return $managerData;				
 	}	
 	
 	public function getTeemeManagersDetailsByWorkSpaceId($spaceId, $spaceType)
@@ -7671,18 +7680,21 @@ teeme_leaf a,teeme_node b where a.id=b.leafId and b.treeIds='".$inserted_tree_id
 	
 	public function getWorkSpaceManagersByWorkSpaceId ($spaceId, $spaceType)
 	{
-		$managerIds = array();		
-		$query = $this->db->query('SELECT managerId FROM teeme_managers WHERE placeId='.$spaceId.' AND placeType='.$spaceType);
-		if($query->num_rows() > 0)
+		if ($spaceId!='' && $spaceType!='')
 		{
-			$i = 0;
-			foreach($query->result() as $row)
-			{			
-				$managerIds[$i] = $row->managerId;										
-				$i++;													
-			}
-		}					
-		return $managerIds;
+			$managerIds = array();		
+			$query = $this->db->query('SELECT managerId FROM teeme_managers WHERE placeId='.$spaceId.' AND placeType='.$spaceType);
+			if($query->num_rows() > 0)
+			{
+				$i = 0;
+				foreach($query->result() as $row)
+				{			
+					$managerIds[$i] = $row->managerId;										
+					$i++;													
+				}
+			}					
+			return $managerIds;
+		}
 	}
 	
 	public function isShared ($treeId)
@@ -8609,7 +8621,7 @@ echo "</table>";
 	{
 		$userGroup= $this->getUserGroupByMemberId($_SESSION['userId']);
 		//echo "wspaceid= " .$workSpaceId; exit;
-		if($workSpaceId >= 0)
+		if($workSpaceId != '' && $workSpaceId >= 0)
 		{
 			//echo "here"; exit;
 			if($workSpaceId == 0)
@@ -10053,17 +10065,18 @@ $q = 'select * from(SELECT a.id, a.name, a.type, b.artifactId, b.artifactType ,b
 	
 	public function getTreeAccessByWorkSpaceId($workSpaceId)
 	{
+		if ($workSpaceId!='')
+		{		
+			$query = $this->db->query( "SELECT a.treeAccess FROM teeme_work_space a WHERE a.workSpaceId=".$workSpaceId);
 			
-		$query = $this->db->query( "SELECT a.treeAccess FROM teeme_work_space a WHERE a.workSpaceId=".$workSpaceId);
-		
-		if($query->num_rows() > 0)
-		{
-			 $row=$query->row();
-			return $row->treeAccess;	
-			
-		}					
-		return false;	
-		
+			if($query->num_rows() > 0)
+			{
+				$row=$query->row();
+				return $row->treeAccess;	
+				
+			}					
+			return false;	
+		}
 	}
 	
 	function validatePlace($place){

@@ -6578,6 +6578,10 @@ margin: 0 !important;
     width: 58%;*/
 	width: 300px; /*Dashrath: change width: 20% to 300px;*/
 }
+#TimelineLeftContent2{
+	float: right;
+	width: 25%;
+}
 .newTree{
 /*width:60%;*/
 /*width:80%;*/ /*Dashrath: change width: 60% to 80%;*/
@@ -6594,7 +6598,11 @@ float:left;
     width: 58%;*/
 	width: calc(100% - 340px); /*Dashrath: change width: 78% to calc(100% - 340px);*/
 }
-
+#TimelineRightContent2{
+	float: left;
+	width: 73%;
+	padding: 0 2% 0 0;
+}
 .offset:before {
     display: block; 
     content: " ";
@@ -6623,7 +6631,7 @@ float:left;
 .selbox-post
 {
  	font-size: 0.875em;
-    height: 28px;
+    /*height: 28px;*/
     margin: 0px 0 15px;
     padding: 2px;
     width: 100%;
@@ -7681,14 +7689,6 @@ span.reserve a
 	{
 		width:40%;
 	}
-	#TimelineLeftContent
-	{
-		/*width:28% !important;*/
-	}
-	#TimelineRightContent {
-		/*margin: 0 5% 0 0 !important;
-    	width: 62% !important;*/
-	}
 	.tab_menu_new_timeline li
 	{
 		width:33%;
@@ -7816,14 +7816,7 @@ span.reserve a
 	{
 		width:20% !important;
 	}
-	#TimelineLeftContent
-	{
-		/*width:39% !important;*/
-	}
-	#TimelineRightContent {
-		/*margin: 0 3% 0 0 !important;
-    	width: 55% !important;*/
-	}
+
 	/*css for header icons*/
 	.selbox-min {
 		width: 162px !important;
