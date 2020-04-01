@@ -7508,14 +7508,14 @@ teeme_leaf a,teeme_node b where a.id=b.leafId and b.treeIds='".$inserted_tree_id
 		}
 	}
 	
-	public function insertBackup ($filename,$filesize,$ftpDetailsArray='',$place_name='')
+	public function insertBackup ($filename,$filesize,$ftpDetailsArray='',$place_name='',$result='success',$execution_time=0,$creator_user_id=0,$type='')
 	{
 		
 		$this->load->model('dal/time_manager');
 		$createdDate = time_manager::getGMTTime();
 		
-		$query = "INSERT INTO teeme_backups (file_name,file_size,createdDate,remoteServer) VALUES ('".$filename."','".$filesize."','".$createdDate."','".$ftpDetailsArray."')";
-		
+		$query = "INSERT INTO teeme_backups (file_name,file_size,createdDate,remoteServer,result,execution_time,creator_user_id,type) VALUES ('".$filename."','".$filesize."','".$createdDate."','".$ftpDetailsArray."','".$result."','".$execution_time."','".$creator_user_id."','".$type."')";
+
 		//Manoj: assign database name in config start
 		if($place_name!='')
 		{
@@ -7572,6 +7572,10 @@ teeme_leaf a,teeme_node b where a.id=b.leafId and b.treeIds='".$inserted_tree_id
 				$backupDetails[$i]['createdDate'] 	= $row->createdDate;
 				$backupDetails[$i]['status'] 		= $row->status;
 				$backupDetails[$i]['remoteServer'] 	= unserialize($row->remoteServer);
+				$backupDetails[$i]['result'] 		= $row->result;
+				$backupDetails[$i]['execution_time'] 		= $row->execution_time;
+				$backupDetails[$i]['creator_user_id'] 		= $row->creator_user_id;
+				$backupDetails[$i]['type'] 		= $row->type;
 				$i++;
 			}	
 		}	

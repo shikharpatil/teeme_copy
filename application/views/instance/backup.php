@@ -588,6 +588,12 @@ function addRemoteServerDetails() {
 				
 				<td><strong><?php echo $this->lang->line('remote_server_txt'); ?> </strong></td>
 
+				<td><strong><?php echo "Result"; ?> </strong></td>
+
+				<td><strong><?php echo "Execution time"; ?> </strong></td>
+
+				<td><strong><?php echo "Created by"; ?> </strong></td>
+
                 <td align="center"><strong><?php echo $this->lang->line('txt_Action');?></strong></td>
 
               </tr>
@@ -613,32 +619,43 @@ function addRemoteServerDetails() {
                 <td><?php echo $this->time_manager->getUserTimeFromGMTTime($backupData['createdDate'], 'm-d-Y h:i A');?></td>
 			
 				<!--Manoj: Showing backup type-->
-				<td><?php 
+				<td>
+					<?php 
+					/*
 					$configBackupDir = $this->config->item('absolute_path').'backups'.DIRECTORY_SEPARATOR.'autoInstanceBackups'.DIRECTORY_SEPARATOR;
 					$path = $configBackupDir;
-					if ($handle = opendir($path)) {
-					
-						while (false !== ($file = readdir($handle))) { 
-							if($file==$backupData['filename'])
-							{
-								$val=$this->lang->line('automatic_txt');
-								break;
+						if ($handle = opendir($path)) {
+						
+							while (false !== ($file = readdir($handle))) { 
+								if($file==$backupData['filename'])
+								{
+									$val=$this->lang->line('automatic_txt');
+									break;
+								}
+								else
+								{
+									$val=$this->lang->line('manual_txt');
+								}	
 							}
-							else
-							{
-								$val=$this->lang->line('manual_txt');
-							}	
-						}
-						echo $val;
-					
-						closedir($handle); 
-					} ?></td>
+							echo $val;
+						
+							closedir($handle); 
+						} 
+					*/
+					echo $backupData['type'];
+					?>
+					</td>
 					
 					<td>
 					<?php 
 						echo $backupData['remoteServer']['ftp_host'];
 					?>
 					</td>
+
+					<td><?php echo $backupData['result'];?></td>
+				  <td><?php echo $backupData['execution_time']; if($backupData['execution_time']>0) echo " seconds";?></td>
+				  <td><?php if ($backupData['creator_user_id']>0){$getUserName = $this->identity_db_manager->getAdminDetailsByAdminId($backupData['creator_user_id']);echo $getUserName['adminUserName'];}?></td>
+
 					<!--Manoj: code end-->
 
                 <td align="center">

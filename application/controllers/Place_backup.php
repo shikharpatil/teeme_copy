@@ -188,14 +188,18 @@ class Place_backup extends CI_Controller
 					}
 				
 
-				// Put backups in which directory 
+				// Put backups in which directory, type of backups: automatic/manual and current logged in user id
 				if($this->uri->segment(3)=='cron')
 				{
 					$configBackupDir = $backupDir.DIRECTORY_SEPARATOR.'autoPlaceBackups'.DIRECTORY_SEPARATOR;
+					$backup_type = 'Automatic';
+					$current_user_id = 0;
 				}
 				else
 				{
 					$configBackupDir = $backupDir.DIRECTORY_SEPARATOR;
+					$backup_type = 'Manual';
+					$current_user_id = $_SESSION['userId'];
 				}
 				if (!is_dir($configBackupDir)){
 					exec("cd $basepath;mkdir -m 777 -p backups;");
@@ -261,11 +265,11 @@ class Place_backup extends CI_Controller
 					//}				
 
 				$fileName = $configBackupDir.$backupName;
-				//echo "filesize1= " .filesize ($fileName); exit;
+				$time_elapsed_secs = microtime(true) - $start;
+				$exec_time = round($time_elapsed_secs, 2);
 
 				if ($dbBackupDone || $placeBackupDone){
-					$time_elapsed_secs = microtime(true) - $start;
-					$exec_time = round($time_elapsed_secs, 2);
+
 					//log application message start
 						if($this->uri->segment(3)=='cron')
 						{
@@ -295,8 +299,7 @@ class Place_backup extends CI_Controller
 				}
 
 				
-				//Manoj: Get the ftp credentials start
-				
+				//Manoj: Get the ftp credentials start				
 				$ftpDetails=array();
 				$ftp_host=$details['remoteServerDetails']['config_value']['ftp_host'];
 				$ftp_user=$details['remoteServerDetails']['config_value']['ftp_user'];
@@ -304,13 +307,10 @@ class Place_backup extends CI_Controller
 				$ftp_backup_path=$details['remoteServerDetails']['config_value']['ftp_backup_path'];
 				$manual_remote_backup_status=$details['backupChecksDetails']['config_value']['manual_remote_backup_status'];
 				$auto_remote_backup_status=$details['backupChecksDetails']['config_value']['auto_remote_backup_status'];
-				$ftpDetailsArray='';
-						
+				$ftpDetailsArray='';						
 				//Manoj: Get ftp credentials end
 				
 				//Manoj: code of sftp file upload on remote server
-					
-					//$ftpBackupDetails=$objIdentity->getInstanceBackupFtpDetails($backupName);
 				if($this->uri->segment(3)=='cron' && $auto_remote_backup_status=='true' || $this->input->post('backup') != '' && $manual_remote_backup_status=='true')
 				{	
 					if($ftp_host!='' && $ftp_user!='' && $ftp_backup_path!='')
@@ -339,6 +339,8 @@ class Place_backup extends CI_Controller
 									//if(!fwrite ($resFile, $zipfile)) 
 									if (ssh2_scp_send($resConnection, $fileName, $ftp_file_backup_path, 0777)==0)
 									{
+										$time_elapsed_secs = microtime(true) - $start;
+										$exec_time = round($time_elapsed_secs, 2);
 										$Remote_Backup_Fail='false';
 										$_SESSION['ftpErrorMsg'] = $this->lang->line('ftp_upload_failed');
 									}
@@ -412,7 +414,13 @@ class Place_backup extends CI_Controller
 						//echo "placebackupfail= " .$Place_Backup_Fail; exit;
 						if($Place_Backup_Fail!='false')
 						{
-							$insertBackupStatus=$objIdentity->insertBackup ($backupName,$filesize,$ftpDetailsArray,$place_name);
+							if ($Place_Backup_Success==1){
+								$result='success';
+							}
+							else {
+								$result='failure';
+							}
+							$insertBackupStatus=$objIdentity->insertBackup ($backupName,$filesize,$ftpDetailsArray,$place_name,$result,$exec_time,$current_user_id,$backup_type);
 							if($insertBackupStatus!=1)
 							{
 								$Place_Backup_Fail='false';

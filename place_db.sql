@@ -1475,3 +1475,4 @@ ALTER TABLE `teeme_external_docs` ADD `orig_modified_date` DATETIME NOT NULL AFT
 INSERT INTO `teeme_templates` (`id`, `template`) VALUES (NULL, 'timeline_txt_tree_unshared_by');
 UPDATE `teeme_notification_template` SET `template_id` = '77' WHERE `teeme_notification_template`.`id` = 115;
 ALTER TABLE `teeme_notification_events` ADD `parent_tree_id` INT NOT NULL DEFAULT '0' AFTER `created_date`;INSERT INTO `teeme_templates` (`id`, `template`) VALUES (NULL, 'timeline_txt_simple_tag_created_by');UPDATE `teeme_notification_template` SET `template_id` = '78' WHERE `teeme_notification_template`.`id` = 76;
+ALTER TABLE `teeme_backups` ADD `result` VARCHAR(512) NULL DEFAULT NULL AFTER `remoteServer`, ADD `execution_time` VARCHAR(512) NULL DEFAULT NULL AFTER `result`, ADD `creator_user_id` INT NULL DEFAULT NULL AFTER `execution_time`, ADD `type` VARCHAR(128) NULL DEFAULT NULL AFTER `creator_user_id`;

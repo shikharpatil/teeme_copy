@@ -1970,6 +1970,17 @@ class Home extends CI_Controller
 					$isSpaceAvailable = 0;
 				}
 			
+				if($this->uri->segment(4)=='cron')
+				{
+					$backup_type = 'Automatic';
+					$current_user_id = 0;
+				}
+				else
+				{
+					$backup_type = 'Manual';
+					$current_user_id = $_SESSION['adminId'];
+				}
+			
 			//Manoj: condition added for cron job
 			if($this->input->post('backup') != '' || $this->uri->segment(4)=='cron' && $autoInstanceBackupStatus=='true')	
 			{
@@ -2142,7 +2153,7 @@ class Home extends CI_Controller
 					
 
 				// Log results
-				if ($instanceDbBackupDone && $placeDbBackupDone && $workPlaceBackupDone) {
+				if ($instanceDbBackupDone && $placeDbBackupDone) {
 					$time_elapsed_secs = microtime(true) - $start;
 					$exec_time = round($time_elapsed_secs, 2);
 					//log application message start
@@ -2287,7 +2298,13 @@ class Home extends CI_Controller
 
 						if($details['Instance_Backup_Fail']!='false')
 						{
-							$insertBackupStatus=$objIdentity->insertBackup ($backupName,$filesize,$ftpDetailsArray);
+							if ($instanceDbBackupDone && $placeDbBackupDone){
+								$result='success';
+							}
+							else {
+								$result='failure';
+							}
+							$insertBackupStatus=$objIdentity->insertBackup ($backupName,$filesize,$ftpDetailsArray,'',$result,$exec_time,$current_user_id,$backup_type);
 							if($insertBackupStatus!=1)
 							{
 								$details['Instance_Backup_Fail']='false';
