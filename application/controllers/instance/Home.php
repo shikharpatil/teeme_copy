@@ -1947,15 +1947,28 @@ class Home extends CI_Controller
 			//echo '<pre>';
 			//print_r($check); exit;
 			//End
-			$details['workPlaceDetails'] 	= $objIdentity->getWorkPlaces();
-			
+
 			//ini_set('max_execution_time', 500);
 			//ini_set('memory_limit','300M');
 			
+			$details['workPlaceDetails'] 	= $objIdentity->getWorkPlaces();
 			$details['offline_mode'] = $objIdentity->get_maintenance_mode(); 
 			$details['remoteServerDetails'] = $objIdentity->GetRemoteServerDetails();
 			$details['backupChecksDetails'] = $objIdentity->GetBackupChecksDetails();
 			$autoInstanceBackupStatus=$details['backupChecksDetails']['config_value']['autoInstanceBackupStatus'];
+
+			$workPlaceDir = $this->config->item('absolute_path').'workplaces';	
+			
+			$totalDiskSpace = disk_total_space("/");
+			$totalFreeSpace = disk_free_space("/");
+			$totalWorkPlaceSize = $objIdentity->folderSize($workPlaceDir);
+
+				if ($totalFreeSpace >= $totalWorkPlaceSize*2){
+					$isSpaceAvailable = 1;	
+				}
+				else if ($workPlaceId==$_SESSION['workPlaceId']) {
+					$isSpaceAvailable = 0;
+				}
 			
 			//Manoj: condition added for cron job
 			if($this->input->post('backup') != '' || $this->uri->segment(4)=='cron' && $autoInstanceBackupStatus=='true')	
@@ -1979,11 +1992,13 @@ class Home extends CI_Controller
 					$configBackupDir = $this->config->item('absolute_path').'backups'.DIRECTORY_SEPARATOR; 
 				}
 				
+				// Create backup directory in root if it doesn't exist
 				if (!is_dir($configBackupDir)){
 					exec("cd $basepath;mkdir -m 777 -p backups;");
 				}
 				$backupPath = $this->config->item('absolute_path').'backups'.DIRECTORY_SEPARATOR;
 				$autoBackupPath = $this->config->item('absolute_path').'backups'.DIRECTORY_SEPARATOR.'autoInstanceBackups'.DIRECTORY_SEPARATOR;
+				// Create auto backup directory inside the backup directory in the root if it doesn't exist
 				if (!is_dir($autoBackupPath)) {
 					exec("cd $backupPath;mkdir -m 777 -p autoInstanceBackups");
 				}
@@ -2080,58 +2095,11 @@ class Home extends CI_Controller
 
 	
 					// Backup any files or folders if any
-					if (isset($configBackup) && is_array($configBackup) && count($configBackup)>0)
+					if (isset($configBackup) && is_array($configBackup) && count($configBackup)>0 && $isSpaceAvailable==1)
 					{
 						foreach ($configBackup as $dir)
 						{
-							/*
-							$basename = basename($dir);
-					
-							// dir basename
-							if (is_file($dir))
-							{
-								$fileContents = file_get_contents($dir);
-								$createZip->addFile($fileContents,$basename);
-							}
-							else
-							{
-								$createZip->addDirectory($basename.DIRECTORY_SEPARATOR);
-								$files = $createZip->directoryToArray($dir,true);
-								$files = array_reverse($files);
-					
-								foreach ($files as $file)
-								{
-									$zipPath = explode($dir,$file);
-									$zipPath = $zipPath[1];
-					
-									// skip any if required
-					
-									$skip =  false;
-									foreach ($configSkip as $skipObject)
-									{
-										if (strpos($file,$skipObject) === 0)
-										{
-											$skip = true;
-											break;
-										}
-									}
-					
-									if ($skip) {
-										continue;
-									}
-					
-									if (is_dir($file))
-									{
-										$createZip->addDirectory($basename.DIRECTORY_SEPARATOR.$zipPath);
-									}
-									else
-									{
-										$fileContents = file_get_contents($file);
-										$createZip->addFile($fileContents,$basename.DIRECTORY_SEPARATOR.$zipPath);
-									}
-								}
-							}
-							*/
+
 							$basename = basename($dir);
 							$instanceDbBackupPath = basename($configBackupDir.DIRECTORY_SEPARATOR.'instancedb');
 							$placeDbBackupPath = basename($configBackupDir.DIRECTORY_SEPARATOR.'placedb');
@@ -2146,88 +2114,32 @@ class Home extends CI_Controller
 							}
 						}			
 					}
+					else if (isset($configBackup) && is_array($configBackup) && count($configBackup)>0 && $isSpaceAvailable==0){
+						foreach ($configBackup as $dir)
+						{
+							$basename = basename($dir);
+							$instanceDbBackupPath = basename($configBackupDir.DIRECTORY_SEPARATOR.'instancedb');
+							$placeDbBackupPath = basename($configBackupDir.DIRECTORY_SEPARATOR.'placedb');
+							$workPlaceBackupDone = 0;
+							//if(exec("cd $basepath;zip -r $backupName $basename $instanceDbBackupPath $placeDbBackupPath && mv $backupName $configBackupDir && rm -rf $placeDbBackupPath")) {
+							//if(exec("cd $basepath;zip -r $backupName $basename && mv $backupName $configBackupDir;cd $configBackupDir;zip -ur $backupName $instanceDbBackupPath $placeDbBackupPath")) {
+							if(exec("cd $configBackupDir;zip -r $backupName $instanceDbBackupPath $placeDbBackupPath")) {
+								$workPlaceBackupDone = 1;
+								//echo "<li>Place backup done"; 
+							}
+							else{
+								//echo "<li>Place backup failed"; 
+							}
+						}	
+						$_SESSION['backupStatusMsg'] = "WARNING: There wasn't enough disk space available on the server, hence only the database backup was created and the place files and folders backup wasn't created. Please contact the administrator to resolve this issue.";
+
+					}
 					exec("cd $configBackupDir;rm -rf instancedb");
 					exec("cd $configBackupDir;rm -rf placedb");
 					$fileName = $configBackupDir.$backupName;
 
 					//exit;
-					/*
-					// Backup instance database
-					if (isset($configBackupDB1) && is_array($configBackupDB1) && count($configBackupDB1)>0)
-					{
-						foreach ($configBackupDB1 as $db)
-						{
-							//echo "<li>database= " . $db['username'].'---'.$db['password']; exit;
-							$backup  	 = $this->backup_manager;
-							$backup->server   = $db['server'];
-							$backup->username = $db['username'];
-							$backup->password = $db['password'];
-							$backup->database = $db['database'];
-							$backup->tables   = $db['tables'];
-						 
-							$backup->backup_dir = $configBackupDir;
-							$sqldump = $backup->Execute($MSB_STRING,"",FALSE);
-							//echo '<pre>';
-							//print_r($sqldump); exit;
-							//echo $sqldump;exit;
-								
-							$createZip->addFile($sqldump,'instancedb'.DIRECTORY_SEPARATOR.$db['database'].'-sqldump.sql');
-						}									
-					}
 					
-					
-					// Backup place databases
-					if (isset($configBackupDB2) && is_array($configBackupDB2) && count($configBackupDB2)>0)
-					{
-						foreach ($configBackupDB2 as $db)
-						{
-							//echo "<li>database= " . $db['database'];
-							$backup  	 = $this->backup_manager;
-							$backup->server   = $db['server'];
-							$backup->username = $db['username'];
-							$backup->password = $db['password'];
-							$backup->database = $db['database'];
-							$backup->tables   = $db['tables'];
-						 
-							$backup->backup_dir = $configBackupDir;
-							$sqldump = $backup->Execute($MSB_STRING,"",FALSE);
-							//echo '<pre>';
-							//print_r($sqldump); exit;
-							$createZip->addFile($sqldump,'placedb'.DIRECTORY_SEPARATOR.$db['database'].'-sqldump.sql');
-						}									
-					}
-					*/
-				/*
-				$zipfile=$createZip->getZippedfile();
-				$fileName = $configBackupDir.$backupName;
-				$fd = fopen ($fileName, "wb");
-				
-				if(!fwrite ($fd, $zipfile))
-				{
-					$details['Instance_Backup_Fail']='false';
-				}
-				else
-				{
-					$time_elapsed_secs = microtime(true) - $start;
-					$exec_time = round($time_elapsed_secs, 2);
-					//log application message start
-						if($this->uri->segment(4)=='cron')
-						{
-							$backupTemplate = $this->lang->line('txt_automatic_backup_log');
-						}
-						else
-						{
-							$backupTemplate = $this->lang->line('txt_manual_backup_log');
-						}
-						$var1 = array("{username}", "{exectime}");
-						$var2 = array($_SESSION['adminUserName'],$exec_time);
-						$logMsg = str_replace($var1,$var2,$backupTemplate);
-						log_message('MY_INSTANCE', $logMsg);
-                    //log application message end
-					$details['Instance_Backup_Success'] = 1;
-				}
-				fclose ($fd);
-				*/
 
 				// Log results
 				if ($instanceDbBackupDone && $placeDbBackupDone && $workPlaceBackupDone) {
@@ -2433,6 +2345,11 @@ class Home extends CI_Controller
 					
 					
 			}	
+			else{
+				if ($isSpaceAvailable==0){
+					$_SESSION['backupStatusMsg'] = "WARNING: There's not enough disk space available on the server, hence only the database backup will be created and the place files and folders backup won't be created. Please contact the administrator to resolve this issue.";
+				}
+			}
 					
 			$details['backupDetails'] 	= $objIdentity->getBackupDetails();		
 			if($_COOKIE['ismobile'])

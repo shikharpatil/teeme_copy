@@ -7543,7 +7543,7 @@ teeme_leaf a,teeme_node b where a.id=b.leafId and b.treeIds='".$inserted_tree_id
 			$result = $this->db->query($query);
 		}
 		//Manoj: assign database name in config  end
-		
+		//echo "res= " .$result; exit;
 		if($result)
 		{
 			return true;
@@ -21732,5 +21732,14 @@ $q = 'select * from(SELECT a.id, a.name, a.type, b.artifactId, b.artifactType ,b
 	
 		return round($bytes, $precision) . ' ' . $units[$pow]; 
 	} 
+
+	function folderSize ($dir='/')
+	{
+		$size = 0;
+		foreach (new RecursiveIteratorIterator(new RecursiveDirectoryIterator($dir)) as $file) {
+			$size += $file->getSize();
+		}
+		return $size;
+	}
 
 }

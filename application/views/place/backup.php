@@ -319,23 +319,38 @@
 			  }
 			  
 			  //Manoj: showing backup status end
-			  
+			  /*
 			  if(isset($_SESSION['errorMsg']) && $_SESSION['errorMsg'] !=	"")
 
 			  {
 
 			  ?>
 
-				<?php /*?><tr>
+				<?php ?><tr>
 
 				  <td colspan="5" class="tdSpace"><span class="errorMsg"><?php echo $_SESSION['errorMsg']; $_SESSION['errorMsg'] ='';?></span></td>
 
-				</tr><?php */?>
+				</tr><?php ?>
 
 				<?php
 
 			  }
+			  */
+			  if(isset($_SESSION['backupStatusMsg']) && $_SESSION['backupStatusMsg'] !=	"")
 
+			  {
+
+			  ?>
+
+				<?php ?><tr>
+
+				  <td colspan="5" class="tdSpace"><span class="errorMsg"><?php echo $_SESSION['backupStatusMsg']; $_SESSION['backupStatusMsg'] ='';?></span></td>
+
+				</tr><?php ?>
+
+				<?php
+
+			  }
 			  if ($success==1)
 
 			  {

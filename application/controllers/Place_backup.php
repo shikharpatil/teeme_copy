@@ -47,6 +47,18 @@ class Place_backup extends CI_Controller
 			$objIdentity = $this->identity_db_manager;
 			//$this->load->model('dal/backup_manager');
 			//$createZip	 = $this->backup_manager;
+
+			// Which directory/files to backup ( directory should have trailing slash ) 	
+			$workPlaceDir = $this->config->item('absolute_path').'workplaces';	
+			
+			$totalDiskSpace = disk_total_space("/");
+			$totalFreeSpace = disk_free_space("/");
+			
+
+			//echo "<li>Total disk space= " .$objIdentity->formatBytes($totalDiskSpace);
+			//echo "<li>Total free space= " .$objIdentity->formatBytes($totalFreeSpace); 
+			//echo "<li>Folder size= " .$objIdentity->formatBytes($totalWorkPlaceSize ); 
+
 			
 			$details['workSpaceId'] = 0;
 			$details['workSpaceType'] = 1;
@@ -78,6 +90,23 @@ class Place_backup extends CI_Controller
 				else
 				{
 					$workPlaceId = $_SESSION['workPlaceId'];
+					if(count($details['workPlaceDetails']) > 0)
+					{
+			
+						foreach($details['workPlaceDetails'] as $keyVal=>$workPlaceData)
+						{		
+							$workPlaceId = $workPlaceData['workPlaceId'];
+							$place_name = mb_strtolower($workPlaceData['companyName']);
+							$totalWorkPlaceSize = $objIdentity->folderSize($workPlaceDir.DIRECTORY_SEPARATOR.$place_name);
+							if ($totalFreeSpace >= $totalWorkPlaceSize*2){
+								$isSpaceAvailable = 1;	
+							}
+							else if ($workPlaceId==$_SESSION['workPlaceId']) {
+								$isSpaceAvailable = 0;
+								$_SESSION['backupStatusMsg'] = "WARNING: There's not enough disk space available on the server, hence only the database backup will be created and the place files and folders backup won't be created. Please contact the administrator to resolve this issue.";
+							}
+						}
+					}					
 				}
 				if($this->input->post('backup') != '')	
 				{
@@ -124,6 +153,8 @@ class Place_backup extends CI_Controller
 			$createZip	 = $this->backup_manager;
 			
 			$start = microtime(true);
+
+
 			
 				//Manoj: get remote server details 
 					$details['remoteServerDetails'] = $objIdentity->GetRemoteServerDetails('place');
@@ -139,6 +170,24 @@ class Place_backup extends CI_Controller
 				$backupDir = 	$this->config->item('absolute_path').'backups';	
 				$configBackup = array($workPlaceDir.DIRECTORY_SEPARATOR.$place_name.DIRECTORY_SEPARATOR);
 				$backupName = "backup-".$place_name."-".date('d-m-y-H-i-s').'.zip';
+
+				$totalDiskSpace = disk_total_space("/");
+				$totalFreeSpace = disk_free_space("/");
+				$totalWorkPlaceSize = $objIdentity->folderSize($workPlaceDir.DIRECTORY_SEPARATOR.$place_name);
+
+				//echo "<li>Total disk space= " .$objIdentity->formatBytes($totalDiskSpace);
+				//echo "<li>Total free space= " .$objIdentity->formatBytes($totalFreeSpace); 
+				//echo "<li>Folder size= " .$objIdentity->formatBytes($totalWorkPlaceSize ); 
+
+					if ($totalFreeSpace >= $totalWorkPlaceSize*2){
+						$isSpaceAvailable = 1;	
+					}
+					else {
+						$isSpaceAvailable = 0;
+						$_SESSION['backupStatusMsg'] = "WARNING: There wasn't enough disk space available on the server, hence only the database backup was created and the place files and folders backup wasn't created. Please contact the administrator to resolve this issue.";
+					}
+				
+
 				// Put backups in which directory 
 				if($this->uri->segment(3)=='cron')
 				{
@@ -166,67 +215,12 @@ class Place_backup extends CI_Controller
 					// Backup any files or folders if any
 					if (isset($configBackup) && is_array($configBackup) && count($configBackup)>0)
 					{
-					
 						foreach ($configBackup as $dir)
 						{
-							/*
-							$basename = basename($dir);
-					
-							// dir basename
-							if (is_file($dir))
-							{
-								$fileContents = file_get_contents($dir);
-								$createZip->addFile($fileContents,$basename);
-							}
-							else
-							{
-								$createZip->addDirectory($basename."/");
-								$files = $createZip->directoryToArray($dir,true);
-								$files = array_reverse($files);
-					   
-								foreach ($files as $file)
-								{
-									$zipPath = explode($dir,$file);
-									$zipPath = $zipPath[1];
-					
-									// skip any if required
-					
-									$skip =  false;
-									
-									foreach ($configSkip as $skipObject)
-									{
-										if (strpos($file,$skipObject) === 0)
-										{
-											$skip = true;
-											break;
-										}
-									}
-					
-									if ($skip) {
-										continue;
-									}
-					
-									if (is_dir($file))
-									{
-										$createZip->addDirectory($basename."/".$zipPath);
-									}
-									else
-									{
-										$fileContents = file_get_contents($file);
-										$createZip->addFile($fileContents,$basename."/".$zipPath);
-									}
-								}
-							}
-							*/
-							/*
-							$rootPath = realpath($dir);
-							$CreateNewZip = $this->backup_manager;
-							//$CreateNewZip->zip_files($rootPath,$configBackupDir.$backupName);
-							$CreateNewZip->zipDir($rootPath,$configBackupDir.$backupName,$configBackupDB);
-							*/
 							$dbBackupDone = 0;
 							$placeBackupDone = 0;
-							
+							$basename = basename($dir);
+
 								foreach ($configBackupDB as $db)
 								{
 									$server   = $db['server'];
@@ -244,8 +238,7 @@ class Place_backup extends CI_Controller
 										//echo "<li>database backup failed"; 
 									}
 								}		
-								if ($dbBackupDone){
-									$basename = basename($dir);
+								if ($dbBackupDone && $isSpaceAvailable){
 									if(exec("cd $workPlaceDir;zip -r $backupName $basename $dbBackupFileName && mv $backupName $configBackupDir && rm $dbBackupFileName")) {
 										$placeBackupDone = 1;
 										//echo "<li>Place backup done"; 
@@ -254,76 +247,22 @@ class Place_backup extends CI_Controller
 										//echo "<li>Place backup failed"; 
 									}
 								}	
-								else {
+								else if ($dbBackupDone){
+									if (exec("cd $workPlaceDir;zip -r $backupName $dbBackupFileName && mv $backupName $configBackupDir && rm $dbBackupFileName")){
+										$placeBackupDone = 1;
+									}
 									//echo "<li>database backup failed. Can't continue place backup"; 
 								}						
 
 						}			
 					}
-					if (!$dbBackupDone && !$placeBackupDone){
-						echo "<li>There were some error executing backups"; 
-					}				
-					
-					// Backup database
-					/*
-					if (isset($configBackupDB) && is_array($configBackupDB) && count($configBackupDB)>0)
-					{
-						foreach ($configBackupDB as $db)
-						{
-							$backup  	 = $this->backup_manager;
-							$backup->server   = $db['server'];
-							$backup->username = $db['username'];
-							$backup->password = $db['password'];
-							$backup->database = $db['database'];
-							$backup->tables   = $db['tables'];
-							//print_r($db); exit;
-							$backup->backup_dir = $configBackupDir;
-							$sqldump = $backup->Execute(MSB_STRING,"",FALSE);
-							//echo '<pre>';
-							//print_r($sqldump); exit;
-							//echo "<li>sqldump= " .$sqldump; exit;
-								
-							$createZip->addFile($sqldump,$db['database'].'-sqldump.sql');
-							//echo "heeee"; exit;
-							
-						}				
-					}
-					*/
-				//$zipfile=$createZip->getZippedfile();
+					//if (!$dbBackupDone && !$placeBackupDone){
+						//echo "<li>There were some error executing backups"; 
+					//}				
 
-				/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 				$fileName = $configBackupDir.$backupName;
-				/*
-				
-				$fd = fopen ($fileName, "wb");
-				//$out = fwrite ($fd, $zipfile);
-				if(!fwrite ($fd, $zipfile))
-				{
-					$Place_Backup_Fail='false';
-				}
-				else
-				{
-					$time_elapsed_secs = microtime(true) - $start;
-					$exec_time = round($time_elapsed_secs, 2);
-					//log application message start
-						if($this->uri->segment(3)=='cron')
-						{
-							$backupTemplate = $this->lang->line('txt_automatic_place_backup_log');
-						}
-						else
-						{
-							$backupTemplate = $this->lang->line('txt_manual_place_backup_log');
-						}
-						$var1 = array("{placename}", "{username}", "{exectime}");
-						$var2 = array($place_name, $_SESSION['userTagName'],$exec_time);
-						$logMsg = str_replace($var1,$var2,$backupTemplate);
-						log_message('MY_PLACE', $logMsg);
-                    //log application message end
-				
-					$Place_Backup_Success = 1;
-				}
-				fclose ($fd);
-				*/
+				//echo "filesize1= " .filesize ($fileName); exit;
+
 				if ($dbBackupDone || $placeBackupDone){
 					$time_elapsed_secs = microtime(true) - $start;
 					$exec_time = round($time_elapsed_secs, 2);
@@ -453,8 +392,9 @@ class Place_backup extends CI_Controller
 					
 				//Manoj: backup upload on ftp end 
 				
-				//echo "<li>filename= " .$fileName; exit;
-
+				//echo "<li>backupname= " .$backupName; exit;
+				//echo $Place_Backup_Fail; exit;
+				//echo "filesize= " .filesize ($fileName); exit;
 					if (filesize ($fileName) > 1)
 					{
 						//$_SESSION['errorMsg'] = "Backup created successfully !!!!!";
@@ -469,7 +409,7 @@ class Place_backup extends CI_Controller
 						{
 							$ftpDetailsArray='';
 						}
-						
+						//echo "placebackupfail= " .$Place_Backup_Fail; exit;
 						if($Place_Backup_Fail!='false')
 						{
 							$insertBackupStatus=$objIdentity->insertBackup ($backupName,$filesize,$ftpDetailsArray,$place_name);
@@ -481,50 +421,50 @@ class Place_backup extends CI_Controller
 						//Manoj: added extra param place name for cron job
 						//$objIdentity->insertBackup ($backupName,$filesize,$place_name);
 					}
+					//echo "Backupstatus= " .$insertBackupStatus; exit;
 					
-					//Manoj: code to Delete Backups
-					 
+					//Manoj: code to Delete Backups					 
 					if($this->uri->segment(3)=='cron')
 					{
-					$configBackupDir = $this->config->item('absolute_path').'backups'.DIRECTORY_SEPARATOR.'autoPlaceBackups'.DIRECTORY_SEPARATOR;
-					$path = $configBackupDir;
-					$files = array();
-					if ($handle = opendir($path)) {
-					
-						while (false !== ($file = readdir($handle))) { 
+						$configBackupDir = $this->config->item('absolute_path').'backups'.DIRECTORY_SEPARATOR.'autoPlaceBackups'.DIRECTORY_SEPARATOR;
+						$path = $configBackupDir;
+						$files = array();
+							if ($handle = opendir($path)) {
 							
-							$placeNameFromBackupFile=explode("-",$file);
-							//print_r($placeNameFromBackupFile[1]);
-							
-							
-							if($placeNameFromBackupFile[1]==$place_name)
-							{
-								if (!is_dir($file))
-								{
-									$files[$file] = filemtime($configBackupDir.$file);
-								}
-							}
-							
-					
-						}
-						asort($files);
-						if(count($files)>3)
-						{
-									$deletions = array_slice($files, 0, count($files) - 3);
-									$files = array_keys($deletions);
-								
-									foreach($files as $file_to_delete) 
+								while (false !== ($file = readdir($handle))) { 
+									
+									$placeNameFromBackupFile=explode("-",$file);
+									//print_r($placeNameFromBackupFile[1]);
+									
+									
+									if($placeNameFromBackupFile[1]==$place_name)
 									{
-										$delete_backup_status=$objIdentity->removeBackup($file_to_delete,$place_name);
-										if($delete_backup_status==1)
+										if (!is_dir($file))
 										{
-											unlink($path . $file_to_delete); 
+											$files[$file] = filemtime($configBackupDir.$file);
 										}
 									}
-						}		
-						
-						closedir($handle); 
-					}
+									
+							
+								}
+								asort($files);
+								if(count($files)>3)
+								{
+											$deletions = array_slice($files, 0, count($files) - 3);
+											$files = array_keys($deletions);
+										
+											foreach($files as $file_to_delete) 
+											{
+												$delete_backup_status=$objIdentity->removeBackup($file_to_delete,$place_name);
+												if($delete_backup_status==1)
+												{
+													unlink($path . $file_to_delete); 
+												}
+											}
+								}		
+								
+								closedir($handle); 
+							}
 					}
 					
 					//Manoj: code end
