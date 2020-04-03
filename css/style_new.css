@@ -8739,3 +8739,43 @@ span.reserve a
 {
 	margin-top:5px;
 }
+.post_web_sidebar_header{
+	margin: 13px 0 13px 0;
+	word-wrap: break-word !important;
+}
+.post_web_sidebar_row{
+	height: 72px;
+	background-color: white !important;
+	border-top: solid 1px #DDDFE2 !important;
+	display: flex;
+}
+.post_web_sidebar_col1{
+	padding: 0 15px 0 13px;
+	display: flex;
+	align-items: center;
+}
+.post_web_sidebar_col2{
+	flex-grow: 1;
+    flex-basis: auto;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+.post_web_search{
+	margin: 0 0 13px 0;
+}
+.post_web_sidebar_profile_pic{
+	width:49px; 
+	height:49px;
+	border-radius: 50%;
+}
+.post_web_sidebar_user_time{
+	text-align: left;
+	align-items: center;
+	line-height: normal;
+	display: flex;
+}
+.rounded_profile_pic{
+	border-radius:50%;
+}

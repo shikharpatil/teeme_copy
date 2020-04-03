@@ -198,11 +198,11 @@
 				?>
 			  <?php if(isset($_SESSION['photo']) && $_SESSION['photo']!='noimage.jpg'){ ?>
 			  <!--<img class="clsHeaderUserImage" src="<?php echo base_url();?>images/user_images/<?php echo $_SESSION['photo'];?>" >-->
-			  <img class="clsHeaderUserImage" src="<?php echo base_url();?>workplaces/<?php echo $workPlaceDetails['companyName'];?>/user_profile_pics/<?php echo $_SESSION['photo'];?>" >
+			  <img class="clsHeaderUserImage rounded_profile_pic" src="<?php echo base_url();?>workplaces/<?php echo $workPlaceDetails['companyName'];?>/user_profile_pics/<?php echo $_SESSION['photo'];?>" >
 			  <?php }
 			  else
 			  { ?>
-			  	 <img class="clsHeaderUserImage" src="<?php echo base_url();?>images/<?php echo $_SESSION['photo'];?>" >
+			  	 <img class="clsHeaderUserImage rounded_profile_pic" src="<?php echo base_url();?>images/<?php echo $_SESSION['photo'];?>" >
 			  <?php } ?>
 			   </a>
 			  <?php /*?> <div> <?php */ ?>

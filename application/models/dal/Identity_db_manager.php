@@ -14653,6 +14653,7 @@ $q = 'select * from(SELECT a.id, a.name, a.type, b.artifactId, b.artifactType ,b
 	
 	public function getPostsByWorkSpaceId($treeId,$workSpaceId,$workSpaceType)
 	{
+
 		$treeId = '0';
 	
 		$treeData	= array();
