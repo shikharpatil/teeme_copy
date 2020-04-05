@@ -14651,14 +14651,15 @@ $q = 'select * from(SELECT a.id, a.name, a.type, b.artifactId, b.artifactType ,b
 	
 	//Assigned move tree originator code end 
 	
-	public function getPostsByWorkSpaceId($treeId,$workSpaceId,$workSpaceType)
+	public function getPostsByWorkSpaceId($treeId,$workSpaceId,$workSpaceType,$allSpace=0,$user_id=0)
 	{
-
 		$treeId = '0';
 	
 		$treeData	= array();
 
 		$tree = array();	
+
+		//echo "userid= " .$user_id; exit;
 		
 		if($user_id!='' && $user_id !=0)
 		{
@@ -14668,7 +14669,7 @@ $q = 'select * from(SELECT a.id, a.name, a.type, b.artifactId, b.artifactType ,b
 		{
 			$profileUserId = $_SESSION['userId'];
 		}
-		
+		//echo "profileUserId= " .$profileUserId; exit;
 		//Memcache code start here
 		/*$memc=$this->createMemcacheObject();
 
@@ -14695,7 +14696,7 @@ $q = 'select * from(SELECT a.id, a.name, a.type, b.artifactId, b.artifactType ,b
 				$tree = $memc->get($memCacheId);	
 			}*/
 		/*}*/		
-
+			//echo "<li>count= " .count($tree); exit;
 		if(count($tree) > 0)
 		{
 

@@ -1113,8 +1113,8 @@ $(document).ready(function()
 		<div id="TimelineEditor" style="width:98%; padding:2% 1%; display:none;" class="handCursor">
 			<form name="formTimeline" id="formTimeline" method="post" action="" >
 				 <textarea name="replyDiscussion" id="replyDiscussion"></textarea>
-				 <input value="" id="list" type="hidden" />
-				 <input value="" id="listGroup" type="hidden" />
+				 <input name="list" value="<?php echo $userPostSearch;?>" id="list" type="hidden" />
+				 <input name="listGroup" value="" id="listGroup" type="hidden" />
 				 <!--Myspace select recepient code start-->
 				 
 				 
@@ -1349,6 +1349,7 @@ $(window).scroll(function(){
 //Insert timeline post content
 function insertTimeline()
 {  
+	
 	var error	= ''	
 	var replyDiscussion = 'replyDiscussion'; 
     var INSTANCE_NAME = $("#replyDiscussion").attr('name');
@@ -1377,10 +1378,11 @@ function insertTimeline()
 		{
 			var groupRecipients=document.getElementById("listGroup").value.split(",");
 		}
+		//alert (recipients); return false;
 		data_user = data_user+'&replyDiscussion='+encodeURIComponent(getvalue)+'&recipients='+recipients+'&groupRecipients='+groupRecipients; 
 		//var pnodeId=$("#pnodeId").val();
 		var request = $.ajax({
-			  url: baseUrl+"post/insert_timeline/",
+			  url: baseUrl+"post/insert_timeline_web/",
 			  type: "POST",
 			  data: data_user,
 			  dataType: "html",

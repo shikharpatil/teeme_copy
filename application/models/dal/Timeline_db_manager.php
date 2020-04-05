@@ -1,4 +1,4 @@
-<?php /*Copyright © 2008-2014. Team Beyond Borders Pty Ltd. All rights reserved.*/
+<?php /*Copyright ï¿½ 2008-2014. Team Beyond Borders Pty Ltd. All rights reserved.*/
 
 class timeline_db_manager extends CI_Model
 
@@ -46,10 +46,12 @@ class timeline_db_manager extends CI_Model
 		//$query = $this->db->query("INSERT INTO teeme_wall_recipients(commentId,recipientId) VALUES ('".$nodeId."','".$userId."')");
 		
 		//$query = $this->db->query("INSERT INTO teeme_posts_shared (postId,members) VALUES ('".$nodeId."','".$userId."')");
+		/*
 		if(!is_array($recipients))
 		{
 			$recipients .= ", ".$_SESSION['userId'];
 		}
+		*/
 		
 		if(!empty($recipients))
 		{
