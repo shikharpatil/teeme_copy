@@ -340,11 +340,14 @@ class Post extends CI_Controller {
 				$workSpaceType	= $this->input->post('workSpaceType');
 				$publicPost	= $this->input->post('publicPost');
 				
+
+				//echo "<li>workspaceid= " .$workSpaceId; exit;
 				//allspace 1 for myspace and 2 for public space
 				//My space recepients start
 					$recipients='';
 					if($workSpaceId==0){
 						$allSpace='1';
+						//echo "public post= " .$publicPost; exit;
 						if($publicPost == '')
 						{	
 							$recipients = $this->input->post('recipients');
@@ -365,6 +368,8 @@ class Post extends CI_Controller {
 							}
 							$allUsersIdArr = array_unique($groupUsersIdArr);
 							$groupUserRecipients = implode(',',$allUsersIdArr);
+
+							//echo "<pre>"; print_r($recipients); exit;
 							
 							//get group list end
 							
@@ -2860,7 +2865,8 @@ class Post extends CI_Controller {
 			else
 			{
 				if ($arrDetails['userPostSearch']!=''){
-					$arrDetails['arrTimeline']	= $this->identity_db_manager->getPostsByWorkSpaceId($treeId,$arrDetails['workSpaceId'],$arrDetails['workSpaceType'],0,$arrDetails['userPostSearch']);
+					//$arrDetails['arrTimeline']	= $this->identity_db_manager->getPostsByWorkSpaceId($treeId,$arrDetails['workSpaceId'],$arrDetails['workSpaceType'],0,$arrDetails['userPostSearch']);
+					$arrDetails['arrTimeline']	= $this->timeline_db_manager->get_timeline($treeId,$arrDetails['workSpaceId'],$arrDetails['workSpaceType'],0,$arrDetails['userPostSearch']);
 				}
 				else{
 					$arrDetails['arrTimeline']	= $this->identity_db_manager->getPostsByWorkSpaceId($treeId,$arrDetails['workSpaceId'],$arrDetails['workSpaceType']);
@@ -3799,8 +3805,8 @@ class Post extends CI_Controller {
 								}
 							}
 							$allUsersIdArr = array_unique($groupUsersIdArr);
-							$groupUserRecipients = implode(',',$allUsersIdArr);
-							
+							$groupUserRecipients = implode(',',trim($allUsersIdArr));
+							//echo "<pre>"; print_r($recipients); exit;
 							//get group list end
 							
 						}
@@ -3839,7 +3845,7 @@ class Post extends CI_Controller {
 				if(trim($this->input->post($this->input->post('editorname1')))!='')
 				{
 					//echo "<li>recepients2= "; print_r($recipients);exit; 
-					$postNodeId	= $this->timeline_db_manager->insert_timeline($treeId,$this->input->post($this->input->post('editorname1')),$_SESSION['userId'],$postCreatedDate,0,0,$workSpaceId,$workSpaceType,$recipients);	
+					$postNodeId	= $this->timeline_db_manager->insert_timeline_web($treeId,$this->input->post($this->input->post('editorname1')),$_SESSION['userId'],$postCreatedDate,0,0,$workSpaceId,$workSpaceType,$recipients);	
 					
 					$groupSharedId = $this->identity_db_manager->add_group_recipients($postNodeId,$workSpaceId,$groupRecipients,$groupUserRecipients);	
 
@@ -4431,7 +4437,7 @@ class Post extends CI_Controller {
 				$allSpace='1';
 			}
 			
-			$arrTimeline1		= $this->timeline_db_manager->get_timeline($treeId,$workSpaceId,$workSpaceType,$allSpace);
+			$arrTimeline1		= $this->timeline_db_manager->get_timeline_web($treeId,$workSpaceId,$workSpaceType,$allSpace);
 			$arrTimelineViewPage['workSpaceId'] = $workSpaceId;
 			$arrTimelineViewPage['workSpaceType'] = $workSpaceType;
 			$arrTimelineViewPage['arrTimeline']=$arrTimeline1;
