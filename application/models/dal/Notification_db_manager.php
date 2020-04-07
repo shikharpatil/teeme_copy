@@ -1559,7 +1559,7 @@ function send_user_email_notifications($place_name=0,$email='')
 	
 	//Manoj: add user notification preferences 
 	
-	function add_user_notification_email_preference($user_id,$place_name)
+	function add_user_notification_email_preference($user_id,$place_name='')
 	{
 		$setUserNotificationEmailPreferences = "INSERT INTO `teeme_notification_modes_user` (`user_id`, `notification_type_id`, `notification_priority_id`, `preference`) VALUES ('".$user_id."', 1, 4, 1),('".$user_id."', 2, 4, 1)";
 		

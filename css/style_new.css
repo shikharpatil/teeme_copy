@@ -7352,6 +7352,7 @@ input:checked + .slider:before {
 {
 	float:left;
 	width:50% !important;
+	font-size:0.8em;
 }
 .postTable:nth-child(odd) 
 { 
@@ -8778,4 +8779,12 @@ span.reserve a
 }
 .rounded_profile_pic{
 	border-radius:50%;
+}
+.postUserDetailsBox{
+	width:90%;
+	float: left;
+}
+.timelineProfImg{
+	width:60px;
+	float: left;
 }

@@ -1,5 +1,5 @@
 <?php
-				
+				//echo "<pre>"; print_r($workSpaceMembers); exit;
 				if(count($workSpaceMembers) > 0)
 
 				{

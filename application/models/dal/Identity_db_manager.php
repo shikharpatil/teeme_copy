@@ -2915,6 +2915,11 @@ teeme_leaf a,teeme_node b where a.id=b.leafId and b.treeIds='".$inserted_tree_id
 					$workSpaceData['workSpaceCreatedDate']	= $row->workSpaceCreatedDate;	
 					$workSpaceData['status']				= $row->status;
 					$workSpaceData['workSpaceCreatorId']	= $row->workSpaceCreatorId;
+					$getUserName = $this->getUserDetailsByUserId($workSpaceData['workSpaceCreatorId']);
+						if($getUserName['userTagName']!='')
+						{
+							$workSpaceData['workSpaceCreatorUsername']	= $getUserName['userTagName'];
+						}
 				}				
 			}				
 			return $workSpaceData;		

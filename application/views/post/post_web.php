@@ -868,33 +868,35 @@ $(document).ready(function()
 		<div class="clr"></div>
 	</div>
 	-->
-	<!--Tab section end here-->
-					
-	<div class="timelineTopContent">
-  
+	<!--Tab section end here-->					
+	<div class="timelineTopContent"> 
   		<!--Timeline profile start here-->
-		<div id="TimelineProfile"  style=" display: <?php if($this->uri->segment(10)==''){ echo 'none';}else{ echo 'block';}?> ">
-			<div style="float:left; width:90%;">
-				<div class="timelineProfImg" style="float:left; width:60px;">
+		<!--<div id="TimelineProfile"  style=" display: <?php if($this->uri->segment(10)==''){ echo 'none';}else{ echo 'block';}?> ">-->
+		<div id="TimelineProfile">
+			<?php
+			if($this->uri->segment(8)!=''){
+			?>
+				<div>
+				<div class="timelineProfImg">
 					
 							<?php
 								if ($Profiledetail['photo']!='noimage.jpg')
 								{
 							?>
-									<img alt="image" src="<?php echo base_url();?>workplaces/<?php echo $workPlaceDetails['companyName'];?>/user_profile_pics/<?php echo $Profiledetail['photo'];?>" border="0"  width="45" height="45" id="imgName"> 
+									<img class="rounded_profile_pic" alt="image" src="<?php echo base_url();?>workplaces/<?php echo $workPlaceDetails['companyName'];?>/user_profile_pics/<?php echo $Profiledetail['photo'];?>" border="0"  width="45" height="45" id="imgName"> 
                           	<?php
 								}
 								else
 								{
 							?>
-									<img alt="image" src="<?php echo base_url();?>images/<?php echo $Profiledetail['photo'];?>" border="0"  width="45" height="45" id="imgName"> 
+									<img class="rounded_profile_pic" alt="image" src="<?php echo base_url();?>images/<?php echo $Profiledetail['photo'];?>" border="0"  width="30" height="30" id="imgName"> 
 							<?php
 								}
 							?>
 					
 				</div>
 				
-			<div style="width:90%; float:left;" class="postUserDetailsBox">
+			<div class="postUserDetailsBox">
 			
 				<?php if($Profiledetail['firstName']!='' && $Profiledetail['lastName']!='') { ?>
 				<table class="postTable" style="font-size:0.8em; width:30%;">
@@ -909,7 +911,7 @@ $(document).ready(function()
 			</table>
 			<?php } ?>
 			<?php if($Profiledetail['editNickName']!='') { ?>
-			<table class="postTable" style="font-size:0.8em; width:30%;">
+			<table class="postTable">
 			<tr>
 			<td style="padding-bottom:5px;" class="profileLeftLabel">
 				<?php echo $this->lang->line('txt_nick_name');?>:
@@ -921,7 +923,7 @@ $(document).ready(function()
 			</table>
 			<?php } ?>
 			<?php if($Profiledetail['statusUpdate']!='') { ?>
-			<table class="postTable" style="font-size:0.8em; width:30%;">
+			<table class="postTable">
 				<tr>
 				<td style="padding-bottom:5px;" class="profileLeftLabel">
 					<?php echo $this->lang->line('txt_Status');?>:
@@ -933,7 +935,7 @@ $(document).ready(function()
 			</table>
 			<?php } ?>
 			<?php if($Profiledetail['role']!='') { ?>
-			<table class="postTable" style="font-size:0.8em; width:30%;">
+			<table class="postTable">
 				<tr>
 				<td style="" class="profileLeftLabel">	
 					<?php echo $this->lang->line('txt_Role');?>:
@@ -945,7 +947,7 @@ $(document).ready(function()
 			</table>
 			<?php } ?>
 			<?php if($Profiledetail['mobile']!='') { ?>
-			<table class="postTable" style="font-size:0.8em; width:30%;">
+			<table class="postTable">
 				<tr>
 				
 				</tr>
@@ -961,7 +963,7 @@ $(document).ready(function()
 			</table>
 			<?php } ?>	
 			<?php if($Profiledetail['userName']!='') { ?>
-			<table class="postTable" style="font-size:0.8em; width:30%;">
+			<table class="postTable">
 			<tr>
 			<td style="padding-bottom:5px;" class="profileLeftLabel">
 				<?php echo $this->lang->line('txt_Email');?>:
@@ -973,7 +975,7 @@ $(document).ready(function()
 			</table>
 			<?php } ?>
 			<?php if($Profiledetail['editUserTagName']!='') { ?>
-			<table class="postTable" style="font-size:0.8em; width:30%;">
+			<table class="postTable">
 			<tr>
 			<td style="padding-bottom:5px;" class="profileLeftLabel">
 				<?php echo $this->lang->line('txt_user_profile_tag_name');?>:
@@ -1016,11 +1018,33 @@ $(document).ready(function()
 			<div style="float:left;width:100%;height:30px;" >
             <div style="margin-top:12px;border-bottom:1px dotted gray;margin-left:0%" ></div>
         	</div>
-		</div>
-		
+			<?php 
+			} // end if not a space profile
+			else if ($workSpaceId>0){				
+				?>
+				<div class="postUserDetailsBox">
+					<div class="timelineProfImg">
+						<img class="rounded_profile_pic" id="imgName" alt="image" src="<?php echo base_url();?>images/noimage.jpg" border="0"  width="45" height="45">
+					</div>
+					<div class="postUserDetailsBox">
+						<div class="profileLeftLabel"><span class="postTable">Name:</span><span> <?php echo $workSpaceDetails['workSpaceName']; ?></span></div>
+						<div class="profileLeftLabel"><span class="postTable">Created on:</span><span> <?php echo $this->time_manager->getUserTimeFromGMTTime($workSpaceDetails['workSpaceCreatedDate'],$this->config->item('date_format')); ?></span></div>
+						<div class="profileLeftLabel"><span class="postTable">Created by:</span><span> <?php echo $workSpaceDetails['workSpaceCreatorUsername']; ?></span></div>
+						<?php //echo "<pre>"; print_r($workSpaceDetails); ?>
+					</div>
+				</div>
+				<?php
+			}
+			else {
+				?>
+
+				<?php
+			}
+			?> 
+		</div>	
 		<div class="clr"></div>
 		<!--Timeline profile end here-->
-		<div>
+	<div>
 		<div class="leftAddBox">
 		<!--Plus icon for public post start here-->
 		<?php /*if($treeAccess==1  ||  $workSpaceId==0  || in_array($_SESSION['userId'],$managerIds) || isset($_SESSION['workPlaceManagerName']) && $_SESSION['workPlaceManagerName']!='')*/
@@ -1104,9 +1128,9 @@ $(document).ready(function()
 									}
 								?>
 				<!--code end-->
-					</div>
-				</div>
-				</div>
+			</div>
+		</div>
+	</div>
 		<div class="clr"></div>
 		<!--Timeline editor start here-->
 		<!--Changed by Dashrath- add handCursor class in div for editor content line spacing issue-->

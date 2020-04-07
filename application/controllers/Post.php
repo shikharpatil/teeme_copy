@@ -2847,7 +2847,7 @@ class Post extends CI_Controller {
 			if($this->uri->segment(8)=='all')
 			{
 				$allSpace='1';
-				$arrDetails['arrTimeline']	= $this->timeline_db_manager->get_timeline($treeId,$arrDetails['workSpaceId'],$arrDetails['workSpaceType'],$allSpace);
+				$arrDetails['arrTimeline']	= $this->timeline_db_manager->get_timeline_web($treeId,$arrDetails['workSpaceId'],$arrDetails['workSpaceType'],$allSpace);
 				//echo '<pre>';
 				//print_r($arrDetails['arrTimeline']);
 				//exit;
@@ -2855,21 +2855,21 @@ class Post extends CI_Controller {
 			else if($this->uri->segment(8)=='public')
 			{
 				$allPublicSpace='2';
-				$arrDetails['arrTimeline']	= $this->timeline_db_manager->get_timeline($treeId,$arrDetails['workSpaceId'],$arrDetails['workSpaceType'],$allPublicSpace);
+				$arrDetails['arrTimeline']	= $this->timeline_db_manager->get_timeline_web($treeId,$arrDetails['workSpaceId'],$arrDetails['workSpaceType'],$allPublicSpace);
 			}
 			else if($this->uri->segment(8)=='bookmark')
 			{
 				$allBookmarkSpace='3';
-				$arrDetails['arrTimeline']	= $this->timeline_db_manager->get_timeline($treeId,$arrDetails['workSpaceId'],$arrDetails['workSpaceType'],$allBookmarkSpace);
+				$arrDetails['arrTimeline']	= $this->timeline_db_manager->get_timeline_web($treeId,$arrDetails['workSpaceId'],$arrDetails['workSpaceType'],$allBookmarkSpace);
 			}
 			else
 			{
 				if ($arrDetails['userPostSearch']!=''){
 					//$arrDetails['arrTimeline']	= $this->identity_db_manager->getPostsByWorkSpaceId($treeId,$arrDetails['workSpaceId'],$arrDetails['workSpaceType'],0,$arrDetails['userPostSearch']);
-					$arrDetails['arrTimeline']	= $this->timeline_db_manager->get_timeline($treeId,$arrDetails['workSpaceId'],$arrDetails['workSpaceType'],0,$arrDetails['userPostSearch']);
+					$arrDetails['arrTimeline']	= $this->timeline_db_manager->get_timeline_web($treeId,$arrDetails['workSpaceId'],$arrDetails['workSpaceType'],0,$arrDetails['userPostSearch']);
 				}
 				else{
-					$arrDetails['arrTimeline']	= $this->identity_db_manager->getPostsByWorkSpaceId($treeId,$arrDetails['workSpaceId'],$arrDetails['workSpaceType']);
+					$arrDetails['arrTimeline']	= $this->timeline_db_manager->get_timeline_web($treeId,$arrDetails['workSpaceId'],$arrDetails['workSpaceType'],0,0);
 				}
 				//echo '<pre>';print_r($arrDetails['arrTimeline']); exit;
 			}
@@ -3824,22 +3824,41 @@ class Post extends CI_Controller {
 						{	
 							if ($workSpaceType==1)
 							{
-								$recipients=$this->identity_db_manager->getWorkSpaceMembersByWorkSpaceId($workSpaceId);
+								$arrRecipients=$this->identity_db_manager->getWorkSpaceMembersByWorkSpaceId($workSpaceId);
 							}
 							else
 							{
-								$recipients=$this->identity_db_manager->getSubWorkSpaceMembersBySubWorkSpaceId($workSpaceId);
+								$arrRecipients=$this->identity_db_manager->getSubWorkSpaceMembersBySubWorkSpaceId($workSpaceId);
+							}
+
+							$recipients='';
+							$recipients_count=0;
+							foreach($arrRecipients as $recipientsUserId)
+							{ 
+								if($recipientsUserId['userId']>0 && $recipientsUserId['userId']!=$_SESSION['userId'])
+								{
+									if ($recipients_count==0){
+										$recipients = $recipientsUserId['userId'];
+									}
+									else{
+										$recipients .= ",".$recipientsUserId['userId'];
+									}	
+									$recipients_count++;
+								}		
 							}
 						}
 						else
 						{
 							$allSpace='2';
 							//$recipients='';
-							$workSpaceId = '0';
-							$workSpaceType = '0';
+							//$workSpaceId = '0';
+							//$workSpaceType = '0';
+							if ($workSpaceId<0){$workSpaceId = '0';}
+							if ($workSpaceType<0){$workSpaceType = '0';}
 						}
 					}
 				//print_r($recipients); exit;
+				
 				//My space recepients end
 				$postCreatedDate=$objTime->getGMTTime();
 				if(trim($this->input->post($this->input->post('editorname1')))!='')
