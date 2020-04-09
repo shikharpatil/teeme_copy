@@ -3779,7 +3779,7 @@ class Post extends CI_Controller {
 				$workSpaceId	= $this->input->post('workSpaceId');
 				$workSpaceType	= $this->input->post('workSpaceType');
 				$publicPost	= $this->input->post('publicPost');
-				$recipients=$this->input->post('recipients');;
+				$recipients=$this->input->post('recipients');
 				
 				//allspace 1 for myspace and 2 for public space
 				//My space recepients start
@@ -3788,8 +3788,8 @@ class Post extends CI_Controller {
 						$allSpace='1';
 						if($publicPost == '')
 						{	
-							$recipients = $this->input->post('recipients');
 							//get groups list start
+							
 							$groupUsersIdArr = array();
 							$groupRecipients = $this->input->post('groupRecipients');
 							$groups = array_filter(explode (",",$groupRecipients));
@@ -3806,7 +3806,7 @@ class Post extends CI_Controller {
 							}
 							$allUsersIdArr = array_unique($groupUsersIdArr);
 							$groupUserRecipients = implode(',',trim($allUsersIdArr));
-							//echo "<pre>"; print_r($recipients); exit;
+							
 							//get group list end
 							
 						}
@@ -3857,16 +3857,14 @@ class Post extends CI_Controller {
 							if ($workSpaceType<0){$workSpaceType = '0';}
 						}
 					}
-				//print_r($recipients); exit;
-				
+			
 				//My space recepients end
 				$postCreatedDate=$objTime->getGMTTime();
 				if(trim($this->input->post($this->input->post('editorname1')))!='')
 				{
-					//echo "<li>recepients2= "; print_r($recipients);exit; 
 					$postNodeId	= $this->timeline_db_manager->insert_timeline_web($treeId,$this->input->post($this->input->post('editorname1')),$_SESSION['userId'],$postCreatedDate,0,0,$workSpaceId,$workSpaceType,$recipients);	
 					
-					$groupSharedId = $this->identity_db_manager->add_group_recipients($postNodeId,$workSpaceId,$groupRecipients,$groupUserRecipients);	
+					//$groupSharedId = $this->identity_db_manager->add_group_recipients($postNodeId,$workSpaceId,$groupRecipients,$groupUserRecipients);	
 
 					if($publicPost == '')
 					{
