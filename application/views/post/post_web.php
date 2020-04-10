@@ -1141,8 +1141,9 @@ $(document).ready(function()
 				 
 				 
 				<?php
-					if($workSpaceId=='0' && $_SESSION['public'] != 'public')
-					{
+				/*
+				if($workSpaceId=='0' && $_SESSION['public'] != 'public')
+				{
 						
 						?>
 									
@@ -1174,17 +1175,17 @@ $(document).ready(function()
 						foreach($groupList as $keyVal=>$groupData)
 						{
 						
-						$groupAllUsersList	= $this->identity_db_manager->getGroupUsersListByGroupId($groupData['groupId']);
-						
-						?>
+							$groupAllUsersList	= $this->identity_db_manager->getGroupUsersListByGroupId($groupData['groupId']);
+							
+							?>
 
-					<input type="checkbox" name="groupRecipients[]" id="<?php echo 'groupRecipients_'.$i ; ?>" value="<?php echo $groupData['groupId'];?>" class="clsCheckGroup removeGroup<?php echo $groupData['groupId'];?>"  data-myval="<?php echo $groupData['groupName'];?>" data-myusers="<?php echo $groupAllUsersList;?>"  />
-					
-					<?php echo $groupData['groupName'];?><br />
-					
-					<?php
+							<input type="checkbox" name="groupRecipients[]" id="<?php echo 'groupRecipients_'.$i ; ?>" value="<?php echo $groupData['groupId'];?>" class="clsCheckGroup removeGroup<?php echo $groupData['groupId'];?>"  data-myval="<?php echo $groupData['groupName'];?>" data-myusers="<?php echo $groupAllUsersList;?>"  />
+							
+							<?php echo $groupData['groupName'];?><br />
+							
+							<?php
 
-						$i++;
+								$i++;
 		
 							
 		
@@ -1192,16 +1193,16 @@ $(document).ready(function()
 		
 						?>
 
-				  </div>
-				  </div>
-				  <!--Select user div end-->
-				  <div style="float:left; width:60%;">
-					<div class="sol-current-selection-groups" style="max-height:250px; overflow-y:scroll;"></div>
-				  </div>
-				  <!--Select user label end-->
-				  <div class="clr"></div>
-			</div>
-			<?php } ?>			
+						</div>
+						</div>
+						<!--Select user div end-->
+						<div style="float:left; width:60%;">
+							<div class="sol-current-selection-groups" style="max-height:250px; overflow-y:scroll;"></div>
+						</div>
+						<!--Select user label end-->
+						<div class="clr"></div>
+						</div>
+						<?php } ?>			
 						<!--Group feature end here-->
 						
 						<div style="margin-top:1%;">
@@ -1247,36 +1248,37 @@ $(document).ready(function()
 										else
 											$showGuestUser = 0;
 									}	
-					if($_SESSION['userId'] != $workPlaceMemberData['userId'] && $this->uri->segment(3)!=$workPlaceMemberData['userId'] && $showGuestUser){						
+						if($_SESSION['userId'] != $workPlaceMemberData['userId'] && $this->uri->segment(3)!=$workPlaceMemberData['userId'] && $showGuestUser){						
 
-				?>
+										?>
 
-<input type="checkbox" name="recipients[]" id="<?php echo 'recipients_'.$i ; ?>" value="<?php echo $workPlaceMemberData['userId'];?>" class="clsChecks remove<?php echo $workPlaceMemberData['userId'];?>"  data-myval="<?php echo $workPlaceMemberData['tagName'];?>" />
+							<input type="checkbox" name="recipients[]" id="<?php echo 'recipients_'.$i ; ?>" value="<?php echo $workPlaceMemberData['userId'];?>" class="clsChecks remove<?php echo $workPlaceMemberData['userId'];?>"  data-myval="<?php echo $workPlaceMemberData['tagName'];?>" />
 
-<?php echo $workPlaceMemberData['tagName'];?><br />
+							<?php echo $workPlaceMemberData['tagName'];?><br />
 
-<?php
+							<?php
 
-				$i++;
+										$i++;
+
+						}
 
 					}
+					
+							?>
 
+					</div>
+					</div>
+					<!--Select user div end-->
+					<div style="float:left; width:60%; margin-top:3%;">
+						<div class="sol-current-selection" style="max-height:250px; overflow-y:scroll;"></div>
+					</div>
+					<!--Select user label end-->
+					<div class="clr"></div>
+									</div>
+									
+								<?php	
 				}
-
-				?>
-
-          </div>
-		  </div>
-		  <!--Select user div end-->
-		  <div style="float:left; width:60%; margin-top:3%;">
-		  	<div class="sol-current-selection" style="max-height:250px; overflow-y:scroll;"></div>
-		  </div>
-		  <!--Select user label end-->
-		  <div class="clr"></div>
-						</div>
-						
-					<?php	
-					}
+				*/
 				 ?>
 				 <!--Myspace select recepient code end-->
 				 
@@ -2053,7 +2055,6 @@ function getRecepientName(checkid,nodeId)
 /*setInterval(function () {
 	findNewPostComment()		
 }, 10000);*/
-//Add SetTimeOut 
 setTimeout("findNewPostComment()", 10000);
 //On single checkbox click myspace end	
 
@@ -2096,7 +2097,6 @@ function selectPostType(postType,workSpaceId,workSpaceType)
 	postCommentUpdate()		
 }, 5000);*/
 
-//Add SetTimeOut 
 setTimeout("postCommentUpdate()", 10000);
 
 function postCommentUpdate()
@@ -2122,7 +2122,6 @@ function postCommentUpdate()
 			  });
 			  //$('#treeTitle').val('');
 		  }
-		  //Add SetTimeOut 
 		  setTimeout("postCommentUpdate()", 10000);
 		}
 	});
@@ -2160,7 +2159,6 @@ function findNewPostComment()
 				  }
 			  }
 			  //$('#treeTitle').val('');
-			  //Add SetTimeOut 
 			  //Changed by Dashrath - change time 50000 to 10000
 			  setTimeout("findNewPostComment()", 10000);
 			}
@@ -2523,7 +2521,8 @@ $(document).on('click', '.clsChecks', function(){
             });
             alert(favorite.join(", "));
 	}
-setTimeout("getPostUserStatus()", 10000);
+//setTimeout("getPostUserStatus()", 10000);
+getPostUserStatus();
 function getPostUserStatus()
 {
 	var workSpaceId = '<?php echo $workSpaceId;?>';
