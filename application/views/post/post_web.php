@@ -874,7 +874,7 @@ $(document).ready(function()
 		<!--<div id="TimelineProfile"  style=" display: <?php if($this->uri->segment(10)==''){ echo 'none';}else{ echo 'block';}?> ">-->
 		<div id="TimelineProfile">
 			<?php
-			if($this->uri->segment(8)!=''){
+			if($post_type_id==1 && count($Profiledetail)>0){
 			?>
 				<div>
 				<div class="timelineProfImg">
@@ -1019,26 +1019,24 @@ $(document).ready(function()
             <div style="margin-top:12px;border-bottom:1px dotted gray;margin-left:0%" ></div>
         	</div>
 			<?php 
-			} // end if not a space profile
-			else if ($workSpaceId>0){				
+			} // end if a user profile
+			// if a space or subspace profile
+			else if (($post_type_id==2 || $post_type_id==3) && count($Profiledetail)>0){				
 				?>
 				<div class="postUserDetailsBox">
 					<div class="timelineProfImg">
 						<img class="rounded_profile_pic" id="imgName" alt="image" src="<?php echo base_url();?>images/noimage.jpg" border="0"  width="45" height="45">
 					</div>
 					<div class="postUserDetailsBox">
-						<div class="profileLeftLabel"><span class="postTable">Name:</span><span> <?php echo $workSpaceDetails['workSpaceName']; ?></span></div>
-						<div class="profileLeftLabel"><span class="postTable">Created on:</span><span> <?php echo $this->time_manager->getUserTimeFromGMTTime($workSpaceDetails['workSpaceCreatedDate'],$this->config->item('date_format')); ?></span></div>
-						<div class="profileLeftLabel"><span class="postTable">Created by:</span><span> <?php echo $workSpaceDetails['workSpaceCreatorUsername']; ?></span></div>
-						<?php //echo "<pre>"; print_r($workSpaceDetails); ?>
+						<div class="profileLeftLabel"><span class="postTable">Name:</span><span> <?php echo $Profiledetail['workSpaceName']; ?></span></div>
+						<div class="profileLeftLabel"><span class="postTable">Created on:</span><span> <?php echo $this->time_manager->getUserTimeFromGMTTime($Profiledetail['workSpaceCreatedDate'],$this->config->item('date_format')); ?></span></div>
+						<div class="profileLeftLabel"><span class="postTable">Created by:</span><span> <?php echo $Profiledetail['workSpaceCreatorUsername']; ?></span></div>
 					</div>
 				</div>
 				<?php
 			}
 			else {
-				?>
-
-				<?php
+				echo "Nothing found";
 			}
 			?> 
 		</div>	
@@ -1137,7 +1135,7 @@ $(document).ready(function()
 		<div id="TimelineEditor" style="width:98%; padding:2% 1%; display:none;" class="handCursor">
 			<form name="formTimeline" id="formTimeline" method="post" action="" >
 				 <textarea name="replyDiscussion" id="replyDiscussion"></textarea>
-				 <input name="list" value="<?php echo $userPostSearch;?>" id="list" type="hidden" />
+				 <input name="list" value="<?php echo $post_type_object_id;?>" id="list" type="hidden" />
 				 <input name="listGroup" value="" id="listGroup" type="hidden" />
 				 <!--Myspace select recepient code start-->
 				 
@@ -1304,6 +1302,8 @@ $(document).ready(function()
 				 <input type="hidden" name="workSpaceId" value="<?php echo $workSpaceId;?>" id="workSpaceId">
           		 <input type="hidden" name="workSpaceType" value="<?php echo $workSpaceType;?>" id="workSpaceType">
 				 <input type="hidden" name="publicPost" value="<?php echo $_SESSION['public']; ?>" id="publicPost">
+				 <input type="hidden" name="post_type_id" value="<?php echo $post_type_id;?>" id="post_type_id">
+				 <input type="hidden" name="post_type_object_id" value="<?php echo $post_type_object_id;?>" id="post_type_object_id">
 				 <input name="editorname1" id="editorname1" type="hidden"  value="replyDiscussion">
 				<?php /*?><div class="timelineExpiryDate" style="float:left; padding-left:20px;">
 					Expiry Date: <input name="timeline_exp_date" type="text"  id="timeline_exp_date" class="timelineExpDate" value="" readonly>
