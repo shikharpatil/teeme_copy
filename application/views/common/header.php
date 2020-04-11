@@ -121,7 +121,7 @@
 					
 					<!--For notification icon-->
 					<?php //$temp=  (is_numeric($total_notification) && $total_notification>0)?$total_notification:"0"; ?>
-					<span style="margin:3px 5px; float:left;"><a href="<?php echo base_url(); ?>post/web/<?php echo $workSpaceId;?>/type/<?php echo $workSpaceType; ?>" style="color:#fff; cursor: pointer;"><?php echo $this->lang->line('txt_Post'); ?></a>
+					<span style="margin:3px 5px; float:left;"><a href="<?php echo base_url(); ?>post/web/<?php echo $workSpaceId;?>/<?php echo $workSpaceType; ?>/space/<?php echo $workSpaceId;?>" style="color:#fff; cursor: pointer;"><?php echo $this->lang->line('txt_Post'); ?></a>
 </span>
 					<div class="notify_box">
 					<a id="notificationLink" onclick="seenAllNotification()">

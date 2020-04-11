@@ -2956,7 +2956,7 @@ class Post extends CI_Controller {
 			}					
 			*/
 			$arrDetails['countAll'] = $this->profile_manager->getMessagesBySpaceIdAndType($userId,true,$workSpaceType_search_user,$workSpaceId_search_user);
-			
+			/*
 			if ($this->input->post('search')!='')
 			{
 				$arrDetails['search']=$this->input->post('search',true);
@@ -2989,7 +2989,8 @@ class Post extends CI_Controller {
 					}			
 				}
 			}
-			
+			*/
+			$arrDetails['workSpaceMembers']	= $this->profile_manager->getAllUsersByWorkPlaceId($_SESSION['workPlaceId']);
 			$workSpaceMembers = array();
 			if(count($arrDetails['workSpaceMembers']) > 0)
 			{		
@@ -3150,16 +3151,17 @@ class Post extends CI_Controller {
 	
 			$arrDetails['manager']=$rs;
 			
-				if ($workSpaceType==2)
-				{
-					$workSpaceDetails=$this->identity_db_manager->getSubWorkSpaceDetailsBySubWorkSpaceId($workSpaceId);
-					$arrDetails['workSpaceName'] = $workSpaceDetails['subWorkSpaceName'];
-				}
-				else
-				{
-					$workSpaceDetails=$this->identity_db_manager->getWorkSpaceDetailsByWorkSpaceId($workSpaceId);
-					$arrDetails['workSpaceName'] = $workSpaceDetails['workSpaceName'];
-				}
+			/*
+			if ($workSpaceType==2)
+			{
+				$workSpaceDetails=$this->identity_db_manager->getSubWorkSpaceDetailsBySubWorkSpaceId($workSpaceId);
+				$arrDetails['workSpaceName'] = $workSpaceDetails['subWorkSpaceName'];
+			}
+			else
+			{
+				$workSpaceDetails=$this->identity_db_manager->getWorkSpaceDetailsByWorkSpaceId($workSpaceId);
+				$arrDetails['workSpaceName'] = $workSpaceDetails['workSpaceName'];
+			}
 			
 			if ($this->input->post('search')!='')
 			{
@@ -3193,8 +3195,8 @@ class Post extends CI_Controller {
 					}			
 				}
 			}
-			
-						
+			*/
+			$arrDetails['workSpaceMembers']	= $this->profile_manager->getAllUsersByWorkPlaceId($_SESSION['workPlaceId']);			
 			$workSpaceMembers = array();
 			if(count($arrDetails['workSpaceMembers']) > 0)
 			{		
