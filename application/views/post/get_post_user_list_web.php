@@ -12,7 +12,7 @@
 
 						?>
 
-          			<div id="divSearchUser" name="divSearchUser">
+						<div id="divSearchUser" name="divSearchUser">
 
         				<?php
 						if ($_SESSION['all'])

@@ -690,6 +690,20 @@ class timeline_db_manager extends CI_Model
 					$q = "INSERT INTO teeme_post_web_post_store (post_id,post_type_id,post_type_object_id,participant_id,sender_id,delivery_status_id,seen_status,sent_timestamp,data) VALUES $val";
 					$query = $this->db->query($q);				
 				}
+				else if ($post_type_id==3){
+					$this->load->model('dal/identity_db_manager');
+					$arrRecipients = $this->identity_db_manager->getSubWorkSpaceMembersBySubWorkSpaceId($post_type_object_id);
+
+					foreach($arrRecipients as $recipientsUserId)
+					{ 
+						if($recipientsUserId['userId']>0){
+							$values[] = "('".$nodeId."','".$post_type_id."','".$post_type_object_id."','".$recipientsUserId['userId']."','".$userId."','".$delivery_status_id."','".$seen_status."','".$createdDate."','".$this->db->escape_str($data)."')"; 	
+						}	
+					}
+					$val = implode(',', $values);
+					$q = "INSERT INTO teeme_post_web_post_store (post_id,post_type_id,post_type_object_id,participant_id,sender_id,delivery_status_id,seen_status,sent_timestamp,data) VALUES $val";
+					$query = $this->db->query($q);				
+				}
 				if($this->db->trans_status()=== FALSE)
 				{
 					$this->db->trans_rollback();
@@ -860,8 +874,10 @@ class timeline_db_manager extends CI_Model
 			$q = "SELECT COUNT(id) as row_count FROM teeme_post_web_post_store WHERE post_type_id=2 AND post_type_object_id='".$post_type_object_id."' AND participant_id='".$user_id."'";
 			$query = $this->db->query($q);
 		}
-		//echo "<pre>"; echo $q; 
-		//echo "<pre>"; print_r($query->result()); exit;
+		else if ($post_type_id==3) {
+			$q = "SELECT COUNT(id) as row_count FROM teeme_post_web_post_store WHERE post_type_id=3 AND post_type_object_id='".$post_type_object_id."' AND participant_id='".$user_id."'";
+			$query = $this->db->query($q);
+		}
 		foreach($query->result() as $row){		
 			$row_count = $row->row_count;													
 		}	
@@ -871,11 +887,11 @@ class timeline_db_manager extends CI_Model
 			}
 			else if ($post_type_id==2) {
 				$q2 = "SELECT a.workSpaceId as workSpaceId, a.workSpaceType as workSpaceType, a.id, a.successors, a.predecessor, a.nodeOrder, b.id as leafId, b.authors, b.userId, b.contents, DATE_FORMAT(b.createdDate, '%Y-%m-%d %H:%i:%s') as TimelineCreatedDate, b.leafStatus FROM teeme_node a, teeme_leaf b, teeme_post_web_post_store c WHERE c.post_id=a.id AND c.post_type_id=2  AND c.participant_id='".$user_id."' AND c.post_type_object_id='".$post_type_object_id."' AND b.id=a.leafId AND (a.predecessor='0' OR a.predecessor='') AND a.treeIds=".$treeId." ORDER BY b.editedDate DESC";
-
+			}
+			else if ($post_type_id==3) {
+				$q2 = "SELECT a.workSpaceId as workSpaceId, a.workSpaceType as workSpaceType, a.id, a.successors, a.predecessor, a.nodeOrder, b.id as leafId, b.authors, b.userId, b.contents, DATE_FORMAT(b.createdDate, '%Y-%m-%d %H:%i:%s') as TimelineCreatedDate, b.leafStatus FROM teeme_node a, teeme_leaf b, teeme_post_web_post_store c WHERE c.post_id=a.id AND c.post_type_id=3  AND c.participant_id='".$user_id."' AND c.post_type_object_id='".$post_type_object_id."' AND b.id=a.leafId AND (a.predecessor='0' OR a.predecessor='') AND a.treeIds=".$treeId." ORDER BY b.editedDate DESC";
 			}
 				$query2 = $this->db->query($q2);
-			//echo "<pre>"; echo $q2; 
-			//echo "<pre>"; print_r($query2->result()); exit;
 			if($query2->num_rows()>0){
 				$i=0;
 				foreach($query2->result() as $row){		
@@ -901,16 +917,13 @@ class timeline_db_manager extends CI_Model
 	
 					$treeData[$i]['commentWorkSpaceType']  		= $row->workSpaceType;
 
-					//Added by Dashrath- Add leafStatus in array
 					$treeData[$i]['leafStatus']  		= $row->leafStatus;
 	
 					$i++;											
 				}
-				//echo "<pre>"; print_r($treeData); exit;
 				return $treeData;	
 			}	
 		}
-
 
 		return $treeData;	
 

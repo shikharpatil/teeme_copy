@@ -223,12 +223,7 @@ $(document).ready(function()
 
 					  <div class="clr"></div>
 				</div>
-					<?php  //echo '<img src="'.base_url().'images/online_user.gif" width="15" height="16" style=" margin-top:5px;float:left;"  />'; ?>
-					<!--  
-					<a href="<?php echo base_url();?>post/web/<?php echo $workSpaceId;?>/type/<?php echo $workSpaceType; ?>/<?php echo $workSpaceId; ?>/<?php echo $workSpaceType; ?>/0/0/<?php echo $myProfileDetail['userId']; ?>" title="<?php //echo str_replace(chr(10)," ",$myProfileDetail['statusUpdate']);  ?>" style="word-wrap:break-word;float:left;"><?php echo wordwrap($myProfileDetail['tagName'],true); ?> </a>
-					-->
 
-					
 					
 					<?php
 
@@ -244,7 +239,7 @@ $(document).ready(function()
 
 						?>
 
-                        <div id="divSearchUser" name="divSearchUser" >
+                        <div id="divSearchUser" name="divSearchUser">
 
                         <?php 	
 
@@ -478,33 +473,8 @@ $(document).ready(function()
 
 				{
 
-				
-
 				?>
-				<!--
-	  	<div class="post_web_sidebar_header post_web_sidebar_row">
-			<div class="post_web_sidebar_col1">
-				<div class="post_web_sidebar_profile_pic">					
-				<?php
-					if ($Profiledetail['photo']!='noimage.jpg') {?>
-						<img class="rounded_profile_pic" alt="image" src="<?php echo base_url();?>workplaces/<?php echo $workPlaceDetails['companyName'];?>/user_profile_pics/<?php echo $Profiledetail['photo'];?>" border="0"  width="49px" height="49px" id="imgName"> 
-                          	<?php
-					}
-					else {?>
-						<img alt="image" src="<?php echo base_url();?>images/<?php echo $Profiledetail['photo'];?>" border="0"  width="45" height="45" id="imgName"> 
-						<?php
-					} ?>
-				</div>
-			</div>
-			<div class="post_web_sidebar_col2">
-				<div class="post_web_sidebar_user_time">
-					<?php  echo '<img src="'.base_url().'images/online_user.gif" width="15" height="16" style=" margin-top:5px;float:left;"  />'; ?>
-					<a href="<?php echo base_url();?>post/web/<?php echo $workSpaceId;?>/type/<?php echo $workSpaceType; ?>/<?php echo $workSpaceId; ?>/<?php echo $workSpaceType; ?>/0/0/<?php echo $Profiledetail['userId']; ?>" class="blue-link-underline" title="<?php //echo str_replace(chr(10)," ",$myProfileDetail['statusUpdate']);  ?>" style="word-wrap:break-word;float:left;"><?php echo wordwrap($Profiledetail['tagName'],true); ?> </a>
-				</div>
-			</div>	
-			<div class="clr"></div>  		
-		</div>
-				-->
+
         <div id="row1" class="post_web_search">
 
 			<?php
@@ -534,22 +504,66 @@ $(document).ready(function()
 		<div class="clr"></div>
 
 		<div class="post_web_tab_menu">
-			<ul>
-				<li><a>Chats</a></li>
-				<li class="active"><a>Users</a></li>
-				<li><a>Spaces</a></li>
-				<li><a>Groups</a></li>
+			<ul class="post_web_tab_menu_list">
+				<li><a href="#divChats">Chats</a></li>
+				<li class="active"><a href="#divSearchUser">Users</a></li>
+				<li><a href="#divSpaces">Spaces</a></li>
+				<li><a href="#divGroups">Groups</a></li>
 			</ul>
 		</div>
 
 		<div class="clr"></div>
+		<div id="divChats" name="divChats" class="post_web_tab_menu_tab" style="display:none;">Chats</div>
+		<div id="divSpaces" name="divSpaces" class="post_web_tab_menu_tab" style="display:none;">
+			<?php 	
+					if (count($userAllSpaces)>0) {
+						foreach($userAllSpaces as $keyVal=>$arrVal){
+							?>
+							<div class="post_web_sidebar_row">
+								<div class="post_web_sidebar_col1">
+									<div class="post_web_sidebar_profile_pic">					
+										<img class="rounded_profile_pic" alt="image" src="<?php echo base_url();?>images/noimage.jpg" border="0" width="45" height="45" id="imgName"> 
+									</div>
+								</div>
+								<div class="post_web_sidebar_col2">
+									<div class="post_web_sidebar_user_time">
+										<a href="<?php echo base_url();?>post/web/<?php echo $workSpaceId;?>/<?php echo $workSpaceType; ?>/space/<?php echo $arrVal['workSpaceId']; ?>" class="blue-link-underline" title="<?php echo $arrVal['workSpaceName']; ?>" style="word-wrap:break-word;float:left;"><?php echo wordwrap($arrVal['workSpaceName'],true); ?> </a>
+									</div>
+								</div>	  		
+								<div class="clr"></div>
+							</div>
+							<?php	
+							if (count($userAllSubSpaces)>0) {							
+								foreach($userAllSubSpaces as $keyVal2=>$arrVal2){
+									if ($arrVal['workSpaceId']==$arrVal2['workSpaceId']){
+									?>
+										<div class="post_web_sidebar_row">
+											<div class="post_web_sidebar_col1">
+												<div class="post_web_sidebar_profile_pic">					
+													<img class="rounded_profile_pic" alt="image" src="<?php echo base_url();?>images/noimage.jpg" border="0" width="45" height="45" id="imgName"> 
+												</div>
+											</div>
+											<div class="post_web_sidebar_col2">
+												<div class="post_web_sidebar_user_time">
+													<a href="<?php echo base_url();?>post/web/<?php echo $workSpaceId;?>/<?php echo $workSpaceType; ?>/subspace/<?php echo $arrVal2['subWorkSpaceId']; ?>" class="blue-link-underline" title="<?php echo $arrVal2['subWorkSpaceName']; ?>" style="word-wrap:break-word;float:left;"><?php echo wordwrap($arrVal2['subWorkSpaceName'],true); ?> </a>
+												</div>
+											</div>	  		
+											<div class="clr"></div>
+										</div>
+									<?php
+									}	
+								}
+							}
+						}
+					}
 
+			?>
 
+		</div>
+		<div id="divGroups" name="divGroups" class="post_web_tab_menu_tab" style="display:none;">Groups feature not currently available</div>
+		<div class="clr"></div>
 
-		
-		<?php
-
-					
+		<?php				
 				if(count($workSpaceMembers) > 0)
 
 				{
@@ -564,7 +578,7 @@ $(document).ready(function()
 
 						?>
 
-          				<div id="divSearchUser" name="divSearchUser">
+          				<div id="divSearchUser" name="divSearchUser" class="post_web_tab_menu_tab">
 
         				<?php
 						if ($_SESSION['all'])
@@ -630,13 +644,6 @@ $(document).ready(function()
 											$rowColor = ($i % 2) ? $rowColor1 : $rowColor2;		
 										?>
 
-
-										<!--
-											<div id="row1" class="post_web_sidebar_row"> <?php echo '<img src="'.base_url().'images/online_user.gif" width="15" height="16" style=" margin-top:5px;float:left;"  />';  ?> 
-											<?php /* href="<?php echo base_url();?>profile/index/<?php echo $arrVal['userId'];?>/<?php echo $workSpaceId;?>/type/<?php echo $workSpaceType;?>/<?php echo $workSpaceId_search_user ?>/<?php echo  $workSpaceType_search_user; ?><?php if ($_SESSION['all']) {echo "/all";}?>" */ ?>
-											<a href="<?php echo base_url();?>post/web/<?php echo $workSpaceId;?>/type/<?php echo $workSpaceType; ?>/<?php echo $workSpaceId; ?>/<?php echo $workSpaceType; ?>/0/0/<?php echo $arrVal['userId']; ?>"  class="blue-link-underline" title="<?php //echo str_replace(chr(10)," ",$arrVal['statusUpdate']);  ?>" style="word-wrap:break-word;float:left;"><?php echo wordwrap($arrVal['tagName'],true);?> </a>
-											<div class="clr"></div>
-										-->	
 											<div class="post_web_sidebar_row">
 												<div class="post_web_sidebar_col1">
 													<div class="post_web_sidebar_profile_pic">					
@@ -1036,7 +1043,7 @@ $(document).ready(function()
 			<?php 
 			} // end if a user profile
 			// if a space or subspace profile
-			else if (($post_type_id==2 || $post_type_id==3) && count($Profiledetail)>0){				
+			else if ($post_type_id==2 && count($Profiledetail)>0){				
 				?>
 				<div class="postUserDetailsBox">
 					<div class="timelineProfImg">
@@ -1046,6 +1053,20 @@ $(document).ready(function()
 						<div class="profileLeftLabel"><span class="postTable">Name:</span><span> <?php echo $Profiledetail['workSpaceName']; ?></span></div>
 						<div class="profileLeftLabel"><span class="postTable">Created on:</span><span> <?php echo $this->time_manager->getUserTimeFromGMTTime($Profiledetail['workSpaceCreatedDate'],$this->config->item('date_format')); ?></span></div>
 						<div class="profileLeftLabel"><span class="postTable">Created by:</span><span> <?php echo $Profiledetail['workSpaceCreatorUsername']; ?></span></div>
+					</div>
+				</div>
+				<?php
+			}
+			else if ($post_type_id==3 && count($Profiledetail)>0){				
+				?>
+				<div class="postUserDetailsBox">
+					<div class="timelineProfImg">
+						<img class="rounded_profile_pic" id="imgName" alt="image" src="<?php echo base_url();?>images/noimage.jpg" border="0"  width="45" height="45">
+					</div>
+					<div class="postUserDetailsBox">
+						<div class="profileLeftLabel"><span class="postTable">Name:</span><span> <?php echo $Profiledetail['subWorkSpaceName']; ?></span></div>
+						<div class="profileLeftLabel"><span class="postTable">Created on:</span><span> <?php echo $this->time_manager->getUserTimeFromGMTTime($Profiledetail['subWorkSpaceCreatedDate'],$this->config->item('date_format')); ?></span></div>
+						<div class="profileLeftLabel"><span class="postTable">Created by:</span><span> <?php echo $Profiledetail['subWorkSpaceCreatorUsername']; ?></span></div>
 					</div>
 				</div>
 				<?php
@@ -1363,7 +1384,7 @@ $(document).ready(function()
 <?php //$this->load->view('common/datepicker_js.php'); ?>
 <script>
 $(document).ready(function(){
-$(window).scroll(function(){
+	$(window).scroll(function(){
       if ($(this).scrollTop() > 60) {
           	$('#postTabUI').addClass('postTabUIFixed');
           	setPostTabBarWidth();
@@ -1371,6 +1392,20 @@ $(window).scroll(function(){
       	  removePostTabBarWidth();
           $('#postTabUI').removeClass('postTabUIFixed');
       }
+  	});
+
+	$(".post_web_tab_menu_list li a").click(function(e){
+     e.preventDefault();
+  	});
+
+  	$(".post_web_tab_menu_list li").click(function(){
+     var tabid = $(this).find("a").attr("href");
+     $(".post_web_tab_menu_list li,.post_web_tab_menu div.post_web_tab_menu_tab").removeClass("active");   // removing active class from tab
+
+     $(".post_web_tab_menu_tab").hide();   // hiding open tab
+     $(tabid).show();    // show tab
+     $(this).addClass("active"); //  adding active class to clicked tab
+
   });
 
 	/*$('.timelineExpDate').datepicker({

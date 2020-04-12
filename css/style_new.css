@@ -7336,7 +7336,7 @@ input:checked + .slider:before {
 }
 
 #TimelineProfile .profileLeftLabel {
-    width: 25%;
+    width: 35%;
 	font-weight:bold;
 }
 .contactSeedDetails
@@ -7351,7 +7351,7 @@ input:checked + .slider:before {
 .postTable
 {
 	float:left;
-	width:50% !important;
+	width:40% !important;
 	font-size:0.8em;
 }
 .postTable:nth-child(odd) 
@@ -8800,21 +8800,24 @@ span.reserve a
 	float: left;
 	margin: 0 2px 0 0;
 	padding: 7px;
-	background-color: #25429b;
+	background-color: #cdd1d7;
 	text-align: center;
 	border-top-left-radius: 5px;
 	border-top-right-radius: 5px;
+	border-top: 1px solid #cdd1d7;
+	border-left: 1px solid #cdd1d7;
+	border-right: 1px solid #cdd1d7;
 }
 .post_web_tab_menu li.active{
-	background-color: lavender;
+	background-color: #ececec;
 	color: #000;]
 }
 .post_web_tab_menu li:hover{
 	cursor: pointer;
-	background-color: #1e88e5;
+	background-color: #dddddd;
 }
 .post_web_tab_menu li a{
-	color: #fcf8f8;
+	color: #463f3f;
 	text-decoration: none;
 	font-size:.9em;
 }

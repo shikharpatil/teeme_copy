@@ -2807,6 +2807,7 @@ class Post extends CI_Controller {
 			$this->load->model('dal/time_manager');
 			$this->load->model('dal/discussion_db_manager');
 			$objIdentity	= $this->identity_db_manager;	
+
 			$treeId='0';
 			$workSpaceId = $this->uri->segment(3);			
 			//$workSpaceType = $this->uri->segment(5);
@@ -2896,14 +2897,8 @@ class Post extends CI_Controller {
 				}
 				else if($post_type=='subspace') {
 					$post_type_id = 3; 
-					if ($post_type_object_id==$workSpaceId){
-						$arrDetails['Profiledetail'] = $workSpaceDetails;
-					}
-					else
-					{
-						$arrDetails['Profiledetail'] = $this->identity_db_manager->getSubWorkSpaceDetailsBySubWorkSpaceId($post_type_object_id);
-					}	
-					//$arrDetails['arrTimeline']	= $this->timeline_db_manager->get_timeline_web($treeId,$arrDetails['workSpaceId'],$arrDetails['workSpaceType'],0,$arrDetails['userPostSearch']);
+					$arrDetails['Profiledetail'] = $this->identity_db_manager->getSubWorkSpaceDetailsBySubWorkSpaceId($post_type_object_id);
+					$arrDetails['arrTimeline']	= $this->timeline_db_manager->get_timeline_web($treeId,$arrDetails['workSpaceId'],$arrDetails['workSpaceType'],0,$_SESSION['userId'],$post_type_id,$post_type_object_id);
 				}
 				else if($post_type=='group') {
 					$post_type_id = 4; 
@@ -2953,9 +2948,10 @@ class Post extends CI_Controller {
 			else{
 				unset($_SESSION['public']);
 				unset($_SESSION['allPublicSpace']);
-			}					
+			}
+			$arrDetails['countAll'] = $this->profile_manager->getMessagesBySpaceIdAndType($userId,true,$workSpaceType_search_user,$workSpaceId_search_user);					
 			*/
-			$arrDetails['countAll'] = $this->profile_manager->getMessagesBySpaceIdAndType($userId,true,$workSpaceType_search_user,$workSpaceId_search_user);
+			
 			/*
 			if ($this->input->post('search')!='')
 			{
@@ -2991,6 +2987,8 @@ class Post extends CI_Controller {
 			}
 			*/
 			$arrDetails['workSpaceMembers']	= $this->profile_manager->getAllUsersByWorkPlaceId($_SESSION['workPlaceId']);
+			$arrDetails['userAllSpaces']	= $objIdentity->getAllUserSpacesByWorkPlaceId($_SESSION['workPlaceId'],$_SESSION['userId']);
+			$arrDetails['userAllSubSpaces']	= $objIdentity->getAllUserSubSpacesByWorkPlaceId($_SESSION['workPlaceId'],$_SESSION['userId']);
 			$workSpaceMembers = array();
 			if(count($arrDetails['workSpaceMembers']) > 0)
 			{		

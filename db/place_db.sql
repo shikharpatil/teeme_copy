@@ -658,20 +658,6 @@ CREATE TABLE `teeme_simple_tag` (
   `createdDate` datetime NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
-CREATE TABLE `teeme_sub_work_place` (
-  `subWorkplaceId` int(11) NOT NULL,
-  `workPlaceId` int(11) NOT NULL,
-  `subWorkPlaceManagerId` int(11) NOT NULL DEFAULT '0',
-  `subWorkPlaceName` varchar(100) COLLATE utf8_unicode_ci NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-
-CREATE TABLE `teeme_sub_work_place_members` (
-  `subWorkPlacMembersId` int(11) NOT NULL,
-  `subWorkPlaceId` int(11) NOT NULL,
-  `userId` int(11) NOT NULL,
-  `userAccess` tinyint(1) NOT NULL DEFAULT '0'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-
 CREATE TABLE `teeme_sub_work_space` (
   `subWorkSpaceId` int(11) NOT NULL,
   `workSpaceId` int(11) NOT NULL,
@@ -1135,12 +1121,6 @@ ALTER TABLE `teeme_post_change`
 ALTER TABLE `teeme_selection_tag`
   ADD PRIMARY KEY (`selectionId`);
 
-ALTER TABLE `teeme_sub_work_place`
-  ADD PRIMARY KEY (`subWorkplaceId`);
-
-ALTER TABLE `teeme_sub_work_place_members`
-  ADD PRIMARY KEY (`subWorkPlacMembersId`);
-
 ALTER TABLE `teeme_sub_work_space`
   ADD PRIMARY KEY (`subWorkSpaceId`);
 
@@ -1247,10 +1227,6 @@ ALTER TABLE `teeme_post_change`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 ALTER TABLE `teeme_selection_tag`
   MODIFY `selectionId` int(255) NOT NULL AUTO_INCREMENT;
-ALTER TABLE `teeme_sub_work_place`
-  MODIFY `subWorkplaceId` int(11) NOT NULL AUTO_INCREMENT;
-ALTER TABLE `teeme_sub_work_place_members`
-  MODIFY `subWorkPlacMembersId` int(11) NOT NULL AUTO_INCREMENT;
 ALTER TABLE `teeme_sub_work_space`
   MODIFY `subWorkSpaceId` int(11) NOT NULL AUTO_INCREMENT;
 ALTER TABLE `teeme_sub_work_space_members`

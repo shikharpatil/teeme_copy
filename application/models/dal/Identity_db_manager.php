@@ -3038,6 +3038,11 @@ teeme_leaf a,teeme_node b where a.id=b.leafId and b.treeIds='".$inserted_tree_id
 				$subWorkSpaceData['subWorkSpaceName']		= $row->subWorkSpaceName;		
 				$subWorkSpaceData['subWorkSpaceCreatedDate']= $row->subWorkSpaceCreatedDate;	
 				$subWorkSpaceData['subWorkSpaceManagerId']	= $row->subWorkSpaceManagerId;	
+				$getUserName = $this->getUserDetailsByUserId($subWorkSpaceData['subWorkSpaceManagerId']);
+				if($getUserName['userTagName']!='')
+				{
+					$subWorkSpaceData['subWorkSpaceCreatorUsername']	= $getUserName['userTagName'];
+				}
 				$subWorkSpaceData['status']	= $row->status;													
 			}				
 		}					
@@ -21751,6 +21756,94 @@ $q = 'select * from(SELECT a.id, a.name, a.type, b.artifactId, b.artifactType ,b
 			$size += $file->getSize();
 		}
 		return $size;
+	}
+
+	public function getAllUserSpacesByWorkPlaceId($workPlaceId, $userId, $config=0)
+    {	
+		$workSpaceDetails = array();	
+		
+		$q = 'SELECT a.workSpaceId, a.workPlaceId, a.workSpaceName, a.workSpaceCreatedDate, status, deleted FROM teeme_work_space a, teeme_work_space_members b WHERE a.workPlaceId = '.$workPlaceId.' AND a.status = 1 AND a.workSpaceId=b.workSpaceId AND b.workSpaceUserId='.$userId.' ORDER BY a.workSpaceName ASC';
+		$q2 = 'SELECT a.workSpaceId, a.workPlaceId, a.workSpaceName, a.workSpaceCreatedDate, status, deleted FROM teeme_work_space a, teeme_managers b WHERE a.workPlaceId = '.$workPlaceId.' AND a.status = 1 AND a.workSpaceId=b.placeId AND b.managerId='.$userId.' AND b.placeType=3 ORDER BY a.workSpaceName ASC';	
+
+		/*Changed by Dashrath- Add if else condition for load db*/
+		if ($config!=0)
+        {
+            $placedb = $this->load->database($config,TRUE);
+
+			$query = $placedb->query($q);
+			$query2 = $placedb->query($q2);
+        }
+		else
+		{
+			$query = $this->db->query($q);
+			$query2 = $this->db->query($q2);
+		}
+		/*Dashrath- changes end*/	
+
+		if($query->num_rows()> 0)
+		{
+			$i = 0;	
+			foreach($query->result() as $row)
+			{
+				$workSpaceDetails[$i]['workSpaceId'] 			= $row->workSpaceId;
+				$workSpaceDetails[$i]['workPlaceId'] 			= $row->workPlaceId;
+				$workSpaceDetails[$i]['workSpaceName'] 			= $row->workSpaceName;
+				$workSpaceDetails[$i]['workSpaceManagerId'] 	= $row->workSpaceManagerId;
+				$workSpaceDetails[$i]['workSpaceCreatedDate'] 	= $row->workSpaceCreatedDate;
+				$workSpaceDetails[$i]['status'] 				= $row->status;
+				$workSpaceDetails[$i]['deleted'] 				= $row->deleted;
+				$i++;
+			}	
+		}
+		if($query2->num_rows()> 0)
+		{
+			$i = 0;	
+			foreach($query2->result() as $row)
+			{
+				$workSpaceDetails[$i]['workSpaceId'] 			= $row->workSpaceId;
+				$workSpaceDetails[$i]['workPlaceId'] 			= $row->workPlaceId;
+				$workSpaceDetails[$i]['workSpaceName'] 			= $row->workSpaceName;
+				$workSpaceDetails[$i]['workSpaceManagerId'] 	= $row->workSpaceManagerId;
+				$workSpaceDetails[$i]['workSpaceCreatedDate'] 	= $row->workSpaceCreatedDate;
+				$workSpaceDetails[$i]['status'] 				= $row->status;
+				$workSpaceDetails[$i]['deleted'] 				= $row->deleted;
+				$i++;
+			}	
+		}			
+		return $workSpaceDetails;	
+	}
+
+	public function getAllUserSubSpacesByWorkPlaceId($workPlaceId, $userId, $config=0)
+    {	
+		$workSpaceDetails = array();	
+		
+		$q = "SELECT b.workSpaceId, b.subWorkSpaceId, b.subWorkSpaceName, b.subWorkSpaceManagerId, b.subWorkSpaceCreatedDate, b.status, b.status1, c.subWorkSpaceUserId FROM teeme_work_space a,teeme_sub_work_space b, teeme_sub_work_space_members c WHERE a.workPlaceId='".$workPlaceId."' AND a.status=1 AND a.workSpaceId=b.workSpaceId AND b.subWorkSpaceId=c.subWorkSpaceId AND c.subWorkSpaceUserId = '".$userId."'";
+
+		/*Changed by Dashrath- Add if else condition for load db*/
+		if ($config!=0)
+        {
+            $placedb = $this->load->database($config,TRUE);
+			$query = $placedb->query($q);
+        }
+		else
+		{
+			$query = $this->db->query($q);
+		}
+		/*Dashrath- changes end*/	
+
+		if($query->num_rows()){
+			foreach($query->result() as $row){
+				$workSpaceDetails[$i]['workSpaceId'] 			= $row->workSpaceId;
+				$workSpaceDetails[$i]['subWorkSpaceId'] 		= $row->subWorkSpaceId;
+				$workSpaceDetails[$i]['subWorkSpaceName'] 		= $row->subWorkSpaceName;
+				$workSpaceDetails[$i]['subWorkSpaceManagerId'] 	= $row->subWorkSpaceManagerId;
+				$workSpaceDetails[$i]['subWorkSpaceCreatedDate']= $row->subWorkSpaceCreatedDate;
+				$workSpaceDetails[$i]['status'] 				= $row->status;
+				$workSpaceDetails[$i]['status1'] 				= $row->status1;
+			}
+		}			
+		
+		return $workSpaceDetails;	
 	}
 
 }
