@@ -3895,7 +3895,7 @@ class Post extends CI_Controller {
 					{
 						$this->identity_db_manager->updatePostsMemCache($workSpaceId,$workSpaceType,$postNodeId);
 					}
-					exit;
+					
 					//Manoj: Insert post create notification start
 								$notificationDetails=array();
 													
@@ -4430,7 +4430,8 @@ class Post extends CI_Controller {
 				if($workSpaceId==0){
 					$allSpace = '';
 				}
-				redirect('/post/get_timeline_web/'.$treeId.'/'.$workSpaceId.'/type/'.$workSpaceType.'/'.$allSpace, 'location');
+				
+				redirect('/post/get_timeline_web/'.$workSpaceId.'/'.$workSpaceType.'/'.$post_type_id.'/'.$post_type_object_id, 'location');
 					
 			}
 		}		
@@ -4465,9 +4466,11 @@ class Post extends CI_Controller {
 		$this->load->model('dal/discussion_db_manager');
 		
 			
-			$treeId 	= $this->uri->segment(3);
-			$workSpaceId 	= $this->uri->segment(4);
-			$workSpaceType  = $this->uri->segment(6);
+			$treeId 	= 0;
+			$workSpaceId 	= $this->uri->segment(3);
+			$workSpaceType  = $this->uri->segment(4);
+			$post_type_id = $this->uri->segment(5);
+			$post_type_object_id = $this->uri->segment(6);
 			if($this->uri->segment(7)=='2')
 			{
 				$workSpaceId  = '0';
@@ -4478,8 +4481,13 @@ class Post extends CI_Controller {
 			{
 				$allSpace='1';
 			}
+			else{
+				$allSpace=0;
+			}
 			
-			$arrTimeline1		= $this->timeline_db_manager->get_timeline_web($treeId,$workSpaceId,$workSpaceType,$allSpace);
+			//$arrTimeline1		= $this->timeline_db_manager->get_timeline_web($treeId,$workSpaceId,$workSpaceType,$allSpace);
+			$arrTimeline1	= $this->timeline_db_manager->get_timeline_web($treeId,$workSpaceId,$workSpaceType,0,$_SESSION['userId'],$post_type_id,$post_type_object_id);
+
 			$arrTimelineViewPage['workSpaceId'] = $workSpaceId;
 			$arrTimelineViewPage['workSpaceType'] = $workSpaceType;
 			$arrTimelineViewPage['arrTimeline']=$arrTimeline1;
@@ -4492,10 +4500,249 @@ class Post extends CI_Controller {
 			}
 			else
 			{
-				$this->load->view('get_timeline', $arrTimelineViewPage); 
+				$this->load->view('post/get_timeline_web', $arrTimelineViewPage); 
 			}
 		
 	}
+	function findNewPostCommentWeb()
+	{
+	
+		if(!isset($_SESSION['userName']) || $_SESSION['userName'] =='')
+		{
+			//redirect ('home','location');
+			$_SESSION['errorMsg']	= 	$this->lang->line('msg_session_expire'); 
+			$this->load->model('dal/identity_db_manager');						
+			$objIdentity	= $this->identity_db_manager;	
+			$arrDetails['workPlaceDetails'] 	= $objIdentity->getWorkPlaces();	
+			$this->load->view('login', $arrDetails);
+		}		
+		//Checking the required parameters passed
+		$this->load->model('dal/timeline_db_manager');	
+		$this->load->model('dal/identity_db_manager');	
+		$objIdentity	= $this->identity_db_manager;	
+		
+			$totalPostNodesId=array();
+			$treeId 	= 0;
+			$workSpaceId 	= $this->uri->segment(3);
+			$workSpaceType  = $this->uri->segment(4);
+			$postTypeId       = $this->uri->segment(5);
+			$postTypeObjectId      = $this->uri->segment(6);
+			//$userPostSearch       = $this->uri->segment(7);
+			$totalPostNodes = $this->input->post('totalNodes');
+		/*if($postType!='bookmark')
+		{*/
+			$treeLinkedArray = unserialize($this->input->post('totalTreeLinkedNodes'));
+			$fileLinkedArray = unserialize($this->input->post('totalFileLinkedNodes'));
+			$urlLinkedArray = unserialize($this->input->post('totalUrlLinkedNodes'));
+			$taggedPostArray = unserialize($this->input->post('totalTagNodes'));
+
+			/*Added by Dashrath- used for check folder link*/
+			$folderLinkedArray = unserialize($this->input->post('totalFolderLinkedNodes'));
+			/*Dashrath- code end*/
+			
+			
+			if($postType=='public')
+			{
+				$workSpaceId  = '0';
+				$workSpaceType  = '0';
+				$allPublicSpace='2';
+				$arrTimeline	= $this->timeline_db_manager->get_timeline_web($treeId,$workSpaceId,$workSpaceType,$allPublicSpace);
+			}
+			else if($postType=='bookmark')
+			{
+				$allStarredSpace='3';
+				$arrTimeline	= $this->timeline_db_manager->get_timeline_web($treeId,'','',$allStarredSpace);
+			}
+			else
+			{
+				$arrTimeline	= $this->timeline_db_manager->get_timeline_web($treeId,$workSpaceId,$workSpaceType,0,$_SESSION['userId'],$post_type_id,$post_type_object_id);
+			}
+			
+			$totalPostNodesId=explode(",",$totalPostNodes); 
+			$i=1;
+			$postCount=0;
+			if(count($arrTimeline) > 0)
+			{		
+				$nodeIdArray = array();
+					 
+				foreach($arrTimeline as $keyVal=>$arrVal)
+				{
+					//Check user new post(s) search  
+						if($userPostSearch=='')
+						{
+							if(!in_array($arrVal['nodeId'],$totalPostNodesId))	
+							{
+								$postCount+=$i;
+							}
+						}
+						
+					//Code end
+					
+					//For new comments start
+					if($userPostSearch!='' && is_numeric($userPostSearch))
+					{	
+						if($arrVal['userId']==$userPostSearch)
+						{
+							/*if(!$_COOKIE['ismobile'])
+							{*/
+							if($arrVal['successors'])
+							{
+								$sArray=explode(',',$arrVal['successors']);
+								$counter=0;
+								while($counter < count($sArray))
+								{
+									$leafData = $objIdentity->getLeafIdByNodeId($sArray[$counter]);
+									if(!empty($leafData))
+									{
+										if($leafData['userId']!=$_SESSION['userId'])
+										{
+											if(!in_array($sArray[$counter],$totalPostNodesId))	
+											{
+												$postCount+=$i;
+												$nodeIdArray[]=$arrVal['nodeId'];
+											}
+											
+										}
+									}
+									$counter++;
+								}
+							}
+							/*}*/
+							//Link update
+							$postLinkOldCount = $treeLinkedArray[$arrVal['nodeId']];
+							$postLinkCount = $this->identity_db_manager->getLinkedPostsByNodeId($arrVal['nodeId'],'tree');
+							if($postLinkOldCount>$postLinkCount || $postLinkOldCount<$postLinkCount)
+							{
+								$postCount+=$i;
+								$nodeIdArray[]=$arrVal['nodeId'];
+							}
+							$postLinkOldCount = $fileLinkedArray[$arrVal['nodeId']];
+							$postLinkCount = $this->identity_db_manager->getLinkedPostsByNodeId($arrVal['nodeId'],'file');
+							if($postLinkOldCount>$postLinkCount || $postLinkOldCount<$postLinkCount)
+							{
+								$postCount+=$i;
+								$nodeIdArray[]=$arrVal['nodeId'];
+							}
+							//file link end
+
+							/*Added by Dashrath- used for check folder link*/
+							$postLinkOldCount = $folderLinkedArray[$arrVal['nodeId']];
+							$postLinkCount = $this->identity_db_manager->getLinkedPostsByNodeId($arrVal['nodeId'],'folder');
+							if($postLinkOldCount>$postLinkCount || $postLinkOldCount<$postLinkCount)
+							{
+								$postCount+=$i;
+								$nodeIdArray[]=$arrVal['nodeId'];
+							}
+							/*Dashrath- code end*/
+
+							
+							$postLinkOldCount = $urlLinkedArray[$arrVal['nodeId']];
+							$postLinkCount = $this->identity_db_manager->getLinkedPostsByNodeId($arrVal['nodeId'],'url');
+							if($postLinkOldCount>$postLinkCount || $postLinkOldCount<$postLinkCount)
+							{
+								$postCount+=$i;
+								$nodeIdArray[]=$arrVal['nodeId'];
+							}
+							//url link end
+							$postTagOldCount = $taggedPostArray[$arrVal['nodeId']];
+							$postTagCount = $this->identity_db_manager->getTaggedPostByNodeId($arrVal['nodeId']);
+							if($postTagOldCount>$postTagCount || $postTagOldCount<$postTagCount)
+							{
+								$postCount+=$i;
+								$nodeIdArray[]=$arrVal['nodeId'];
+							}
+							//Tag update end
+						}
+					}
+					else
+					{
+						/*if(!$_COOKIE['ismobile'])
+						{*/
+						if($arrVal['successors'])
+						{
+							$sArray=explode(',',$arrVal['successors']);
+							$counter=0;
+							while($counter < count($sArray))
+							{
+								$leafData = $objIdentity->getLeafIdByNodeId($sArray[$counter]);
+								if(!empty($leafData))
+								{
+									if($leafData['userId']!=$_SESSION['userId'])
+									{
+										if(!in_array($sArray[$counter],$totalPostNodesId))	
+										{
+											$postCount+=$i;
+											$nodeIdArray[]=$arrVal['nodeId'];
+										}
+									}
+								}
+								$counter++;
+							}
+						}
+						/*}*/
+						//Link update
+						$postLinkOldCount = $treeLinkedArray[$arrVal['nodeId']];
+						$postLinkCount = $this->identity_db_manager->getLinkedPostsByNodeId($arrVal['nodeId'],'tree');
+						if($postLinkOldCount>$postLinkCount || $postLinkOldCount<$postLinkCount)
+						{
+							$postCount+=$i;
+							$nodeIdArray[]=$arrVal['nodeId'];
+						}
+						$postLinkOldCount = $fileLinkedArray[$arrVal['nodeId']];
+						$postLinkCount = $this->identity_db_manager->getLinkedPostsByNodeId($arrVal['nodeId'],'file');
+						if($postLinkOldCount>$postLinkCount || $postLinkOldCount<$postLinkCount)
+						{
+							$postCount+=$i;
+							$nodeIdArray[]=$arrVal['nodeId'];
+						}
+						//file link end
+
+						/*Added by Dashrath- used for check folder link*/
+						$postLinkOldCount = $folderLinkedArray[$arrVal['nodeId']];
+						$postLinkCount = $this->identity_db_manager->getLinkedPostsByNodeId($arrVal['nodeId'],'folder');
+						if($postLinkOldCount>$postLinkCount || $postLinkOldCount<$postLinkCount)
+						{
+							$postCount+=$i;
+							$nodeIdArray[]=$arrVal['nodeId'];
+						}
+						/*Dashrath- code end*/
+
+						$postLinkOldCount = $urlLinkedArray[$arrVal['nodeId']];
+						$postLinkCount = $this->identity_db_manager->getLinkedPostsByNodeId($arrVal['nodeId'],'url');
+						if($postLinkOldCount>$postLinkCount || $postLinkOldCount<$postLinkCount)
+						{
+							$postCount+=$i;
+							$nodeIdArray[]=$arrVal['nodeId'];
+						}
+						//url link end
+						$postTagOldCount = $taggedPostArray[$arrVal['nodeId']];
+						$postTagCount = $this->identity_db_manager->getTaggedPostByNodeId($arrVal['nodeId']);
+						if($postTagOldCount>$postTagCount || $postTagOldCount<$postTagCount)
+						{
+							$postCount+=$i;
+							$nodeIdArray[]=$arrVal['nodeId'];
+						}
+						//Tag update end
+					}
+					//New comments code end
+					
+					$i++;	
+					
+				}
+			}
+			if($postCount>0)
+			{
+				$nodeIdArray = array_map("unserialize", array_unique(array_map("serialize", $nodeIdArray)));
+				echo json_encode($nodeIdArray);
+				//print_r($nodeIdArray);
+				//echo $postCount;
+			}
+			/*}*/
+			else
+			{
+				echo '0';
+			}
+	}	
 }
 
 ?>

@@ -1037,6 +1037,7 @@ class timeline_db_manager extends CI_Model
 							$userActivePostsDetails[$i]['last_post_data']=$lastPostData;
 							$userActivePostsDetails[$i]['last_post_timestamp']=$row->sent_timestamp;
 							$userActivePostsDetails[$i]['seen_status']=$row->seen_status;
+							$userActivePostsDetails[$i]['unseen_post_count']=$this->getUnseenPostCount($userId,$userActivePostsDetails[$i]['post_type_id'],$userActivePostsDetails[$i]['sender_id']);
 						}
 						if ($row->post_type_id==2){
 							$userActivePostsDetails[$i]['post_type_id']=$row->post_type_id;
@@ -1073,11 +1074,18 @@ class timeline_db_manager extends CI_Model
 			}
 			//echo "<li>count= " .count($userActivePostsDetails);
 			//echo "<pre>"; print_r($userActivePostsDetails);exit;
-
 			//echo "<pre>"; print_r($arrPostIds);print_r($query7->result());exit;
 
-			
 			return $userActivePostsDetails;	
 
+	}
+
+	public function getUnseenPostCount ($user_id=0, $post_type_id=0,$post_type_object_id=0){
+		$q = "SELECT COUNT(a.id) as row_count FROM `teeme_post_web_post_store` AS a, teeme_post_web_post_store AS b WHERE a.post_type_id=$post_type_id AND a.participant_id=$user_id AND a.seen_status=0 and a.post_id=b.post_id AND b.participant_id=$post_type_object_id";
+		$query = $this->db->query($q);
+		foreach($query->result() as $row){		
+			$row_count = $row->row_count;													
+		}	
+		return $row_count;
 	}
 }

@@ -109,6 +109,7 @@ $(document).ready(function()
   	<div id="TimelineLeftContent2">
 		<!--Space and place section start here-->
 		<div>
+		<!--
 		<div>
 		
 		<select name="postTypeSelect" id="postTypeSelect" class="selbox-post" onChange="javascript:selectPostType(this,'<?php echo $workSpaceId;?>','<?php echo $workSpaceType;?>');">
@@ -154,7 +155,7 @@ $(document).ready(function()
         <option value="all" <?php if($this->uri->segment(8)=='all') echo 'selected';?> ><a href="<?php echo base_url(); ?>post/web/<?php echo $workSpaceId; ?>/type/<?php echo $workSpaceType; ?>/0/1/all" style="margin-top: 9px;padding-left:11px;  <?php if($_SESSION['all']) { ?>background:#ECECEC;" class="active <?php } ?>" id="all"><?php echo $this->lang->line('all_post_txt').' ('.$allPosts.')'; ?></a></option>
 		<?php } ?>
 		
-		<!--For public posts start-->
+
 		<option value="public" <?php if($this->uri->segment(8)=='public') echo 'selected';?>>
 			<a href="<?php echo base_url(); ?>post/web/<?php echo $workSpaceId; ?>/type/<?php echo $workSpaceType; ?>/0/1/public" style="margin-top: 9px;padding-left:11px;  <?php if($_SESSION['public']) { ?>background:#ECECEC;" class="active <?php } ?>" id="public"><?php echo $this->lang->line('public_txt').' ('.$totalPublicPosts.')'; ?></a>
 		</option>
@@ -169,6 +170,7 @@ $(document).ready(function()
   <div class="clr"></div>
 
         </div>
+		-->
 		</div><?php ?>
 		<!--Space and place section end here-->	
 		<div class="post_web_sidebar_header post_web_sidebar_row">
@@ -505,15 +507,15 @@ $(document).ready(function()
 
 		<div class="post_web_tab_menu">
 			<ul class="post_web_tab_menu_list">
-				<li><a href="#divChats">Chats</a></li>
-				<li class="active"><a href="#divSearchUser">Users</a></li>
+				<li class="active"><a href="#divChats">Active</a></li>
+				<li><a href="#divSearchUser">Users</a></li>
 				<li><a href="#divSpaces">Spaces</a></li>
 				<li><a href="#divGroups">Groups</a></li>
 			</ul>
 		</div>
 
 		<div class="clr"></div>
-		<div id="divChats" name="divChats" class="post_web_tab_menu_tab" style="display:none;">
+		<div id="divChats" name="divChats" class="post_web_tab_menu_tab" style="display:block;">
 			<?php //echo "<pre>"; print_r($userActivePosts);?>
 			<?php 	
 					if (count($userActivePosts)>0) {
@@ -536,10 +538,26 @@ $(document).ready(function()
 								</div>
 								<div class="post_web_sidebar_col2">
 									<div class="post_web_sidebar_user_time">
-										<a href="<?php echo base_url();?>post/web/<?php echo $workSpaceId;?>/<?php echo $workSpaceType; ?>/space/<?php echo $arrVal['workSpaceId']; ?>" class="blue-link-underline" title="<?php echo $arrVal['sender_name']; ?>" style="word-wrap:break-word;float:left;"><?php echo wordwrap($arrVal['sender_name'],true); ?> </a>
+										<span class="post_web_sidebar_username_data">
+										<?php if ($arrVal['post_type_id']==1) {
+										?>
+											<a href="<?php echo base_url();?>post/web/<?php echo $workSpaceId;?>/<?php echo $workSpaceType; ?>/one/<?php echo $arrVal['sender_id']; ?>" class="blue-link-underline" title="<?php echo $arrVal['sender_name']; ?>" style="word-wrap:break-word;float:left;"><?php echo wordwrap($arrVal['sender_name'],true); ?> </a>
+
+										<?php											
+										} else if ($arrVal['post_type_id']==2) {?>
+										<a href="<?php echo base_url();?>post/web/<?php echo $workSpaceId;?>/<?php echo $workSpaceType; ?>/space/<?php echo $arrVal['sender_id']; ?>" class="blue-link-underline" title="<?php echo $arrVal['sender_name']; ?>" style="word-wrap:break-word;float:left;"><?php echo wordwrap($arrVal['sender_name'],true); ?> </a>
+										<?php } else if ($arrVal['post_type_id']==3) { ?>
+											<a href="<?php echo base_url();?>post/web/<?php echo $workSpaceId;?>/<?php echo $workSpaceType; ?>/subspace/<?php echo $arrVal['sender_id']; ?>" class="blue-link-underline" title="<?php echo $arrVal['sender_name']; ?>" style="word-wrap:break-word;float:left;"><?php echo wordwrap($arrVal['sender_name'],true); ?> </a>
+										<?php } ?>
+										</span>
+										
+										<div><span class="post_web_sidebar_secondary"><?php echo $this->time_manager->getUserTimeFromGMTTime($arrVal['last_post_timestamp'],$this->config->item('date_format')); ?></span></div>
 									</div>
-									<div>
-										<?php echo $arrVal['last_post_data']; ?>
+									<div class="post_web_sidebar_data">
+										<span class="post_web_sidebar_secondary post_web_sidebar_username_data"><?php echo $arrVal['last_post_data']; ?></span>
+										<?php if($arrVal['unseen_post_count']>0){?>
+										<div><span class="post_web_post_count"><?php echo $arrVal['unseen_post_count']; ?></span></div>
+										<?php } ?>
 									</div>
 								</div>	  		
 								<div class="clr"></div>
@@ -612,7 +630,7 @@ $(document).ready(function()
 
 						?>
 
-          				<div id="divSearchUser" name="divSearchUser" class="post_web_tab_menu_tab">
+          				<div id="divSearchUser" name="divSearchUser" class="post_web_tab_menu_tab" style="display:none;">
 
         				<?php
 						if ($_SESSION['all'])
@@ -2218,13 +2236,24 @@ function findNewPostComment()
 		var realTimePostIds=document.getElementById('totalNodes').value;
 	}
 	//alert(workSpaceId+'===='+workSpaceType+'====<?php //echo $this->uri->segment(8) ?>');
-	var postType = '<?php echo $this->uri->segment(8)?>';
-	var userPostSearch = '<?php echo $this->uri->segment(10)?>';
+	var postType = '<?php echo $this->uri->segment(5)?>';
+	if(postType=='one'){
+		postTypeId = 1;
+	}
+	else if(postType=='space'){
+		postTypeId = 2;
+	}
+	else if(postType=='subspace'){
+		postTypeId = 3;
+	}
+	//var userPostSearch = '<?php echo $this->uri->segment(10)?>';
+	var postTypeObjectId = '<?php echo $this->uri->segment(6)?>';
 	/*if(userPostSearch=='')
 	{*/
 		$.ajax({
 			type: "POST",
-			url: baseUrl+"post/findNewPostComment/"+workSpaceId+"/type/"+workSpaceType+"/"+postType+"/"+userPostSearch,
+			//url: baseUrl+"post/findNewPostCommentWeb/"+workSpaceId+"/"+workSpaceType+"/"+postType+"/"+userPostSearch,
+			url: baseUrl+"post/findNewPostCommentWeb/"+workSpaceId+"/"+workSpaceType+"/"+postTypeId+"/"+postTypeObjectId,
 			data: jQuery("#totalPostNodes").serialize(),
 			dataType: 'json',
 			cache: false,

@@ -8761,7 +8761,8 @@ span.reserve a
     min-width: 0;
     display: flex;
     flex-direction: column;
-    justify-content: center;
+	justify-content: center;
+	padding-right:15px;
 }
 .post_web_search{
 	margin: 0 0 13px 0;
@@ -8829,4 +8830,27 @@ span.reserve a
 
 .post_web_tab_menu li a:hover {
 	display: block;
+}
+.post_web_sidebar_username_data{
+	flex-grow:1;
+}
+.post_web_sidebar_secondary{
+	font-size:0.9em;
+}
+.post_web_post_count{
+	background: green none repeat scroll 0px 0px;
+	color: white;
+	border-radius: 8px;
+	border-top: 1px solid #CCCCCC;
+	font-size: .7em;
+	height: auto;
+	line-height: 14px;
+	margin: 0 0 0 3px;
+	padding: 0 5px 1px;
+	position: relative;
+	text-align: center;
+	top: -1px;
+}
+.post_web_sidebar_data{
+	display:flex;
 }
