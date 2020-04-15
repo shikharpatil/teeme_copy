@@ -21832,6 +21832,7 @@ $q = 'select * from(SELECT a.id, a.name, a.type, b.artifactId, b.artifactType ,b
 		/*Dashrath- changes end*/	
 
 		if($query->num_rows()){
+			$i = 0;	
 			foreach($query->result() as $row){
 				$workSpaceDetails[$i]['workSpaceId'] 			= $row->workSpaceId;
 				$workSpaceDetails[$i]['subWorkSpaceId'] 		= $row->subWorkSpaceId;
@@ -21840,10 +21841,13 @@ $q = 'select * from(SELECT a.id, a.name, a.type, b.artifactId, b.artifactType ,b
 				$workSpaceDetails[$i]['subWorkSpaceCreatedDate']= $row->subWorkSpaceCreatedDate;
 				$workSpaceDetails[$i]['status'] 				= $row->status;
 				$workSpaceDetails[$i]['status1'] 				= $row->status1;
+				$i++;
 			}
 		}			
 		
 		return $workSpaceDetails;	
 	}
+
+	
 
 }

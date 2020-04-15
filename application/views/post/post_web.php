@@ -513,7 +513,42 @@ $(document).ready(function()
 		</div>
 
 		<div class="clr"></div>
-		<div id="divChats" name="divChats" class="post_web_tab_menu_tab" style="display:none;">Chats</div>
+		<div id="divChats" name="divChats" class="post_web_tab_menu_tab" style="display:none;">
+			<?php //echo "<pre>"; print_r($userActivePosts);?>
+			<?php 	
+					if (count($userActivePosts)>0) {
+						foreach($userActivePosts as $keyVal=>$arrVal){
+							?>
+							<div class="post_web_sidebar_row">
+								<div class="post_web_sidebar_col1">
+									<div class="post_web_sidebar_profile_pic">	
+										<?php
+										if ($arrVal['photo']!='noimage.jpg') {?>
+											<img class="rounded_profile_pic" alt="image" src="<?php echo base_url();?>workplaces/<?php echo $workPlaceDetails['companyName'];?>/user_profile_pics/<?php echo $arrVal['photo'];?>" border="0"  width="49px" height="49px" id="imgName"> 
+												<?php
+										}
+										else {?>
+											<img class="rounded_profile_pic" alt="image" src="<?php echo base_url();?>images/<?php echo $arrVal['photo'];?>" border="0"  width="45" height="45" id="imgName"> 
+											<?php
+										} 
+										?>				
+									</div>
+								</div>
+								<div class="post_web_sidebar_col2">
+									<div class="post_web_sidebar_user_time">
+										<a href="<?php echo base_url();?>post/web/<?php echo $workSpaceId;?>/<?php echo $workSpaceType; ?>/space/<?php echo $arrVal['workSpaceId']; ?>" class="blue-link-underline" title="<?php echo $arrVal['sender_name']; ?>" style="word-wrap:break-word;float:left;"><?php echo wordwrap($arrVal['sender_name'],true); ?> </a>
+									</div>
+									<div>
+										<?php echo $arrVal['last_post_data']; ?>
+									</div>
+								</div>	  		
+								<div class="clr"></div>
+							</div>
+							<?php	
+						}
+					}
+			?>
+		</div>
 		<div id="divSpaces" name="divSpaces" class="post_web_tab_menu_tab" style="display:none;">
 			<?php 	
 					if (count($userAllSpaces)>0) {
@@ -556,7 +591,6 @@ $(document).ready(function()
 							}
 						}
 					}
-
 			?>
 
 		</div>

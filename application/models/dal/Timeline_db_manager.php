@@ -661,20 +661,12 @@ class timeline_db_manager extends CI_Model
 				*/
 				// If one-to-one
 				if ($post_type_id==1){
-					$query = $this->db->query(
-						"INSERT INTO teeme_post_web_post_store (post_id,post_type_id,post_type_object_id,participant_id,sender_id,delivery_status_id,seen_status,sent_timestamp,data) 
-							VALUES (
-							'".$nodeId."',
-							'".$post_type_id."',
-							'".$post_type_object_id."',
-							'".$recipients."',
-							'".$userId."',
-							'".$delivery_status_id."',
-							'".$seen_status."',
-							'".$createdDate."',
-							'".$this->db->escape_str($data)."'
-							)"
-					);
+					$values[] = "('".$nodeId."','".$post_type_id."','".$post_type_object_id."','".$recipients."','".$userId."','".$delivery_status_id."','".$seen_status."','".$createdDate."','".$this->db->escape_str($data)."')"; 	
+					$values[] = "('".$nodeId."','".$post_type_id."','".$post_type_object_id."','".$userId."','".$userId."','".$delivery_status_id."','".$seen_status."','".$createdDate."','".$this->db->escape_str($data)."')"; 	
+
+					$val = implode(',', $values);
+					$q = "INSERT INTO teeme_post_web_post_store (post_id,post_type_id,post_type_object_id,participant_id,sender_id,delivery_status_id,seen_status,sent_timestamp,data) VALUES $val";
+					$query = $this->db->query($q);
 				}
 				else if ($post_type_id==2){
 					$this->load->model('dal/identity_db_manager');
@@ -926,6 +918,166 @@ class timeline_db_manager extends CI_Model
 		}
 
 		return $treeData;	
+
+	}
+	public function getUserActivePostsByUserId ($userId=0)
+	{
+		/*
+		$id = array();
+		$userActivePostsDetails = array();
+		$q1 = "select least(participant_id, sender_id) as user_1, greatest(participant_id, sender_id) as user_2, max(id) as last_id, max(sent_timestamp) as last_timestamp from teeme_post_web_post_store WHERE 1 IN (participant_id,sender_id) AND post_type_id=1 group by least(participant_id, sender_id), greatest(participant_id, sender_id) ORDER BY last_timestamp DESC";
+		$q2 = "SELECT `id`, `post_id`, `post_type_id`, `post_type_object_id`, `participant_id`, `sender_id`, `delivery_status_id`, `seen_status`, `sent_timestamp`, `data` FROM `teeme_post_web_post_store` 
+		WHERE (post_type_id=2 AND participant_id=1) 
+		OR (post_type_id=3 AND participant_id=1)  
+		GROUP BY post_type_id,post_type_object_id
+		ORDER BY sent_timestamp DESC";
+		
+		$query1 = $this->db->query($q1);
+		$query2 = $this->db->query($q2);
+		foreach($query1->result() as $row){
+			$id[] = $row->last_id;
+		}
+		foreach($query2->result() as $row){
+			$id[] = $row->id;
+		}		
+		$ids = implode(",",$id);
+		$q3 = "SELECT id, post_id, post_type_id, post_type_object_id, sent_timestamp FROM teeme_post_web_post_store WHERE id IN ($ids)";
+		$query3 = $this->db->query($q3);
+		echo $q3;
+		echo "<pre>"; print_r($query3->result()); exit;
+		*/
+		$arrPostIds = array();
+		$this->load->model('dal/identity_db_manager');
+		// This will give us unique participants of one-to-one chats
+		$q1 = "select DISTINCT a.participant_id FROM teeme_post_web_post_store AS a, teeme_post_web_post_store AS b WHERE a.post_type_id=1 and a.post_id=b.post_id AND (a.participant_id=$userId OR b.participant_id=$userId)";
+		$query1 = $this->db->query($q1);
+			if ($query1->num_rows() > 1) {
+				$arrParticipantIds = array();
+				foreach($query1->result() as $row){
+					if ($row->participant_id!=$userId){
+						$arrParticipantIds[] = $row->participant_id;
+					}					
+				}				
+				foreach($arrParticipantIds as $key=>$value){
+					// This will give us the last post ids from chats between a users and it's participants
+					$q2 = "select MAX(post_id) as post_id from teeme_post_web_post_store WHERE participant_id=$userId AND post_id IN (SELECT post_id FROM teeme_post_web_post_store WHERE post_type_id=1 AND participant_id=$value)";
+					$query2 = $this->db->query($q2);
+					if ($query2->num_rows() > 0) {	
+						foreach($query2->result() as $row){
+							$arrPostIds[] = $row->post_id;											
+						}	
+					}
+				}
+
+			}
+			// This will give unique space ids
+			$q3 = "SELECT DISTINCT post_type_object_id FROM `teeme_post_web_post_store` WHERE participant_id=$userId AND post_type_id=2 ORDER by sent_timestamp DESC";
+			$query3 = $this->db->query($q3);
+				if ($query3->num_rows() > 0) {
+					$arrSpaceIds = array();
+					foreach($query3->result() as $row){
+							$arrSpaceIds[] = $row->post_type_object_id;										
+					}	
+					foreach($arrSpaceIds as $key=>$value){
+						// This will give us the last post ids from chats between a users and it's participants
+						$q4 = "select MAX(post_id) as post_id from teeme_post_web_post_store WHERE participant_id=$userId AND post_id IN (SELECT post_id FROM teeme_post_web_post_store WHERE post_type_id=2 AND post_type_object_id=$value)";
+						$query4 = $this->db->query($q4);
+						if ($query4->num_rows() > 0) {	
+							foreach($query4->result() as $row){
+								$arrPostIds[] = $row->post_id;											
+							}	
+						}
+					}				
+				}
+
+			// This will give unique subspace ids
+			$q5 = "SELECT DISTINCT post_type_object_id FROM `teeme_post_web_post_store` WHERE participant_id=$userId AND post_type_id=3 ORDER by sent_timestamp DESC";
+			$query5 = $this->db->query($q5);
+				if ($query5->num_rows() > 0) {
+					$arrSubSpaceIds = array();
+					foreach($query5->result() as $row){
+							$arrSubSpaceIds[] = $row->post_type_object_id;										
+					}	
+					foreach($arrSubSpaceIds as $key=>$value){
+						// This will give us the last post ids from chats between a users and it's participants
+						$q6 = "select MAX(post_id) as post_id from teeme_post_web_post_store WHERE participant_id=$userId AND post_id IN (SELECT post_id FROM teeme_post_web_post_store WHERE post_type_id=3 AND post_type_object_id=$value)";
+						$query6 = $this->db->query($q6);
+						if ($query6->num_rows() > 0) {	
+							foreach($query6->result() as $row){
+								$arrPostIds[] = $row->post_id;											
+							}	
+						}
+					}				
+				}
+			arsort($arrPostIds);
+			$userActivePostsDetails = array();
+			$i=0;
+			foreach($arrPostIds as $key=>$value){
+				//$post_ids = implode(',', $arrPostIds);
+				$q7 = "SELECT * FROM teeme_post_web_post_store WHERE participant_id=$userId AND post_id=$value";
+				$query7 = $this->db->query($q7);	
+	
+				if($query7->num_rows()){					
+					foreach($query7->result() as $row){
+						//$userActivePostsDetails[] = $row;
+						if ($row->post_type_id==1){
+							$userActivePostsDetails[$i]['post_type_id']=$row->post_type_id;
+							if($row->sender_id!=$row->participant_id){
+								$userActivePostsDetails[$i]['sender_id']=$row->sender_id;
+							}
+							else if($row->post_type_object_id!=$row->participant_id){
+								$userActivePostsDetails[$i]['sender_id']=$row->post_type_object_id;
+							}
+							$userDetails = $this->identity_db_manager->getUserDetailsByUserId($userActivePostsDetails[$i]['sender_id']);
+							$userActivePostsDetails[$i]['sender_user_id']=$userActivePostsDetails[$i]['sender_id'];
+							$userActivePostsDetails[$i]['sender_name']= $userDetails['userTagName'];
+							$userActivePostsDetails[$i]['photo']= $userDetails['photo'];
+							$userActivePostsDetails[$i]['last_post_id']=$row->post_id;
+							$lastPostData = $this->identity_db_manager->formatContent($this->identity_db_manager->getLeafContentsByNodeId($userActivePostsDetails[$i]['last_post_id']),45,1);
+							$userActivePostsDetails[$i]['last_post_data']=$lastPostData;
+							$userActivePostsDetails[$i]['last_post_timestamp']=$row->sent_timestamp;
+							$userActivePostsDetails[$i]['seen_status']=$row->seen_status;
+						}
+						if ($row->post_type_id==2){
+							$userActivePostsDetails[$i]['post_type_id']=$row->post_type_id;
+							$userActivePostsDetails[$i]['sender_id']=$row->post_type_object_id;
+							$spaceDetails = $this->identity_db_manager->getWorkSpaceDetailsByWorkSpaceId($userActivePostsDetails[$i]['sender_id']);
+							$userActivePostsDetails[$i]['sender_name']=$spaceDetails['workSpaceName'];
+							$userActivePostsDetails[$i]['sender_user_id']=$row->sender_id;
+							$userDetails = $this->identity_db_manager->getUserDetailsByUserId($userActivePostsDetails[$i]['sender_user_id']);
+							$userActivePostsDetails[$i]['photo']= 'noimage.jpg';
+							$userActivePostsDetails[$i]['last_post_id']=$row->post_id;
+							$lastPostData = $this->identity_db_manager->formatContent($userDetails['userTagName'].': '.$this->identity_db_manager->getLeafContentsByNodeId($userActivePostsDetails[$i]['last_post_id']),35,1);
+							$userActivePostsDetails[$i]['last_post_data']=$lastPostData;
+							$userActivePostsDetails[$i]['last_post_timestamp']=$row->sent_timestamp;
+							$userActivePostsDetails[$i]['seen_status']=$row->seen_status;
+						}
+						if ($row->post_type_id==3){
+							$userActivePostsDetails[$i]['post_type_id']=$row->post_type_id;
+							$userActivePostsDetails[$i]['sender_id']=$row->post_type_object_id;
+							$subSpaceDetails = $this->identity_db_manager->getSubWorkSpaceDetailsBySubWorkSpaceId($userActivePostsDetails[$i]['sender_id']);
+							$userActivePostsDetails[$i]['sender_name']=$subSpaceDetails['subWorkSpaceName'];
+							$userActivePostsDetails[$i]['sender_user_id']=$row->sender_id;
+							$userDetails = $this->identity_db_manager->getUserDetailsByUserId($userActivePostsDetails[$i]['sender_user_id']);
+							$userActivePostsDetails[$i]['photo']= 'noimage.jpg';
+							$userActivePostsDetails[$i]['last_post_id']=$row->post_id;
+							$lastPostData = $this->identity_db_manager->formatContent($userDetails['userTagName'].': '.$this->identity_db_manager->getLeafContentsByNodeId($userActivePostsDetails[$i]['last_post_id']),35,1);
+							$userActivePostsDetails[$i]['last_post_data']=$lastPostData;
+							$userActivePostsDetails[$i]['last_post_timestamp']=$row->sent_timestamp;
+							$userActivePostsDetails[$i]['seen_status']=$row->seen_status;
+						}	
+						$i++;										
+					}
+					
+				}					
+			}
+			//echo "<li>count= " .count($userActivePostsDetails);
+			//echo "<pre>"; print_r($userActivePostsDetails);exit;
+
+			//echo "<pre>"; print_r($arrPostIds);print_r($query7->result());exit;
+
+			
+			return $userActivePostsDetails;	
 
 	}
 }

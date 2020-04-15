@@ -45,7 +45,7 @@ else
 <link rel="stylesheet" href="<?php echo base_url();?>froala_editor/css/plugins/table.min.css">
 <link rel="stylesheet" href="<?php echo base_url();?>froala_editor/css/plugins/video.min.css">
 
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"  media="print" onload="this.media='all'">
 <?php /*?><link rel="stylesheet" href="<?php echo base_url();?>froala_editor/css/font-awesome.min.css"><?php */?>
 <!-- Include Code Mirror CSS. -->
 <?php /*?><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.3.0/codemirror.min.css"><?php */?>
