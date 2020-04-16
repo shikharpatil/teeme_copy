@@ -8854,3 +8854,6 @@ span.reserve a
 .post_web_sidebar_data{
 	display:flex;
 }
+.loader{
+	margin:10px 0;
+}

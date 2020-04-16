@@ -515,6 +515,7 @@ $(document).ready(function()
 		</div>
 
 		<div class="clr"></div>
+		<div id="post_web_sidebar_loader" class="loader" style="display:none;"><span><img src='<?php echo base_url();?>images/ajax-loader-add.gif'></span></div>
 		<div id="divChats" name="divChats" class="post_web_tab_menu_tab" style="display:block;">
 			<?php //echo "<pre>"; print_r($userActivePosts);?>
 			<?php 	
@@ -1445,19 +1446,22 @@ $(document).ready(function(){
           $('#postTabUI').removeClass('postTabUIFixed');
       }
   	});
+	
 
+	
 	$(".post_web_tab_menu_list li a").click(function(e){
      e.preventDefault();
   	});
 
   	$(".post_web_tab_menu_list li").click(function(){
-     var tabid = $(this).find("a").attr("href");
-     $(".post_web_tab_menu_list li,.post_web_tab_menu div.post_web_tab_menu_tab").removeClass("active");   // removing active class from tab
+		
+		var tabid = $(this).find("a").attr("href");
+		$(".post_web_tab_menu_list li,.post_web_tab_menu div.post_web_tab_menu_tab").removeClass("active");   // removing active class from tab
 
-     $(".post_web_tab_menu_tab").hide();   // hiding open tab
-     $(tabid).show();    // show tab
-     $(this).addClass("active"); //  adding active class to clicked tab
-
+		$(".post_web_tab_menu_tab").hide();   // hiding open tab
+		$(tabid).show();    // show tab
+		$(this).addClass("active"); //  adding active class to clicked tab
+		$("#post_web_sidebar_loader").show();
   });
 
 	/*$('.timelineExpDate').datepicker({
@@ -2153,10 +2157,6 @@ function getRecepientName(checkid,nodeId)
 
 		}
 }
-
-/*setInterval(function () {
-	findNewPostComment()		
-}, 10000);*/
 setTimeout("findNewPostComment()", 10000);
 //On single checkbox click myspace end	
 
@@ -2235,6 +2235,8 @@ function findNewPostComment()
 	{
 		var realTimePostIds=document.getElementById('totalNodes').value;
 	}
+	//alert (realTimePostIds);
+	//console.log('First= '+realTimePostIds);
 	//alert(workSpaceId+'===='+workSpaceType+'====<?php //echo $this->uri->segment(8) ?>');
 	var postType = '<?php echo $this->uri->segment(5)?>';
 	if(postType=='one'){
@@ -2246,10 +2248,12 @@ function findNewPostComment()
 	else if(postType=='subspace'){
 		postTypeId = 3;
 	}
+	
 	//var userPostSearch = '<?php echo $this->uri->segment(10)?>';
 	var postTypeObjectId = '<?php echo $this->uri->segment(6)?>';
-	/*if(userPostSearch=='')
-	{*/
+	//console.log('Post type id= '+postTypeId);
+	//console.log('Post type object id= '+postTypeObjectId);
+	/*if(userPostSearch=='') {*/
 		$.ajax({
 			type: "POST",
 			//url: baseUrl+"post/findNewPostCommentWeb/"+workSpaceId+"/"+workSpaceType+"/"+postType+"/"+userPostSearch,
@@ -2258,8 +2262,10 @@ function findNewPostComment()
 			dataType: 'json',
 			cache: false,
 			success:  function(data){
+			//console.log('Second= '+data);
 			 if($('#TimelineEditor').is(':hidden'))
 			 {
+				 
 				 if(data!=0)
 				 {
 					$("#newPostCommentMessage").show();				
@@ -2636,19 +2642,21 @@ $(document).on('click', '.clsChecks', function(){
 	}
 setTimeout("getPostUserStatus()", 10000);
 function getPostUserStatus()
-{
+{ 
 	var workSpaceId = '<?php echo $workSpaceId;?>';
 	var workSpaceType = '<?php echo $workSpaceType;?>';
 	var toMatch = document.getElementById('search').value;
+	$("#post_web_sidebar_loader").hide();
 	//alert(workSpaceId+'===='+workSpaceType+'====<?php //echo $this->uri->segment(8) ?>');
 		$.ajax({
 			type: "POST",
 			url: baseUrl+"post/getPostUserStatusWeb/"+workSpaceId+"/type/"+workSpaceType,
 			data: 'search='+toMatch,
 			dataType: 'html',
-			success:  function(data){
-			 	//alert(data);
-				$('#divSearchUser').html(data);
+			success:  function(data){				
+				var res = data.split("|@#$%^&|");	
+				$('#divChats').html(res[1]);		
+				$('#divSearchUser').html(res[0]);								
 			 	setTimeout("getPostUserStatus()", 5000);
 			}
 		});

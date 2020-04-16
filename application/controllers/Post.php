@@ -3212,6 +3212,7 @@ class Post extends CI_Controller {
 			}		
 			
 			$arrDetails['myProfileDetail']= $this->profile_manager->getUserDetailsByUserId($_SESSION['userId']);
+			$arrDetails['userActivePosts'] = $this->timeline_db_manager->getUserActivePostsByUserId($_SESSION['userId']);
 			
 			
 			/*Added for checking device type start*/
@@ -3235,7 +3236,10 @@ class Post extends CI_Controller {
 			}
 			else 
 			{*/
-				$this->load->view('post/get_post_user_list_web',$arrDetails);		
+
+				$data = $this->load->view('post/get_post_user_list_web',$arrDetails,TRUE);	
+				$data .= '|@#$%^&|'.$this->load->view('post/get_post_active_posts_web',$arrDetails,TRUE);
+				echo $data;	
 			/*}*/
 		}		
 	}
@@ -4525,8 +4529,8 @@ class Post extends CI_Controller {
 			$treeId 	= 0;
 			$workSpaceId 	= $this->uri->segment(3);
 			$workSpaceType  = $this->uri->segment(4);
-			$postTypeId       = $this->uri->segment(5);
-			$postTypeObjectId      = $this->uri->segment(6);
+			$post_type_id       = $this->uri->segment(5);
+			$post_type_object_id      = $this->uri->segment(6);
 			//$userPostSearch       = $this->uri->segment(7);
 			$totalPostNodes = $this->input->post('totalNodes');
 		/*if($postType!='bookmark')

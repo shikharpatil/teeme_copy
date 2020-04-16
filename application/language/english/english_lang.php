@@ -1971,7 +1971,7 @@ $lang['txt_search_query_short'] = 'Search query too short. Try with at least 3 l
 
 $lang['txt_search_result_found'] = 'result(s) found';
 
-$lang['txt_new_post_found'] = 'Get Updates'; //There are new posts or comments. Click here to update
+$lang['txt_new_post_found'] = 'New posts available. Click here to update.'; //There are new posts or comments. Click here to update
 
 $lang['txt_new_post_added'] = '{username} has added a new post'; //post change heading for new post
 
