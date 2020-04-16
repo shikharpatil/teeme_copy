@@ -1136,6 +1136,7 @@ $(document).ready(function()
 		<!--Plus icon for public post start here-->
 		<?php /*if($treeAccess==1  ||  $workSpaceId==0  || in_array($_SESSION['userId'],$managerIds) || isset($_SESSION['workPlaceManagerName']) && $_SESSION['workPlaceManagerName']!='')*/
 		//echo $_SESSION['WSManagerAccess'].'===='.$_SESSION['workPlaceManagerName'];
+		/*
 		if((isset($_SESSION['WSManagerAccess']) && $_SESSION['WSManagerAccess'] == 1) || (isset($_SESSION['workPlaceManagerName']) && $_SESSION['workPlaceManagerName']!='')) 
 		{ 
 			if($_SESSION['public'] == 'public')
@@ -1149,16 +1150,21 @@ $(document).ready(function()
 		<?php
 			}
 		}
+		*/
 		?>
 		<!--Plus icon for public post end here-->
 		
-			<?php if(!$_SESSION['all'] && !$_SESSION['public']){ ?>
+			<?php /*
+			if(!$_SESSION['all'] && !$_SESSION['public']){ ?>
 				<?php if($this->uri->segment('8')!='bookmark'){ ?>
 			
 				<div class="postAddIcon">
 				<a id="add" style="cursor:pointer;" onclick="showTimelineEditor();"><img border="0" title="Add" src="<?php echo base_url(); ?>/images/addnew.png" ></a>
 				</div>
-			<?php } } ?>
+			<?php } 
+		} 
+		*/
+		?>
 		<!--Plus icon end here-->
 		<!--New post and comment message start-->
 		
@@ -1221,7 +1227,7 @@ $(document).ready(function()
 		<div class="clr"></div>
 		<!--Timeline editor start here-->
 		<!--Changed by Dashrath- add handCursor class in div for editor content line spacing issue-->
-		<div id="TimelineEditor" style="width:98%; padding:2% 1%; display:none;" class="handCursor">
+		<div id="TimelineEditor" style="width:98%; padding:2% 1%;" class="handCursor">
 			<form name="formTimeline" id="formTimeline" method="post" action="" >
 				 <textarea name="replyDiscussion" id="replyDiscussion"></textarea>
 				 <input name="list" value="<?php echo $post_type_object_id;?>" id="list" type="hidden" />
@@ -1459,9 +1465,15 @@ $(document).ready(function(){
 		$(".post_web_tab_menu_list li,.post_web_tab_menu div.post_web_tab_menu_tab").removeClass("active");   // removing active class from tab
 
 		$(".post_web_tab_menu_tab").hide();   // hiding open tab
+		//alert (tabid);
+			if(tabid=='#divChats')
+			{
+				$("#post_web_sidebar_loader").show();
+				getPostUserStatus();
+			}
 		$(tabid).show();    // show tab
 		$(this).addClass("active"); //  adding active class to clicked tab
-		$("#post_web_sidebar_loader").show();
+		//$("#post_web_sidebar_loader").show();
   });
 
 	/*$('.timelineExpDate').datepicker({
@@ -1476,7 +1488,7 @@ $(document).ready(function(){
 
 });
 //Change textarea as editor
-//chnage_textarea_to_editor('replyDiscussion','simple');
+chnage_textarea_to_editor('replyDiscussion','simple');
 
 //Insert timeline post content
 function insertTimeline()
@@ -1527,7 +1539,7 @@ function insertTimeline()
 					 $('#TimelinePost').html(result);
 					 if($('#TimelineEditor').is(':visible'))
 					 {
-						$("#TimelineEditor").hide();
+						//$("#TimelineEditor").hide();
 						$("#searchTags").val("");
 						$(".fr-element").html("");
 						$("#buttons").html("");
@@ -1654,6 +1666,19 @@ function insertPostComment(nodeId)
 	var replyDiscussion = 'replyTimelineComment'+nodeId;
 	var INSTANCE_NAME = $("#replyTimelineComment"+nodeId).attr('name');
 	var getvalue	= getvaluefromEditor(INSTANCE_NAME);
+	var postType = '<?php echo $this->uri->segment(5)?>';
+	if(postType=='one'){
+		postTypeId = 1;
+	}
+	else if(postType=='space'){
+		postTypeId = 2;
+	}
+	else if(postType=='subspace'){
+		postTypeId = 3;
+	}
+	var postTypeObjectId = '<?php echo $this->uri->segment(6)?>';
+	//console.log('postTypeId= '+postTypeId);
+	//console.log('postTypeObjectId= '+postTypeObjectId);
 	
 	if (getvalue == ''){
 		jAlert("<?php echo $this->lang->line('txt_enter');?>","Alert");
@@ -1671,12 +1696,14 @@ function insertPostComment(nodeId)
 		
 		treeId='0';
 		var data_user =$("#form"+nodeId).serialize();
+		data_user = data_user+'&post_type_id='+postTypeId+'&post_type_object_id='+postTypeObjectId;
 		data_user = data_user+'&'+replyDiscussion+'='+encodeURIComponent(getvalue); 
+		//alert('data user= '+data_user);
 		
 		//var pnodeId=$("#pnodeId").val();
 		//url: baseUrl+"post/insert_timeline_comment/"+treeId+"/1/"+nodeId+'?realTimeTimelineDivIds='+realTimeTimelineDivIds,
 			  var request = $.ajax({
-			  url: baseUrl+"post/insert_timeline_comment/"+treeId+"/1/"+nodeId+'?realTimeTimelineDivIds='+realTimeTimelineDivIds,
+			  url: baseUrl+"post/insert_timeline_comment_web/"+treeId+"/1/"+nodeId+'?realTimeTimelineDivIds='+realTimeTimelineDivIds,
 			  type: "POST",
 			  data: data_user,
 			  dataType: "html",
@@ -2263,8 +2290,8 @@ function findNewPostComment()
 			cache: false,
 			success:  function(data){
 			//console.log('Second= '+data);
-			 if($('#TimelineEditor').is(':hidden'))
-			 {
+			 //if($('#TimelineEditor').is(':hidden'))
+			// {
 				 
 				 if(data!=0)
 				 {
@@ -2276,7 +2303,7 @@ function findNewPostComment()
 					});
 					//$('#updateImage').attr('src',baseUrl+'images/tab-icon/update-view-green.png');
 				  }
-			  }
+			 // }
 			  //$('#treeTitle').val('');
 			  //Changed by Dashrath - change time 50000 to 10000
 			  setTimeout("findNewPostComment()", 10000);
@@ -2646,18 +2673,19 @@ function getPostUserStatus()
 	var workSpaceId = '<?php echo $workSpaceId;?>';
 	var workSpaceType = '<?php echo $workSpaceType;?>';
 	var toMatch = document.getElementById('search').value;
-	$("#post_web_sidebar_loader").hide();
 	//alert(workSpaceId+'===='+workSpaceType+'====<?php //echo $this->uri->segment(8) ?>');
 		$.ajax({
 			type: "POST",
 			url: baseUrl+"post/getPostUserStatusWeb/"+workSpaceId+"/type/"+workSpaceType,
 			data: 'search='+toMatch,
 			dataType: 'html',
+			async: true,
 			success:  function(data){				
-				var res = data.split("|@#$%^&|");	
+				var res = data.split("|@#$%^&|");
+				$("#post_web_sidebar_loader").hide();
 				$('#divChats').html(res[1]);		
 				$('#divSearchUser').html(res[0]);								
-			 	setTimeout("getPostUserStatus()", 5000);
+			 	setTimeout("getPostUserStatus()", 10000);
 			}
 		});
 }

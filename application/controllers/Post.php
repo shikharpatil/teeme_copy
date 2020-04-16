@@ -3338,6 +3338,8 @@ class Post extends CI_Controller {
 			if($this->input->post('reply') == 1){  
 				$workSpaceId	= $this->input->post('workSpaceId');
 				$workSpaceType	= $this->input->post('workSpaceType');
+				$post_type_id	= $this->input->post('post_type_id');
+				$post_type_object_id	= $this->input->post('post_type_object_id');
 				$postCommentNodeId	= $this->timeline_db_manager->insertTimelineComment($this->uri->segment(5),$this->input->post($this->input->post('editorname1')),$_SESSION['userId'],$postCommentCreatedDate,$treeId,$workSpaceId,$workSpaceType);
 				
 				//Add post comment change details start
@@ -3354,7 +3356,7 @@ class Post extends CI_Controller {
 					$treeId=$this->input->post('treeId');
 				}
 				
-				$arrTimeline1		= $this->timeline_db_manager->get_timeline($treeId,$workSpaceId,$workSpaceType);
+				$arrTimeline1		= $this->timeline_db_manager->get_timeline_web($treeId,$workSpaceId,$workSpaceType,0,$_SESSION['userId'],$post_type_id,$post_type_object_id);
 				$arrTimelineViewPage['arrTimeline']=$arrTimeline1;
 				$arrTimelineViewPage['Profiledetail'] = $this->profile_manager->getUserDetailsByUserId($_SESSION['userId']);
 				$arrTimelineViewPage['treeId'] = $treeId;
@@ -3365,6 +3367,8 @@ class Post extends CI_Controller {
 				$arrTimelineViewPage['realTimeTimelineDivIds']= $_GET['realTimeTimelineDivIds'];
 				$arrTimelineViewPage['arrparent']= $this->chat_db_manager->getPerentInfo($this->uri->segment(5));
 				$arrTimelineViewPage['reatTimeStatus']= 'false';
+				$arrTimelineViewPage['post_type_id'] = $post_type_id;
+				$arrTimelineViewPage['post_type_object_id'] = $post_type_object_id;
 				
 				//Manoj: Insert post create notification start
 				
