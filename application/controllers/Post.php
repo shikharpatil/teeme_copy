@@ -2815,6 +2815,18 @@ class Post extends CI_Controller {
 			$post_type = $this->uri->segment(5);
 			$post_type_object_id = $this->uri->segment(6);
 
+			if ($post_type=='one'){
+				$post_type_id = 1;
+			} else if($post_type=='space') {
+				$post_type_id = 2;
+			} else if($post_type=='subspace') {
+				$post_type_id = 3;
+			} else if($post_type=='group') {
+				$post_type_id = 4;
+			}
+
+			// Update seen status of the current object
+			$this->timeline_db_manager->updateUnseenCount($_SESSION['userId'],$post_type_id,$post_type_object_id,1);
 
 			/*
 			$arrDetails['userPostSearch'] = '';
@@ -2879,13 +2891,11 @@ class Post extends CI_Controller {
 			//All space post showing end
 
 				// Parv - Post type ids can be refrenced from teeme_post_web_post_types table
-				if ($post_type=='one'){
-					$post_type_id = 1;
+				if ($post_type_id==1){
 					$arrDetails['Profiledetail'] = $this->profile_manager->getUserDetailsByUserId($post_type_object_id);
 					$arrDetails['arrTimeline']	= $this->timeline_db_manager->get_timeline_web($treeId,$arrDetails['workSpaceId'],$arrDetails['workSpaceType'],0,$_SESSION['userId'],$post_type_id,$post_type_object_id);
 				}
-				else if($post_type=='space') {
-					$post_type_id = 2; 					
+				else if($post_type_id==2) {			
 					if ($post_type_object_id==$workSpaceId){
 						$arrDetails['Profiledetail'] = $workSpaceDetails;
 					}
@@ -2895,13 +2905,11 @@ class Post extends CI_Controller {
 					}					
 					$arrDetails['arrTimeline']	= $this->timeline_db_manager->get_timeline_web($treeId,$arrDetails['workSpaceId'],$arrDetails['workSpaceType'],0,$_SESSION['userId'],$post_type_id,$post_type_object_id);
 				}
-				else if($post_type=='subspace') {
-					$post_type_id = 3; 
+				else if($post_type_id==3) {
 					$arrDetails['Profiledetail'] = $this->identity_db_manager->getSubWorkSpaceDetailsBySubWorkSpaceId($post_type_object_id);
 					$arrDetails['arrTimeline']	= $this->timeline_db_manager->get_timeline_web($treeId,$arrDetails['workSpaceId'],$arrDetails['workSpaceType'],0,$_SESSION['userId'],$post_type_id,$post_type_object_id);
 				}
-				else if($post_type=='group') {
-					$post_type_id = 4; 
+				else if($post_type_id==4) {
 					$arrDetails['Profiledetail']=$this->identity_db_manager->getGroupDetailsByGroupId($post_type_object_id);
 					//$arrDetails['arrTimeline']	= $this->timeline_db_manager->get_timeline_web($treeId,$arrDetails['workSpaceId'],$arrDetails['workSpaceType'],0,$arrDetails['userPostSearch']);
 				}
@@ -4751,6 +4759,111 @@ class Post extends CI_Controller {
 				echo '0';
 			}
 	}	
+	function getNewPostCommentWeb()
+	{
+	
+		if(!isset($_SESSION['userName']) || $_SESSION['userName'] =='')
+		{
+			//redirect ('home','location');
+			$_SESSION['errorMsg']	= 	$this->lang->line('msg_session_expire'); 
+			$this->load->model('dal/identity_db_manager');						
+			$objIdentity	= $this->identity_db_manager;	
+			$arrDetails['workPlaceDetails'] 	= $objIdentity->getWorkPlaces();	
+			$this->load->view('login', $arrDetails);
+		}		
+		//Checking the required parameters passed
+		$this->load->model('dal/timeline_db_manager');	
+		$this->load->model('dal/identity_db_manager');	
+		$objIdentity	= $this->identity_db_manager;	
+		$objIdentity->updateLogin();			
+		
+		//echo $this->input->post('totalNodes'); exit;
+			$totalPostNodesId=array();
+			$treeId 	= 0;
+			$workSpaceId 	= $this->uri->segment(3);
+			$workSpaceType  = $this->uri->segment(4);
+			$post_type_id       = $this->uri->segment(5);
+			$post_type_object_id       = $this->uri->segment(6);
+			$totalPostNodes = $this->input->post('totalNodes');
+		/*if($postType!='bookmark')
+		{*/
+			if($postType=='public')
+			{
+				$workSpaceId  = '0';
+				$workSpaceType  = '0';
+				$allPublicSpace='2';
+				$arrTimeline	= $this->timeline_db_manager->get_timeline($treeId,$workSpaceId,$workSpaceType,$allPublicSpace);
+			}
+			else if($postType=='bookmark')
+			{
+				$allStarredSpace='3';
+				$arrTimeline	= $this->timeline_db_manager->get_timeline($treeId,'','',$allStarredSpace);
+			}
+			else
+			{
+				//$arrTimeline	= $this->timeline_db_manager->get_timeline($treeId,$workSpaceId,$workSpaceType);
+				$arrTimeline	= $this->timeline_db_manager->get_timeline_web($treeId,$workSpaceId,$workSpaceType,0,$_SESSION['userId'],$post_type_id,$post_type_object_id);
+
+			}
+			
+			$totalPostNodesId=explode(",",$totalPostNodes); 
+			$i=1;
+			$postCount=0;
+			$nodesArr=array();
+			if(count($arrTimeline) > 0)
+			{				 
+				foreach($arrTimeline as $keyVal=>$arrVal)
+				{
+					if(!in_array($arrVal['nodeId'],$totalPostNodesId))	
+					{
+						$postCount+=$i;
+					}
+					//For new comments start
+					
+					if($arrVal['successors'])
+					{
+						$sArray=explode(',',$arrVal['successors']);
+						$counter=0;
+						while($counter < count($sArray))
+						{
+							if(!in_array($sArray[$counter],$totalPostNodesId))	
+							{
+								$postCount+=$i;
+								$nodesArr[]=$arrVal['nodeId'];
+							}
+							$counter++;
+						}
+					}
+					//New comments code end
+					$i++;				
+				}
+			}
+			if($postCount>0)
+			{
+				//echo $postCount;
+				$nodesArr = array_map("unserialize", array_unique(array_map("serialize", $nodesArr)));
+				echo json_encode($nodesArr);
+				//print_r($nodesArr);
+			}
+			/*}*/
+			else
+			{
+				echo '0';
+			}
+			//print_r($arrDetails['arrTimeline']);
+			//exit;
+			
+			/*if($_COOKIE['ismobile'])
+			{
+				$this->load->view('get_timeline_for_mobile',$arrTimelineViewPage);	
+			}
+			else
+			{
+				$this->load->view('get_timeline', $arrTimelineViewPage); 
+			}*/
+		
+	}	
+
 }
 
 ?>

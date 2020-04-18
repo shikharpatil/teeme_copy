@@ -1052,6 +1052,7 @@ class timeline_db_manager extends CI_Model
 							$userActivePostsDetails[$i]['last_post_data']=$lastPostData;
 							$userActivePostsDetails[$i]['last_post_timestamp']=$row->sent_timestamp;
 							$userActivePostsDetails[$i]['seen_status']=$row->seen_status;
+							$userActivePostsDetails[$i]['unseen_post_count']=$this->getUnseenPostCount($userId,$userActivePostsDetails[$i]['post_type_id'],$userActivePostsDetails[$i]['sender_id']);
 						}
 						if ($row->post_type_id==3){
 							$userActivePostsDetails[$i]['post_type_id']=$row->post_type_id;
@@ -1066,6 +1067,7 @@ class timeline_db_manager extends CI_Model
 							$userActivePostsDetails[$i]['last_post_data']=$lastPostData;
 							$userActivePostsDetails[$i]['last_post_timestamp']=$row->sent_timestamp;
 							$userActivePostsDetails[$i]['seen_status']=$row->seen_status;
+							$userActivePostsDetails[$i]['unseen_post_count']=$this->getUnseenPostCount($userId,$userActivePostsDetails[$i]['post_type_id'],$userActivePostsDetails[$i]['sender_id']);
 						}	
 						$i++;										
 					}
@@ -1081,11 +1083,47 @@ class timeline_db_manager extends CI_Model
 	}
 
 	public function getUnseenPostCount ($user_id=0, $post_type_id=0,$post_type_object_id=0){
-		$q = "SELECT COUNT(a.id) as row_count FROM `teeme_post_web_post_store` AS a, teeme_post_web_post_store AS b WHERE a.post_type_id=$post_type_id AND a.participant_id=$user_id AND a.seen_status=0 and a.post_id=b.post_id AND b.participant_id=$post_type_object_id";
-		$query = $this->db->query($q);
-		foreach($query->result() as $row){		
-			$row_count = $row->row_count;													
-		}	
+		$row_count=0;
+		if($post_type_id==1){
+			$q = "SELECT COUNT(a.id) as row_count FROM `teeme_post_web_post_store` AS a, teeme_post_web_post_store AS b WHERE a.post_type_id=1 AND a.participant_id=$user_id AND a.seen_status=0 AND a.post_id=b.post_id AND b.participant_id=$post_type_object_id";
+			$query = $this->db->query($q);
+			foreach($query->result() as $row){		
+				$row_count = $row->row_count;													
+			}	
+		}
+		if($post_type_id==2 || $post_type_id==3){
+			$q = "SELECT COUNT(a.id) as row_count FROM `teeme_post_web_post_store` AS a WHERE a.participant_id=$user_id AND a.post_type_id=$post_type_id AND a.post_type_object_id=$post_type_object_id AND a.seen_status=0";
+			$query = $this->db->query($q);
+			foreach($query->result() as $row){		
+				$row_count = $row->row_count;													
+			}	
+		}
 		return $row_count;
+	}
+
+	public function updateUnseenCount($user_id=0, $post_type_id=0,$post_type_object_id=0,$seen_status_new=1){
+		$seen_status_new = $seen_status_new;
+		if ($seen_status_new==1){$seen_status_old=0;} else{$seen_status_old=1;}
+		if($post_type_id==1){
+			//$q = "SELECT COUNT(a.id) as row_count FROM `teeme_post_web_post_store` AS a, teeme_post_web_post_store AS b WHERE a.post_type_id=1 AND a.participant_id=$user_id AND a.seen_status=0 AND a.post_id=b.post_id AND b.participant_id=$post_type_object_id";
+			$q = "UPDATE teeme_post_web_post_store SET seen_status=$seen_status_new WHERE post_type_id=1 AND participant_id=$user_id AND seen_status=$seen_status_old AND (sender_id=$post_type_object_id OR post_type_object_id=$post_type_object_id)";
+			$query = $this->db->query($q);
+			/*
+			foreach($query->result() as $row){		
+				$row_count = $row->row_count;													
+			}
+			*/	
+		}
+		if($post_type_id==2 || $post_type_id==3){
+			//$q = "SELECT COUNT(a.id) as row_count FROM `teeme_post_web_post_store` AS a WHERE a.participant_id=$user_id AND a.post_type_id=$post_type_id AND a.post_type_object_id=$post_type_object_id AND a.seen_status=0";
+			$q = "UPDATE teeme_post_web_post_store SET seen_status=$seen_status_new WHERE post_type_id=$post_type_id AND participant_id=$user_id AND seen_status=$seen_status_old AND post_type_object_id=$post_type_object_id";
+			$query = $this->db->query($q);
+			//echo "<li>".$q; echo "<li>" .$query->num_rows(); echo "<li>" .$query->result(); exit;
+			/*
+			foreach($query->result() as $row){		
+				$row_count = $row->row_count;													
+			}
+			*/	
+		}		
 	}
 }

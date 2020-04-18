@@ -469,7 +469,7 @@ if(disableEditor==0)
 								   
 		  toolbarButtons: ['insertImage', 'myButton', 'insertVideo', 'insertFile', 'bold', 'italic', 'underline', 'formatOL', 'html', 'fullscreen'],
 	 
-	 	  height: 100,
+	 	  height: 90,
 		  
 		  //imageUploadURL: baseUrl+'froala_editor/upload.php',
       imageUploadURL: baseUrl+'image_editing/imageUpload',

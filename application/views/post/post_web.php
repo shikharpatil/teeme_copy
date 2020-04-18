@@ -1166,13 +1166,7 @@ $(document).ready(function()
 		*/
 		?>
 		<!--Plus icon end here-->
-		<!--New post and comment message start-->
-		
-		<div id="newPostCommentMessage" style="display:none;">
-			<a href="" class="newPostMsg"><span><?php echo $this->lang->line('txt_new_post_found'); ?></span></a>
-		</div>	
-		
-		<!--New post and comment message end-->
+
 		</div>
 		
 			<div class="rightAddBox">
@@ -1227,7 +1221,7 @@ $(document).ready(function()
 		<div class="clr"></div>
 		<!--Timeline editor start here-->
 		<!--Changed by Dashrath- add handCursor class in div for editor content line spacing issue-->
-		<div id="TimelineEditor" style="width:98%; padding:2% 1%;" class="handCursor">
+		<div id="TimelineEditor" class="timeline_editor" style="display:none;">
 			<form name="formTimeline" id="formTimeline" method="post" action="" >
 				 <textarea name="replyDiscussion" id="replyDiscussion"></textarea>
 				 <input name="list" value="<?php echo $post_type_object_id;?>" id="list" type="hidden" />
@@ -1410,6 +1404,13 @@ $(document).ready(function()
 		<div class="clr"></div>
 		</div>
 		<!--Timeline editor end here-->
+
+		<!--New post and comment message start-->		
+		<div id="newPostCommentMessage" style="display:none;">
+			<a href="" class="newPostMsg"><span><?php echo $this->lang->line('txt_new_post_found'); ?></span></a>
+		</div>	
+		<div class="clr"></div>		
+		<!--New post and comment message end-->
 		
 		<div id="TimelinePost" style="margin-top:2%;">
 		
@@ -1488,8 +1489,8 @@ $(document).ready(function(){
 
 });
 //Change textarea as editor
-chnage_textarea_to_editor('replyDiscussion','simple');
-
+//chnage_textarea_to_editor('replyDiscussion','simple');
+showTimelineEditor();
 //Insert timeline post content
 function insertTimeline()
 {  
@@ -1780,7 +1781,7 @@ function showTimelineEditor()
 {
 	if($('#TimelineEditor').is(':visible'))
 	{
-		$("#TimelineEditor").hide();
+		//$("#TimelineEditor").hide();
 		$("#searchTags").val("");
 		showTags();
 		$(".fr-element").html("");
@@ -2235,11 +2236,23 @@ function postCommentUpdate()
 		var realTimePostIds=document.getElementById('totalNodes').value;
 	}
 	//alert(workSpaceId+'===='+workSpaceType+'====<?php //echo $this->uri->segment(8) ?>');
-	var postType = '<?php echo $this->uri->segment(8)?>';
+	//var postType = '<?php echo $this->uri->segment(8)?>';
+	var postType = '<?php echo $this->uri->segment(5)?>';
+	if(postType=='one'){
+		postTypeId = 1;
+	}
+	else if(postType=='space'){
+		postTypeId = 2;
+	}
+	else if(postType=='subspace'){
+		postTypeId = 3;
+	}
+	var postTypeObjectId = '<?php echo $this->uri->segment(6)?>';
 	
 	$.ajax({
 		type: "POST",
-		url: baseUrl+"post/getNewPostComment/"+workSpaceId+"/type/"+workSpaceType+"/"+postType,
+		//url: baseUrl+"post/getNewPostCommentWeb/"+workSpaceId+"/type/"+workSpaceType+"/"+postType,
+		url: baseUrl+"post/getNewPostCommentWeb/"+workSpaceId+"/"+workSpaceType+"/"+postTypeId+"/"+postTypeObjectId,
 		data: jQuery("#totalPostNodes").serialize(),
 		dataType: 'json',
 		cache: false,
