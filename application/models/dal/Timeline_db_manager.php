@@ -660,12 +660,24 @@ class timeline_db_manager extends CI_Model
 				$query = $this->db->query("INSERT INTO teeme_posts_shared (postId,members) VALUES ('".$nodeId."','".$recipients."')");
 				*/
 				// If one-to-one
-				if ($post_type_id==1){
+				if ($post_type_id==1 || $post_type_id==5){
+					$values = array();
+					$this->load->model('dal/profile_manager');
+					$arrPlaceUsers = $this->profile_manager->getAllUsersByWorkPlaceId($_SESSION['workPlaceId']);
+						foreach($arrPlaceUsers  as $keyVal=>$arrVal){
+							if ($post_type_object_id!=''){
+								$values[] = "('".$nodeId."','".$post_type_id."','".$post_type_object_id."','".$arrVal['userId']."','".$userId."','".$delivery_status_id."','".$seen_status."','".$createdDate."','".$this->db->escape_str($data)."')"; 	
+							}
+							else if ($post_type_object_id=='') {
+								$values[] = "('".$nodeId."','".$post_type_id."','".$userId."','".$arrVal['userId']."','".$userId."','".$delivery_status_id."','".$seen_status."','".$createdDate."','".$this->db->escape_str($data)."')"; 	
+							}
+						}
+					/*
 					if ($userId!=$recipients){
 						$values[] = "('".$nodeId."','".$post_type_id."','".$post_type_object_id."','".$recipients."','".$userId."','".$delivery_status_id."','".$seen_status."','".$createdDate."','".$this->db->escape_str($data)."')"; 	
 					}
 					$values[] = "('".$nodeId."','".$post_type_id."','".$post_type_object_id."','".$userId."','".$userId."','".$delivery_status_id."','".$seen_status."','".$createdDate."','".$this->db->escape_str($data)."')"; 	
-
+					*/
 					$val = implode(',', $values);
 					$q = "INSERT INTO teeme_post_web_post_store (post_id,post_type_id,post_type_object_id,participant_id,sender_id,delivery_status_id,seen_status,sent_timestamp,data) VALUES $val";
 					$query = $this->db->query($q);
@@ -861,13 +873,16 @@ class timeline_db_manager extends CI_Model
 		*/
 		// if one-to-one
 		if ($post_type_id==1) {
+			/*
 			if ($user_id!=$post_type_object_id){
 				$q = "SELECT COUNT(id) as row_count FROM teeme_post_web_post_store WHERE post_type_id=1 AND ((participant_id='".$post_type_object_id."' AND sender_id='".$user_id."') OR (participant_id='".$user_id."' AND sender_id='".$post_type_object_id."'))";
 			}
 			else{
 				$q = "SELECT COUNT(id) as row_count FROM teeme_post_web_post_store WHERE post_type_id=1 AND participant_id='".$user_id."' AND sender_id='".$user_id."' AND post_type_object_id='".$user_id."'";
-
 			}
+			*/
+			$q = "SELECT COUNT(id) as row_count FROM teeme_post_web_post_store WHERE (post_type_id=1 OR post_type_id=5) AND post_type_object_id='".$post_type_object_id."'";
+
 			$query = $this->db->query($q);
 		}
 		else if ($post_type_id==2) {
@@ -878,23 +893,33 @@ class timeline_db_manager extends CI_Model
 			$q = "SELECT COUNT(id) as row_count FROM teeme_post_web_post_store WHERE post_type_id=3 AND post_type_object_id='".$post_type_object_id."' AND participant_id='".$user_id."'";
 			$query = $this->db->query($q);
 		}
+		else if ($post_type_id==5) {
+			$q = "SELECT COUNT(id) as row_count FROM teeme_post_web_post_store WHERE participant_id='".$user_id."'";
+			$query = $this->db->query($q);
+		}
 		foreach($query->result() as $row){		
 			$row_count = $row->row_count;													
 		}	
 		if($row_count>0){
 			if ($post_type_id==1) {
+				/*
 				if ($user_id==$post_type_object_id){
 					$q2 = "SELECT a.workSpaceId as workSpaceId, a.workSpaceType as workSpaceType, a.id, a.successors, a.predecessor, a.nodeOrder, b.id as leafId, b.authors, b.userId, b.contents, DATE_FORMAT(b.createdDate, '%Y-%m-%d %H:%i:%s') as TimelineCreatedDate, b.leafStatus FROM teeme_node a, teeme_leaf b, teeme_post_web_post_store c WHERE c.post_id=a.id AND c.post_type_id=1  AND (c.participant_id='".$post_type_object_id."' AND c.sender_id='".$user_id."' AND c.post_type_object_id='".$user_id."') AND b.id=a.leafId AND (a.predecessor='0' OR a.predecessor='') AND a.treeIds=".$treeId." AND b.userId=".$_SESSION['userId']." ORDER BY b.editedDate DESC";
 				}
 				else {
 					$q2 = "SELECT a.workSpaceId as workSpaceId, a.workSpaceType as workSpaceType, a.id, a.successors, a.predecessor, a.nodeOrder, b.id as leafId, b.authors, b.userId, b.contents, DATE_FORMAT(b.createdDate, '%Y-%m-%d %H:%i:%s') as TimelineCreatedDate, b.leafStatus FROM teeme_node a, teeme_leaf b, teeme_post_web_post_store c WHERE c.post_id=a.id AND c.post_type_id=1  AND ((c.participant_id='".$post_type_object_id."' AND c.sender_id='".$user_id."') OR (c.participant_id='".$user_id."' AND c.sender_id='".$post_type_object_id."')) AND b.id=a.leafId AND (a.predecessor='0' OR a.predecessor='') AND a.treeIds=".$treeId." AND (b.userId=".$_SESSION['userId']." OR b.userId='".$post_type_object_id."') ORDER BY b.editedDate DESC";
 				}
+				*/
+				$q2 = "SELECT a.workSpaceId as workSpaceId, a.workSpaceType as workSpaceType, a.id, a.successors, a.predecessor, a.nodeOrder, b.id as leafId, b.authors, b.userId, b.contents, DATE_FORMAT(b.createdDate, '%Y-%m-%d %H:%i:%s') as TimelineCreatedDate, b.leafStatus FROM teeme_node a, teeme_leaf b, teeme_post_web_post_store c WHERE c.post_id=a.id AND (c.post_type_id=1 OR c.post_type_id=5)  AND c.post_type_object_id='".$post_type_object_id."' AND c.participant_id='".$post_type_object_id."' AND b.id=a.leafId AND (a.predecessor='0' OR a.predecessor='') AND a.treeIds=".$treeId." ORDER BY b.editedDate DESC";
 			}
 			else if ($post_type_id==2) {
 				$q2 = "SELECT a.workSpaceId as workSpaceId, a.workSpaceType as workSpaceType, a.id, a.successors, a.predecessor, a.nodeOrder, b.id as leafId, b.authors, b.userId, b.contents, DATE_FORMAT(b.createdDate, '%Y-%m-%d %H:%i:%s') as TimelineCreatedDate, b.leafStatus FROM teeme_node a, teeme_leaf b, teeme_post_web_post_store c WHERE c.post_id=a.id AND c.post_type_id=2  AND c.participant_id='".$user_id."' AND c.post_type_object_id='".$post_type_object_id."' AND b.id=a.leafId AND (a.predecessor='0' OR a.predecessor='') AND a.treeIds=".$treeId." ORDER BY b.editedDate DESC";
 			}
 			else if ($post_type_id==3) {
 				$q2 = "SELECT a.workSpaceId as workSpaceId, a.workSpaceType as workSpaceType, a.id, a.successors, a.predecessor, a.nodeOrder, b.id as leafId, b.authors, b.userId, b.contents, DATE_FORMAT(b.createdDate, '%Y-%m-%d %H:%i:%s') as TimelineCreatedDate, b.leafStatus FROM teeme_node a, teeme_leaf b, teeme_post_web_post_store c WHERE c.post_id=a.id AND c.post_type_id=3  AND c.participant_id='".$user_id."' AND c.post_type_object_id='".$post_type_object_id."' AND b.id=a.leafId AND (a.predecessor='0' OR a.predecessor='') AND a.treeIds=".$treeId." ORDER BY b.editedDate DESC";
+			}
+			else if ($post_type_id==5) {
+				$q2 = "SELECT a.workSpaceId as workSpaceId, a.workSpaceType as workSpaceType, a.id, a.successors, a.predecessor, a.nodeOrder, b.id as leafId, b.authors, b.userId, b.contents, DATE_FORMAT(b.createdDate, '%Y-%m-%d %H:%i:%s') as TimelineCreatedDate, b.leafStatus FROM teeme_node a, teeme_leaf b, teeme_post_web_post_store c WHERE c.post_id=a.id AND c.participant_id='".$user_id."' AND b.id=a.leafId AND (a.predecessor='0' OR a.predecessor='') AND a.treeIds=".$treeId." ORDER BY b.editedDate DESC";
 			}
 				$query2 = $this->db->query($q2);
 			if($query2->num_rows()>0){
@@ -962,6 +987,7 @@ class timeline_db_manager extends CI_Model
 		$arrPostIds = array();
 		$this->load->model('dal/identity_db_manager');
 		// This will give us unique participants of one-to-one chats
+		/*
 		$q1 = "select DISTINCT a.participant_id FROM teeme_post_web_post_store AS a, teeme_post_web_post_store AS b WHERE a.post_type_id=1 and a.post_id=b.post_id AND (a.participant_id=$userId OR b.participant_id=$userId)";
 		$query1 = $this->db->query($q1);
 			if ($query1->num_rows() > 1) {
@@ -1022,70 +1048,85 @@ class timeline_db_manager extends CI_Model
 						}
 					}				
 				}
-			arsort($arrPostIds);
+			*/
+			$q = "SELECT post_id FROM teeme_post_web_post_store WHERE participant_id='".$userId."' ORDER BY post_id DESC";
+			$query = $this->db->query($q);
+
+			if ($query->num_rows() > 0) {	
+				foreach($query->result() as $row){
+					$arrPostIds[] = $row->post_id;											
+				}	
+			}
+			//arsort($arrPostIds);
 			$userActivePostsDetails = array();
 			$i=0;
-			foreach($arrPostIds as $key=>$value){
-				//$post_ids = implode(',', $arrPostIds);
-				$q7 = "SELECT * FROM teeme_post_web_post_store WHERE participant_id=$userId AND post_id=$value";
-				$query7 = $this->db->query($q7);	
-	
-				if($query7->num_rows()){					
-					foreach($query7->result() as $row){
-						//$userActivePostsDetails[] = $row;
-						if ($row->post_type_id==1){
-							$userActivePostsDetails[$i]['post_type_id']=$row->post_type_id;
-							if($row->sender_id!=$row->participant_id){
-								$userActivePostsDetails[$i]['sender_id']=$row->sender_id;
+
+			if (count($arrPostIds)>0){
+				foreach($arrPostIds as $key=>$value){
+					//$post_ids = implode(',', $arrPostIds);
+					$q7 = "SELECT * FROM teeme_post_web_post_store WHERE participant_id=$userId AND post_id=$value";
+					$query7 = $this->db->query($q7);	
+		
+					if($query7->num_rows()){					
+						foreach($query7->result() as $row){
+							//$userActivePostsDetails[] = $row;
+							if ($row->post_type_id==1 || $row->post_type_id==5){
+								$userActivePostsDetails[$i]['post_type_id']=$row->post_type_id;
+								if($row->sender_id!=$row->participant_id){
+									$userActivePostsDetails[$i]['sender_id']=$row->sender_id;
+								}
+								else if($row->post_type_object_id!=$row->participant_id){
+									$userActivePostsDetails[$i]['sender_id']=$row->post_type_object_id;
+								}
+								else if($row->post_type_object_id==$row->participant_id && $row->sender_id==$row->participant_id && $row->sender_id==$row->post_type_object_id){
+									$userActivePostsDetails[$i]['sender_id']=$row->post_type_object_id;
+								}
+								$userDetails = $this->identity_db_manager->getUserDetailsByUserId($userActivePostsDetails[$i]['sender_id']);
+								$userActivePostsDetails[$i]['sender_user_id']=$userActivePostsDetails[$i]['sender_id'];
+								$userActivePostsDetails[$i]['sender_name']= $userDetails['userTagName'];
+								$userActivePostsDetails[$i]['photo']= $userDetails['photo'];
+								$userActivePostsDetails[$i]['last_post_id']=$row->post_id;
+								$lastPostData = $this->identity_db_manager->formatContent($this->identity_db_manager->getLeafContentsByNodeId($userActivePostsDetails[$i]['last_post_id']),45,1);
+								$userActivePostsDetails[$i]['last_post_data']=$lastPostData;
+								$userActivePostsDetails[$i]['last_post_timestamp']=$row->sent_timestamp;
+								$userActivePostsDetails[$i]['seen_status']=$row->seen_status;
+								//$userActivePostsDetails[$i]['unseen_post_count']=$this->getUnseenPostCount($userId,$userActivePostsDetails[$i]['post_type_id'],$userActivePostsDetails[$i]['sender_id']);
 							}
-							else if($row->post_type_object_id!=$row->participant_id){
+							if ($row->post_type_id==2){
+								$userActivePostsDetails[$i]['post_type_id']=$row->post_type_id;
 								$userActivePostsDetails[$i]['sender_id']=$row->post_type_object_id;
+								$spaceDetails = $this->identity_db_manager->getWorkSpaceDetailsByWorkSpaceId($userActivePostsDetails[$i]['sender_id']);
+								$userActivePostsDetails[$i]['sender_name']=$spaceDetails['workSpaceName'];
+								$userActivePostsDetails[$i]['sender_user_id']=$row->sender_id;
+								$userDetails = $this->identity_db_manager->getUserDetailsByUserId($userActivePostsDetails[$i]['sender_user_id']);
+								$userActivePostsDetails[$i]['photo']= 'noimage.jpg';
+								$userActivePostsDetails[$i]['last_post_id']=$row->post_id;
+								$lastPostData = $this->identity_db_manager->formatContent($userDetails['userTagName'].': '.$this->identity_db_manager->getLeafContentsByNodeId($userActivePostsDetails[$i]['last_post_id']),35,1);
+								$userActivePostsDetails[$i]['last_post_data']=$lastPostData;
+								$userActivePostsDetails[$i]['last_post_timestamp']=$row->sent_timestamp;
+								$userActivePostsDetails[$i]['seen_status']=$row->seen_status;
+								//$userActivePostsDetails[$i]['unseen_post_count']=$this->getUnseenPostCount($userId,$userActivePostsDetails[$i]['post_type_id'],$userActivePostsDetails[$i]['sender_id']);
 							}
-							$userDetails = $this->identity_db_manager->getUserDetailsByUserId($userActivePostsDetails[$i]['sender_id']);
-							$userActivePostsDetails[$i]['sender_user_id']=$userActivePostsDetails[$i]['sender_id'];
-							$userActivePostsDetails[$i]['sender_name']= $userDetails['userTagName'];
-							$userActivePostsDetails[$i]['photo']= $userDetails['photo'];
-							$userActivePostsDetails[$i]['last_post_id']=$row->post_id;
-							$lastPostData = $this->identity_db_manager->formatContent($this->identity_db_manager->getLeafContentsByNodeId($userActivePostsDetails[$i]['last_post_id']),45,1);
-							$userActivePostsDetails[$i]['last_post_data']=$lastPostData;
-							$userActivePostsDetails[$i]['last_post_timestamp']=$row->sent_timestamp;
-							$userActivePostsDetails[$i]['seen_status']=$row->seen_status;
-							$userActivePostsDetails[$i]['unseen_post_count']=$this->getUnseenPostCount($userId,$userActivePostsDetails[$i]['post_type_id'],$userActivePostsDetails[$i]['sender_id']);
+							if ($row->post_type_id==3){
+								$userActivePostsDetails[$i]['post_type_id']=$row->post_type_id;
+								$userActivePostsDetails[$i]['sender_id']=$row->post_type_object_id;
+								$subSpaceDetails = $this->identity_db_manager->getSubWorkSpaceDetailsBySubWorkSpaceId($userActivePostsDetails[$i]['sender_id']);
+								$userActivePostsDetails[$i]['sender_name']=$subSpaceDetails['subWorkSpaceName'];
+								$userActivePostsDetails[$i]['sender_user_id']=$row->sender_id;
+								$userDetails = $this->identity_db_manager->getUserDetailsByUserId($userActivePostsDetails[$i]['sender_user_id']);
+								$userActivePostsDetails[$i]['photo']= 'noimage.jpg';
+								$userActivePostsDetails[$i]['last_post_id']=$row->post_id;
+								$lastPostData = $this->identity_db_manager->formatContent($userDetails['userTagName'].': '.$this->identity_db_manager->getLeafContentsByNodeId($userActivePostsDetails[$i]['last_post_id']),35,1);
+								$userActivePostsDetails[$i]['last_post_data']=$lastPostData;
+								$userActivePostsDetails[$i]['last_post_timestamp']=$row->sent_timestamp;
+								$userActivePostsDetails[$i]['seen_status']=$row->seen_status;
+								//$userActivePostsDetails[$i]['unseen_post_count']=$this->getUnseenPostCount($userId,$userActivePostsDetails[$i]['post_type_id'],$userActivePostsDetails[$i]['sender_id']);
+							}	
+							$i++;										
 						}
-						if ($row->post_type_id==2){
-							$userActivePostsDetails[$i]['post_type_id']=$row->post_type_id;
-							$userActivePostsDetails[$i]['sender_id']=$row->post_type_object_id;
-							$spaceDetails = $this->identity_db_manager->getWorkSpaceDetailsByWorkSpaceId($userActivePostsDetails[$i]['sender_id']);
-							$userActivePostsDetails[$i]['sender_name']=$spaceDetails['workSpaceName'];
-							$userActivePostsDetails[$i]['sender_user_id']=$row->sender_id;
-							$userDetails = $this->identity_db_manager->getUserDetailsByUserId($userActivePostsDetails[$i]['sender_user_id']);
-							$userActivePostsDetails[$i]['photo']= 'noimage.jpg';
-							$userActivePostsDetails[$i]['last_post_id']=$row->post_id;
-							$lastPostData = $this->identity_db_manager->formatContent($userDetails['userTagName'].': '.$this->identity_db_manager->getLeafContentsByNodeId($userActivePostsDetails[$i]['last_post_id']),35,1);
-							$userActivePostsDetails[$i]['last_post_data']=$lastPostData;
-							$userActivePostsDetails[$i]['last_post_timestamp']=$row->sent_timestamp;
-							$userActivePostsDetails[$i]['seen_status']=$row->seen_status;
-							$userActivePostsDetails[$i]['unseen_post_count']=$this->getUnseenPostCount($userId,$userActivePostsDetails[$i]['post_type_id'],$userActivePostsDetails[$i]['sender_id']);
-						}
-						if ($row->post_type_id==3){
-							$userActivePostsDetails[$i]['post_type_id']=$row->post_type_id;
-							$userActivePostsDetails[$i]['sender_id']=$row->post_type_object_id;
-							$subSpaceDetails = $this->identity_db_manager->getSubWorkSpaceDetailsBySubWorkSpaceId($userActivePostsDetails[$i]['sender_id']);
-							$userActivePostsDetails[$i]['sender_name']=$subSpaceDetails['subWorkSpaceName'];
-							$userActivePostsDetails[$i]['sender_user_id']=$row->sender_id;
-							$userDetails = $this->identity_db_manager->getUserDetailsByUserId($userActivePostsDetails[$i]['sender_user_id']);
-							$userActivePostsDetails[$i]['photo']= 'noimage.jpg';
-							$userActivePostsDetails[$i]['last_post_id']=$row->post_id;
-							$lastPostData = $this->identity_db_manager->formatContent($userDetails['userTagName'].': '.$this->identity_db_manager->getLeafContentsByNodeId($userActivePostsDetails[$i]['last_post_id']),35,1);
-							$userActivePostsDetails[$i]['last_post_data']=$lastPostData;
-							$userActivePostsDetails[$i]['last_post_timestamp']=$row->sent_timestamp;
-							$userActivePostsDetails[$i]['seen_status']=$row->seen_status;
-							$userActivePostsDetails[$i]['unseen_post_count']=$this->getUnseenPostCount($userId,$userActivePostsDetails[$i]['post_type_id'],$userActivePostsDetails[$i]['sender_id']);
-						}	
-						$i++;										
-					}
-					
-				}					
+						
+					}					
+				}
 			}
 			//echo "<li>count= " .count($userActivePostsDetails);
 			//echo "<pre>"; print_r($userActivePostsDetails);exit;

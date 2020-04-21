@@ -2824,9 +2824,15 @@ class Post extends CI_Controller {
 			} else if($post_type=='group') {
 				$post_type_id = 4;
 			}
+			else if($post_type=='home') {
+				$post_type_id = 5;
+			}
 
 			// Update seen status of the current object
-			$this->timeline_db_manager->updateUnseenCount($_SESSION['userId'],$post_type_id,$post_type_object_id,1);
+			if ($post_type_object_id!=''){
+				$this->timeline_db_manager->updateUnseenCount($_SESSION['userId'],$post_type_id,$post_type_object_id,1);
+			}
+			
 
 			/*
 			$arrDetails['userPostSearch'] = '';
@@ -2913,12 +2919,15 @@ class Post extends CI_Controller {
 					$arrDetails['Profiledetail']=$this->identity_db_manager->getGroupDetailsByGroupId($post_type_object_id);
 					//$arrDetails['arrTimeline']	= $this->timeline_db_manager->get_timeline_web($treeId,$arrDetails['workSpaceId'],$arrDetails['workSpaceType'],0,$arrDetails['userPostSearch']);
 				}
+				else if ($post_type_id==5){
+					//$arrDetails['Profiledetail'] = $this->profile_manager->getUserDetailsByUserId($post_type_object_id);
+					$arrDetails['arrTimeline']	= $this->timeline_db_manager->get_timeline_web($treeId,$arrDetails['workSpaceId'],$arrDetails['workSpaceType'],0,$_SESSION['userId'],$post_type_id,$post_type_object_id);
+				}
 				else{
 					$arrDetails['arrTimeline'] = '';
 				}
 				$arrDetails['post_type_id'] = $post_type_id;
 				$arrDetails['post_type_object_id'] = $post_type_object_id;
-				
 			
 			$workSpaceId_search_user= $this->uri->segment(3);	
 			$workSpaceType_search_user=$this->uri->segment(7);
@@ -3904,7 +3913,7 @@ class Post extends CI_Controller {
 					$postCreatedDate=$objTime->getGMTTime();
 					//$postNodeId	= $this->timeline_db_manager->insert_timeline_web($treeId,$this->input->post($this->input->post('editorname1')),$_SESSION['userId'],$postCreatedDate,0,0,$workSpaceId,$workSpaceType,$recipients);	
 					$postNodeId	= $this->timeline_db_manager->insert_timeline_web($treeId,$post_content,$_SESSION['userId'],$postCreatedDate,0,0,$workSpaceId,$workSpaceType,$recipients,'','',1,1,0,$post_type_id,$post_type_object_id);	
-					
+					//echo "<li>postnodeid= " .$postNodeId; exit;
 					//$groupSharedId = $this->identity_db_manager->add_group_recipients($postNodeId,$workSpaceId,$groupRecipients,$groupUserRecipients);	
 
 					if($publicPost == '')
@@ -4466,10 +4475,12 @@ class Post extends CI_Controller {
 			$this->load->view('login', $arrDetails);
 		}		
 		//Checking the required parameters passed
+		/*
 		if($this->uri->segment(2) == '' || $this->uri->segment(3) == '' || $this->uri->segment(4) == '' || $this->uri->segment(5) == '' || $this->uri->segment(6) == '')
 		{			
 			redirect('home', 'location');
 		}
+		*/
 		$this->load->model('dal/timeline_db_manager');	
 		$this->load->model('dal/identity_db_manager');	
 		$this->load->model('dal/time_manager');	
@@ -4502,6 +4513,7 @@ class Post extends CI_Controller {
 			}
 			
 			//$arrTimeline1		= $this->timeline_db_manager->get_timeline_web($treeId,$workSpaceId,$workSpaceType,$allSpace);
+			//echo "<li>posttypeid= " .$post_type_id; echo "<li>posttypeobjectid= " .$post_type_object_id; exit;
 			$arrTimeline1	= $this->timeline_db_manager->get_timeline_web($treeId,$workSpaceId,$workSpaceType,0,$_SESSION['userId'],$post_type_id,$post_type_object_id);
 
 			$arrTimelineViewPage['workSpaceId'] = $workSpaceId;

@@ -173,6 +173,7 @@ $(document).ready(function()
 		-->
 		</div><?php ?>
 		<!--Space and place section end here-->	
+		<!--
 		<div class="post_web_sidebar_header post_web_sidebar_row">
 			<div class="post_web_sidebar_col1">
 				<div class="post_web_sidebar_profile_pic">					
@@ -194,7 +195,8 @@ $(document).ready(function()
 				</div>
 			</div>	
 			<div class="clr"></div>  		
-    	</div>
+		</div>
+		-->
           <?php
 				//online user list view
 				
@@ -507,7 +509,7 @@ $(document).ready(function()
 
 		<div class="post_web_tab_menu">
 			<ul class="post_web_tab_menu_list">
-				<li class="active"><a href="#divChats">Chats</a></li>
+				<li class="active"><a href="#divChats">Live feed</a></li>
 				<li><a href="#divSearchUser">Users</a></li>
 				<li><a href="#divSpaces">Spaces</a></li>
 				<li><a href="#divGroups">Groups</a></li>
@@ -540,7 +542,7 @@ $(document).ready(function()
 								<div class="post_web_sidebar_col2">
 									<div class="post_web_sidebar_user_time">
 										<span class="post_web_sidebar_username_data">
-										<?php if ($arrVal['post_type_id']==1) {
+										<?php if ($arrVal['post_type_id']==1 || $arrVal['post_type_id']==5) {
 										?>
 											<a href="<?php echo base_url();?>post/web/<?php echo $workSpaceId;?>/<?php echo $workSpaceType; ?>/one/<?php echo $arrVal['sender_id']; ?>" class="blue-link-underline" title="<?php echo $arrVal['sender_name']; ?>" style="word-wrap:break-word;float:left;"><?php echo wordwrap($arrVal['sender_name'],true); ?> </a>
 
@@ -953,7 +955,7 @@ $(document).ready(function()
 			<?php
 			if($post_type_id==1 && count($Profiledetail)>0){
 			?>
-				<div>
+			<div>
 				<div class="timelineProfImg">
 					
 							<?php
@@ -972,129 +974,23 @@ $(document).ready(function()
 							?>
 					
 				</div>
-				
-			<div class="postUserDetailsBox">
-			
-				<?php if($Profiledetail['firstName']!='' && $Profiledetail['lastName']!='') { ?>
-				<table class="postTable" style="font-size:0.8em; width:30%;">
-					<tr>
-			<td style="padding-bottom:5px;" class="profileLeftLabel">
-				<?php echo $this->lang->line('txt_user_full_name');?>:
-			</td>
-			<td style="padding-bottom:5px;">
-				<?php echo $Profiledetail['firstName'].' '.$Profiledetail['lastName']; ?>
-			</td>
-			</tr>
-			</table>
-			<?php } ?>
-			<?php if($Profiledetail['editNickName']!='') { ?>
-			<table class="postTable">
-			<tr>
-			<td style="padding-bottom:5px;" class="profileLeftLabel">
-				<?php echo $this->lang->line('txt_nick_name');?>:
-			</td>
-			<td style="padding-bottom:5px;">
-				<?php echo $Profiledetail['editNickName'];?>
-			</td>
-			</tr>
-			</table>
-			<?php } ?>
-			<?php if($Profiledetail['statusUpdate']!='') { ?>
-			<table class="postTable">
-				<tr>
-				<td style="padding-bottom:5px;" class="profileLeftLabel">
-					<?php echo $this->lang->line('txt_Status');?>:
-				</td>
-				<td style="padding-bottom:5px;">
-					 <?php echo $Profiledetail['statusUpdate'];?>
-				</td>
-				</tr>
-			</table>
-			<?php } ?>
-			<?php if($Profiledetail['role']!='') { ?>
-			<table class="postTable">
-				<tr>
-				<td style="" class="profileLeftLabel">	
-					<?php echo $this->lang->line('txt_Role');?>:
-				</td>
-				<td>
-						<?php echo $Profiledetail['role'];?>
-				</td>
-				</tr>
-			</table>
-			<?php } ?>
-			<?php if($Profiledetail['mobile']!='') { ?>
-			<table class="postTable">
-				<tr>
-				
-				</tr>
-				<tr> 
-				<td style="padding-bottom:5px;" class="profileLeftLabel">
-					<?php echo $this->lang->line('txt_Mobile');?>:
-				</td>			
-	
-				<td style="padding-bottom:5px;">
-					 <?php echo $Profiledetail['mobile'];?>
-				</td>
-				</tr>
-			</table>
-			<?php } ?>	
-			<?php if($Profiledetail['userName']!='') { ?>
-			<table class="postTable">
-			<tr>
-			<td style="padding-bottom:5px;" class="profileLeftLabel">
-				<?php echo $this->lang->line('txt_Email');?>:
-			</td>
-			<td style="padding-bottom:5px;">
-				<?php echo $Profiledetail['userName'];?>
-			</td>
-			</tr>
-			</table>
-			<?php } ?>
-			<?php if($Profiledetail['editUserTagName']!='') { ?>
-			<table class="postTable">
-			<tr>
-			<td style="padding-bottom:5px;" class="profileLeftLabel">
-				<?php echo $this->lang->line('txt_user_profile_tag_name');?>:
-			</td>
-			<td style="padding-bottom:5px;">
-				<?php echo $Profiledetail['editUserTagName'];?>
-			</td>
-			</tr>
-			</table>
-			<?php } ?>
-			</div>
-				<?php /* ?>
-				<div class="timelineProfname" style="padding-left:75px; padding-top:2px; font-size:0.8em;">
-					<b><?php echo strip_tags($Profiledetail['userTagName'],'<b><em><span><img>');//echo strip_tags($Profiledetail['firstName'].' '.$Profiledetail['lastName'],'<b><em><span><img>'); ?></b>
+				<div class="postUserDetailsBox">
+					<span class="profileLeftLabel"><?php if($Profiledetail['firstName']!='' && $Profiledetail['lastName']!='') { ?><?php echo $Profiledetail['firstName'].' '.$Profiledetail['lastName']; ?><?php } ?></span>
+					<div>
+						<span><?php if($Profiledetail['editNickName']!='') { ?><?php echo $Profiledetail['editNickName'];?><?php } ?></span>												
+						<span><?php if($Profiledetail['editUserTagName']!='') { ?><?php echo $Profiledetail['editUserTagName'];?><?php } ?></span>
+						<span><?php if($Profiledetail['userName']!='') { ?><?php echo $Profiledetail['userName'];?><?php } ?></span>
+						<span><?php if($Profiledetail['role']!='') { ?><?php echo $Profiledetail['role'];?><?php } ?></span>
+						<span><?php if($Profiledetail['mobile']!='') { ?><?php echo $Profiledetail['mobile'];?><?php } ?></span>
+						<span><?php if($Profiledetail['statusUpdate']!='') { ?> <?php echo $Profiledetail['statusUpdate'];?><?php } ?></span>
+					</div>
 				</div>
-				<?php if($Profiledetail['statusUpdate']!='') { ?>
-				<div class="timelineProfname" style="padding-left:75px; padding-top:6px; font-size:0.8em;">
-					<div style="width:13%; float:left;"><b><?php echo $this->lang->line('txt_Status').':'; ?></b></div> <div><?php echo strip_tags($Profiledetail['statusUpdate'],'<b><em><span><img>'); ?></div>
-				</div>
-				<div class="clear"></div>
-				<?php } ?>
-				<?php if($Profiledetail['mobile']!='') { ?>
-				<div class="timelineProfname" style="padding-left:75px; padding-top:6px; font-size:0.8em;">
-					<div style="width:13%; float:left;"><b><?php echo $this->lang->line('txt_Mobile').':'; ?></b></div> <div><?php echo strip_tags($Profiledetail['mobile'],'<b><em><span><img>'); ?></div>					
-				</div>
-				<div class="clear"></div>
-				<?php } ?>
-				<?php if($Profiledetail['role']!='') { ?>
-				<div class="timelineProfname" style="padding-left:75px; padding-top:6px; font-size:0.8em;">
-					<div style="width:13%; float:left;"><b><?php echo $this->lang->line('txt_Role').':'; ?></b></div> <div><?php echo strip_tags($Profiledetail['role'],'<b><em><span><img>'); ?></div>
-				</div>
-				<div class="clear"></div>
-				<?php } */ ?>
 			</div>
 			
 			<div class="" style="float:right; padding-top:0px; margin-right: 60px;">
 				<?php /*?>Expiry Date: <input name="timeline_exp_date" type="text"  id="timeline_exp_date" class="timelineExpDate" value="" readonly><?php */?>
 				<?php /*?><div><img id="updateImage" src="<?php echo base_url()?>images/new-version.png" title="<?php echo $this->lang->line('txt_Update');?>" border="0" onclick='window.location.reload(true);' style="cursor:pointer; padding-top:0px;"></div><?php */?>
 			</div>
-			<div style="float:left;width:100%;height:30px;" >
-            <div style="margin-top:12px;border-bottom:1px dotted gray;margin-left:0%" ></div>
-        	</div>
 			<?php 
 			} // end if a user profile
 			// if a space or subspace profile
@@ -1105,9 +1001,11 @@ $(document).ready(function()
 						<img class="rounded_profile_pic" id="imgName" alt="image" src="<?php echo base_url();?>images/noimage.jpg" border="0"  width="45" height="45">
 					</div>
 					<div class="postUserDetailsBox">
-						<div class="profileLeftLabel"><span class="postTable">Name:</span><span> <?php echo $Profiledetail['workSpaceName']; ?></span></div>
-						<div class="profileLeftLabel"><span class="postTable">Created on:</span><span> <?php echo $this->time_manager->getUserTimeFromGMTTime($Profiledetail['workSpaceCreatedDate'],$this->config->item('date_format')); ?></span></div>
-						<div class="profileLeftLabel"><span class="postTable">Created by:</span><span> <?php echo $Profiledetail['workSpaceCreatorUsername']; ?></span></div>
+						<span class="profileLeftLabel"><?php echo $Profiledetail['workSpaceName'] .' (space)'; ?></span>
+						<div>
+							<span>Created on:<?php echo $this->time_manager->getUserTimeFromGMTTime($Profiledetail['workSpaceCreatedDate'],$this->config->item('date_format')); ?></span>
+							<span>Created by:<?php echo $Profiledetail['workSpaceCreatorUsername']; ?></span>
+						</div>
 					</div>
 				</div>
 				<?php
@@ -1119,9 +1017,11 @@ $(document).ready(function()
 						<img class="rounded_profile_pic" id="imgName" alt="image" src="<?php echo base_url();?>images/noimage.jpg" border="0"  width="45" height="45">
 					</div>
 					<div class="postUserDetailsBox">
-						<div class="profileLeftLabel"><span class="postTable">Name:</span><span> <?php echo $Profiledetail['subWorkSpaceName']; ?></span></div>
-						<div class="profileLeftLabel"><span class="postTable">Created on:</span><span> <?php echo $this->time_manager->getUserTimeFromGMTTime($Profiledetail['subWorkSpaceCreatedDate'],$this->config->item('date_format')); ?></span></div>
-						<div class="profileLeftLabel"><span class="postTable">Created by:</span><span> <?php echo $Profiledetail['subWorkSpaceCreatorUsername']; ?></span></div>
+						<span class="profileLeftLabel"><?php echo $Profiledetail['subWorkSpaceName'] .' (sub-space)'; ?></span>
+						<div>
+							<span>Created on:<?php echo $this->time_manager->getUserTimeFromGMTTime($Profiledetail['subWorkSpaceCreatedDate'],$this->config->item('date_format')); ?></span>
+							<span>Created by:<?php echo $Profiledetail['subWorkSpaceCreatorUsername']; ?></span>
+						</div>
 					</div>
 				</div>
 				<?php
@@ -1168,8 +1068,10 @@ $(document).ready(function()
 		*/
 		?>
 		<!--Plus icon end here-->
-
 		</div>
+		<div style="float:left;width:100%;height:30px;">
+            <div style="margin-top:12px;border-bottom:1px dotted gray;margin-left:0%" ></div>
+        </div>
 		
 			<div class="rightAddBox">
 					<div style="float:right;">
@@ -1414,17 +1316,17 @@ $(document).ready(function()
 		<div class="clr"></div>
 		</div>
 		<!--Timeline editor end here-->
-
-		<!--New post and comment message start-->		
-		<div id="newPostCommentMessage" style="display:none;">
-			<a href="" class="newPostMsg"><span><?php echo $this->lang->line('txt_new_post_found'); ?></span></a>
-		</div>	
-		<div class="clr"></div>		
-		<!--New post and comment message end-->
+		<div class="clr"></div>	
 		
-		<div id="TimelinePost" style="margin-top:2%;">
+		<div id="TimelinePost">
+			<!--New post and comment message start-->		
+			<div id="newPostCommentMessage" style="display:none;">
+				<a href="" class="newPostMsg"><span><?php echo $this->lang->line('txt_new_post_found'); ?></span></a>
+			</div>	
+			<div class="clr"></div>		
+			<!--New post and comment message end-->
 		
-		<!--Timeline post start here-->
+			<!--Timeline post start here-->
 		
 			<?php
 			if($workSpaceDetails['workSpaceName']=="Try Teeme" && ($this->uri->segment(8)=='bookmark' || $this->uri->segment(8)=='public' || $this->uri->segment(8)=='all'))

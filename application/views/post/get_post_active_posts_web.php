@@ -22,7 +22,7 @@
 								<div class="post_web_sidebar_col2">
 									<div class="post_web_sidebar_user_time">
 										<span class="post_web_sidebar_username_data">
-										<?php if ($arrVal['post_type_id']==1) {
+										<?php if ($arrVal['post_type_id']==1 || $arrVal['post_type_id']==5) {
 										?>
 											<a href="<?php echo base_url();?>post/web/<?php echo $workSpaceId;?>/<?php echo $workSpaceType; ?>/one/<?php echo $arrVal['sender_id']; ?>" class="blue-link-underline" title="<?php echo $arrVal['sender_name']; ?>" style="word-wrap:break-word;float:left;"><?php echo wordwrap($arrVal['sender_name'],true); ?> </a>
 

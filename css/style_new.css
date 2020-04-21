@@ -6656,7 +6656,7 @@ float:left;
 }
 #newPostCommentMessage
 {
-	margin: 10px 0 0 0;
+	margin: 10px 0 ;
 	padding:5px;
 	text-align:center;
 	background:green;
@@ -6722,6 +6722,10 @@ float:left;
     padding: 7% !important;
 	cursor: pointer;
 }
+#TimelinePost {
+	margin-top:1%;
+}
+
 
 #TimelinePost .bookmark, #TimelinePost .bookmarked
 {
@@ -7337,7 +7341,7 @@ input:checked + .slider:before {
 }
 
 #TimelineProfile .profileLeftLabel {
-    width: 35%;
+	font-size: 1.2em;
 	font-weight:bold;
 }
 .contactSeedDetails

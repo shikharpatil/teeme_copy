@@ -1265,5 +1265,5 @@ CREATE TABLE `teeme_post_web_post_types` ( `id` INT NOT NULL AUTO_INCREMENT , `p
 CREATE TABLE `teeme_post_web_post_store` ( `id` BIGINT NOT NULL AUTO_INCREMENT , `post_id` INT NULL DEFAULT NULL , `post_type_id` INT NULL DEFAULT NULL , `post_type_object_id` INT NULL DEFAULT NULL , `participant_id` INT NULL DEFAULT NULL , `sender_id` INT NULL DEFAULT NULL , `delivery_status_id` TINYINT NULL DEFAULT NULL , `seen_status` BOOLEAN NULL DEFAULT FALSE , `sent_timestamp` DATETIME NULL DEFAULT CURRENT_TIMESTAMP , `data` TEXT NULL DEFAULT NULL , PRIMARY KEY (`id`)) ENGINE = InnoDB DEFAULT CHARSET=utf8 COLLATE utf8_unicode_ci;
 CREATE TABLE `teeme_post_web_delivery_status` ( `id` TINYINT NOT NULL AUTO_INCREMENT , `status` VARCHAR(256) NULL DEFAULT NULL , PRIMARY KEY (`id`)) ENGINE = InnoDB DEFAULT CHARSET=utf8 COLLATE utf8_unicode_ci;
 INSERT INTO `teeme_post_web_group_status` (`id`, `status`) VALUES ('1', 'joined'), ('2', 'left'), ('3', 'suspended');
-INSERT INTO `teeme_post_web_post_types` (`id`, `post_type`) VALUES ('1', 'one-to-one'), ('2', 'space'), ('3', 'subspace'), ('4', 'group');
+INSERT INTO `teeme_post_web_post_types` (`id`, `post_type`) VALUES ('1', 'one-to-one'), ('2', 'space'), ('3', 'subspace'), ('4', 'group'), ('5','home');
 INSERT INTO `teeme_post_web_delivery_status` (`id`, `status`) VALUES ('1', 'delivered'), ('2', 'received');

@@ -99,7 +99,7 @@ function loadResults(limit) {
 //Notification popup code end here			
 
 //status update popup start
-
+/*
 $('a.showreranks').click(function () {
   position = $(this).position();
   // $('body').append('<div class="overlay"></div>');
@@ -114,6 +114,7 @@ $('a.showreranks').click(function () {
   } 
   return false;
 });
+*/
 
 function updateUserStatus()
 {
