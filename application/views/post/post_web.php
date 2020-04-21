@@ -507,7 +507,7 @@ $(document).ready(function()
 
 		<div class="post_web_tab_menu">
 			<ul class="post_web_tab_menu_list">
-				<li class="active"><a href="#divChats">Active</a></li>
+				<li class="active"><a href="#divChats">Chats</a></li>
 				<li><a href="#divSearchUser">Users</a></li>
 				<li><a href="#divSpaces">Spaces</a></li>
 				<li><a href="#divGroups">Groups</a></li>
@@ -943,7 +943,9 @@ $(document).ready(function()
 		<div class="clr"></div>
 	</div>
 	-->
-	<!--Tab section end here-->					
+	<!--Tab section end here-->		
+	
+				
 	<div class="timelineTopContent"> 
   		<!--Timeline profile start here-->
 		<!--<div id="TimelineProfile"  style=" display: <?php if($this->uri->segment(10)==''){ echo 'none';}else{ echo 'block';}?> ">-->
@@ -1219,6 +1221,14 @@ $(document).ready(function()
 		</div>
 	</div>
 		<div class="clr"></div>
+		<div class="post_web_tab_menu">
+			<ul class="post_web_tab_menu_list_2">
+				<li class="active"><a href="#divInteraction">Chats</a></li>
+				<li><a href="#divProfile">View Profile</a></li>
+			</ul>
+		</div>
+
+		<div class="clr"></div>
 		<!--Timeline editor start here-->
 		<!--Changed by Dashrath- add handCursor class in div for editor content line spacing issue-->
 		<div id="TimelineEditor" class="timeline_editor" style="display:none;">
@@ -1475,7 +1485,10 @@ $(document).ready(function(){
 		$(tabid).show();    // show tab
 		$(this).addClass("active"); //  adding active class to clicked tab
 		//$("#post_web_sidebar_loader").show();
+
   });
+
+  leftMenuHideShow();
 
 	/*$('.timelineExpDate').datepicker({
 			

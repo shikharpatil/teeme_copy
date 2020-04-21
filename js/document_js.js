@@ -469,7 +469,7 @@ if(disableEditor==0)
 								   
 		  toolbarButtons: ['insertImage', 'myButton', 'insertVideo', 'insertFile', 'bold', 'italic', 'underline', 'formatOL', 'html', 'fullscreen'],
 	 
-	 	  height: 90,
+	 	  height: 80,
 		  
 		  //imageUploadURL: baseUrl+'froala_editor/upload.php',
       imageUploadURL: baseUrl+'image_editing/imageUpload',
@@ -486,7 +486,9 @@ if(disableEditor==0)
 		  
 		  toolbarButtonsSM: ['insertImage', 'myButton', 'insertVideo', 'bold', 'italic', 'underline', 'formatOL', 'html', 'fullscreen'],
 		  
-		  imageDefaultAlign: 'left',
+      imageDefaultAlign: 'left',
+      
+      placeholderText: 'Write something...',
 		  
 		  
     	});

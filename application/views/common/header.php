@@ -121,7 +121,8 @@
 					
 					<!--For notification icon-->
 					<?php //$temp=  (is_numeric($total_notification) && $total_notification>0)?$total_notification:"0"; ?>
-					<span style="margin:3px 5px; float:left;"><a href="<?php echo base_url(); ?>post/web/<?php echo $workSpaceId;?>/<?php echo $workSpaceType; ?>/space/<?php echo $workSpaceId;?>" style="color:#fff; cursor: pointer;"><?php echo $this->lang->line('txt_Post'); ?></a>
+					<span style="margin:0 5px;"><a title="<?php echo $this->lang->line('txt_Home'); ?>" href="<?php echo base_url(); ?>dashboard/index/<?php echo $workSpaceId; ?>/type/<?php echo $workSpaceType ; ?>/1"><img title="<?php echo $this->lang->line('txt_Home'); ?>" src="<?php echo base_url();?>images/icon_home.png"  class="left-menu-icon" /></a></span>
+					<span style="margin:0 5px;"><a href="<?php echo base_url(); ?>post/web/<?php echo $workSpaceId;?>/<?php echo $workSpaceType; ?>/space/<?php echo $workSpaceId;?>" style="color:#fff; cursor: pointer;"><img title="<?php echo $this->lang->line('txt_Post'); ?>" src="<?php echo base_url();?>images/icon_chat.png"  class="left-menu-icon" /></a>
 </span>
 					<div class="notify_box">
 					<a id="notificationLink" onclick="seenAllNotification()">
