@@ -3212,7 +3212,17 @@ class Post extends CI_Controller {
 				}
 			}
 			*/
-			$arrDetails['workSpaceMembers']	= $this->profile_manager->getAllUsersByWorkPlaceId($_SESSION['workPlaceId']);			
+			if ($this->input->post('search')!='')
+			{
+				$arrDetails['search']=$this->input->post('search',true);
+		
+				$arrDetails['workSpaceMembers']	= $this->profile_manager->getAllUsersByWorkPlaceId($_SESSION['workPlaceId'], $this->input->post('search'));
+				
+			}
+			else{
+				$arrDetails['workSpaceMembers']	= $this->profile_manager->getAllUsersByWorkPlaceId($_SESSION['workPlaceId']);	
+			}
+					
 			$workSpaceMembers = array();
 			if(count($arrDetails['workSpaceMembers']) > 0)
 			{		

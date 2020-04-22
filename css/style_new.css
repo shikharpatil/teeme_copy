@@ -6569,8 +6569,9 @@ margin: 0 !important;
 {
 	/*margin:0% 31% 0% 0%;
 	float:right;
-	width:38%;*/
+	width:38%;
 	padding-top: 15px;
+	*/
 }
 #TimelineLeftContent{
 	float: right;
@@ -8864,5 +8865,26 @@ span.reserve a
 }
 .timeline_editor{
 	width:100%;
-	padding:30px 0;
+	padding:0 0 30px 0;
+}
+.main_tabs{
+	margin:0 0 10px 0;
+}
+.replyCancelButtons{
+	margin:25px 0 0 0;
+}
+#showMan{
+	display:none; 
+	max-height:150px;
+	margin:10px 0 10px 175px; 
+	overflow:auto;
+}
+#multipleRecipientArea{
+	display:none;
+	margin-top:3%; 
+	float:left; 
+}
+.sol-current-selection{
+	max-height:150px; 
+	overflow:auto;
 }

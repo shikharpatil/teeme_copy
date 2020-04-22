@@ -776,17 +776,20 @@ class Profile_manager extends CI_Model
 
 	
 
-	public function getAllUsersByWorkPlaceId($workPlaceId)
+	public function getAllUsersByWorkPlaceId($workPlaceId,$search='')
 
 	{
 
 		$userData = array();
 
 		$i = 0;
-
+		if ($search==''){
+			$query = $this->db->query('SELECT * FROM teeme_users WHERE workPlaceId='.$workPlaceId.' ORDER BY tagName ASC');
+		}
+		else {
+			$query = $this->db->query('SELECT * FROM teeme_users WHERE workPlaceId='.$workPlaceId.' AND tagName LIKE (\''.$search.'%\') ORDER BY tagName ASC');
+		}
 		
-
-		$query = $this->db->query('SELECT * FROM teeme_users WHERE workPlaceId='.$workPlaceId.' ORDER BY tagName ASC');
 
 		if($query->num_rows() > 0)
 

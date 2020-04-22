@@ -1026,12 +1026,23 @@ $(document).ready(function()
 				</div>
 				<?php
 			}
+			/*
 			else {
 				echo "Nothing found";
 			}
+			*/
 			?> 
 		</div>	
 		<div class="clr"></div>
+			<?php
+			if(count($Profiledetail)>0){
+			?>
+				<div style="float:left;width:100%;height:30px;">
+					<div style="margin-top:12px;border-bottom:1px dotted gray;margin-left:0%" ></div>
+				</div>
+				<div class="clr"></div>
+			<?php
+			} ?>
 		<!--Timeline profile end here-->
 	<div>
 		<div class="leftAddBox">
@@ -1069,9 +1080,6 @@ $(document).ready(function()
 		?>
 		<!--Plus icon end here-->
 		</div>
-		<div style="float:left;width:100%;height:30px;">
-            <div style="margin-top:12px;border-bottom:1px dotted gray;margin-left:0%" ></div>
-        </div>
 		
 			<div class="rightAddBox">
 					<div style="float:right;">
@@ -1123,27 +1131,35 @@ $(document).ready(function()
 		</div>
 	</div>
 		<div class="clr"></div>
-		<div class="post_web_tab_menu">
-			<ul class="post_web_tab_menu_list_2">
-				<li class="active"><a href="#divInteraction">Chats</a></li>
-				<li><a href="#divProfile">View Profile</a></li>
-			</ul>
-		</div>
-
-		<div class="clr"></div>
+			<?php
+			if($post_type_id!=5){
+			?>
+				<div class="post_web_tab_menu main_tabs">
+					<ul class="post_web_tab_menu_list_2">
+						<li class="active"><a href="#divInteraction">Posts</a></li>
+						<li><a href="#divProfile">View Profile</a></li>
+					</ul>
+					<div class="clr"></div>
+				</div>
+				
+			<?php 
+			} ?>
 		<!--Timeline editor start here-->
 		<!--Changed by Dashrath- add handCursor class in div for editor content line spacing issue-->
 		<div id="TimelineEditor" class="timeline_editor" style="display:none;">
 			<form name="formTimeline" id="formTimeline" method="post" action="" >
 				 <textarea name="replyDiscussion" id="replyDiscussion"></textarea>
-				 <input name="list" value="<?php echo $post_type_object_id;?>" id="list" type="hidden" />
+				 <input name="list" value="" id="list" type="hidden" />
+				 <input name="listSpace" value="" id="listSpace" type="hidden" />
+				 <input name="listSubSpace" value="" id="listSubSpace" type="hidden" />
 				 <input name="listGroup" value="" id="listGroup" type="hidden" />
 				 <!--Myspace select recepient code start-->
 				 
 				 
 				<?php
-				/*
-				if($workSpaceId=='0' && $_SESSION['public'] != 'public')
+				
+				//if($workSpaceId=='0' && $_SESSION['public'] != 'public')
+				if(1)
 				{
 						
 						?>
@@ -1207,25 +1223,26 @@ $(document).ready(function()
 						<!--Group feature end here-->
 						
 						<div style="margin-top:1%;">
-						<div style="width:40%; float:left;">
+						<div style="width:50%; float:left;">
 						
 						<?php
-				 		echo $this->lang->line('txt_Select_Recepient(s)')." : <br><br>"; 
-						echo $this->lang->line('txt_Search')." : "; 
+				 		//echo 'Send to multiple: '." : <br><br>"; 
+						//echo $this->lang->line('txt_Search')." : "; 
+						echo "Send to multiple recipients: "; 
 						?>
-						<input type="text" id="searchTags" name="searchTags" onKeyUp="showTags()" size="50"/>
+						<input type="text" id="searchTags" name="searchTags" onKeyUp="showTags()" size="50" placeholder="Search"/>
 						
-						<div id="showMan" style="height:150px;margin-left:50px; overflow:scroll; margin-bottom:30px; margin-top:20px; width:65%; ">
-
-						<?php if(count($workSpaceMembers_search_user)>0){ ?>
+						<div id="showMan">
+						
+							<?php if(count($workSpaceMembers_search_user)>0){ ?>
 			
-						<input type="checkbox" name="checkAll" id="checkAll" onclick="checkAllFunctions();" />
+							<input type="checkbox" name="checkAll" id="checkAll" onclick="checkAllFunctions();" />
 			
-						<?php echo $this->lang->line('txt_All');?><br />
+							<?php echo $this->lang->line('txt_All');?><br />
 			
-						<?php } ?>
+							<?php } ?>
 			
-						<?php
+							<?php
 			
 							$i=1;			
 			
@@ -1249,7 +1266,7 @@ $(document).ready(function()
 										else
 											$showGuestUser = 0;
 									}	
-						if($_SESSION['userId'] != $workPlaceMemberData['userId'] && $this->uri->segment(3)!=$workPlaceMemberData['userId'] && $showGuestUser){						
+							if($_SESSION['userId'] != $workPlaceMemberData['userId'] && $this->uri->segment(3)!=$workPlaceMemberData['userId'] && $showGuestUser){						
 
 										?>
 
@@ -1267,40 +1284,39 @@ $(document).ready(function()
 					
 							?>
 
-					</div>
+						</div>
 					</div>
 					<!--Select user div end-->
-					<div style="float:left; width:60%; margin-top:3%;">
-						<div class="sol-current-selection" style="max-height:250px; overflow-y:scroll;"></div>
+					<div id="multipleRecipientArea">
+						<div class="sol-current-selection"></div>
 					</div>
 					<!--Select user label end-->
 					<div class="clr"></div>
-									</div>
-									
-								<?php	
+					</div>
+					<?php	
 				}
-				*/
+				
 				 ?>
 				 <!--Myspace select recepient code end-->
 				 
-				 
-				 <div id="buttons"></div>
-				 <br />
-				 <?php
-				 if(isset($_SESSION['WSManagerAccess']) && $_SESSION['WSManagerAccess'] == 1 && $_SESSION['public'] == 'public')
-				 {
-				 ?>
-				 <input type="button" name="Replybutton" value="<?php echo $this->lang->line('txt_Post');?>" onClick="insertTimeline();" style="float:left; margin-top:-1%;" >		 
-				 <input type="button" name="Replybutton" value="<?php echo $this->lang->line('txt_Cancel');?>" onClick="showTimelineEditor();" style="float:left; margin-left:1%;margin-top:-1%;" >				
-				 <?php 
-				 }
-				 else
-				 { ?>
-				 <input type="button" name="Replybutton" value="<?php echo $this->lang->line('txt_Post');?>" onClick="insertTimeline();" style="float:left; margin-top:-1%;" >		 
-				 <input type="button" name="Replybutton" value="<?php echo $this->lang->line('txt_Cancel');?>" onClick="showTimelineEditor();" style="float:left; margin-left:1%;margin-top:-1%;" >	
-				 <?php
-				 }
-				 ?>
+				<div id="buttons"></div>
+				<div class="replyCancelButtons">
+					<?php
+					if(isset($_SESSION['WSManagerAccess']) && $_SESSION['WSManagerAccess'] == 1 && $_SESSION['public'] == 'public')
+					{
+					?>
+					<input type="button" name="Replybutton" value="<?php echo $this->lang->line('txt_Post');?>" onClick="insertTimeline();" style="float:left; margin-top:-1%;" >		 
+					<input type="button" name="Replybutton" value="<?php echo $this->lang->line('txt_Cancel');?>" onClick="showTimelineEditor();" style="float:left; margin-left:1%;margin-top:-1%;" >				
+					<?php 
+					}
+					else
+					{ ?>
+					<input type="button" name="Replybutton" value="<?php echo $this->lang->line('txt_Post');?>" onClick="insertTimeline();" style="float:left; margin-top:-1%;" >		 
+					<input type="button" name="Replybutton" value="<?php echo $this->lang->line('txt_Cancel');?>" onClick="showTimelineEditor();" style="float:left; margin-left:1%;margin-top:-1%;" >	
+					<?php
+					}
+					?>
+				 </div>
 				 <input name="reply" id="reply" type="hidden"  value="1">
 				 <input type="hidden" name="workSpaceId" value="<?php echo $workSpaceId;?>" id="workSpaceId">
           		 <input type="hidden" name="workSpaceType" value="<?php echo $workSpaceType;?>" id="workSpaceType">
@@ -1390,8 +1406,9 @@ $(document).ready(function(){
 
   });
 
-  leftMenuHideShow();
-
+  //leftMenuHideShow();
+  document.getElementById("leftSideBar").style.display = "none";
+		document.getElementById("rightSideBar").style.width = "100%";
 	/*$('.timelineExpDate').datepicker({
 			
 			minDate:0,
@@ -1704,6 +1721,9 @@ function showTimelineEditor()
 		$('#checkAll').prop("checked",false);
 		$('.clsChecks').prop("checked",false);
 		$('.sol-current-selection').html('');
+		$("#list").val("");
+		$("#showMan").hide();
+		$("#multipleRecipientArea").hide();
 	}
 	else
 	{
@@ -1889,114 +1909,69 @@ function showMySpaceTags(nodeId,originatorUserId,currentUserId)
 
 }
 
-//Search recipients of myspace
+//Search multiple recipients
 function showTags()
 
 {
 	if(document.getElementById('searchTags') !== null)
 	{
-   	var toMatch = document.getElementById('searchTags').value;
+		var toMatch = document.getElementById('searchTags').value;
+		var val = '';
+		val += '<div class="dashboard_fee_right_title">Users</div>';
+		val += '<input type="checkbox" name="checkAll" id="checkAll" onclick="checkAllFunctions();" /><?php echo $this->lang->line('txt_All');?><br />';
+		//if (toMatch!='')
+		//if(1){
+			var count = '';
+			var sectionChecked = '';
+			<?php
+			$i=1;
+			foreach($workSpaceMembers_search_user as $keyVal=>$workPlaceMemberData)
+			{
+				if ($_SESSION['all']){
+					if ($workPlaceMemberData['userGroup']>0) $showGuestUser = 1;
+					else $showGuestUser = 0;
+				}
+				else if ($workSpaceId>0) {
+					$showGuestUser = 1;
+				}
+				else {
+					if ($workPlaceMemberData['userGroup']>0) $showGuestUser = 1;
+						else $showGuestUser = 0;
+				}	
+				if($workPlaceMemberData['userId']!=$_SESSION['userId'] && $workPlaceMemberData['userId']!=$this->uri->segment(3) && $showGuestUser){?>
+					var str = '<?php echo $workPlaceMemberData['tagName']; ?>';
+					var pattern = new RegExp('\^'+toMatch, 'gi');
+					if (str.match(pattern)) {
+						val +=  '<input class="clsChecks remove<?php echo $workPlaceMemberData['userId'];?>" type="checkbox" id="recipients_<?php echo $i;?>" name="recipients[]" value="<?php echo $workPlaceMemberData['userId'];?>"  data-myval="<?php echo $workPlaceMemberData['tagName'];?>" /><?php echo $workPlaceMemberData['tagName'];?><br>';
+					}
+					<?php
+					$i++;	
+				}
+				?>
+				<?php
+			}?>
+			document.getElementById('showMan').innerHTML = val;
+			document.getElementById('showMan').style.display = 'block';
 
-	var val = '<input type="checkbox" name="checkAll" id="checkAll" onclick="checkAllFunctions();" /><?php echo $this->lang->line('txt_All');?><br />';
+			var list = $("#list").val();
+			var val1 = list.split(",");
 
-	
+			$(".clsChecks").each(function(){
 
-	//if (toMatch!='')
+				if(val1.indexOf($(this).val())!=-1){
 
-	if(1)
-
-	{
-
-		var count = '';
-
-		var sectionChecked = '';
-
-		<?php
-
-		$i=1;
-
-		foreach($workSpaceMembers_search_user as $keyVal=>$workPlaceMemberData)
-		{
-									if ($_SESSION['all'])
-									{
-										if ($workPlaceMemberData['userGroup']>0)
-											$showGuestUser = 1;
-										else
-											$showGuestUser = 0;
-									}
-									else if ($workSpaceId>0)
-									{
-										$showGuestUser = 1;
-									}
-									else
-									{
-										if ($workPlaceMemberData['userGroup']>0)
-											$showGuestUser = 1;
-										else
-											$showGuestUser = 0;
-									}	
-			if($workPlaceMemberData['userId']!=$_SESSION['userId'] && $workPlaceMemberData['userId']!=$this->uri->segment(3) && $showGuestUser){?>
-
-				var str = '<?php echo $workPlaceMemberData['tagName']; ?>';
-
-				
-
-				var pattern = new RegExp('\^'+toMatch, 'gi');
-
-				
-
-				if (str.match(pattern))
-
-				{
-
-					val +=  '<input class="clsChecks remove<?php echo $workPlaceMemberData['userId'];?>" type="checkbox" id="recipients_<?php echo $i;?>" name="recipients[]" value="<?php echo $workPlaceMemberData['userId'];?>"  data-myval="<?php echo $workPlaceMemberData['tagName'];?>" /><?php echo $workPlaceMemberData['tagName'];?><br>';
+					$(this).attr("checked",true);
 
 				}
 
-				<?php
-
-				$i++;	
-
-			}
-
-		
-
-			?>
-			<?php
-
-		}?>
-
-		document.getElementById('showMan').innerHTML = val;
-
-		document.getElementById('showMan').style.display = 'block';
-
-		var list = $("#list").val();
-
-		var val1 = list.split(",");
-
-		
-
-		$(".clsChecks").each(function(){
-
-			 if(val1.indexOf($(this).val())!=-1){
-
-				$(this).attr("checked",true);
-
-			 }
-
-		});
-
-	}
-
-	else
-
-	{
-
-		document.getElementById('showMan').style.display = 'none';
-
-	}
-
-
+			});
+		//}
+		/*
+		else
+		{
+			document.getElementById('showMan').style.display = 'none';
+		}
+		*/
 	}
 }
 
@@ -2013,8 +1988,11 @@ function showSearchUser()
 			data: 'search='+toMatch,
 			dataType: 'html',
 			success:  function(data){
-			 	//alert(data);
-				$('#divSearchUser').html(data);
+				//$('#divSearchUser').html(data);
+				var res = data.split("|@#$%^&|");
+				$("#post_web_sidebar_loader").hide();
+				//$('#divChats').html(res[1]);		
+				$('#divSearchUser').html(res[0]);
 			}
 	});
 }
@@ -2162,6 +2140,12 @@ function postCommentUpdate()
 	else if(postType=='subspace'){
 		postTypeId = 3;
 	}
+	else if(postType=='group'){
+		postTypeId = 4;
+	}
+	else if(postType=='home'){
+		postTypeId = 5;
+	}
 	var postTypeObjectId = '<?php echo $this->uri->segment(6)?>';
 	
 	$.ajax({
@@ -2203,7 +2187,12 @@ function findNewPostComment()
 	else if(postType=='subspace'){
 		postTypeId = 3;
 	}
-	
+	else if(postType=='group'){
+		postTypeId = 4;
+	}
+	else if(postType=='home'){
+		postTypeId = 5;
+	}	
 	//var userPostSearch = '<?php echo $this->uri->segment(10)?>';
 	var postTypeObjectId = '<?php echo $this->uri->segment(6)?>';
 	//console.log('Post type id= '+postTypeId);
@@ -2473,11 +2462,10 @@ function checkAllFunctions(){
 	}
 	
 		
-//On single checkbox click myspace start
-
-//$('.clsChecks').live("click",function()
-$(document).on('click', '.clsChecks', function(){
-		//alert('dfsd');
+	//On single checkbox click start
+	//$('.clsChecks').live("click",function()
+	$(document).on('click', '.clsChecks', function(){
+		$("#multipleRecipientArea").show();
 		val = $("#list").val();
 
 		val1 = val.split(",");	
@@ -2514,36 +2502,7 @@ $(document).on('click', '.clsChecks', function(){
 
 		}
 
-	});
-	
-function openCommentEditor(nodeId)
-{
-	//alert ('here'+nodeId);
-	//Added by Dashrath- for add comment image -->
-	$("#commentButtonPost"+nodeId).css("display", "none");
-	$("#CommentTextBox"+nodeId).css("display", "block");
-
-	chnage_textarea_to_editor('replyTimelineComment'+nodeId,'comment');
-	//alert (nodeId);
-	$('.CommentTextBox'+nodeId+' .fr-element').focus();
-}	
-
-function cancelPostEditor(nodeId)
-{
-	//Added by Dashrath- for add comment image -->
-	$("#commentButtonPost"+nodeId).css("display", "block");
-	$("#CommentTextBox"+nodeId).css("display", "none");
-
-	//alert('cancel');
-	$('.CommentTextBox'+nodeId+' .fr-element').html("");
-	$('#replyTimelineComment'+nodeId).froalaEditor('destroy');
-}
-
-//Showing user label on check checkbox
-//$('.clsChecks').live("click",function()
-$(document).on('click', '.clsChecks', function(){
-		//alert($(this).attr('value'));
-		//alert($(this).data('myval'));
+		//Showing user label on check checkbox
 		var data = $(this).data('myval');
 		var value = $(this).val();
 		if ($(this).prop('checked')) 
@@ -2554,8 +2513,32 @@ $(document).on('click', '.clsChecks', function(){
 		{
 		   removeSelectionDisplayItem(value);
         }
+
 	});
 	
+	function openCommentEditor(nodeId)
+	{
+		//alert ('here'+nodeId);
+		//Added by Dashrath- for add comment image -->
+		$("#commentButtonPost"+nodeId).css("display", "none");
+		$("#CommentTextBox"+nodeId).css("display", "block");
+
+		chnage_textarea_to_editor('replyTimelineComment'+nodeId,'comment');
+		//alert (nodeId);
+		$('.CommentTextBox'+nodeId+' .fr-element').focus();
+	}	
+
+	function cancelPostEditor(nodeId)
+	{
+		//Added by Dashrath- for add comment image -->
+		$("#commentButtonPost"+nodeId).css("display", "block");
+		$("#CommentTextBox"+nodeId).css("display", "none");
+
+		//alert('cancel');
+		$('.CommentTextBox'+nodeId+' .fr-element').html("");
+		$('#replyTimelineComment'+nodeId).froalaEditor('destroy');
+	}
+
 	
 	function addSelectionDisplayItem(data,value,changedItem)
 	{
