@@ -7340,7 +7340,9 @@ input:checked + .slider:before {
 #profileForm .profileLeftLabel {
     width: 12%;
 }
-
+#TimelineProfile{
+	display:flex;
+}
 #TimelineProfile .profileLeftLabel {
 	font-size: 1.2em;
 	font-weight:bold;
@@ -8763,9 +8765,9 @@ span.reserve a
 }
 .post_web_sidebar_col2{
 	flex-grow: 1;
-    flex-basis: auto;
-    min-width: 0;
-    display: flex;
+    flex-basis: auto; 
+	display: flex;
+	min-width: 0;
     flex-direction: column;
 	justify-content: center;
 	padding-right:15px;
@@ -8790,20 +8792,25 @@ span.reserve a
 .postUserDetailsBox{
 	width:90%;
 	float: left;
+	flex-grow: 1;
+    flex-basis: auto; 
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
 }
 .timelineProfImg{
-	width:60px;
+	width:80px;
 	float: left;
 }
-.post_web_tab_menu{
+.post_web_tab_menu, .post_web_tab_menu_2{
 	z-index: 1;
 }
-.post_web_tab_menu ul{
+.post_web_tab_menu ul, .post_web_tab_menu_2 ul{
 	list-style: none;
 	margin: 0px;
 	padding: 0px;
 }
-.post_web_tab_menu li{
+.post_web_tab_menu li, .post_web_tab_menu_2 li{
 	float: left;
 	margin: 0 2px 0 0;
 	padding: 7px;
@@ -8815,26 +8822,26 @@ span.reserve a
 	border-left: 1px solid #cdd1d7;
 	border-right: 1px solid #cdd1d7;
 }
-.post_web_tab_menu li.active{
+.post_web_tab_menu li.active, .post_web_tab_menu_2 li.active{
 	background-color: #ececec;
 	color: #000;]
 }
-.post_web_tab_menu li:hover{
+.post_web_tab_menu li:hover, .post_web_tab_menu_2 li:hover{
 	cursor: pointer;
 	background-color: #dddddd;
 }
-.post_web_tab_menu li a{
+.post_web_tab_menu li a, .post_web_tab_menu_2 li a{
 	color: #463f3f;
 	text-decoration: none;
 	font-size:.9em;
 }
 
-.post_web_tab_menu .active a{
+.post_web_tab_menu .active a, .post_web_tab_menu_2 .active a{
 	color: #000;
 	font-weight: bold;
 }
 
-.post_web_tab_menu li a:hover {
+.post_web_tab_menu li a:hover, .post_web_tab_menu_2 li a:hover {
 	display: block;
 }
 .post_web_sidebar_username_data{
@@ -8868,7 +8875,7 @@ span.reserve a
 	padding:0 0 30px 0;
 }
 .main_tabs{
-	margin:0 0 10px 0;
+	margin:10px 0;
 }
 .replyCancelButtons{
 	margin:25px 0 0 0;
@@ -8888,3 +8895,35 @@ span.reserve a
 	max-height:150px; 
 	overflow:auto;
 }
+
+.divProfileContainer{
+	display:flex;
+	flex-direction: column;
+	align-items: center;	
+}
+.divProfileRow {
+	display: flex;
+	flex-direction: row;
+	flex-wrap: wrap;
+	width: 100%;
+	margin:5px 0;
+	padding:5px;
+}
+.divProfileColumn1 {
+	display: flex;
+	flex-direction: column;
+	/*
+	flex-basis: 100%;
+	flex: 1;
+	*/
+	flex:15%;
+  }
+  .divProfileColumn2 {
+	display: flex;
+	flex-direction: column;
+	/*
+	flex-basis: 100%;
+	flex: 1;
+	*/
+	flex:85%;
+  }

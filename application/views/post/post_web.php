@@ -514,9 +514,10 @@ $(document).ready(function()
 				<li><a href="#divSpaces">Spaces</a></li>
 				<!--<li><a href="#divGroups">Groups</a></li>-->
 			</ul>
+			<div class="clr"></div>
 		</div>
 
-		<div class="clr"></div>
+		
 		<div id="post_web_sidebar_loader" class="loader" style="display:none;"><span><img src='<?php echo base_url();?>images/ajax-loader-add.gif'></span></div>
 		<div id="divChats" name="divChats" class="post_web_tab_menu_tab" style="display:block;">
 			<?php //echo "<pre>"; print_r($userActivePosts);?>
@@ -955,35 +956,26 @@ $(document).ready(function()
 			<?php
 			if($post_type_id==1 && count($Profiledetail)>0){
 			?>
-			<div>
-				<div class="timelineProfImg">
-					
-							<?php
-								if ($Profiledetail['photo']!='noimage.jpg')
-								{
-							?>
-									<img class="rounded_profile_pic" alt="image" src="<?php echo base_url();?>workplaces/<?php echo $workPlaceDetails['companyName'];?>/user_profile_pics/<?php echo $Profiledetail['photo'];?>" border="0"  width="45" height="45" id="imgName"> 
-                          	<?php
-								}
-								else
-								{
-							?>
-									<img class="rounded_profile_pic" alt="image" src="<?php echo base_url();?>images/<?php echo $Profiledetail['photo'];?>" border="0"  width="30" height="30" id="imgName"> 
-							<?php
-								}
-							?>
-					
-				</div>
-				<div class="postUserDetailsBox">
-					<span class="profileLeftLabel"><?php if($Profiledetail['firstName']!='' && $Profiledetail['lastName']!='') { ?><?php echo $Profiledetail['firstName'].' '.$Profiledetail['lastName']; ?><?php } ?></span>
-					<div>
-						<span><?php if($Profiledetail['editNickName']!='') { ?><?php echo $Profiledetail['editNickName'];?><?php } ?></span>												
-						<span><?php if($Profiledetail['editUserTagName']!='') { ?><?php echo $Profiledetail['editUserTagName'];?><?php } ?></span>
-						<span><?php if($Profiledetail['userName']!='') { ?><?php echo $Profiledetail['userName'];?><?php } ?></span>
-						<span><?php if($Profiledetail['role']!='') { ?><?php echo $Profiledetail['role'];?><?php } ?></span>
-						<span><?php if($Profiledetail['mobile']!='') { ?><?php echo $Profiledetail['mobile'];?><?php } ?></span>
-						<span><?php if($Profiledetail['statusUpdate']!='') { ?> <?php echo $Profiledetail['statusUpdate'];?><?php } ?></span>
-					</div>
+			<div class="timelineProfImg">
+				<?php
+				if ($Profiledetail['photo']!='noimage.jpg')
+				{
+				?>
+					<img class="rounded_profile_pic" alt="image" src="<?php echo base_url();?>workplaces/<?php echo $workPlaceDetails['companyName'];?>/user_profile_pics/<?php echo $Profiledetail['photo'];?>" width="65" height="65" id="imgName"> 
+                <?php
+				}
+				else
+				{
+				?>
+					<img class="rounded_profile_pic" alt="image" src="<?php echo base_url();?>images/<?php echo $Profiledetail['photo'];?>" width="30" height="30" id="imgName"> 
+				<?php
+				}
+				?>					
+			</div>
+			<div class="postUserDetailsBox">
+				<div class="profileLeftLabel"><span><?php if($Profiledetail['firstName']!='' && $Profiledetail['lastName']!='') { ?><?php echo $Profiledetail['firstName'].' '.$Profiledetail['lastName']; ?><?php } ?></span></div>
+				<div>											
+					<span><?php if($Profiledetail['editUserTagName']!='') { ?><?php echo $Profiledetail['editUserTagName'];?><?php } ?></span>
 				</div>
 			</div>
 			
@@ -1032,9 +1024,26 @@ $(document).ready(function()
 			}
 			*/
 			?> 
+			<div class="clr"></div>
 		</div>	
-		<div class="clr"></div>
+		
 			<?php
+			if($post_type_id!=5){
+			?>
+				<div class="post_web_tab_menu_2 main_tabs">
+					<ul class="post_web_tab_menu_list_2">
+						<li class="active"><a href="#TimelinePost">Timeline</a></li>
+						<li><a href="#divProfile">Profile</a></li>
+						<li><a href="#divPhotos">Photos</a></li>
+						<li><a href="#divVideos">Videos</a></li>
+					</ul>
+					<div class="clr"></div>
+				</div>
+				
+			<?php 
+			} ?>
+			<?php
+			/*
 			if(count($Profiledetail)>0){
 			?>
 				<div style="float:left;width:100%;height:30px;">
@@ -1042,7 +1051,7 @@ $(document).ready(function()
 				</div>
 				<div class="clr"></div>
 			<?php
-			} ?>
+			} */?>
 		<!--Timeline profile end here-->
 	<div>
 		<div class="leftAddBox">
@@ -1130,20 +1139,35 @@ $(document).ready(function()
 			</div>
 		</div>
 	</div>
+	<div class="clr"></div>
+		</div>
 		<div class="clr"></div>
-			<?php
-			if($post_type_id!=5){
-			?>
-				<div class="post_web_tab_menu main_tabs">
-					<ul class="post_web_tab_menu_list_2">
-						<li class="active"><a href="#divInteraction">Posts</a></li>
-						<li><a href="#divProfile">View Profile</a></li>
-					</ul>
-					<div class="clr"></div>
-				</div>
-				
-			<?php 
-			} ?>
+		<div id="divProfile" class="post_web_tab_menu_tab_2" style="display:none;">
+			<div class="divProfileContainer">
+				<div class="divProfileRow"><span class="divProfileColumn1"><b>Name</b></span><span class="divProfileColumn2"><?php if($Profiledetail['firstName']!='' && $Profiledetail['lastName']!='') { ?><?php echo $Profiledetail['firstName'].' '.$Profiledetail['lastName']; ?><?php } ?></span></div>														
+				<div class="divProfileRow"><span class="divProfileColumn1"><b>User tag</b></span><span class="divProfileColumn2"><?php if($Profiledetail['editUserTagName']!='') { ?><?php echo $Profiledetail['editUserTagName'];?><?php } ?></span></div>
+				<div class="divProfileRow"><span class="divProfileColumn1"><b>Email</b></span><span class="divProfileColumn2"><?php if($Profiledetail['userName']!='') { ?><?php echo $Profiledetail['userName'];?><?php } ?></span></div>				
+				<div class="divProfileRow"><span class="divProfileColumn1"><b>Registration date</b></span><span class="divProfileColumn2"><?php if($Profiledetail['registeredDate']!='') { ?><?php echo $this->time_manager->getUserTimeFromGMTTime($Profiledetail['registeredDate'],$this->config->item('date_format'));?><?php } ?></span></div>
+				<div class="divProfileRow"><span class="divProfileColumn1"><b>Last logged in</b></span><span class="divProfileColumn2"><?php if($Profiledetail['lastLoginTime']!='') { ?><?php echo $this->time_manager->getUserTimeFromGMTTime($Profiledetail['lastLoginTime'],$this->config->item('date_format'));?><?php } ?></span></div>
+				<div class="divProfileRow"><span class="divProfileColumn1"><b>Status</b></span><span class="divProfileColumn2"><?php if($Profiledetail['statusUpdate']!='') { ?> <?php echo $Profiledetail['statusUpdate'];?><?php } ?></span></div>
+				<div class="divProfileRow"><span class="divProfileColumn1"><b>Nick name</b></span><span class="divProfileColumn2"><?php if($Profiledetail['editNickName']!='') { ?><?php echo $Profiledetail['editNickName'];?><?php } ?></span></div>				
+				<div class="divProfileRow"><span class="divProfileColumn1"><b>Role</b></span><span class="divProfileColumn2"><?php if($Profiledetail['role']!='') { ?><?php echo $Profiledetail['role'];?><?php } ?></span></div>	
+				<div class="divProfileRow"><span class="divProfileColumn1"><b>Mobile no.</b></span><span class="divProfileColumn2"><?php if($Profiledetail['mobile']!='') { ?><?php echo $Profiledetail['mobile'];?><?php } ?></span></div>	
+				<div class="divProfileRow"><span class="divProfileColumn1"><b>Address line 1</b></span><span class="divProfileColumn2"><?php if($Profiledetail['address1']!='') { ?><?php echo $Profiledetail['address1'];?><?php } ?></span></div>
+				<div class="divProfileRow"><span class="divProfileColumn1"><b>Address line 2</b></span><span class="divProfileColumn2"><?php if($Profiledetail['address2']!='') { ?><?php echo $Profiledetail['address2'];?><?php } ?></span></div>
+				<div class="divProfileRow"><span class="divProfileColumn1"><b>City</b></span><span class="divProfileColumn2"><?php if($Profiledetail['city']!='') { ?><?php echo $Profiledetail['city'];?><?php } ?></span></div>	
+				<div class="divProfileRow"><span class="divProfileColumn1"><b>State</b></span><span class="divProfileColumn2"><?php if($Profiledetail['state']!='') { ?><?php echo $Profiledetail['state'];?><?php } ?></span></div>	
+				<div class="divProfileRow"><span class="divProfileColumn1"><b>Country</b></span><span class="divProfileColumn2"><?php if($Profiledetail['country']!='') { ?><?php echo $Profiledetail['country'];?><?php } ?></span></div>	
+				<div class="divProfileRow"><span class="divProfileColumn1"><b>Zip</b></span><span class="divProfileColumn2"><?php if($Profiledetail['zip']!='') { ?><?php echo $Profiledetail['zip'];?><?php } ?></span></div>
+				<div class="divProfileRow"><span class="divProfileColumn1"><b>Other</b></span><span class="divProfileColumn2"><?php if($Profiledetail['other']!='') { ?><?php echo $Profiledetail['other'];?><?php } ?></span></div>
+				<div class="divProfileRow"><span class="divProfileColumn1"><b>Skills</b></span><span class="divProfileColumn2"><?php if($Profiledetail['skills']!='') { ?><?php echo $Profiledetail['skills'];?><?php } ?></span></div>
+				<div class="divProfileRow"><span class="divProfileColumn1"><b>Department</b></span><span class="divProfileColumn2"><?php if($Profiledetail['department']!='') { ?><?php echo $Profiledetail['department'];?><?php } ?></span></div>
+			</div>	
+		</div>
+		<div id="divPhotos" class="post_web_tab_menu_tab_2" style="display:none;">Photos</div>
+		<div id="divVideos" class="post_web_tab_menu_tab_2" style="display:none;" >Videos</div>
+		<div id="TimelinePost" class="post_web_tab_menu_tab_2">
+			
 		<!--Timeline editor start here-->
 		<!--Changed by Dashrath- add handCursor class in div for editor content line spacing issue-->
 		<div id="TimelineEditor" class="timeline_editor" style="display:none;">
@@ -1329,12 +1353,9 @@ $(document).ready(function()
 				 </div><?php */?>
 			 </form>
 		</div>
-		<div class="clr"></div>
-		</div>
-		<!--Timeline editor end here-->
+	
 		<div class="clr"></div>	
-		
-		<div id="TimelinePost">
+		<!--Timeline editor end here-->
 			<!--New post and comment message start-->		
 			<div id="newPostCommentMessage" style="display:none;">
 				<a href="" class="newPostMsg"><span><?php echo $this->lang->line('txt_new_post_found'); ?></span></a>
@@ -1354,6 +1375,7 @@ $(document).ready(function()
 				$this->load->view('post/get_timeline_web'); 
 			}
 			?>
+
 		</div>
 		<!--Timeline post end here-->
 		</div>
@@ -1389,12 +1411,10 @@ $(document).ready(function(){
   	});
 
   	$(".post_web_tab_menu_list li").click(function(){
-		//console.log (this);
 		var tabid = $(this).find("a").attr("href");
 		$(".post_web_tab_menu_list li,.post_web_tab_menu div.post_web_tab_menu_tab").removeClass("active");   // removing active class from tab
 
 		$(".post_web_tab_menu_tab").hide();   // hiding open tab
-		//alert (tabid);
 			if(tabid=='#divChats')
 			{
 				$("#post_web_sidebar_loader").show();
@@ -1403,7 +1423,21 @@ $(document).ready(function(){
 		$(tabid).show(); // show tab
 		$(this).addClass("active"); //  adding active class to clicked tab
 		//$("#post_web_sidebar_loader").show();
+  });
 
+  $(".post_web_tab_menu_list_2 li a").click(function(e){
+     e.preventDefault();
+  	});
+
+  	$(".post_web_tab_menu_list_2 li").click(function(){
+		//console.log (this);
+		var tabid = $(this).find("a").attr("href");
+		$(".post_web_tab_menu_list_2 li,.post_web_tab_menu_2 div.post_web_tab_menu_tab_2").removeClass("active");   // removing active class from tab
+
+		$(".post_web_tab_menu_tab_2").hide();   // hiding open tab
+		$(tabid).show(); // show tab
+		$(this).addClass("active"); //  adding active class to clicked tab
+		//$("#post_web_sidebar_loader").show();
   });
 
   //leftMenuHideShow();
