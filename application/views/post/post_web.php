@@ -496,7 +496,7 @@ $(document).ready(function()
 			if ($showSearchBox)	
 			{
 			?>
-				<input type="text" name="search" id="search" value="" placeholder="Search"  onKeyUp="showSearchUser()" onclick="removeSearh()" onblur="writeSearh()" style="width:95%"/>
+				<input type="text" name="search" id="search" value="" placeholder="Search users..."  onKeyUp="showSearchUser()" onclick="removeSearh()" onblur="writeSearh()" style="width:95%"/>
 			<?php
 			}
 			?>
@@ -512,7 +512,7 @@ $(document).ready(function()
 				<li class="active"><a href="#divChats">Live feed</a></li>
 				<li><a href="#divSearchUser">Users</a></li>
 				<li><a href="#divSpaces">Spaces</a></li>
-				<li><a href="#divGroups">Groups</a></li>
+				<!--<li><a href="#divGroups">Groups</a></li>-->
 			</ul>
 		</div>
 
@@ -1389,7 +1389,7 @@ $(document).ready(function(){
   	});
 
   	$(".post_web_tab_menu_list li").click(function(){
-		
+		//console.log (this);
 		var tabid = $(this).find("a").attr("href");
 		$(".post_web_tab_menu_list li,.post_web_tab_menu div.post_web_tab_menu_tab").removeClass("active");   // removing active class from tab
 
@@ -1400,7 +1400,7 @@ $(document).ready(function(){
 				$("#post_web_sidebar_loader").show();
 				getPostUserStatus();
 			}
-		$(tabid).show();    // show tab
+		$(tabid).show(); // show tab
 		$(this).addClass("active"); //  adding active class to clicked tab
 		//$("#post_web_sidebar_loader").show();
 
@@ -1420,6 +1420,8 @@ $(document).ready(function(){
 	});*/
 
 });
+
+
 //Change textarea as editor
 //chnage_textarea_to_editor('replyDiscussion','simple');
 showTimelineEditor();
@@ -1980,20 +1982,26 @@ function showTags()
 
 function showSearchUser()
 {
+
 	var toMatch = document.getElementById('search').value;
-	
+
+	$(".post_web_tab_menu_list li,.post_web_tab_menu div.post_web_tab_menu_tab").removeClass("active");   // removing active class from current active tab
+	$(".post_web_tab_menu_tab").hide();   // hiding open tabs
+	$("#divSearchUser").show(); // show tab
+	$("li:has(a[href='#divSearchUser']):first()").addClass("active"); // add active class to users tab
+
 	$.ajax({
-			type: "POST",
-			url: baseUrl+"post/getPostUserStatusWeb/"+workSpaceId+"/type/"+workSpaceType+"/search",
-			data: 'search='+toMatch,
-			dataType: 'html',
-			success:  function(data){
-				//$('#divSearchUser').html(data);
-				var res = data.split("|@#$%^&|");
-				$("#post_web_sidebar_loader").hide();
-				//$('#divChats').html(res[1]);		
-				$('#divSearchUser').html(res[0]);
-			}
+		type: "POST",
+		url: baseUrl+"post/getPostUserStatusWeb/"+workSpaceId+"/type/"+workSpaceType+"/search",
+		data: 'search='+toMatch,
+		dataType: 'html',
+		success:  function(data){
+			//$('#divSearchUser').html(data);
+			var res = data.split("|@#$%^&|");
+			$("#post_web_sidebar_loader").hide();
+			//$('#divChats').html(res[1]);		
+			$('#divSearchUser').html(res[0]);
+		}
 	});
 }
 	
