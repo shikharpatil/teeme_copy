@@ -2910,10 +2910,12 @@ class Post extends CI_Controller {
 						$arrDetails['Profiledetail'] = $this->identity_db_manager->getWorkSpaceDetailsByWorkSpaceId($post_type_object_id);
 					}					
 					$arrDetails['arrTimeline']	= $this->timeline_db_manager->get_timeline_web($treeId,$arrDetails['workSpaceId'],$arrDetails['workSpaceType'],0,$_SESSION['userId'],$post_type_id,$post_type_object_id);
+					$arrDetails['spaceProfileMembers'] = $this->identity_db_manager->getWorkSpaceMembersByWorkSpaceId($post_type_object_id);
 				}
 				else if($post_type_id==3) {
 					$arrDetails['Profiledetail'] = $this->identity_db_manager->getSubWorkSpaceDetailsBySubWorkSpaceId($post_type_object_id);
 					$arrDetails['arrTimeline']	= $this->timeline_db_manager->get_timeline_web($treeId,$arrDetails['workSpaceId'],$arrDetails['workSpaceType'],0,$_SESSION['userId'],$post_type_id,$post_type_object_id);
+					$arrDetails['subSpaceProfileMembers'] = $this->identity_db_manager->getSubWorkSpaceMembersBySubWorkSpaceId($post_type_object_id);
 				}
 				else if($post_type_id==4) {
 					$arrDetails['Profiledetail']=$this->identity_db_manager->getGroupDetailsByGroupId($post_type_object_id);

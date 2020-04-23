@@ -2247,12 +2247,15 @@ teeme_leaf a,teeme_node b where a.id=b.leafId and b.treeIds='".$inserted_tree_id
 					$subWorkSpaceMembersData[$i]['lastName']				= $row->lastName;	
 					$subWorkSpaceMembersData[$i]['registeredDate']			= $row->registeredDate;		
 					$subWorkSpaceMembersData[$i]['lastLoginTime']			= $row->lastLoginTime;	
+					$subWorkSpaceMembersData[$i]['photo'] 					= $row->photo;
 					if($row->nickName!='')
 					{
-						$subWorkSpaceMembersData[$i]['tagName']	= $row->nickName;	
+						$subWorkSpaceMembersData[$i]['userTagName']	= $row->nickName;	
+						$subWorkSpaceMembersData[$i]['tagName']		= $row->nickName;	
 					}
 					else
 					{
+						$subWorkSpaceMembersData[$i]['userTagName']	= $row->tagName;
 						$subWorkSpaceMembersData[$i]['tagName']	= $row->tagName;	
 					}					
 					$i++;													

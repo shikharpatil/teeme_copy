@@ -7343,7 +7343,7 @@ input:checked + .slider:before {
 #TimelineProfile{
 	display:flex;
 }
-#TimelineProfile .profileLeftLabel {
+.profileLeftLabel {
 	font-size: 1.2em;
 	font-weight:bold;
 }
@@ -8753,6 +8753,7 @@ span.reserve a
 	word-wrap: break-word !important;
 }
 .post_web_sidebar_row{
+	width: 100%;
 	height: 72px;
 	background-color: white !important;
 	border-top: solid 1px #DDDFE2 !important;
