@@ -967,7 +967,7 @@ $(document).ready(function()
 				else
 				{
 				?>
-					<img class="rounded_profile_pic" alt="image" src="<?php echo base_url();?>images/<?php echo $Profiledetail['photo'];?>" width="30" height="30" id="imgName"> 
+					<img class="rounded_profile_pic" alt="image" src="<?php echo base_url();?>images/<?php echo $Profiledetail['photo'];?>" width="65" height="65" id="imgName"> 
 				<?php
 				}
 				?>					
@@ -978,43 +978,44 @@ $(document).ready(function()
 					<span><?php if($Profiledetail['editUserTagName']!='') { ?><?php echo $Profiledetail['editUserTagName'];?><?php } ?></span>
 				</div>
 			</div>
-			
+			<!--
 			<div class="" style="float:right; padding-top:0px; margin-right: 60px;">
 				<?php /*?>Expiry Date: <input name="timeline_exp_date" type="text"  id="timeline_exp_date" class="timelineExpDate" value="" readonly><?php */?>
 				<?php /*?><div><img id="updateImage" src="<?php echo base_url()?>images/new-version.png" title="<?php echo $this->lang->line('txt_Update');?>" border="0" onclick='window.location.reload(true);' style="cursor:pointer; padding-top:0px;"></div><?php */?>
 			</div>
+			-->
 			<?php 
 			} // end if a user profile
 			// if a space or subspace profile
 			else if ($post_type_id==2 && count($Profiledetail)>0){				
-				?>
+				?>				
+				<div class="timelineProfImg">
+					<img class="rounded_profile_pic" id="imgName" alt="image" src="<?php echo base_url();?>images/noimage.jpg" width="65" height="65">
+				</div>
 				<div class="postUserDetailsBox">
-					<div class="timelineProfImg">
-						<img class="rounded_profile_pic" id="imgName" alt="image" src="<?php echo base_url();?>images/noimage.jpg" border="0"  width="45" height="45">
+					<span class="profileLeftLabel"><?php echo $Profiledetail['workSpaceName'] .' (space)'; ?></span>
+					<!--
+					<div>
+						<span>Created on:<?php echo $this->time_manager->getUserTimeFromGMTTime($Profiledetail['workSpaceCreatedDate'],$this->config->item('date_format')); ?></span>
+						<span>Created by:<?php echo $Profiledetail['workSpaceCreatorUsername']; ?></span>
 					</div>
-					<div class="postUserDetailsBox">
-						<span class="profileLeftLabel"><?php echo $Profiledetail['workSpaceName'] .' (space)'; ?></span>
-						<div>
-							<span>Created on:<?php echo $this->time_manager->getUserTimeFromGMTTime($Profiledetail['workSpaceCreatedDate'],$this->config->item('date_format')); ?></span>
-							<span>Created by:<?php echo $Profiledetail['workSpaceCreatorUsername']; ?></span>
-						</div>
-					</div>
+					-->
 				</div>
 				<?php
 			}
 			else if ($post_type_id==3 && count($Profiledetail)>0){				
 				?>
+				<div class="timelineProfImg">
+					<img class="rounded_profile_pic" id="imgName" alt="image" src="<?php echo base_url();?>images/noimage.jpg" border="0"  width="45" height="45">
+				</div>
 				<div class="postUserDetailsBox">
-					<div class="timelineProfImg">
-						<img class="rounded_profile_pic" id="imgName" alt="image" src="<?php echo base_url();?>images/noimage.jpg" border="0"  width="45" height="45">
+					<span class="profileLeftLabel"><?php echo $Profiledetail['subWorkSpaceName'] .' (sub-space)'; ?></span>
+					<!--
+					<div>
+						<span>Created on:<?php echo $this->time_manager->getUserTimeFromGMTTime($Profiledetail['subWorkSpaceCreatedDate'],$this->config->item('date_format')); ?></span>
+						<span>Created by:<?php echo $Profiledetail['subWorkSpaceCreatorUsername']; ?></span>
 					</div>
-					<div class="postUserDetailsBox">
-						<span class="profileLeftLabel"><?php echo $Profiledetail['subWorkSpaceName'] .' (sub-space)'; ?></span>
-						<div>
-							<span>Created on:<?php echo $this->time_manager->getUserTimeFromGMTTime($Profiledetail['subWorkSpaceCreatedDate'],$this->config->item('date_format')); ?></span>
-							<span>Created by:<?php echo $Profiledetail['subWorkSpaceCreatorUsername']; ?></span>
-						</div>
-					</div>
+					-->
 				</div>
 				<?php
 			}
@@ -1144,6 +1145,7 @@ $(document).ready(function()
 		<div class="clr"></div>
 		<div id="divProfile" class="post_web_tab_menu_tab_2" style="display:none;">
 			<div class="divProfileContainer">
+				<?php if ($post_type_id==1) {?>
 				<div class="divProfileRow"><span class="divProfileColumn1"><b>Name</b></span><span class="divProfileColumn2"><?php if($Profiledetail['firstName']!='' && $Profiledetail['lastName']!='') { ?><?php echo $Profiledetail['firstName'].' '.$Profiledetail['lastName']; ?><?php } ?></span></div>														
 				<div class="divProfileRow"><span class="divProfileColumn1"><b>User tag</b></span><span class="divProfileColumn2"><?php if($Profiledetail['editUserTagName']!='') { ?><?php echo $Profiledetail['editUserTagName'];?><?php } ?></span></div>
 				<div class="divProfileRow"><span class="divProfileColumn1"><b>Email</b></span><span class="divProfileColumn2"><?php if($Profiledetail['userName']!='') { ?><?php echo $Profiledetail['userName'];?><?php } ?></span></div>				
@@ -1162,6 +1164,17 @@ $(document).ready(function()
 				<div class="divProfileRow"><span class="divProfileColumn1"><b>Other</b></span><span class="divProfileColumn2"><?php if($Profiledetail['other']!='') { ?><?php echo $Profiledetail['other'];?><?php } ?></span></div>
 				<div class="divProfileRow"><span class="divProfileColumn1"><b>Skills</b></span><span class="divProfileColumn2"><?php if($Profiledetail['skills']!='') { ?><?php echo $Profiledetail['skills'];?><?php } ?></span></div>
 				<div class="divProfileRow"><span class="divProfileColumn1"><b>Department</b></span><span class="divProfileColumn2"><?php if($Profiledetail['department']!='') { ?><?php echo $Profiledetail['department'];?><?php } ?></span></div>
+				<?php } else if ($post_type_id==2) {?>
+					<div class="divProfileRow"><span class="divProfileColumn1"><b>Space name</b></span><span class="divProfileColumn2"><?php if($Profiledetail['workSpaceName']!='') { ?><?php echo $Profiledetail['workSpaceName']; ?><?php } ?></span></div>														
+					<div class="divProfileRow"><span class="divProfileColumn1"><b>Created on</b></span><span class="divProfileColumn2"><?php if($Profiledetail['workSpaceCreatedDate']!='') { ?><?php echo $this->time_manager->getUserTimeFromGMTTime($Profiledetail['workSpaceCreatedDate'],$this->config->item('date_format'));?><?php } ?></span></div>
+					<div class="divProfileRow"><span class="divProfileColumn1"><b>Created by</b></span><span class="divProfileColumn2"><?php if($Profiledetail['workSpaceCreatorUsername']!='') { ?><?php echo $Profiledetail['workSpaceCreatorUsername']; ?><?php } ?></span></div>														
+					<?php //echo "<pre>";print_r($Profiledetail); ?>
+				<?php } else if ($post_type_id==3) {?>
+					<div class="divProfileRow"><span class="divProfileColumn1"><b>Sub-space name</b></span><span class="divProfileColumn2"><?php if($Profiledetail['subWorkSpaceName']!='') { ?><?php echo $Profiledetail['subWorkSpaceName']; ?><?php } ?></span></div>														
+					<div class="divProfileRow"><span class="divProfileColumn1"><b>Created on</b></span><span class="divProfileColumn2"><?php if($Profiledetail['subWorkSpaceCreatedDate']!='') { ?><?php echo $this->time_manager->getUserTimeFromGMTTime($Profiledetail['subWorkSpaceCreatedDate'],$this->config->item('date_format'));?><?php } ?></span></div>
+					<div class="divProfileRow"><span class="divProfileColumn1"><b>Created by</b></span><span class="divProfileColumn2"><?php if($Profiledetail['subWorkSpaceCreatorUsername']!='') { ?><?php echo $Profiledetail['subWorkSpaceCreatorUsername']; ?><?php } ?></span></div>														
+					<?php //echo "<pre>";print_r($Profiledetail); ?>
+				<?php } ?>
 			</div>	
 		</div>
 		<div id="divPhotos" class="post_web_tab_menu_tab_2" style="display:none;">Photos</div>
@@ -1364,18 +1377,18 @@ $(document).ready(function()
 			<!--New post and comment message end-->
 		
 			<!--Timeline post start here-->
-		
-			<?php
-			if($workSpaceDetails['workSpaceName']=="Try Teeme" && ($this->uri->segment(8)=='bookmark' || $this->uri->segment(8)=='public' || $this->uri->segment(8)=='all'))
-			{
-			    ?><div style="color:red;"><?php echo $this->lang->line('txt_msg_no_access_to_post'); ?></div><?php
-			}
-			else
-			{
-				$this->load->view('post/get_timeline_web'); 
-			}
-			?>
-
+			<div id="postArea">
+				<?php
+				if($workSpaceDetails['workSpaceName']=="Try Teeme" && ($this->uri->segment(8)=='bookmark' || $this->uri->segment(8)=='public' || $this->uri->segment(8)=='all'))
+				{
+					?><div style="color:red;"><?php echo $this->lang->line('txt_msg_no_access_to_post'); ?></div><?php
+				}
+				else
+				{
+					$this->load->view('post/get_timeline_web'); 
+				}
+				?>
+			</div>
 		</div>
 		<!--Timeline post end here-->
 		</div>
@@ -1505,7 +1518,9 @@ function insertTimeline()
 				 //alert(result);
 				 if(result!='' && result!='0')
 				 {
-					 $('#TimelinePost').html(result);
+					// $('#TimelinePost').html(result);
+					$('#postArea').html(result);
+					$("#showMan").hide();
 					 if($('#TimelineEditor').is(':visible'))
 					 {
 						//$("#TimelineEditor").hide();
@@ -2445,7 +2460,7 @@ function changeBookmarkStatusOut(nodeId)
 //check all function start
 
 function checkAllFunctions(){
-
+	$("#multipleRecipientArea").show();
 		var htmlContent='';
 		
 		if($("#checkAll").prop("checked")==true){

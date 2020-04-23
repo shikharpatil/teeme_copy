@@ -579,6 +579,11 @@ class timeline_db_manager extends CI_Model
 	{
 		//echo "<li>recipients= " .$recipients;exit;
 		//echo "<li>post_type_id= " .$post_type_id;exit;
+		//echo "<pre>"; print_r(explode(",",$recipients));exit;
+		$arrRecipients = array();
+		if ($recipients!=''){
+			$arrRecipients = explode(",",$recipients);
+		}
 		if(!empty($userId)){
 			$this->db->trans_begin();
 			if ($nodeOrder==0)
@@ -662,14 +667,25 @@ class timeline_db_manager extends CI_Model
 				// If one-to-one
 				if ($post_type_id==1 || $post_type_id==5){
 					$values = array();
+					$arrPlaceUsers = array();
 					$this->load->model('dal/profile_manager');
 					$arrPlaceUsers = $this->profile_manager->getAllUsersByWorkPlaceId($_SESSION['workPlaceId']);
 						foreach($arrPlaceUsers  as $keyVal=>$arrVal){
 							if ($post_type_object_id!=''){
-								$values[] = "('".$nodeId."','".$post_type_id."','".$post_type_object_id."','".$arrVal['userId']."','".$userId."','".$delivery_status_id."','".$seen_status."','".$createdDate."','".$this->db->escape_str($data)."')"; 	
+								if(in_array($arrVal['userId'],$arrRecipients)){
+									$values[] = "('".$nodeId."','".$post_type_id."','".$arrVal['userId']."','".$arrVal['userId']."','".$userId."','".$delivery_status_id."','".$seen_status."','".$createdDate."','".$this->db->escape_str($data)."')"; 	
+								}
+								else{
+									$values[] = "('".$nodeId."','".$post_type_id."','".$post_type_object_id."','".$arrVal['userId']."','".$userId."','".$delivery_status_id."','".$seen_status."','".$createdDate."','".$this->db->escape_str($data)."')"; 	
+								}
 							}
 							else if ($post_type_object_id=='') {
-								$values[] = "('".$nodeId."','".$post_type_id."','".$userId."','".$arrVal['userId']."','".$userId."','".$delivery_status_id."','".$seen_status."','".$createdDate."','".$this->db->escape_str($data)."')"; 	
+								if(in_array($arrVal['userId'],$arrRecipients)){
+									$values[] = "('".$nodeId."','".$post_type_id."','".$arrVal['userId']."','".$arrVal['userId']."','".$userId."','".$delivery_status_id."','".$seen_status."','".$createdDate."','".$this->db->escape_str($data)."')"; 							
+								}
+								else {
+									$values[] = "('".$nodeId."','".$post_type_id."','".$userId."','".$arrVal['userId']."','".$userId."','".$delivery_status_id."','".$seen_status."','".$createdDate."','".$this->db->escape_str($data)."')"; 	
+								}
 							}
 						}
 					/*
@@ -683,14 +699,30 @@ class timeline_db_manager extends CI_Model
 					$query = $this->db->query($q);
 				}
 				else if ($post_type_id==2){
-					$this->load->model('dal/identity_db_manager');
-					$arrRecipients = $this->identity_db_manager->getWorkSpaceMembersByWorkSpaceId($post_type_object_id);
+					$this->load->model('dal/identity_db_manager');				
+					$arrSpaceRecipients = array();
+					$arrSpaceRecipientIds = array();
+					$arrSpaceRecipients = $this->identity_db_manager->getWorkSpaceMembersByWorkSpaceId($post_type_object_id);
 
-					foreach($arrRecipients as $recipientsUserId)
+					foreach($arrSpaceRecipients as $recipientsUserId)
 					{ 
 						if($recipientsUserId['userId']>0){
 							$values[] = "('".$nodeId."','".$post_type_id."','".$post_type_object_id."','".$recipientsUserId['userId']."','".$userId."','".$delivery_status_id."','".$seen_status."','".$createdDate."','".$this->db->escape_str($data)."')"; 	
 						}	
+						$arrSpaceRecipientIds[] = $recipientsUserId['userId'];
+					}
+					if(count($arrRecipients)>0){
+						$arrPlaceUsers = array();
+						$this->load->model('dal/profile_manager');
+						$arrPlaceUsers = $this->profile_manager->getAllUsersByWorkPlaceId($_SESSION['workPlaceId']);
+						foreach($arrPlaceUsers  as $keyVal=>$arrVal){
+							if(in_array($arrVal['userId'],$arrRecipients)){
+								$values[] = "('".$nodeId."','".$post_type_id."','".$arrVal['userId']."','".$arrVal['userId']."','".$userId."','".$delivery_status_id."','".$seen_status."','".$createdDate."','".$this->db->escape_str($data)."')"; 	
+							}
+							else if ((!in_array($arrVal['userId'],$arrRecipients)) && (!in_array($arrVal['userId'],$arrSpaceRecipientIds))) {
+								$values[] = "('".$nodeId."','".$post_type_id."','".$userId."','".$arrVal['userId']."','".$userId."','".$delivery_status_id."','".$seen_status."','".$createdDate."','".$this->db->escape_str($data)."')"; 	
+							}
+						}
 					}
 					$val = implode(',', $values);
 					$q = "INSERT INTO teeme_post_web_post_store (post_id,post_type_id,post_type_object_id,participant_id,sender_id,delivery_status_id,seen_status,sent_timestamp,data) VALUES $val";
@@ -698,13 +730,29 @@ class timeline_db_manager extends CI_Model
 				}
 				else if ($post_type_id==3){
 					$this->load->model('dal/identity_db_manager');
-					$arrRecipients = $this->identity_db_manager->getSubWorkSpaceMembersBySubWorkSpaceId($post_type_object_id);
+					$arrSubSpaceRecipients = array();
+					$arrSubSpaceRecipientIds = array();
+					$arrSubSpaceRecipients = $this->identity_db_manager->getSubWorkSpaceMembersBySubWorkSpaceId($post_type_object_id);
 
-					foreach($arrRecipients as $recipientsUserId)
+					foreach($arrSubSpaceRecipients as $recipientsUserId)
 					{ 
 						if($recipientsUserId['userId']>0){
 							$values[] = "('".$nodeId."','".$post_type_id."','".$post_type_object_id."','".$recipientsUserId['userId']."','".$userId."','".$delivery_status_id."','".$seen_status."','".$createdDate."','".$this->db->escape_str($data)."')"; 	
 						}	
+						$arrSubSpaceRecipientIds[] = $recipientsUserId['userId'];
+					}
+					if(count($arrRecipients)>0){
+						$arrPlaceUsers = array();
+						$this->load->model('dal/profile_manager');
+						$arrPlaceUsers = $this->profile_manager->getAllUsersByWorkPlaceId($_SESSION['workPlaceId']);
+						foreach($arrPlaceUsers  as $keyVal=>$arrVal){
+							if(in_array($arrVal['userId'],$arrRecipients)){
+								$values[] = "('".$nodeId."','".$post_type_id."','".$arrVal['userId']."','".$arrVal['userId']."','".$userId."','".$delivery_status_id."','".$seen_status."','".$createdDate."','".$this->db->escape_str($data)."')"; 	
+							}
+							else if ((!in_array($arrVal['userId'],$arrRecipients)) && (!in_array($arrVal['userId'],$arrSubSpaceRecipientIds))) {
+								$values[] = "('".$nodeId."','".$post_type_id."','".$userId."','".$arrVal['userId']."','".$userId."','".$delivery_status_id."','".$seen_status."','".$createdDate."','".$this->db->escape_str($data)."')"; 	
+							}
+						}
 					}
 					$val = implode(',', $values);
 					$q = "INSERT INTO teeme_post_web_post_store (post_id,post_type_id,post_type_object_id,participant_id,sender_id,delivery_status_id,seen_status,sent_timestamp,data) VALUES $val";
