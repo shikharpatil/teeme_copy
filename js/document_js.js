@@ -488,7 +488,7 @@ if(disableEditor==0)
 		  
       imageDefaultAlign: 'left',
       
-      placeholderText: 'Write something...',
+      placeholderText: 'Type something',
 		  
 		  
     	});

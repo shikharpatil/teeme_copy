@@ -1966,8 +1966,6 @@ class Post extends CI_Controller {
 		$postbookmarkCreatedDate=$objTime->getGMTTime();
 		$postBookmarkStatus	= $this->timeline_db_manager->add_bookmark($nodeId,$_SESSION['userId'],$postbookmarkCreatedDate);
 		echo $postBookmarkStatus;		
-		
-		
 	}
 	
 	function insert_post_shared_users()
@@ -2814,6 +2812,7 @@ class Post extends CI_Controller {
 			$workSpaceType = $this->uri->segment(4);
 			$post_type = $this->uri->segment(5);
 			$post_type_object_id = $this->uri->segment(6);
+			$is_bookmark = $this->uri->segment(7);
 
 			if ($post_type=='one'){
 				$post_type_id = 1;
@@ -2899,7 +2898,13 @@ class Post extends CI_Controller {
 				// Parv - Post type ids can be refrenced from teeme_post_web_post_types table
 				if ($post_type_id==1){
 					$arrDetails['Profiledetail'] = $this->profile_manager->getUserDetailsByUserId($post_type_object_id);
-					$arrDetails['arrTimeline']	= $this->timeline_db_manager->get_timeline_web($treeId,$arrDetails['workSpaceId'],$arrDetails['workSpaceType'],0,$_SESSION['userId'],$post_type_id,$post_type_object_id);
+					if($is_bookmark=='bookmark'){
+						$allBookmarkSpace='3';
+						$arrDetails['arrTimeline']	= $this->timeline_db_manager->get_timeline_web($treeId,$arrDetails['workSpaceId'],$arrDetails['workSpaceType'],$allBookmarkSpace,$_SESSION['userId'],$post_type_id,$post_type_object_id);
+					}
+					else{
+						$arrDetails['arrTimeline']	= $this->timeline_db_manager->get_timeline_web($treeId,$arrDetails['workSpaceId'],$arrDetails['workSpaceType'],0,$_SESSION['userId'],$post_type_id,$post_type_object_id);
+					}
 				}
 				else if($post_type_id==2) {			
 					if ($post_type_object_id==$workSpaceId){
@@ -3005,6 +3010,8 @@ class Post extends CI_Controller {
 				}
 			}
 			*/
+			$arrDetails['totalSpacePosts'] = $this->timeline_db_manager->getPostCountTimeline($workSpaceId, $workSpaceType, 0, 'space');
+			$arrDetails['totalPublicPosts'] = $this->timeline_db_manager->getPostCountTimeline($workSpaceId, $workSpaceType, 0, 'public');
 			$arrDetails['workSpaceMembers']	= $this->profile_manager->getAllUsersByWorkPlaceId($_SESSION['workPlaceId']);
 			$arrDetails['userAllSpaces']	= $objIdentity->getAllUserSpacesByWorkPlaceId($_SESSION['workPlaceId'],$_SESSION['userId']);
 			$arrDetails['userAllSubSpaces']	= $objIdentity->getAllUserSubSpacesByWorkPlaceId($_SESSION['workPlaceId'],$_SESSION['userId']);
@@ -3079,7 +3086,7 @@ class Post extends CI_Controller {
 			
 			//Online users code end here
 
-			$arrDetails['bookmarkedPosts']= $this->timeline_db_manager->get_bookmark_by_user($userId);
+			$arrDetails['bookmarkedPosts']= $this->timeline_db_manager->get_bookmark_by_user($_SESSION['userId']);
 			
 			
 			//For dashboard tag and link

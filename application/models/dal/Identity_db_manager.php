@@ -12704,7 +12704,7 @@ $q = 'select * from(SELECT a.id, a.name, a.type, b.artifactId, b.artifactType ,b
 			{
 				$result_count1 = $this->db->query("SELECT a.workSpaceId as workSpaceId, a.workSpaceType as workSpaceType, a.id, a.successors, a.predecessor, a.nodeOrder, b.id as leafId, b.authors, b.userId, b.contents, DATE_FORMAT(b.createdDate, '%Y-%m-%d %H:%i:%s') as TimelineCreatedDate FROM teeme_node a, teeme_leaf b, teeme_posts_shared r WHERE r.postId =a.id and b.id=a.leafId and (a.predecessor='0' or a.predecessor='') and a.treeIds=".$treeId." ORDER BY b.editedDate DESC");
 			}
-			
+			//echo "<pre>"; print_r($result_count1->result()); exit;
 			
 			//Fetch public post count
 			
@@ -12862,12 +12862,8 @@ $q = 'select * from(SELECT a.id, a.name, a.type, b.artifactId, b.artifactType ,b
 						}
 					}
 				
-		}	
-		
-		return 0;	
-			
-		
-					
+		}			
+		return 0;				
 	}
 	 
 	//Manoj: code for add post count end

@@ -2177,7 +2177,7 @@
 </html>
 <script>
 	//Add SetTimeOut 
-	setTimeout("checkTotalFeedCount(<?php  echo $workSpaceId;?>,<?php echo $workSpaceType;?>)", 10000);
+	//setTimeout("checkTotalFeedCount(<?php  echo $workSpaceId;?>,<?php echo $workSpaceType;?>)", 10000);
 
 	function seeMoreFeed($id)
 	{

@@ -6744,7 +6744,7 @@ float:left;
 .button__badge {
   /*background-color: #fa3e3e;*/
   background-color: #ffffff;
-  border-radius: 50%;
+  /*border-radius: 50%;*/
   color: #777777;
   line-height: 12px;
  /* padding: 1px 3px;*/
@@ -7125,7 +7125,7 @@ input:checked + .slider:before {
 }
 
 .slider.round:before {
-  border-radius: 50%;
+  /*border-radius: 50%;*/
 }
 
 .switch {
@@ -8779,7 +8779,7 @@ span.reserve a
 .post_web_sidebar_profile_pic{
 	width:49px; 
 	height:49px;
-	border-radius: 50%;
+	/*border-radius: 50%;*/
 }
 .post_web_sidebar_user_time{
 	text-align: left;
@@ -8788,7 +8788,7 @@ span.reserve a
 	display: flex;
 }
 .rounded_profile_pic{
-	border-radius:50%;
+	/*border-radius:50%;*/
 }
 .postUserDetailsBox{
 	width:90%;

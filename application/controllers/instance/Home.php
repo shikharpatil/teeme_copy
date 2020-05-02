@@ -312,7 +312,7 @@ class Home extends CI_Controller
 									}
 									else
 									{
-										$place_db = $this->config->item('absolute_path')."place_db.sql";
+										$place_db = $this->config->item('absolute_path')."db".DIRECTORY_SEPARATOR."place_db.sql";
 									}
 								
 								$createPlaceName = $objIdentity->createPlaceDB($place_db_name,$server,$server_username,$server_password,$place_db,$workPlaceId,$workPlaceManagerId,$migrate);
