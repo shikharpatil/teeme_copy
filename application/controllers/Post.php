@@ -2812,7 +2812,6 @@ class Post extends CI_Controller {
 			$workSpaceType = $this->uri->segment(4);
 			$post_type = $this->uri->segment(5);
 			$post_type_object_id = $this->uri->segment(6);
-			$is_bookmark = $this->uri->segment(7);
 
 			if ($post_type=='one'){
 				$post_type_id = 1;
@@ -2826,13 +2825,20 @@ class Post extends CI_Controller {
 			else if($post_type=='home') {
 				$post_type_id = 5;
 			}
+			else if($post_type=='bookmark') {
+				$post_type_id = 6;
+			}
+			else if($post_type=='public') {
+				$post_type_id = 7;
+			}		
 
 			// Update seen status of the current object
+			/*
 			if ($post_type_object_id!=''){
 				$this->timeline_db_manager->updateUnseenCount($_SESSION['userId'],$post_type_id,$post_type_object_id,1);
 			}
-			
-
+			*/
+			//echo $post_type_id; exit;
 			/*
 			$arrDetails['userPostSearch'] = '';
 			if(is_numeric($this->uri->segment(10)))
@@ -2898,7 +2904,7 @@ class Post extends CI_Controller {
 				// Parv - Post type ids can be refrenced from teeme_post_web_post_types table
 				if ($post_type_id==1){
 					$arrDetails['Profiledetail'] = $this->profile_manager->getUserDetailsByUserId($post_type_object_id);
-					if($is_bookmark=='bookmark'){
+					if($post_type=='bookmark'){
 						$allBookmarkSpace='3';
 						$arrDetails['arrTimeline']	= $this->timeline_db_manager->get_timeline_web($treeId,$arrDetails['workSpaceId'],$arrDetails['workSpaceType'],$allBookmarkSpace,$_SESSION['userId'],$post_type_id,$post_type_object_id);
 					}
@@ -2929,6 +2935,11 @@ class Post extends CI_Controller {
 				else if ($post_type_id==5){
 					//$arrDetails['Profiledetail'] = $this->profile_manager->getUserDetailsByUserId($post_type_object_id);
 					$arrDetails['arrTimeline']	= $this->timeline_db_manager->get_timeline_web($treeId,$arrDetails['workSpaceId'],$arrDetails['workSpaceType'],0,$_SESSION['userId'],$post_type_id,$post_type_object_id);
+				}
+				else if ($post_type_id==6){
+					$arrDetails['Profiledetail'] = $this->profile_manager->getUserDetailsByUserId($post_type_object_id);
+					$allBookmarkSpace='3';
+					$arrDetails['arrTimeline']	= $this->timeline_db_manager->get_timeline_web($treeId,$arrDetails['workSpaceId'],$arrDetails['workSpaceType'],$allBookmarkSpace,$_SESSION['userId'],$post_type_id,$post_type_object_id);				
 				}
 				else{
 					$arrDetails['arrTimeline'] = '';
@@ -3010,8 +3021,33 @@ class Post extends CI_Controller {
 				}
 			}
 			*/
+			if($this->uri->segment(5)=='home' && $workSpaceDetails['workSpaceName']!="Try Teeme")
+			{
+				$_SESSION['allSpace']=1;
+				$_SESSION['all']=$this->uri->segment(5);
+			}
+			else{
+				unset($_SESSION['all']);
+				unset($_SESSION['allSpace']);
+			}	
+			if($this->uri->segment(5)=='public')
+			{
+				$_SESSION['allPublicSpace']=1;
+				$_SESSION['public']=$this->uri->segment(5);
+			}
+			else{
+				unset($_SESSION['public']);
+				unset($_SESSION['allPublicSpace']);
+			}		
+			$arrDetails['bookmarkedPosts']= $this->timeline_db_manager->get_bookmark_by_user($_SESSION['userId']);
 			$arrDetails['totalSpacePosts'] = $this->timeline_db_manager->getPostCountTimeline($workSpaceId, $workSpaceType, 0, 'space');
 			$arrDetails['totalPublicPosts'] = $this->timeline_db_manager->getPostCountTimeline($workSpaceId, $workSpaceType, 0, 'public');
+				if ($post_type_id==5){
+					$arrDetails['allPosts'] = count($arrDetails['arrTimeline']);
+				}
+				else{
+					$arrDetails['allPosts'] = $this->timeline_db_manager->getPostCountTimeline($workSpaceId, $workSpaceType, 0, 'all');
+				}			
 			$arrDetails['workSpaceMembers']	= $this->profile_manager->getAllUsersByWorkPlaceId($_SESSION['workPlaceId']);
 			$arrDetails['userAllSpaces']	= $objIdentity->getAllUserSpacesByWorkPlaceId($_SESSION['workPlaceId'],$_SESSION['userId']);
 			$arrDetails['userAllSubSpaces']	= $objIdentity->getAllUserSubSpacesByWorkPlaceId($_SESSION['workPlaceId'],$_SESSION['userId']);
@@ -3086,7 +3122,7 @@ class Post extends CI_Controller {
 			
 			//Online users code end here
 
-			$arrDetails['bookmarkedPosts']= $this->timeline_db_manager->get_bookmark_by_user($_SESSION['userId']);
+			
 			
 			
 			//For dashboard tag and link

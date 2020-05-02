@@ -6486,24 +6486,28 @@ function setPostTabBarWidth()
     //alert('both hide');
     // var subWidth = '-=56px';
     var subWidth = '-=377px';
+    $('.postTabUIFixed').css('width', '73%')
   }
   else if(isLeftMenu1=='1' && isNotificationSidebar=='2')
   {
     //alert('left menu hide timeline show');
     var subWidth = '-=748px';
+    $('.postTabUIFixed').css('width', screen.width).css('width', subWidth);
   }
   else if(isLeftMenu1!='1' && isNotificationSidebar=='1')
   {
     //alert('timeline menu hide left menu show');
     var subWidth = '-=596px';
+    $('.postTabUIFixed').css('width', screen.width).css('width', subWidth);
   }
   else
   {
     //alert('else')
     var subWidth = '-=377px';
+    $('.postTabUIFixed').css('width', screen.width).css('width', subWidth);
   }
 
-  $('.postTabUIFixed').css('width', screen.width).css('width', subWidth);
+  //$('.postTabUIFixed').css('width', screen.width).css('width', subWidth);
 }
 /*Dashrath- code end*/
 /*Added by Dashrath- removePostTabBarWidth function start*/

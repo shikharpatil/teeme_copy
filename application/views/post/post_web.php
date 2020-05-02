@@ -79,11 +79,12 @@ $(document).ready(function()
 		//echo $totalSpacePosts;exit;
 		//$totalPublicPosts = $this->identity_db_manager->getTreeCountByTreePost($workSpaceId, $workSpaceType, 0, 'public');
 		//$allPosts = $this->identity_db_manager->getTreeCountByTreePost($workSpaceId, $workSpaceType, 0, 'all');
-		$getAllPosts = $this->timeline_db_manager->get_timeline('0', $workSpaceId, $workSpaceType, '1');
-		$allPosts = count($getAllPosts);	
+		//$getAllPosts = $this->timeline_db_manager->get_timeline('0', $workSpaceId, $workSpaceType, '1');
+		//$allPosts = count($getAllPosts);	
 		$allBookmarkSpace='3';
-		$bookmarkPosts	= $this->timeline_db_manager->get_timeline('0',$workSpaceId,$workSpaceType,$allBookmarkSpace);
-		$totalBookmarkPosts = count($bookmarkPosts);
+		//$bookmarkPosts	= $this->timeline_db_manager->get_timeline('0',$workSpaceId,$workSpaceType,$allBookmarkSpace);
+		//$totalBookmarkPosts = count($bookmarkPosts);
+		$totalBookmarkPosts = count($bookmarkedPosts);
 		//echo count($bookmarkPosts).'===='; exit;
 		//echo $totalSpacePosts.'======'.$totalPublicPosts;exit;
 		/*$postType=0;
@@ -855,7 +856,21 @@ $(document).ready(function()
   	<div id="postTabUI" class="postTabUI">
 		<div class="leftTabUl">
     		<ul class="tab_menu_new">
+
+
+			<?php if($workSpaceDetails['workSpaceName']!="Try Teeme"){ ?>
+<li>
+	<?php /*?> <a href="javascript:void(0);" id="profile" style="padding-left:12px;margin-left:17px;" title="profile" class="<?php if($profileForm=='1' && $passwordForm!='1'){ ?> active <?php } ?>" onclick="$('#profile').addClass('active');$('#passwordForm').removeClass('active');$('#notification').removeClass('active');$('#password_form').hide();$('#notificationSection').hide();$('#profileForm').show(); clearSessionMsg();"><?php echo $this->lang->line('profile_txt'); ?></a><?php */?>
 	
+	<?php if ($workSpaceDetails['workSpaceName']!="Try Teeme") { ?>
+	<!--<a href="<?php echo base_url(); ?>post/web/<?php echo $workSpaceId; ?>/<?php echo $workSpaceType; ?>/0/1/all<?php if($this->uri->segment(10)!=''){ echo '/0/'.$userPostSearch; }?>" style="padding-left:12px;margin-left:17px; <?php if($_SESSION['all']) { ?>" class="active <?php } ?>" id="all"><?php echo $this->lang->line('all_post_txt').' ('.$allPosts.')'; ?></a>-->
+	<a href="<?php echo base_url(); ?>post/web/<?php echo $workSpaceId; ?>/<?php echo $workSpaceType; ?>/home" style="padding-left:12px; <?php if($_SESSION['all']) { ?>" class="active <?php } ?>" id="all"><?php echo $this->lang->line('all_post_txt').' ('.$allPosts.')'; ?></a>				
+	<?php } ?>
+</li>
+
+	<?php } ?>
+
+
 			<li>
 
             <?php /*?><a href="javascript:void(0);" style="padding-left:12px;margin-left:2px;" id="notification" title="notification" class="<?php if($profileForm!='1' && $passwordForm!='1'){ ?> active <?php } ?>" onclick="$('#notification').addClass('active');$('#profile').removeClass('active');$('#passwordForm').removeClass('active');$('#profileForm').hide();$('#password_form').hide();$('#notificationSection').show(); clearSessionMsg();">
@@ -872,7 +887,7 @@ $(document).ready(function()
 			if ($myProfileDetail['userGroup']>0) { ?>
 		
 			<!--<a style="padding-left:12px;margin-left:2px;<?php if(!$_SESSION['all'] && !$_SESSION['public'] && $this->uri->segment(8)!='bookmark') { ?>" class="active <?php } ?>" title="<?php echo $workSpaceName ?>"  id="curr" href="<?php echo base_url(); ?>post/web/<?php echo $workSpaceId; ?>/<?php echo $workSpaceType; ?>/<?php echo $workSpaceId; ?>/<?php echo $workSpaceType; ?><?php if($this->uri->segment(10)!=''){ echo '/0/0/'.$userPostSearch; }?>">-->
-			<a style="padding-left:12px;margin-left:2px;<?php if(!$_SESSION['all'] && !$_SESSION['public'] && $this->uri->segment(7)!='bookmark') { ?>" class="active <?php } ?>" title="<?php echo $workSpaceName ?>"  id="curr" href="<?php echo $link;?>">
+			<a style="padding-left:12px;margin-left:2px;<?php if(!$_SESSION['all'] && !$_SESSION['public'] && $this->uri->segment(5)!='bookmark') { ?>" class="active <?php } ?>" title="<?php echo $workSpaceName ?>"  id="curr" href="<?php echo $link;?>">
 
 			<span>
 
@@ -891,7 +906,7 @@ $(document).ready(function()
 
           </span></a>
 		  <?php } else if ($workSpaceId>0){ ?>
-			<a style="padding-left:12px;margin-left:2px;<?php if(!$_SESSION['all'] && $this->uri->segment(7)!='bookmark') { ?>" class="active <?php } ?>" title="<?php echo $workSpaceName ?>"  id="curr" href="<?php echo base_url(); ?>post/web/<?php echo $workSpaceId; ?>/type/<?php echo $workSpaceType; ?>/<?php echo $workSpaceId; ?>/<?php echo $workSpaceType; ?>"><span>
+			<a style="padding-left:12px;margin-left:2px;<?php if(!$_SESSION['all'] && $this->uri->segment(5)!='bookmark') { ?>" class="active <?php } ?>" title="<?php echo $workSpaceName ?>"  id="curr" href="<?php echo base_url(); ?>post/web/<?php echo $workSpaceId; ?>/type/<?php echo $workSpaceType; ?>/<?php echo $workSpaceId; ?>/<?php echo $workSpaceType; ?>"><span>
 
           <?php 
 
@@ -919,43 +934,53 @@ $(document).ready(function()
 				<?php /*?><a href="javascript:void(0);" id="passwordForm" style="padding-left:12px;margin-left:17px;" title="password" class="<?php if($passwordForm=='1'){ ?> active <?php } ?>" onclick="$('#passwordForm').addClass('active');$('#profile').removeClass('active');$('#notification').removeClass('active');$('#profileForm').hide();$('#notificationSection').hide();$('#password_form').show(); clearSessionMsg();"><?php echo $this->lang->line('txt_Password'); ?></a><?php */?>
 				
 				<!--<a href="<?php echo base_url(); ?>post/web/<?php echo $workSpaceId; ?>/type/<?php echo $workSpaceType; ?>/0/1/public<?php if($this->uri->segment(10)!=''){ echo '/0/'.$userPostSearch; }?>" style="padding-left:12px;margin-left:17px;  <?php if($_SESSION['public']) { ?>" class="active <?php } ?>" id="public"><?php echo $this->lang->line('public_txt').' ('.$totalPublicPosts.')'; ?></a>-->
-				<a href="<?php echo $link.'/public'; ?>" style="padding-left:12px;margin-left:17px;  <?php if($_SESSION['public']) { ?>" class="active <?php } ?>" id="public"><?php echo $this->lang->line('public_txt').' ('.$totalPublicPosts.')'; ?></a>
+				<a href="<?php echo base_url(); ?>post/web/<?php echo $workSpaceId; ?>/<?php echo $workSpaceType; ?>/public/<?php echo $_SESSION['userId']?>" style="padding-left:12px;margin-left:17px;  <?php if($_SESSION['public']) { ?>" class="active <?php } ?>" id="public"><?php echo $this->lang->line('public_txt').' ('.$totalPublicPosts.')'; ?></a>
 
 				</li>
-				<?php } ?>		
+				<?php } ?>	
+				<li>
+
+					<?php /*?><a href="javascript:void(0);" id="passwordForm" style="padding-left:12px;margin-left:17px;" title="password" class="<?php if($passwordForm=='1'){ ?> active <?php } ?>" onclick="$('#passwordForm').addClass('active');$('#profile').removeClass('active');$('#notification').removeClass('active');$('#profileForm').hide();$('#notificationSection').hide();$('#password_form').show(); clearSessionMsg();"><?php echo $this->lang->line('txt_Password'); ?></a><?php */?>
+					
+					<a href="<?php echo base_url(); ?>post/web/<?php echo $workSpaceId; ?>/<?php echo $workSpaceType; ?>/bookmark/<?php echo $_SESSION['userId']?>" style="padding-left:12px;margin-left:17px;<?php if($this->uri->segment(5)=='bookmark') { ?>" class="active <?php } ?>" id="bookmark"><?php echo $this->lang->line('txt_post_starred').' ('.$totalBookmarkPosts.')'; ?></a>
+					
+				</li>	
 			<?php } ?>
+
 		
 			<?php /*?><li>
 
 				<a href="javascript:void(0);" style="padding-left:12%;margin-left:2%;" id="preferences" title="preferences" class="" onclick="$('#preferences').addClass('active');$('#profile').removeClass('active');$('#notification').removeClass('active');$('#profileForm').hide();$('#notificationSection').hide();$('#editorChoice').show();"><?php echo $this->lang->line('preferences_txt'); ?></a>
 
 			</li><?php */?>
+
 		
 			</ul>
 		</div>
-		<?php if($workSpaceDetails['workSpaceName']!="Try Teeme"){ ?>
+		<?php /* if($workSpaceDetails['workSpaceName']!="Try Teeme"){ ?>
 		<div class="rightTabUl">
 			<ul class="tab_menu_new" style="float:right;">
 				<li>
 
-					<?php /*?><a href="javascript:void(0);" id="passwordForm" style="padding-left:12px;margin-left:17px;" title="password" class="<?php if($passwordForm=='1'){ ?> active <?php } ?>" onclick="$('#passwordForm').addClass('active');$('#profile').removeClass('active');$('#notification').removeClass('active');$('#profileForm').hide();$('#notificationSection').hide();$('#password_form').show(); clearSessionMsg();"><?php echo $this->lang->line('txt_Password'); ?></a><?php */?>
+					<!--<a href="javascript:void(0);" id="passwordForm" style="padding-left:12px;margin-left:17px;" title="password" class="<?php if($passwordForm=='1'){ ?> active <?php } ?>" onclick="$('#passwordForm').addClass('active');$('#profile').removeClass('active');$('#notification').removeClass('active');$('#profileForm').hide();$('#notificationSection').hide();$('#password_form').show(); clearSessionMsg();"><?php echo $this->lang->line('txt_Password'); ?></a>-->
 					
-					<a href="<?php echo base_url(); ?>post/web/<?php echo $workSpaceId; ?>/<?php echo $workSpaceType; ?>/one/<?php echo $_SESSION['userId']?>/bookmark<?php if($this->uri->segment(10)!=''){ echo '/0/'.$userPostSearch; }?>" style="padding-left:12px;margin-left:17px;<?php if($this->uri->segment(7)=='bookmark') { ?>" class="active <?php } ?>" id="bookmark"><?php echo $this->lang->line('txt_post_starred').' ('.$totalBookmarkPosts.')'; ?></a>
+					<a href="<?php echo base_url(); ?>post/web/<?php echo $workSpaceId; ?>/<?php echo $workSpaceType; ?>/one/<?php echo $_SESSION['userId']?>/bookmark<?php if($this->uri->segment(10)!=''){ echo '/0/'.$userPostSearch; }?>" style="padding-left:12px;margin-left:17px;<?php if($this->uri->segment(5)=='bookmark') { ?>" class="active <?php } ?>" id="bookmark"><?php echo $this->lang->line('txt_post_starred').' ('.$totalBookmarkPosts.')'; ?></a>
 					
 				</li>
 
 				<li>
 
-				<?php /*?> <a href="javascript:void(0);" id="profile" style="padding-left:12px;margin-left:17px;" title="profile" class="<?php if($profileForm=='1' && $passwordForm!='1'){ ?> active <?php } ?>" onclick="$('#profile').addClass('active');$('#passwordForm').removeClass('active');$('#notification').removeClass('active');$('#password_form').hide();$('#notificationSection').hide();$('#profileForm').show(); clearSessionMsg();"><?php echo $this->lang->line('profile_txt'); ?></a><?php */?>
+				<!--<a href="javascript:void(0);" id="profile" style="padding-left:12px;margin-left:17px;" title="profile" class="<?php if($profileForm=='1' && $passwordForm!='1'){ ?> active <?php } ?>" onclick="$('#profile').addClass('active');$('#passwordForm').removeClass('active');$('#notification').removeClass('active');$('#password_form').hide();$('#notificationSection').hide();$('#profileForm').show(); clearSessionMsg();"><?php echo $this->lang->line('profile_txt'); ?></a>-->
 					
 					<?php if ($workSpaceDetails['workSpaceName']!="Try Teeme") { ?>
-					<a href="<?php echo base_url(); ?>post/web/<?php echo $workSpaceId; ?>/<?php echo $workSpaceType; ?>/0/1/all<?php if($this->uri->segment(10)!=''){ echo '/0/'.$userPostSearch; }?>" style="padding-left:12px;margin-left:17px; <?php if($_SESSION['all']) { ?>" class="active <?php } ?>" id="all"><?php echo $this->lang->line('all_post_txt').' ('.$allPosts.')'; ?></a></option>
+					<!--<a href="<?php echo base_url(); ?>post/web/<?php echo $workSpaceId; ?>/<?php echo $workSpaceType; ?>/0/1/all<?php if($this->uri->segment(10)!=''){ echo '/0/'.$userPostSearch; }?>" style="padding-left:12px;margin-left:17px; <?php if($_SESSION['all']) { ?>" class="active <?php } ?>" id="all"><?php echo $this->lang->line('all_post_txt').' ('.$allPosts.')'; ?></a>-->
+					<a href="<?php echo base_url(); ?>post/web/<?php echo $workSpaceId; ?>/<?php echo $workSpaceType; ?>/home" style="padding-left:12px;margin-left:17px; <?php if($_SESSION['all']) { ?>" class="active <?php } ?>" id="all"><?php echo $this->lang->line('all_post_txt').' ('.$allPosts.')'; ?></a>				
 				<?php } ?>
 
 				</li>
 			</ul>
 		</div>
-		<?php } ?>
+		<?php } */?>
 		<div class="clr"></div>
 	</div>
 	
