@@ -207,6 +207,7 @@ function showFilteredMembers()
 <div id="rightSideBar">
 
 			<?php
+			//echo "<pre>members= "; print_r ($workPlaceMembers); exit;	
 			$details['workSpaces']		= $workSpaces;
 
 			$details['workSpaceId'] 	= $workSpaceId;
@@ -470,7 +471,7 @@ function showFilteredMembers()
 
             				<?php	
 
-							//print_r ($workPlaceMembers);				
+							//echo "<pre>members= "; print_r ($workPlaceMembers); exit;				
 
 							foreach($workPlaceMembers as $keyVal=>$workPlaceMemberData)
 

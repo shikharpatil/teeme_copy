@@ -2941,6 +2941,11 @@ class Post extends CI_Controller {
 					$allBookmarkSpace='3';
 					$arrDetails['arrTimeline']	= $this->timeline_db_manager->get_timeline_web($treeId,$arrDetails['workSpaceId'],$arrDetails['workSpaceType'],$allBookmarkSpace,$_SESSION['userId'],$post_type_id,$post_type_object_id);				
 				}
+				elseif ($post_type_id==7){
+					$arrDetails['Profiledetail'] = $this->profile_manager->getUserDetailsByUserId($post_type_object_id);
+					$allPublicSpace='2';
+					$arrDetails['arrTimeline']	= $this->timeline_db_manager->get_timeline_web($treeId,$arrDetails['workSpaceId'],$arrDetails['workSpaceType'],$allPublicSpace,$_SESSION['userId'],$post_type_id,$post_type_object_id);
+				}
 				else{
 					$arrDetails['arrTimeline'] = '';
 				}
@@ -3872,15 +3877,12 @@ class Post extends CI_Controller {
 			{
 				$workSpaceId	= $this->input->post('workSpaceId');
 				$workSpaceType	= $this->input->post('workSpaceType');
-				//$publicPost	= $this->input->post('publicPost');
+				$publicPost	= $this->input->post('publicPost');
 				$recipients=$this->input->post('recipients');
 				$post_type_id=$this->input->post('post_type_id');
 				$post_type_object_id=$this->input->post('post_type_object_id');
 				$post_content=trim($this->input->post($this->input->post('editorname1')));
 
-
-
-				
 				//allspace 1 for myspace and 2 for public space
 				//My space recepients start
 					//$recipients='';
@@ -3951,14 +3953,17 @@ class Post extends CI_Controller {
 						else
 						{
 							$allSpace='2';
-							//$recipients='';
-							//$workSpaceId = '0';
-							//$workSpaceType = '0';
-							if ($workSpaceId<0){$workSpaceId = '0';}
-							if ($workSpaceType<0){$workSpaceType = '0';}
+							$recipients='';
+							$workSpaceId = '0';
+							$workSpaceType = '0';
 						}
 					}
 					*/
+					if ($publicPost=='public'){
+						$allSpace='2';
+						$workSpaceId = '0';
+						$workSpaceType = '0';
+					}
 			
 				//My space recepients end
 				

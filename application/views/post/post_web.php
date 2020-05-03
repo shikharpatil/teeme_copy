@@ -887,7 +887,7 @@ $(document).ready(function()
 			if ($myProfileDetail['userGroup']>0) { ?>
 		
 			<!--<a style="padding-left:12px;margin-left:2px;<?php if(!$_SESSION['all'] && !$_SESSION['public'] && $this->uri->segment(8)!='bookmark') { ?>" class="active <?php } ?>" title="<?php echo $workSpaceName ?>"  id="curr" href="<?php echo base_url(); ?>post/web/<?php echo $workSpaceId; ?>/<?php echo $workSpaceType; ?>/<?php echo $workSpaceId; ?>/<?php echo $workSpaceType; ?><?php if($this->uri->segment(10)!=''){ echo '/0/0/'.$userPostSearch; }?>">-->
-			<a style="padding-left:12px;margin-left:2px;<?php if(!$_SESSION['all'] && !$_SESSION['public'] && $this->uri->segment(5)!='bookmark') { ?>" class="active <?php } ?>" title="<?php echo $workSpaceName ?>"  id="curr" href="<?php echo $link;?>">
+			<a style="padding-left:12px;margin-left:2px;<?php if(!$_SESSION['all'] && !$_SESSION['public'] && $this->uri->segment(5)!='bookmark' && (($this->uri->segment(5)=='space' || $this->uri->segment(5)=='subspace') && $this->uri->segment(6)==$workSpaceId)) { ?>" class="active <?php } ?>" title="<?php echo $workSpaceName ?>"  id="curr" href="<?php echo $link;?>">
 
 			<span>
 
@@ -1011,9 +1011,15 @@ $(document).ready(function()
 				?>					
 			</div>
 			<div class="postUserDetailsBox">
-				<div class="profileLeftLabel"><span><?php if($Profiledetail['firstName']!='' && $Profiledetail['lastName']!='') { ?><?php echo $Profiledetail['firstName'].' '.$Profiledetail['lastName']; ?><?php } ?></span></div>
-				<div>											
-					<span><?php if($Profiledetail['editUserTagName']!='') { ?><?php echo $Profiledetail['editUserTagName'];?><?php } ?></span>
+				<div class="profileLeftLabel" style="padding:3px 0;"><span><?php if($Profiledetail['firstName']!='' && $Profiledetail['lastName']!='') { ?><?php echo $Profiledetail['firstName'].' '.$Profiledetail['lastName']; ?><?php } ?></span></div>
+				<div style="padding:3px 0;">											
+					<span>
+						<?php //if($Profiledetail['editUserTagName']!='') { echo $Profiledetail['editUserTagName']; } ?>
+						<?php echo "<b>Status:</b> "; if($Profiledetail['statusUpdate']!='') { echo $Profiledetail['statusUpdate']; } ?>
+					</span>
+				</div>
+				<div style="padding:3px 0;">
+					<a id="divProfileLink" href="#divProfile">Show Profile</a>
 				</div>
 			</div>
 			<!--
@@ -1067,6 +1073,7 @@ $(document).ready(function()
 		</div>	
 		
 			<?php
+			/*
 			if($post_type_id!=5){
 			?>
 				<div class="post_web_tab_menu_2 main_tabs">
@@ -1082,7 +1089,7 @@ $(document).ready(function()
 				</div>
 				
 			<?php 
-			} ?>
+			} */?>
 			<?php
 			/*
 			if(count($Profiledetail)>0){
@@ -1099,10 +1106,11 @@ $(document).ready(function()
 		<!--Plus icon for public post start here-->
 		<?php /*if($treeAccess==1  ||  $workSpaceId==0  || in_array($_SESSION['userId'],$managerIds) || isset($_SESSION['workPlaceManagerName']) && $_SESSION['workPlaceManagerName']!='')*/
 		//echo $_SESSION['WSManagerAccess'].'===='.$_SESSION['workPlaceManagerName'];
-		
+		/*
 		if((isset($_SESSION['WSManagerAccess']) && $_SESSION['WSManagerAccess'] == 1) || (isset($_SESSION['workPlaceManagerName']) && $_SESSION['workPlaceManagerName']!='')) 
 		{ 
-			if($_SESSION['public'] == 'public')
+			//if($_SESSION['public'] == 'public')
+			if($this->uri->segment('5') == 'public')
 			{
 		?>
 			
@@ -1113,7 +1121,52 @@ $(document).ready(function()
 		<?php
 			}
 		}
+		*/
+		if($this->uri->segment('5') == 'one')
+		{
+			if($this->uri->segment('6')==$_SESSION['userId']) 
+			{ 
+		?>
 		
+			<div class="postAddIcon">
+			<a id="add" style="cursor:pointer;" onclick="showTimelineEditor();"><img title="Add" src="<?php echo base_url(); ?>/images/addnew.png" ></a>
+			</div>	
+		<?php
+			}
+		}
+		if($this->uri->segment('5') == 'space' || $this->uri->segment('5') == 'subspace')
+		{
+			if($workSpaceId>0)
+			{ 
+				if(isset($_SESSION['WSManagerAccess']) && $_SESSION['WSManagerAccess'] == 1)
+				{
+			?>		
+			<div class="postAddIcon">
+			<a id="add" style="cursor:pointer;" onclick="showTimelineEditor();"><img title="Add" src="<?php echo base_url(); ?>/images/addnew.png" ></a>
+			</div>	
+			<?php
+				}
+			}
+			else{
+			?>
+				<div class="postAddIcon">
+				<a id="add" style="cursor:pointer;" onclick="showTimelineEditor();"><img title="Add" src="<?php echo base_url(); ?>/images/addnew.png" ></a>
+				</div>	
+			<?php
+			}
+		}
+		if($this->uri->segment('5') == 'public')
+		{
+			if((isset($_SESSION['WSManagerAccess']) && $_SESSION['WSManagerAccess'] == 1) || (isset($_SESSION['workPlaceManagerName']) && $_SESSION['workPlaceManagerName']!='')) 
+			{ 
+		?>
+		
+			<div class="postAddIcon">
+			<a id="add" style="cursor:pointer;" onclick="showTimelineEditor();"><img title="Add" src="<?php echo base_url(); ?>/images/addnew.png" ></a>
+			</div>	
+		<?php
+			}
+		}
 		?>
 		<!--Plus icon for public post end here-->
 		
@@ -1128,14 +1181,18 @@ $(document).ready(function()
 			} 
 		} 
 		*/
+		/*
 		if(!$_SESSION['all'] && !$_SESSION['public']){ ?>
-			<?php if($this->uri->segment('8')!='bookmark' && $_SESSION['userId']==$post_type_object_id){ ?>
+			<?php //if($this->uri->segment('5')!='bookmark' && $_SESSION['userId']==$post_type_object_id){ 
+				if($this->uri->segment('5')!='bookmark'){
+				?>
 				<div class="postAddIcon">
 				<a id="add" style="cursor:pointer;" onclick="showTimelineEditor();"><img border="0" title="Add" src="<?php echo base_url(); ?>/images/addnew.png" ></a>
 				</div>
 			<?php 
 			} 
-		} 				
+		} 	
+		*/			
 		?>
 		<!--Plus icon end here-->
 		</div>
@@ -1307,8 +1364,7 @@ $(document).ready(function()
 				 
 				<?php
 				
-				//if($workSpaceId=='0' && $_SESSION['public'] != 'public')
-				if(1)
+				if($workSpaceId=='0' && $_SESSION['public'] != 'public')
 				{
 						
 						?>
@@ -1550,6 +1606,8 @@ $(document).ready(function(){
 		//$("#post_web_sidebar_loader").show();
   });
 
+
+
   $(".post_web_tab_menu_list_2 li a").click(function(e){
      e.preventDefault();
   	});
@@ -1563,6 +1621,31 @@ $(document).ready(function(){
 		$(tabid).show(); // show tab
 		$(this).addClass("active"); //  adding active class to clicked tab
 		//$("#post_web_sidebar_loader").show();
+  });
+
+  $(".postUserDetailsBox li a").click(function(e){
+     e.preventDefault();
+  	});
+
+  	$("#divProfileLink").click(function(){
+		//console.log (this);
+		//var tabid = $(this).find("a").attr("href");
+		//$(".post_web_tab_menu_list_2 li,.post_web_tab_menu_2 div.post_web_tab_menu_tab_2").removeClass("active");   // removing active class from tab
+
+		//$(".post_web_tab_menu_tab_2").hide();   // hiding open tab
+		//$(tabid).show(); // show tab
+		//$(this).addClass("active"); //  adding active class to clicked tab
+		//$("#post_web_sidebar_loader").show();
+		if($('#divProfile').is(':visible')){
+			$("#divProfile").hide();
+			$("a#divProfileLink").text('Show Profile');
+		}
+		else{
+			$("#divProfile").show();
+			$("a#divProfileLink").text('Hide Profile');
+			return false;
+		}
+		
   });
 
   //leftMenuHideShow();

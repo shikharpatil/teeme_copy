@@ -7343,6 +7343,7 @@ input:checked + .slider:before {
 }
 #TimelineProfile{
 	display:flex;
+	margin-bottom:10px;
 }
 .profileLeftLabel {
 	font-size: 1.2em;
@@ -8883,10 +8884,12 @@ span.reserve a
 	margin:25px 0 0 0;
 }
 #showMan{
-	display:none; 
 	max-height:150px;
-	margin:10px 0 10px 175px; 
 	overflow:auto;
+	/*
+	display:none; 
+	margin:10px 0 10px 175px; 
+	*/
 }
 #multipleRecipientArea{
 	display:none;
