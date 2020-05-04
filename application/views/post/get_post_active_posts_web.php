@@ -22,16 +22,16 @@
 								<div class="post_web_sidebar_col2">
 									<div class="post_web_sidebar_user_time">
 										<span class="post_web_sidebar_username_data">
-										<?php if ($arrVal['post_type_id']==1 || $arrVal['post_type_id']==5) {
+										<?php if ($arrVal['post_type_id']==1 || $arrVal['post_type_id']==2 || $arrVal['post_type_id']==3 || $arrVal['post_type_id']==5 || $arrVal['post_type_id']==7) {
 										?>
 											<a href="<?php echo base_url();?>post/web/<?php echo $workSpaceId;?>/<?php echo $workSpaceType; ?>/one/<?php echo $arrVal['sender_id']; ?>" class="blue-link-underline" title="<?php echo $arrVal['sender_name']; ?>" style="word-wrap:break-word;float:left;"><?php echo wordwrap($arrVal['sender_name'],true); ?> </a>
 
 										<?php											
-										} else if ($arrVal['post_type_id']==2) {?>
+										} /*else if ($arrVal['post_type_id']==2) {?>
 										<a href="<?php echo base_url();?>post/web/<?php echo $workSpaceId;?>/<?php echo $workSpaceType; ?>/space/<?php echo $arrVal['sender_id']; ?>" class="blue-link-underline" title="<?php echo $arrVal['sender_name']; ?>" style="word-wrap:break-word;float:left;"><?php echo wordwrap($arrVal['sender_name'],true); ?> </a>
 										<?php } else if ($arrVal['post_type_id']==3) { ?>
 											<a href="<?php echo base_url();?>post/web/<?php echo $workSpaceId;?>/<?php echo $workSpaceType; ?>/subspace/<?php echo $arrVal['sender_id']; ?>" class="blue-link-underline" title="<?php echo $arrVal['sender_name']; ?>" style="word-wrap:break-word;float:left;"><?php echo wordwrap($arrVal['sender_name'],true); ?> </a>
-										<?php } ?>
+										<?php } */?>
 										</span>
 										
 										<div><span class="post_web_sidebar_secondary"><?php echo $this->time_manager->getUserTimeFromGMTTime($arrVal['last_post_timestamp'],$this->config->item('date_format')); ?></span></div>

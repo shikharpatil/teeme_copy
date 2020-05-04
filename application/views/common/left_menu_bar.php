@@ -254,7 +254,7 @@ if ($userGroup==0 && $workSpaceId==0)
 				</h1>
 			</span>
 		</li> -->
-		<!--
+		
 		<li id="menuHome" class="newjsddm1Li <?php if($typeForActive=='dashboard'){ echo 'active';}?>">
 			<span class="<?php echo $homeClass; ?>">
 				<h1>
@@ -277,7 +277,7 @@ if ($userGroup==0 && $workSpaceId==0)
 				</h1>
 			</span>
 		</li>
-		-->
+		
 		<li id="menuDocument" class="newjsddm1Li <?php if($typeForActive=='document_home' || $typeForActive=='view_document' || ($typeForActive=='tree_timeline' && $treeType=='document')){ echo 'active';}?>" <?php if(!(in_array('1',$treeTypeIds)) && $treeTypeEnabled==1 || $total_documents==0) { ?> style="display:none;" <?php }    ?> >
 			<span >
 				<h1>

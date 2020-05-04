@@ -1208,8 +1208,9 @@ class timeline_db_manager extends CI_Model
 					if($query7->num_rows()){					
 						foreach($query7->result() as $row){
 							//$userActivePostsDetails[] = $row;
-							if ($row->post_type_id==1 || $row->post_type_id==5){
+							//if ($row->post_type_id==1 || $row->post_type_id==5){
 								$userActivePostsDetails[$i]['post_type_id']=$row->post_type_id;
+								/*
 								if($row->sender_id!=$row->participant_id){
 									$userActivePostsDetails[$i]['sender_id']=$row->sender_id;
 								}
@@ -1219,6 +1220,8 @@ class timeline_db_manager extends CI_Model
 								else if($row->post_type_object_id==$row->participant_id && $row->sender_id==$row->participant_id && $row->sender_id==$row->post_type_object_id){
 									$userActivePostsDetails[$i]['sender_id']=$row->post_type_object_id;
 								}
+								*/
+								$userActivePostsDetails[$i]['sender_id']=$row->sender_id;
 								$userDetails = $this->identity_db_manager->getUserDetailsByUserId($userActivePostsDetails[$i]['sender_id']);
 								$userActivePostsDetails[$i]['sender_user_id']=$userActivePostsDetails[$i]['sender_id'];
 								$userActivePostsDetails[$i]['sender_name']= $userDetails['userTagName'];
@@ -1229,10 +1232,12 @@ class timeline_db_manager extends CI_Model
 								$userActivePostsDetails[$i]['last_post_timestamp']=$row->sent_timestamp;
 								$userActivePostsDetails[$i]['seen_status']=$row->seen_status;
 								//$userActivePostsDetails[$i]['unseen_post_count']=$this->getUnseenPostCount($userId,$userActivePostsDetails[$i]['post_type_id'],$userActivePostsDetails[$i]['sender_id']);
-							}
+							//}
+							/*
 							if ($row->post_type_id==2){
 								$userActivePostsDetails[$i]['post_type_id']=$row->post_type_id;
 								$userActivePostsDetails[$i]['sender_id']=$row->post_type_object_id;
+								//$userActivePostsDetails[$i]['sender_id']=$row->sender_id;
 								$spaceDetails = $this->identity_db_manager->getWorkSpaceDetailsByWorkSpaceId($userActivePostsDetails[$i]['sender_id']);
 								$userActivePostsDetails[$i]['sender_name']=$spaceDetails['workSpaceName'];
 								$userActivePostsDetails[$i]['sender_user_id']=$row->sender_id;
@@ -1248,6 +1253,7 @@ class timeline_db_manager extends CI_Model
 							if ($row->post_type_id==3){
 								$userActivePostsDetails[$i]['post_type_id']=$row->post_type_id;
 								$userActivePostsDetails[$i]['sender_id']=$row->post_type_object_id;
+								//$userActivePostsDetails[$i]['sender_id']=$row->sender_id;
 								$subSpaceDetails = $this->identity_db_manager->getSubWorkSpaceDetailsBySubWorkSpaceId($userActivePostsDetails[$i]['sender_id']);
 								$userActivePostsDetails[$i]['sender_name']=$subSpaceDetails['subWorkSpaceName'];
 								$userActivePostsDetails[$i]['sender_user_id']=$row->sender_id;
@@ -1260,6 +1266,7 @@ class timeline_db_manager extends CI_Model
 								$userActivePostsDetails[$i]['seen_status']=$row->seen_status;
 								//$userActivePostsDetails[$i]['unseen_post_count']=$this->getUnseenPostCount($userId,$userActivePostsDetails[$i]['post_type_id'],$userActivePostsDetails[$i]['sender_id']);
 							}	
+							*/
 							$i++;										
 						}
 						
