@@ -899,7 +899,20 @@
 				{ 
 				?>
 					
-					<a href="javascript:void(0)" onClick="deleteLeaf('<?php echo $arrVal['leafId']; ?>','<?php echo $workSpaceId; ?>','<?php echo $workSpaceType; ?>','<?php echo $treeId; ?>', 'post')" title="<?php echo $this->lang->line('txt_delete'); ?>" border="0" ><img src="<?php echo  base_url(); ?>images/trash.gif" alt="<?php echo $this->lang->line("txt_del"); ?>" title="<?php echo $this->lang->line("txt_delete"); ?>" border="0">
+					<a href="javascript:void(0)" onClick="deleteLeaf('<?php echo $arrVal['leafId']; ?>','<?php echo $workSpaceId; ?>','<?php echo $workSpaceType; ?>','<?php echo $treeId; ?>', 'post')" title="<?php echo "Delete Content"; ?>" border="0" ><img src="<?php echo  base_url(); ?>images/trash.gif" alt="<?php echo $this->lang->line("txt_del"); ?>" title="<?php echo "Delete Content"; ?>" border="0">
+					</a>
+					
+				<?php 
+				} 
+				?>
+			</span>
+			<span class="commonSeedLeafSpanRight" id="updatePostSeenStatusSpan<?php echo $arrVal['nodeId'];?>">
+				<?php 
+				if(($arrVal['leafStatus'] != 'discarded'))
+				{ 
+				?>
+					
+					<a href="javascript:void(0)" onClick="updatePostSeenStatus('<?php echo $arrVal['leafId']; ?>','<?php echo $_SESSION['userId']; ?>', 1)" title="<?php echo $this->lang->line('txt_delete'); ?>" border="0" ><img src="<?php echo  base_url(); ?>images/icon_delete.gif" alt="<?php echo $this->lang->line("txt_delete"); ?>" title="<?php echo $this->lang->line("txt_delete"); ?>" border="0">
 					</a>
 					
 				<?php 

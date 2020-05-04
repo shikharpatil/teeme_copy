@@ -84,7 +84,7 @@ $(document).ready(function()
 		$allBookmarkSpace='3';
 		//$bookmarkPosts	= $this->timeline_db_manager->get_timeline('0',$workSpaceId,$workSpaceType,$allBookmarkSpace);
 		//$totalBookmarkPosts = count($bookmarkPosts);
-		$totalBookmarkPosts = count($bookmarkedPosts);
+		//$totalBookmarkPosts = count($bookmarkedPosts);
 		//echo count($bookmarkPosts).'===='; exit;
 		//echo $totalSpacePosts.'======'.$totalPublicPosts;exit;
 		/*$postType=0;
@@ -558,7 +558,8 @@ $(document).ready(function()
 										<?php } */?>
 										</span>
 										
-										<div><span class="post_web_sidebar_secondary"><?php echo $this->time_manager->getUserTimeFromGMTTime($arrVal['last_post_timestamp'],$this->config->item('date_format')); ?></span></div>
+										<!--<div><span class="post_web_sidebar_secondary"><?php echo $this->time_manager->getUserTimeFromGMTTime($arrVal['last_post_timestamp'],$this->config->item('date_format')); ?></span></div>-->
+										<div><span class="post_web_sidebar_secondary spaceNameAllPost"><?php echo $arrVal['space_name'];?></span></div>
 									</div>
 									<div class="post_web_sidebar_data">
 										<span class="post_web_sidebar_secondary post_web_sidebar_username_data"><?php echo $arrVal['last_post_data']; ?></span>
@@ -566,7 +567,8 @@ $(document).ready(function()
 										<div><span class="post_web_post_count"><?php echo $arrVal['unseen_post_count']; ?></span></div>
 										<?php } ?>
 									</div>
-								</div>	  		
+									<div><span class="post_web_sidebar_secondary postTimeStamp"><?php echo $this->time_manager->getUserTimeFromGMTTime($arrVal['last_post_timestamp'],$this->config->item('date_format')); ?></span></div>
+								</div>  		
 								<div class="clr"></div>
 							</div>
 							<?php	
@@ -1011,7 +1013,12 @@ $(document).ready(function()
 				?>					
 			</div>
 			<div class="postUserDetailsBox">
-				<div class="profileLeftLabel" style="padding:3px 0;"><span><?php if($Profiledetail['firstName']!='' && $Profiledetail['lastName']!='') { ?><?php echo $Profiledetail['firstName'].' '.$Profiledetail['lastName']; ?><?php } ?></span></div>
+				<div class="profileLeftLabel" style="padding:3px 0;">
+					<span>
+						<?php //if($Profiledetail['firstName']!='' && $Profiledetail['lastName']!='') { echo $Profiledetail['firstName'].' '.$Profiledetail['lastName']; } ?>
+						<?php if($Profiledetail['editUserTagName']!='') { echo $Profiledetail['editUserTagName']; } ?>
+					</span>
+				</div>
 				<div style="padding:3px 0;">											
 					<span>
 						<?php //if($Profiledetail['editUserTagName']!='') { echo $Profiledetail['editUserTagName']; } ?>

@@ -2781,7 +2781,6 @@ class Post extends CI_Controller {
 			echo false;
 		}
 
-		
 	}
 	// Dashrath : code end
 
@@ -3026,6 +3025,7 @@ class Post extends CI_Controller {
 				}
 			}
 			*/
+			//echo count($arrDetails['arrTimeline']); exit;
 			if($this->uri->segment(5)=='home' && $workSpaceDetails['workSpaceName']!="Try Teeme")
 			{
 				$_SESSION['allSpace']=1;
@@ -3043,8 +3043,10 @@ class Post extends CI_Controller {
 			else{
 				unset($_SESSION['public']);
 				unset($_SESSION['allPublicSpace']);
-			}		
-			$arrDetails['bookmarkedPosts']= $this->timeline_db_manager->get_bookmark_by_user($_SESSION['userId']);
+			}	
+
+			//$arrDetails['bookmarkedPosts']= $this->timeline_db_manager->get_bookmark_by_user($_SESSION['userId']);
+			//$arrDetails['bookmarkedPosts']=$this->timeline_db_manager->get_timeline_web($treeId,$arrDetails['workSpaceId'],$arrDetails['workSpaceType'],$allBookmarkSpace,$_SESSION['userId'],6,$post_type_object_id);
 			$arrDetails['totalSpacePosts'] = $this->timeline_db_manager->getPostCountTimeline($workSpaceId, $workSpaceType, 0, 'space');
 			$arrDetails['totalPublicPosts'] = $this->timeline_db_manager->getPostCountTimeline($workSpaceId, $workSpaceType, 0, 'public');
 				if ($post_type_id==5){
@@ -3052,7 +3054,13 @@ class Post extends CI_Controller {
 				}
 				else{
 					$arrDetails['allPosts'] = $this->timeline_db_manager->getPostCountTimeline($workSpaceId, $workSpaceType, 0, 'all');
-				}			
+				}	
+				if ($post_type_id==6){
+					$arrDetails['totalBookmarkPosts'] = count($arrDetails['arrTimeline']);
+				}
+				else{
+					$arrDetails['totalBookmarkPosts'] = $this->timeline_db_manager->getPostCountTimeline($workSpaceId, $workSpaceType, 0, 'bookmark');
+				}				
 			$arrDetails['workSpaceMembers']	= $this->profile_manager->getAllUsersByWorkPlaceId($_SESSION['workPlaceId']);
 			$arrDetails['userAllSpaces']	= $objIdentity->getAllUserSpacesByWorkPlaceId($_SESSION['workPlaceId'],$_SESSION['userId']);
 			$arrDetails['userAllSubSpaces']	= $objIdentity->getAllUserSubSpacesByWorkPlaceId($_SESSION['workPlaceId'],$_SESSION['userId']);
@@ -4935,6 +4943,32 @@ class Post extends CI_Controller {
 			}*/
 		
 	}	
+
+	function updatePostSeenStatus()
+	{
+		if(!isset($_SESSION['userName']) || $_SESSION['userName'] =='')
+		{
+			$_SESSION['errorMsg']	= 	$this->lang->line('msg_session_expire'); 
+			$this->load->model('dal/identity_db_manager');						
+			$objIdentity	= $this->identity_db_manager;	
+			$arrDetails['workPlaceDetails'] 	= $objIdentity->getWorkPlaces();	
+			$this->load->view('login', $arrDetails);
+		}
+		else
+		{		
+			$this->load->model('dal/timeline_db_manager');
+
+			$post_id=$this->input->post('postId');
+			$user_id=$this->input->post('userId');
+			$seen_status=$this->input->post('seenStatus');
+
+			//Update seen status
+			if ($post_id!=0 && $user_id!=0){				
+				$result = $this->timeline_db_manager->updatePostSeenStatus($post_id,$user_id,$seen_status);
+				if($result) {echo "success";} else{echo "failure";}
+			}
+		}
+	}
 
 }
 

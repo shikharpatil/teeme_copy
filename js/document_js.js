@@ -5764,6 +5764,35 @@ function deleteLeaf(leafId, workSpaceId, workSpaceType, treeId, treeType)
   }  
 } 
 /* Dashrath : code end */
+function updatePostSeenStatus(leafId=0, userId=0, seenStatus=1){
+  var r=confirm("Do you really want to delete this post?");
+    if (r==true){
+      url = baseUrl+"post/updatePostSeenStatus";
+      user_data='postId='+leafId+"&userId="+userId+"&seenStatus="+seenStatus;
+      var request = $.ajax({
+
+        url: url,
+  
+        type: "POST",
+  
+        data: user_data,
+  
+        dataType: "html",
+  
+        async:true,
+  
+        success:function(result)
+           { 
+                if (result=="success"){
+                  location.reload();
+                }
+                else{
+                  jAlert("Something went wrong!","Alert"); 
+                }               
+           }
+        });
+    }
+}
 
 /* Added by Dashrath : code start */
 function newLeafCopy(leafId) 

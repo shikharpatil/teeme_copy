@@ -34,7 +34,8 @@
 										<?php } */?>
 										</span>
 										
-										<div><span class="post_web_sidebar_secondary"><?php echo $this->time_manager->getUserTimeFromGMTTime($arrVal['last_post_timestamp'],$this->config->item('date_format')); ?></span></div>
+										<!--<div><span class="post_web_sidebar_secondary"><?php echo $this->time_manager->getUserTimeFromGMTTime($arrVal['last_post_timestamp'],$this->config->item('date_format')); ?></span></div>-->
+										<div><span class="post_web_sidebar_secondary spaceNameAllPost"><?php echo $arrVal['space_name'];?></span></div>
 									</div>
 									<div class="post_web_sidebar_data">
 										<span class="post_web_sidebar_secondary post_web_sidebar_username_data"><?php echo $arrVal['last_post_data']; ?></span>
@@ -42,6 +43,7 @@
 										<div><span class="post_web_post_count"><?php echo $arrVal['unseen_post_count']; ?></span></div>
 										<?php } ?>
 									</div>
+									<div><span class="post_web_sidebar_secondary postTimeStamp"><?php echo $this->time_manager->getUserTimeFromGMTTime($arrVal['last_post_timestamp'],$this->config->item('date_format')); ?></span></div>
 								</div>	  		
 								<div class="clr"></div>
 							</div>

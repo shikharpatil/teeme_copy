@@ -13274,9 +13274,9 @@ $q = 'select * from(SELECT a.id, a.name, a.type, b.artifactId, b.artifactType ,b
 	{
 		if($nodeId!='')
 		{
-				$query = "SELECT treeIds, workSpaceId, workSpaceType FROM teeme_node where id=".$nodeId." AND treeIds='0'";
+				$q = "SELECT treeIds, workSpaceId, workSpaceType FROM teeme_node where id=".$nodeId." AND treeIds='0'";
 				
-				$query = $this->db->query($query);
+				$query = $this->db->query($q);
 				
 				if($query)
 				{
