@@ -49,7 +49,7 @@ foreach($workSpaceManagers as $managersData)
 }	
 
 //print_r ($managerIds); exit;
-$total_messages			=$this->identity_db_manager->getMessageCountBySpaceIdAndType($_SESSION['userId'],true,$workSpaceType,$workSpaceId );
+//$total_messages			=$this->identity_db_manager->getMessageCountBySpaceIdAndType($_SESSION['userId'],true,$workSpaceType,$workSpaceId );
 
 $userGroup= $this->identity_db_manager->getUserGroupByMemberId($_SESSION['userId']);
 if ($userGroup==0 && $workSpaceId==0)

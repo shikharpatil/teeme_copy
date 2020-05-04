@@ -3388,7 +3388,7 @@ class Dashboard extends CI_Controller
 					$arrDetails['arrTalks'] = $arrTalksFiltered;	
 					
 					$arrDetails['workSpaceMembers']	= $objIdentity->getWorkSpaceMembersByWorkSpaceId($workSpaceId);
-					$arrDetails['arrMessages'] = $this->profile_manager->getMessagesBySpaceIdAndType($userId,false,$workSpaceType,$workSpaceId);
+					//$arrDetails['arrMessages'] = $this->profile_manager->getMessagesBySpaceIdAndType($userId,false,$workSpaceType,$workSpaceId);
 					
 					$arrDetails['arrPostsTimeline'] = $objIdentity->getPostsByWorkSpaceId(0,$workSpaceId,$workSpaceType);
 					$arrDetails['externalDocs'] = $this->identity_db_manager->getExternalDocsByWorkspaceId($workSpaceId, $workSpaceType, '',3,2);

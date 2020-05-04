@@ -1,4 +1,4 @@
-<?php /*Copyright © 2008-2014. Team Beyond Borders Pty Ltd. All rights reserved.*/ ?><?php
+<?php /*Copyright ï¿½ 2008-2014. Team Beyond Borders Pty Ltd. All rights reserved.*/ ?><?php
 	/***********************************************************************************************************
 	*  *  *  *  *  *  *  *  *  *  *   I D E AV A T E   S O L U T I O N S   *  *  *  *  *  *  *  *   *
 	************************************************************************************************************
@@ -271,7 +271,7 @@ class Contact extends CI_Controller {
 		
 		$arrTree['treeId'] = $treeId;
 		$arrTree['position']=1;
-		$arrTree['countryDetails'] 		= $this->identity_db_manager->getCountries();
+		//$arrTree['countryDetails'] 		= $this->identity_db_manager->getCountries();
 		
 		$arrTree['workPlaceMembers'] = $objIdentity->getWorkPlaceMembersByWorkPlaceId($_SESSION['workPlaceId']);
 			
@@ -1003,7 +1003,7 @@ class Contact extends CI_Controller {
 		$arrTree['workSpaceType'] = $this->uri->segment(6);
 		$arrTree['treeId'] = $treeId;
 		$arrTree['position']=1;
-		$arrTree['countryDetails'] 		= $this->identity_db_manager->getCountries();
+		//$arrTree['countryDetails'] 		= $this->identity_db_manager->getCountries();
 		
 		$arrTree['workPlaceMembers'] = $objIdentity->getWorkPlaceMembersByWorkPlaceId($_SESSION['workPlaceId']);
 			
@@ -1112,7 +1112,7 @@ class Contact extends CI_Controller {
 			$arrTree['workSpaceType'] = $this->uri->segment(6);
 			$arrTree['treeId'] = $treeId;
 			$arrTree['position']=1;
-			$arrTree['countryDetails'] 		= $this->identity_db_manager->getCountries();
+			//$arrTree['countryDetails'] 		= $this->identity_db_manager->getCountries();
 			
 			$arrTree['workPlaceMembers'] = $objIdentity->getWorkPlaceMembersByWorkPlaceId($_SESSION['workPlaceId']);
 				
@@ -1280,7 +1280,7 @@ class Contact extends CI_Controller {
 		$arrTree['workSpaceType'] = $this->uri->segment(6);
 		$arrTree['treeId'] = $treeId;
 		$arrTree['position']=1;
-		$arrTree['countryDetails'] 		= $this->identity_db_manager->getCountries();
+		//$arrTree['countryDetails'] 		= $this->identity_db_manager->getCountries();
 		
 		$arrTree['workPlaceMembers'] = $objIdentity->getWorkPlaceMembersByWorkPlaceId($_SESSION['workPlaceId']);
 			
@@ -1392,7 +1392,7 @@ class Contact extends CI_Controller {
 		$arrTree['workSpaceType'] = $this->uri->segment(6);
 		$arrTree['treeId'] = $treeId;
 		$arrTree['position']=1;
-		$arrTree['countryDetails'] 		= $this->identity_db_manager->getCountries();
+		//$arrTree['countryDetails'] 		= $this->identity_db_manager->getCountries();
 		
 		$arrTree['workPlaceMembers'] = $objIdentity->getWorkPlaceMembersByWorkPlaceId($_SESSION['workPlaceId']);
 			
@@ -1763,7 +1763,7 @@ class Contact extends CI_Controller {
 					$arrTree['error']=$this->lang->line('msg_user_tag_exist');
 					
 					$arrTree['Contactdetail']=$postdata;
-					$arrTree['countryDetails'] = $this->identity_db_manager->getCountries();
+					//$arrTree['countryDetails'] = $this->identity_db_manager->getCountries();
 					if($_COOKIE['ismobile'])
 					{	
 						$this->load->view('contact/contact_edit_for_mobile', $arrTree);
@@ -1802,7 +1802,7 @@ class Contact extends CI_Controller {
 					);
 				$arrTree['Contactdetail']=$postdata;
 			}			
-			$arrTree['countryDetails'] 	= $this->identity_db_manager->getCountries();
+			//$arrTree['countryDetails'] 	= $this->identity_db_manager->getCountries();
 			if($_COOKIE['ismobile'])
 			{	
 				$this->load->view('contact/contact_edit_for_mobile', $arrTree);
