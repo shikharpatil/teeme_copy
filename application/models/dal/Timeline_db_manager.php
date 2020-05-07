@@ -581,6 +581,13 @@ class timeline_db_manager extends CI_Model
 		//echo "<li>post_type_id= " .$post_type_id;exit;
 		//echo "<li>workspaceid= " .$workSpaceId;exit;
 		//echo "<pre>"; print_r(explode(",",$recipients));exit;
+		//$this->load->model('dal/notification_db_manager');	
+		//$this->load->model('dal/profile_manager');
+		//$followers = $this->notification_db_manager->getFollowersByOjectId(10, $post_type_object_id);
+		//$arrPlaceUsers = $this->profile_manager->getAllUsersByWorkPlaceId($_SESSION['workPlaceId']);
+		//echo "<pre>follower"; print_r($followers);
+		//echo "<pre>placeusers"; print_r($arrPlaceUsers);exit;
+
 		$arrRecipients = array();
 		if ($recipients!=''){
 			$arrRecipients = explode(",",$recipients);
@@ -691,6 +698,15 @@ class timeline_db_manager extends CI_Model
 							}
 						}
 					*/	
+					$this->load->model('dal/notification_db_manager');	
+					$followers = array();
+					$followers = $this->notification_db_manager->getFollowersByOjectId(15, $post_type_object_id);
+					foreach($followers as $recipientsUserId)
+					{ 
+						if($recipientsUserId['userId']>0 && $recipientsUserId['userId']!=$_SESSION['userId']){
+							$values[] = "('".$nodeId."','".$post_type_id."','".$post_type_object_id."','".$recipientsUserId['userId']."','".$userId."','".$delivery_status_id."','".$seen_status."','".$createdDate."','".$this->db->escape_str($data)."')"; 	
+						}	
+					}
 					$values[] = "('".$nodeId."','".$post_type_id."','".$userId."','".$userId."','".$userId."','".$delivery_status_id."','".$seen_status."','".$createdDate."','".$this->db->escape_str($data)."')"; 						
 					/*
 					if ($userId!=$recipients){
@@ -702,12 +718,12 @@ class timeline_db_manager extends CI_Model
 					$q = "INSERT INTO teeme_post_web_post_store (post_id,post_type_id,post_type_object_id,participant_id,sender_id,delivery_status_id,seen_status,sent_timestamp,data) VALUES $val";
 					$query = $this->db->query($q);
 				}
-				else if ($post_type_id==2){
-					$this->load->model('dal/identity_db_manager');				
-					$arrSpaceRecipients = array();
-					$arrSpaceRecipientIds = array();
-					
+				else if ($post_type_id==2){							
 					if ($workSpaceId>0){
+						/*
+						$this->load->model('dal/identity_db_manager');	
+						$arrSpaceRecipients = array();
+						$arrSpaceRecipientIds = array();
 						$arrSpaceRecipients = $this->identity_db_manager->getWorkSpaceMembersByWorkSpaceId($post_type_object_id);
 
 						foreach($arrSpaceRecipients as $recipientsUserId)
@@ -717,6 +733,20 @@ class timeline_db_manager extends CI_Model
 							}	
 							$arrSpaceRecipientIds[] = $recipientsUserId['userId'];
 						}
+						*/
+						$this->load->model('dal/notification_db_manager');	
+						$followers = array();
+						$arrSpaceRecipientIds = array();
+						$followers = $this->notification_db_manager->getFollowersByOjectId(10, $post_type_object_id);
+						foreach($followers as $recipientsUserId)
+						{ 
+							if($recipientsUserId['userId']>0 && $recipientsUserId['userId']!=$_SESSION['userId']){
+								$values[] = "('".$nodeId."','".$post_type_id."','".$post_type_object_id."','".$recipientsUserId['userId']."','".$userId."','".$delivery_status_id."','".$seen_status."','".$createdDate."','".$this->db->escape_str($data)."')"; 	
+							}	
+							$arrSpaceRecipientIds[] = $recipientsUserId['userId'];
+						}
+						$values[] = "('".$nodeId."','".$post_type_id."','".$post_type_object_id."','".$userId."','".$userId."','".$delivery_status_id."','".$seen_status."','".$createdDate."','".$this->db->escape_str($data)."')"; 	
+						$arrSpaceRecipientIds[] = $userId;
 					}
 					else {
 						$values[] = "('".$nodeId."','".$post_type_id."','0','".$userId."','".$userId."','".$delivery_status_id."','".$seen_status."','".$createdDate."','".$this->db->escape_str($data)."')"; 	
@@ -760,11 +790,11 @@ class timeline_db_manager extends CI_Model
 					$query = $this->db->query($q);				
 				}
 				else if ($post_type_id==3){
+					/*
 					$this->load->model('dal/identity_db_manager');
 					$arrSubSpaceRecipients = array();
 					$arrSubSpaceRecipientIds = array();
 					$arrSubSpaceRecipients = $this->identity_db_manager->getSubWorkSpaceMembersBySubWorkSpaceId($post_type_object_id);
-
 					foreach($arrSubSpaceRecipients as $recipientsUserId)
 					{ 
 						if($recipientsUserId['userId']>0){
@@ -772,6 +802,21 @@ class timeline_db_manager extends CI_Model
 						}	
 						$arrSubSpaceRecipientIds[] = $recipientsUserId['userId'];
 					}
+					*/
+					$this->load->model('dal/notification_db_manager');	
+					$followers = array();
+					$arrSubSpaceRecipientIds = array();
+					$followers = $this->notification_db_manager->getFollowersByOjectId(11, $post_type_object_id);
+					foreach($followers as $recipientsUserId)
+					{ 
+						if($recipientsUserId['userId']>0 && $recipientsUserId['userId']!=$_SESSION['userId']){
+							$values[] = "('".$nodeId."','".$post_type_id."','".$post_type_object_id."','".$recipientsUserId['userId']."','".$userId."','".$delivery_status_id."','".$seen_status."','".$createdDate."','".$this->db->escape_str($data)."')"; 	
+						}	
+						$arrSubSpaceRecipientIds[] = $recipientsUserId['userId'];
+					}
+					$values[] = "('".$nodeId."','".$post_type_id."','".$post_type_object_id."','".$userId."','".$userId."','".$delivery_status_id."','".$seen_status."','".$createdDate."','".$this->db->escape_str($data)."')"; 	
+					$arrSubSpaceRecipientIds[] = $userId;
+					
 					if(count($arrRecipients)>0){
 						$arrPlaceUsers = array();
 						$this->load->model('dal/profile_manager');
@@ -1384,7 +1429,7 @@ class timeline_db_manager extends CI_Model
 			}
 	}
 
-	function getPostCountTimeline($workSpaceId, $workSpaceType, $treeId=0, $postType='')
+	public function getPostCountTimeline($workSpaceId, $workSpaceType, $treeId=0, $postType='')
 	{
 		//$mergePostArray=array();
 		//echo $postType; exit;

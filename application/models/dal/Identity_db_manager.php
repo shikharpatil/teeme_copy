@@ -2948,9 +2948,13 @@ teeme_leaf a,teeme_node b where a.id=b.leafId and b.treeIds='".$inserted_tree_id
 					$workSpaceData['workSpaceCreatedDate']	= $row->workSpaceCreatedDate;		
 					$workSpaceData['workSpaceManagerId'] 	= $row->workSpaceManagerId;		
 					$workSpaceData['status']				= $row->status;								
-				}				
-			}					
-			return $workSpaceData;	
+				}	
+							
+			}	
+			else{
+				$workSpaceData['workSpaceId'] = -1;				
+			}
+			return $workSpaceData;
 		}
 	
 	}	
@@ -13123,13 +13127,12 @@ $q = 'select * from(SELECT a.id, a.name, a.type, b.artifactId, b.artifactType ,b
 	
 	//Get object follow status
 	
-	public function get_follow_status($user_id,$object_instance_id,$place_name='')
+	public function get_follow_status($user_id,$object_instance_id,$place_name='',$object_id=1)
 	{
 		if($user_id!='' && $object_instance_id!='')
 		{
-			$objectFollowDetails	= array();
-			
-			$get_object_follow_status = "SELECT preference FROM teeme_notification_follow WHERE user_id ='".$user_id."' AND object_instance_id='".$object_instance_id."'";
+			$objectFollowDetails	= array();			
+			$get_object_follow_status = "SELECT preference FROM teeme_notification_follow WHERE user_id ='".$user_id."' AND object_id='".$object_id."' AND object_instance_id='".$object_instance_id."'";
 			
 			if($place_name!='')
 			{
@@ -13169,7 +13172,6 @@ $q = 'select * from(SELECT a.id, a.name, a.type, b.artifactId, b.artifactType ,b
 				}
 	
 			}					
-	
 			return $objectFollowDetails;
 		}
 	}

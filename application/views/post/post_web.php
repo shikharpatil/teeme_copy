@@ -948,7 +948,9 @@ $(document).ready(function()
 					
 				</li>	
 			<?php } ?>
-
+				<li>			
+					<a href="<?php echo base_url(); ?>post/web/<?php echo $workSpaceId; ?>/<?php echo $workSpaceType; ?>/one/<?php echo $_SESSION['userId']?>" style="padding-left:12px;margin-left:17px;<?php if($this->uri->segment(5)=='one' && $this->uri->segment(6)==$_SESSION['userId']) { ?>" class="active <?php } ?>"><?php echo 'My Profile'; ?></a>
+				</li>
 		
 			<?php /*?><li>
 
@@ -1018,6 +1020,11 @@ $(document).ready(function()
 						<?php //if($Profiledetail['firstName']!='' && $Profiledetail['lastName']!='') { echo $Profiledetail['firstName'].' '.$Profiledetail['lastName']; } ?>
 						<?php if($Profiledetail['editUserTagName']!='') { echo $Profiledetail['editUserTagName']; } ?>
 					</span>
+						<?php
+							$treeDetails['seedId']=$Profiledetail['userId']; 
+							$treeDetails['object_id']=15; // 15 is for user object. Look in notification_objects table for reference
+							$this->load->view('common/section_follow_post',$treeDetails);
+						?>
 				</div>
 				<div style="padding:3px 0;">											
 					<span>
@@ -1044,7 +1051,14 @@ $(document).ready(function()
 					<img class="rounded_profile_pic" id="imgName" alt="image" src="<?php echo base_url();?>images/noimage.jpg" width="65" height="65">
 				</div>
 				<div class="postUserDetailsBox">
-					<span class="profileLeftLabel"><?php echo $Profiledetail['workSpaceName'] .' (space)'; ?></span>
+					<span class="profileLeftLabel">
+						<?php echo $Profiledetail['workSpaceName'] .' (space)'; ?>
+						<?php
+							$treeDetails['seedId']=$post_type_object_id; 
+							$treeDetails['object_id']=10; // 10 is for space object. Look in notification_objects table for reference
+							$this->load->view('common/section_follow_post',$treeDetails);
+						?>
+					</span>
 					<!--
 					<div>
 						<span>Created on:<?php echo $this->time_manager->getUserTimeFromGMTTime($Profiledetail['workSpaceCreatedDate'],$this->config->item('date_format')); ?></span>
@@ -1060,7 +1074,14 @@ $(document).ready(function()
 					<img class="rounded_profile_pic" id="imgName" alt="image" src="<?php echo base_url();?>images/noimage.jpg" border="0"  width="45" height="45">
 				</div>
 				<div class="postUserDetailsBox">
-					<span class="profileLeftLabel"><?php echo $Profiledetail['subWorkSpaceName'] .' (sub-space)'; ?></span>
+					<span class="profileLeftLabel">
+						<?php echo $Profiledetail['subWorkSpaceName'] .' (sub-space)'; ?>
+						<?php
+							$treeDetails['seedId']=$post_type_object_id; 
+							$treeDetails['object_id']=11; // 11 is for sub-space object. Look in notification_objects table for reference
+							$this->load->view('common/section_follow_post',$treeDetails);
+						?>
+					</span>
 					<!--
 					<div>
 						<span>Created on:<?php echo $this->time_manager->getUserTimeFromGMTTime($Profiledetail['subWorkSpaceCreatedDate'],$this->config->item('date_format')); ?></span>
@@ -1141,20 +1162,29 @@ $(document).ready(function()
 		<?php
 			}
 		}
-		if($this->uri->segment('5') == 'space' || $this->uri->segment('5') == 'subspace')
+		if(($this->uri->segment('5') == 'space' || $this->uri->segment('5') == 'subspace') && ($this->uri->segment('6')==$workSpaceId))
 		{
-			if($workSpaceId>0)
-			{ 
-				if(isset($_SESSION['WSManagerAccess']) && $_SESSION['WSManagerAccess'] == 1)
+			if($this->uri->segment('6')>0)
+			{ 				
+				if ($this->uri->segment('5') == 'subspace'){
+					$wsDetails = $this->identity_db_manager->getWorkSpaceDetailsBySubWorkSpaceId($this->uri->segment('6'));
+					$wsId = $wsDetails['workSpaceId'];
+				}
+				else{
+					$wsId =$this->uri->segment('6');
+				}
+				//if(isset($_SESSION['WSManagerAccess']) && $_SESSION['WSManagerAccess'] == 1)
+				//echo 'wsid= ' .$wsId; exit;
+				if($wsId!='-1' && $this->identity_db_manager->getManagerStatus($_SESSION['userId'], $wsId, 3))
 				{
-			?>		
-			<div class="postAddIcon">
-			<a id="add" style="cursor:pointer;" onclick="showTimelineEditor();"><img title="Add" src="<?php echo base_url(); ?>/images/addnew.png" ></a>
-			</div>	
-			<?php
+					?>		
+					<div class="postAddIcon">
+					<a id="add" style="cursor:pointer;" onclick="showTimelineEditor();"><img title="Add" src="<?php echo base_url(); ?>/images/addnew.png" ></a>
+					</div>	
+					<?php
 				}
 			}
-			else{
+			else if(($this->uri->segment('5') == 'space') && ($this->uri->segment('6') == 0) && ($workSpaceId==0)) {
 			?>
 				<div class="postAddIcon">
 				<a id="add" style="cursor:pointer;" onclick="showTimelineEditor();"><img title="Add" src="<?php echo base_url(); ?>/images/addnew.png" ></a>
@@ -1373,8 +1403,7 @@ $(document).ready(function()
 				
 				if($workSpaceId=='0' && $_SESSION['public'] != 'public')
 				{
-						
-						?>
+				?>
 									
 						<!--Group feature start here-->
 						<?php if(count($groupList)>0){ ?>

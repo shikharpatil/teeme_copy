@@ -6702,33 +6702,9 @@ float:left;
 {
 	margin-top:10px;
 }
-
-.bookmarkBtn {
-    /*margin-top: 20px;*/ /*12 to 20*/
-	margin-left:0px;
-	margin-top: -2px;
-}
-.bookmark {
-    background: #395694 none repeat scroll 0 0;
-    border-radius: 6px !important;
-    color: #fff;
-    font-size: em;
-    padding: 7% !important;
-	cursor: pointer;
-}
-.bookmarked {
-    background: #999999 none repeat scroll 0 0;
-    border-radius: 6px !important;
-    color: #fff;
-    font-size: em;
-    padding: 7% !important;
-	cursor: pointer;
-}
 #TimelinePost {
 	margin-top:1%;
 }
-
-
 #TimelinePost .bookmark, #TimelinePost .bookmarked
 {
 	background: none !important;
@@ -7238,32 +7214,6 @@ input:checked + .slider:before {
     margin-top: 10px;
 }
 /*Notification preference css end*/
-
-/* Ojbect follow feature start here */
-.follow_object
-{
-	color: #fff !important;
-    margin-right: 5px !important;
-    margin-top: 0px !important;
-    font-size:0.8em !important;
-	border-style:none !important;
-}
-.followBtnDiv
-{
-	height:20px;
-	padding:5px 5px 10px 38px; /*old padding:8px 5px 10px 38px;*/
-}
-.blue_follow
-{
-	padding:10% !important;
-	width:35px;
-}
-
-.blue_following
-{
-	width:50px;
-}
-
 #updateImage
 {
 	padding:7px 0 0;

@@ -2286,9 +2286,9 @@ $lang['txt_object_unfollow'] = 'Unfollow';
 
 $lang['txt_object_following'] = 'Following';
 
-$lang['txt_confirm_follow'] =  'Are you sure you want to follow this tree?';
+$lang['txt_confirm_follow'] =  'Are you sure you want to follow?';
 
-$lang['txt_confirm_unfollow'] =  'Are you sure you want to unfollow this tree?';
+$lang['txt_confirm_unfollow'] =  'Are you sure you want to unfollow?';
 
 $lang['txt_summarize_email_notification'] = 'Summarized';
 

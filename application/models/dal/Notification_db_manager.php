@@ -5628,6 +5628,55 @@ function send_user_email_notifications($place_name=0,$email='')
 		return $notificationEventsData;	
 	}
 	/*Dashrath- getSharedTreeFeedData function end */
+	public function getFollowersByOjectId($object_id=0, $object_instance_id=0,$place_name=''){
+		if($object_id>0 && $object_instance_id>0)
+		{
+			$objectFollowDetails	= array();			
+			$get_object_follow_status = "SELECT user_id FROM teeme_notification_follow WHERE object_id='".$object_id."' AND object_instance_id='".$object_instance_id."'";
+			
+			if($place_name!='')
+			{
+				$config = array();
+				$placedb = '';
+				$config['hostname'] = base64_decode($this->config->item('hostname'));
+				$config['username'] = base64_decode($this->config->item('username'));
+				$config['password'] = base64_decode($this->config->item('password'));
+				$config['database'] = $this->config->item('instanceDb').'_'.$place_name;
+				$config['dbdriver'] = $this->db->dbdriver;
+				$config['dbprefix'] = $this->db->dbprefix;
+				$config['pconnect'] = FALSE;
+				$config['db_debug'] = $this->db->db_debug;
+				$config['cache_on'] = $this->db->cache_on;
+				$config['cachedir'] = $this->db->cachedir;
+				$config['char_set'] = $this->db->char_set;
+				$config['dbcollat'] = $this->db->dbcollat;
+				
+				$placedb = $this->load->database($config, TRUE);
+				$get_object_follow_status = $placedb->query($get_object_follow_status);	
+			}
+			else
+			{
+				$get_object_follow_status = $this->db->query($get_object_follow_status);
+			}
+	
+			if($get_object_follow_status->num_rows() > 0)
+	
+			{
+				$i=0;
+	
+				foreach ($get_object_follow_status->result() as $row)
+				{
+	
+					$objectFollowDetails[$i]['userId'] = $row->user_id;	
+					$i++;
+						
+				}
+	
+			}	
+			//echo "<pre>rows"; print_r($objectFollowDetails);exit;				
+			return $objectFollowDetails;
+		}
+	}
 }
 
 ?>

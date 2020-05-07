@@ -2336,3 +2336,67 @@ margin:5px;
 .endTimeIconCls {
   vertical-align: middle;
 }
+.bookmarkBtn {
+  /*margin-top: 20px;*/ /*12 to 20*/
+margin-left:0px;
+margin-top: -2px;
+}
+.bookmark {
+  background: #395694 none repeat scroll 0 0;
+  border-radius: 6px !important;
+  color: #fff;
+  font-size: em;
+  padding: 7% !important;
+cursor: pointer;
+}
+.bookmark2 {
+  background: #395694 none repeat scroll 0 0;
+  border-radius: 6px !important;
+  color: #fff;
+  font-size: em;
+  padding: 5px;
+  cursor: pointer;
+}
+.bookmarked {
+  background: #999999 none repeat scroll 0 0;
+  border-radius: 6px !important;
+  color: #fff;
+  font-size: em;
+  padding: 7% !important;
+cursor: pointer;
+}
+.bookmarked2 {
+  background: #999999 none repeat scroll 0 0;
+  border-radius: 6px !important;
+  color: #fff;
+  font-size: em;
+  padding: 5px;
+  cursor: pointer;
+}
+.follow_object
+{
+	color: #fff !important;
+    margin-right: 5px !important;
+    margin-top: 0px !important;
+    font-size:0.8em !important;
+	border-style:none !important;
+}
+.followBtnDiv
+{
+	height:20px;
+	padding:5px 5px 10px 38px; /*old padding:8px 5px 10px 38px;*/
+}
+.followBtnDiv2
+{
+	padding:5px;
+}
+.blue_follow
+{
+	padding:10% !important;
+	width:35px;
+}
+
+.blue_following
+{
+	width:50px;
+}

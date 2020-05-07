@@ -317,8 +317,9 @@ class Notifications extends CI_Controller
 			$preferenceStatus=$this->uri->segment('4');
 			$workSpaceId = $this->uri->segment(5);			
 			$workSpaceType = $this->uri->segment(6);
+			$object_id = $this->uri->segment(7);
 			$objectFollowData['user_id'] = $_SESSION['userId'];  
-			$objectFollowData['object_id'] = '1';
+			$objectFollowData['object_id'] = $object_id;
 			$objectFollowData['object_instance_id'] = $seedId; 
 			$objectFollowData['preference'] = $preferenceStatus; 
 			$objectFollowData['subscribed_date'] = $objTime->getGMTTime(); 

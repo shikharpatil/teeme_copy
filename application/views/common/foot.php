@@ -436,7 +436,7 @@ function changeFollowStatusOut(seedId)
 	}
 }
 
-function add_object_follow(seedId,followStatus)
+function add_object_follow(seedId,followStatus,object_id=1)
 {
 		//alert(workSpaceId+'==='+workSpaceType);
 		if(followStatus=='unfollow')
@@ -451,7 +451,7 @@ function add_object_follow(seedId,followStatus)
 		
 				$.ajax({
 				type: "POST",
-				url: baseUrl+"notifications/add_follow_status/"+seedId+"/0/"+workSpaceId+"/"+workSpaceType,
+				url: baseUrl+"notifications/add_follow_status/"+seedId+"/0/"+workSpaceId+"/"+workSpaceType+"/"+object_id,
 				cache: false,
 				success:  function(result){
 				  //alert(nodeId);
@@ -459,7 +459,7 @@ function add_object_follow(seedId,followStatus)
 				  {
 					if(followStatus=='unfollow')
 					{
-						$('.followBtn'+seedId).html('<a class="bookmark follow_object blue_follow" onclick="add_object_follow('+seedId+',\'follow\')"><?php echo $this->lang->line('txt_object_follow'); ?></a>');
+						$('.followBtn'+seedId).html('<a class="bookmark2 follow_object" onclick="add_object_follow('+seedId+',\'follow\')"><?php echo $this->lang->line('txt_object_follow'); ?></a>');
 					}
 				  }
 				}
@@ -481,7 +481,7 @@ function add_object_follow(seedId,followStatus)
 			{
 		  		$.ajax({
 					type: "POST",
-					url: baseUrl+"notifications/add_follow_status/"+seedId+"/1/"+workSpaceId+"/"+workSpaceType,
+					url: baseUrl+"notifications/add_follow_status/"+seedId+"/1/"+workSpaceId+"/"+workSpaceType+"/"+object_id,
 					cache: false,
 					success:  function(result){
 					  //alert(result);
@@ -489,7 +489,7 @@ function add_object_follow(seedId,followStatus)
 					  {
 						if(followStatus=='follow')
 						{
-							$('.followBtn'+seedId).html('<a class="bookmarked blue_following marked'+seedId+' follow_object" onclick="add_object_follow('+seedId+',\'unfollow\')" onmouseover="changeFollowStatusOver('+seedId+')" onmouseout="changeFollowStatusOut('+seedId+')"><?php echo $this->lang->line('txt_object_following'); ?></a>');
+							$('.followBtn'+seedId).html('<a class="bookmarked2 marked'+seedId+' follow_object" onclick="add_object_follow('+seedId+',\'unfollow\')" onmouseover="changeFollowStatusOver('+seedId+')" onmouseout="changeFollowStatusOut('+seedId+')"><?php echo $this->lang->line('txt_object_following'); ?></a>');
 						}
 					  }
 					}

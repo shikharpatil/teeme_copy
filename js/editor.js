@@ -78,9 +78,9 @@ function editor_code(val,ename,pId){
 
 		newInput.setAttribute('id',inputName);
 
-		newInput.setAttribute('rows','10');
+		newInput.setAttribute('rows','5');
 
-		newInput.setAttribute('cols','90');
+		newInput.setAttribute('cols','45');
 
 		newInput.value=val;
 
