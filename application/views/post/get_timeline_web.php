@@ -15,9 +15,9 @@
 	$rowColor1='row';
 	$rowColor2='row';	
 	$i = 1;	
-	/*echo '<pre>';
-	print_r($arrTimeline);
-	exit;*/
+	//echo '<pre>';
+	//print_r($arrTimeline);
+	//exit;
 	
 	//echo "<li>count= " .count($arrTimeline);print_r($arrTimeline);exit;
 	if(count($arrTimeline) > 0)
@@ -908,15 +908,23 @@
 			</span>
 			<span class="commonSeedLeafSpanRight" id="updatePostSeenStatusSpan<?php echo $arrVal['nodeId'];?>">
 				<?php 
-				if(($arrVal['leafStatus'] != 'discarded'))
+				if(($arrVal['seen_status'] == 0))
 				{ 
 				?>
 					
-					<a href="javascript:void(0)" onClick="updatePostSeenStatus('<?php echo $arrVal['leafId']; ?>','<?php echo $_SESSION['userId']; ?>', 1)" title="<?php echo $this->lang->line('txt_delete'); ?>" border="0" ><img src="<?php echo  base_url(); ?>images/icon_delete.gif" alt="<?php echo $this->lang->line("txt_delete"); ?>" title="<?php echo $this->lang->line("txt_delete"); ?>" border="0">
+					<a href="javascript:void(0)" onClick="updatePostSeenStatus('<?php echo $arrVal['leafId']; ?>','<?php echo $_SESSION['userId']; ?>', 1)" title="<?php echo 'Park'; ?>" border="0" ><img width="15" height="15" src="<?php echo  base_url(); ?>images/p_letter.png" alt="<?php echo 'Park'; ?>" title="<?php echo 'Park'; ?>">
 					</a>
 					
 				<?php 
 				} 
+				else{
+					?>
+					
+					<a href="javascript:void(0)" onClick="updatePostSeenStatus('<?php echo $arrVal['leafId']; ?>','<?php echo $_SESSION['userId']; ?>', 0)" title="<?php echo 'Park'; ?>" border="0" ><img width="15" height="15" src="<?php echo  base_url(); ?>images/u_letter.png" alt="<?php echo 'Park'; ?>" title="<?php echo 'Park'; ?>">
+					</a>
+					
+				<?php 					
+				}
 				?>
 			</span>
 			<!-- delete button end-->

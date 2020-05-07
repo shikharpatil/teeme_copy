@@ -2830,6 +2830,9 @@ class Post extends CI_Controller {
 			else if($post_type=='public') {
 				$post_type_id = 7;
 			}		
+			else if($post_type=='parked') {
+				$post_type_id = 8;
+			}	
 
 			// Update seen status of the current object
 			/*
@@ -2903,13 +2906,7 @@ class Post extends CI_Controller {
 				// Parv - Post type ids can be refrenced from teeme_post_web_post_types table
 				if ($post_type_id==1){
 					$arrDetails['Profiledetail'] = $this->profile_manager->getUserDetailsByUserId($post_type_object_id);
-					if($post_type=='bookmark'){
-						$allBookmarkSpace='3';
-						$arrDetails['arrTimeline']	= $this->timeline_db_manager->get_timeline_web($treeId,$arrDetails['workSpaceId'],$arrDetails['workSpaceType'],$allBookmarkSpace,$_SESSION['userId'],$post_type_id,$post_type_object_id);
-					}
-					else{
-						$arrDetails['arrTimeline']	= $this->timeline_db_manager->get_timeline_web($treeId,$arrDetails['workSpaceId'],$arrDetails['workSpaceType'],0,$_SESSION['userId'],$post_type_id,$post_type_object_id);
-					}
+					$arrDetails['arrTimeline']	= $this->timeline_db_manager->get_timeline_web($treeId,$arrDetails['workSpaceId'],$arrDetails['workSpaceType'],0,$_SESSION['userId'],$post_type_id,$post_type_object_id);
 				}
 				else if($post_type_id==2) {			
 					if ($post_type_object_id==$workSpaceId){
@@ -2944,6 +2941,10 @@ class Post extends CI_Controller {
 					$arrDetails['Profiledetail'] = $this->profile_manager->getUserDetailsByUserId($post_type_object_id);
 					$allPublicSpace='2';
 					$arrDetails['arrTimeline']	= $this->timeline_db_manager->get_timeline_web($treeId,$arrDetails['workSpaceId'],$arrDetails['workSpaceType'],$allPublicSpace,$_SESSION['userId'],$post_type_id,$post_type_object_id);
+				}
+				elseif ($post_type_id==8){
+					$arrDetails['Profiledetail'] = $this->profile_manager->getUserDetailsByUserId($post_type_object_id);
+					$arrDetails['arrTimeline']	= $this->timeline_db_manager->get_timeline_web($treeId,$arrDetails['workSpaceId'],$arrDetails['workSpaceType'],0,$_SESSION['userId'],$post_type_id,$post_type_object_id);
 				}
 				else{
 					$arrDetails['arrTimeline'] = '';
@@ -3046,9 +3047,13 @@ class Post extends CI_Controller {
 			}	
 
 			//$arrDetails['bookmarkedPosts']= $this->timeline_db_manager->get_bookmark_by_user($_SESSION['userId']);
-			//$arrDetails['bookmarkedPosts']=$this->timeline_db_manager->get_timeline_web($treeId,$arrDetails['workSpaceId'],$arrDetails['workSpaceType'],$allBookmarkSpace,$_SESSION['userId'],6,$post_type_object_id);
 			$arrDetails['totalSpacePosts'] = $this->timeline_db_manager->getPostCountTimeline($workSpaceId, $workSpaceType, 0, 'space');
-			$arrDetails['totalPublicPosts'] = $this->timeline_db_manager->getPostCountTimeline($workSpaceId, $workSpaceType, 0, 'public');
+				if ($post_type_id==1 && $this->uri->segment(6)==$_SESSION['userId']){
+					$arrDetails['totalMyPosts'] = count($arrDetails['arrTimeline']);
+				}
+				else{
+					$arrDetails['totalMyPosts'] = $this->timeline_db_manager->getPostCountTimeline($workSpaceId, $workSpaceType, 0, 'my');
+				}	
 				if ($post_type_id==5){
 					$arrDetails['allPosts'] = count($arrDetails['arrTimeline']);
 				}
@@ -3060,7 +3065,19 @@ class Post extends CI_Controller {
 				}
 				else{
 					$arrDetails['totalBookmarkPosts'] = $this->timeline_db_manager->getPostCountTimeline($workSpaceId, $workSpaceType, 0, 'bookmark');
-				}				
+				}
+				if ($post_type_id==7){
+					$arrDetails['totalPublicPosts'] = count($arrDetails['arrTimeline']);
+				}
+				else{
+					$arrDetails['totalPublicPosts'] = $this->timeline_db_manager->getPostCountTimeline($workSpaceId, $workSpaceType, 0, 'public');
+				}
+				if ($post_type_id==8){
+					$arrDetails['totalParkedPosts'] = count($arrDetails['arrTimeline']);
+				}
+				else{
+					$arrDetails['totalParkedPosts'] = $this->timeline_db_manager->getPostCountTimeline($workSpaceId, $workSpaceType, 0, 'parked');
+				}						
 			$arrDetails['workSpaceMembers']	= $this->profile_manager->getAllUsersByWorkPlaceId($_SESSION['workPlaceId']);
 			$arrDetails['userAllSpaces']	= $objIdentity->getAllUserSpacesByWorkPlaceId($_SESSION['workPlaceId'],$_SESSION['userId']);
 			$arrDetails['userAllSubSpaces']	= $objIdentity->getAllUserSubSpacesByWorkPlaceId($_SESSION['workPlaceId'],$_SESSION['userId']);

@@ -1028,16 +1028,17 @@ class timeline_db_manager extends CI_Model
 
 		}
 		*/
+		/*
 		// if one-to-one
 		if ($post_type_id==1) {
-			/*
-			if ($user_id!=$post_type_object_id){
-				$q = "SELECT COUNT(id) as row_count FROM teeme_post_web_post_store WHERE post_type_id=1 AND ((participant_id='".$post_type_object_id."' AND sender_id='".$user_id."') OR (participant_id='".$user_id."' AND sender_id='".$post_type_object_id."'))";
-			}
-			else{
-				$q = "SELECT COUNT(id) as row_count FROM teeme_post_web_post_store WHERE post_type_id=1 AND participant_id='".$user_id."' AND sender_id='".$user_id."' AND post_type_object_id='".$user_id."'";
-			}
-			*/
+			
+			//if ($user_id!=$post_type_object_id){
+				//$q = "SELECT COUNT(id) as row_count FROM teeme_post_web_post_store WHERE post_type_id=1 AND ((participant_id='".$post_type_object_id."' AND sender_id='".$user_id."') OR (participant_id='".$user_id."' AND sender_id='".$post_type_object_id."'))";
+			//}
+			//else{
+				//$q = "SELECT COUNT(id) as row_count FROM teeme_post_web_post_store WHERE post_type_id=1 AND participant_id='".$user_id."' AND sender_id='".$user_id."' AND post_type_object_id='".$user_id."'";
+			//}
+			
 			$q = "SELECT COUNT(id) as row_count FROM teeme_post_web_post_store WHERE (post_type_id=1 OR post_type_id=5) AND post_type_object_id='".$post_type_object_id."' AND seen_status=0";
 			$query = $this->db->query($q);		
 		}
@@ -1066,8 +1067,9 @@ class timeline_db_manager extends CI_Model
 		foreach($query->result() as $row){		
 			$row_count = $row->row_count;													
 		}	
+		*/
 		//echo "<li>row= " .$row_count; exit;
-		if($row_count>0){
+		//if($row_count>0){
 			if ($post_type_id==1) {
 				/*
 				if ($user_id==$post_type_object_id){
@@ -1107,7 +1109,11 @@ class timeline_db_manager extends CI_Model
 			}
 			else if ($post_type_id==7){
 				$q2 = "SELECT a.workSpaceId as workSpaceId, a.workSpaceType as workSpaceType, a.id, a.successors, a.predecessor, a.nodeOrder, b.id as leafId, b.authors, b.userId, b.contents, DATE_FORMAT(b.createdDate, '%Y-%m-%d %H:%i:%s') as TimelineCreatedDate, b.leafStatus FROM teeme_node a, teeme_leaf b, teeme_post_web_post_store c WHERE c.post_id=a.id AND c.post_type_id=7 AND c.participant_id='".$user_id."' AND b.id=a.leafId AND (a.predecessor='0' or a.predecessor='') AND a.treeIds=".$treeId." AND a.workSpaceId='0' AND a.workSpaceType='0' AND c.seen_status=0 ORDER BY b.editedDate DESC";
-			}			
+			}	
+			else if ($post_type_id==8){
+				//$query = $this->db->query("SELECT a.workSpaceId as workSpaceId, a.workSpaceType as workSpaceType, a.id, a.successors, a.predecessor, a.nodeOrder, b.id as leafId, b.authors, b.userId, b.contents, DATE_FORMAT(b.createdDate, '%Y-%m-%d %H:%i:%s') as TimelineCreatedDate, b.leafStatus FROM teeme_node a, teeme_leaf b WHERE b.id=a.leafId and (a.predecessor='0' or a.predecessor='') and a.treeIds=".$treeId." and a.workSpaceId='0' and a.workSpaceType='0' ORDER BY b.editedDate DESC");
+				$q2 = "SELECT a.workSpaceId as workSpaceId, a.workSpaceType as workSpaceType, a.id, a.successors, a.predecessor, a.nodeOrder, b.id as leafId, b.authors, b.userId, b.contents, DATE_FORMAT(b.createdDate, '%Y-%m-%d %H:%i:%s') as TimelineCreatedDate, b.leafStatus, c.seen_status FROM teeme_node a, teeme_leaf b, teeme_post_web_post_store c WHERE c.post_id=a.id AND c.participant_id='".$user_id."' AND b.id=a.leafId AND (a.predecessor='0' or a.predecessor='') AND a.treeIds=".$treeId." AND c.seen_status=1 ORDER BY b.editedDate DESC";
+			}		
 				$query2 = $this->db->query($q2);
 			//echo $q2;
 			//echo "<pre>"; print_r($query2->result());exit;
@@ -1138,12 +1144,14 @@ class timeline_db_manager extends CI_Model
 					$treeData[$i]['commentWorkSpaceType']  		= $row->workSpaceType;
 
 					$treeData[$i]['leafStatus']  		= $row->leafStatus;
+
+					$treeData[$i]['seen_status']  		= $row->seen_status;
 	
 					$i++;											
 				}
 				return $treeData;	
 			}	
-		}
+		//}
 
 		return $treeData;	
 
@@ -1433,7 +1441,10 @@ class timeline_db_manager extends CI_Model
 	{
 		//$mergePostArray=array();
 		//echo $postType; exit;
-		if ($postType=='space' && $workSpaceType==1){
+		if($postType=='my'){
+			$post_type_id=1;
+		}
+		elseif ($postType=='space' && $workSpaceType==1){
 			$post_type_id=2;
 		}elseif ($postType=='space' && $workSpaceType==2){
 			$post_type_id=3;
@@ -1441,6 +1452,8 @@ class timeline_db_manager extends CI_Model
 			$post_type_id=6;
 		}elseif ($postType=='public'){
 			$post_type_id=7;
+		}elseif ($postType=='parked'){
+			$post_type_id=8;
 		}
 
 		if($workSpaceId >= 0)
@@ -1448,7 +1461,12 @@ class timeline_db_manager extends CI_Model
 		
 			//Fetch space post count			
 			//$result_count1 = $this->db->query("SELECT a.id FROM teeme_node a, teeme_leaf b, teeme_posts_shared r WHERE r.postId =a.id and b.id=a.leafId and (a.predecessor='0' or a.predecessor='') and a.treeIds=".$treeId." and a.workSpaceId='".$workSpaceId."' and a.workSpaceType='".$workSpaceType."' ORDER BY b.editedDate DESC");
-				if($postType=='space'){
+				if($postType=='my'){
+					$q = "SELECT a.id FROM `teeme_post_web_post_store` AS a WHERE a.post_type_id=$post_type_id AND a.participant_id='".$_SESSION['userId']."' AND a.sender_id='".$_SESSION['userId']."' AND a.seen_status=0 GROUP BY a.post_id";
+					$result_count1 = $this->db->query($q);
+					//echo "<pre>result= "; print_r($q); exit;
+				}	
+				elseif($postType=='space'){
 					if($workSpaceId == 0){
 						$q = "SELECT a.id FROM `teeme_post_web_post_store` AS a WHERE a.sender_id='".$_SESSION['userId']."' AND a.post_type_object_id=0 AND a.participant_id='".$_SESSION['userId']."' AND a.seen_status=0 GROUP BY a.post_id";
 					}else{
@@ -1468,7 +1486,10 @@ class timeline_db_manager extends CI_Model
 				}elseif($postType=='public'){
 					//$result_count1 = $this->db->query("SELECT a.id FROM teeme_node a, teeme_leaf b WHERE b.id=a.leafId AND (a.predecessor='0' or a.predecessor='') AND a.treeIds=".$treeId." AND a.workSpaceId='0' AND a.workSpaceType='0' ORDER BY b.editedDate DESC");
 					//echo "<pre>result1= "; print_r($result_count1->result()); exit;
-					$q = "SELECT a.id FROM `teeme_post_web_post_store` AS a WHERE a.post_type_id=$post_type_id AND a.seen_status=0 GROUP BY a.post_id";
+					$q = "SELECT a.id FROM `teeme_post_web_post_store` AS a WHERE a.post_type_id=$post_type_id AND a.participant_id='".$_SESSION['userId']."' AND a.seen_status=0 GROUP BY a.post_id";
+					$result_count1 = $this->db->query($q);
+				}elseif($postType=='parked'){
+					$q = "SELECT a.id FROM `teeme_post_web_post_store` AS a WHERE a.participant_id='".$_SESSION['userId']."' AND a.seen_status=1 GROUP BY a.post_id";
 					$result_count1 = $this->db->query($q);
 				}
 

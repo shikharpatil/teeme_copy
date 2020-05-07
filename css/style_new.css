@@ -7387,16 +7387,6 @@ input:checked + .slider:before {
 	background-color:#E9EBEE;
 	/*width:calc(78% - 185px);*/
 }
-.leftTabUl
-{
-	float:left;
-	width:50%;
-}
-.rightTabUl
-{
-	float:left;
-	width:50%;
-}
 .leftAddBox
 {
 	float:left;

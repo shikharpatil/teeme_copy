@@ -949,8 +949,19 @@ $(document).ready(function()
 				</li>	
 			<?php } ?>
 				<li>			
-					<a href="<?php echo base_url(); ?>post/web/<?php echo $workSpaceId; ?>/<?php echo $workSpaceType; ?>/one/<?php echo $_SESSION['userId']?>" style="padding-left:12px;margin-left:17px;<?php if($this->uri->segment(5)=='one' && $this->uri->segment(6)==$_SESSION['userId']) { ?>" class="active <?php } ?>"><?php echo 'My Profile'; ?></a>
+					<a href="<?php echo base_url(); ?>post/web/<?php echo $workSpaceId; ?>/<?php echo $workSpaceType; ?>/one/<?php echo $_SESSION['userId']?>" style="padding-left:12px;margin-left:17px;<?php if($this->uri->segment(5)=='one' && $this->uri->segment(6)==$_SESSION['userId']) { ?>" class="active <?php } ?>"><?php echo 'My Posts'.' ('.$totalMyPosts.')'; ?></a>
 				</li>
+				<li>			
+					<a href="<?php echo base_url(); ?>post/web/<?php echo $workSpaceId; ?>/<?php echo $workSpaceType; ?>/parked/<?php echo $_SESSION['userId']?>" style="padding-left:12px;margin-left:17px;<?php if($this->uri->segment(5)=='parked' && $this->uri->segment(6)==$_SESSION['userId']) { ?>" class="active <?php } ?>"><?php echo 'Parked'.' ('.$totalParkedPosts.')'; ?></a>
+				</li>
+				<!--	
+				<li>			
+					<a href="<?php echo base_url(); ?>post/web/<?php echo $workSpaceId; ?>/<?php echo $workSpaceType; ?>/following/<?php echo $_SESSION['userId']?>" style="padding-left:12px;margin-left:17px;<?php if($this->uri->segment(5)=='following' && $this->uri->segment(6)==$_SESSION['userId']) { ?>" class="active <?php } ?>"><?php echo 'Following'; ?></a>
+				</li>
+				<li>			
+					<a href="<?php echo base_url(); ?>post/web/<?php echo $workSpaceId; ?>/<?php echo $workSpaceType; ?>/followers/<?php echo $_SESSION['userId']?>" style="padding-left:12px;margin-left:17px;<?php if($this->uri->segment(5)=='followers' && $this->uri->segment(6)==$_SESSION['userId']) { ?>" class="active <?php } ?>"><?php echo 'Followers'; ?></a>
+				</li>
+				-->
 		
 			<?php /*?><li>
 

@@ -5765,7 +5765,13 @@ function deleteLeaf(leafId, workSpaceId, workSpaceType, treeId, treeType)
 } 
 /* Dashrath : code end */
 function updatePostSeenStatus(leafId=0, userId=0, seenStatus=1){
-  var r=confirm("Do you really want to delete this post?");
+  if (seenStatus==1){
+    var r=confirm("Do you really want to park this post?");
+  }
+  else{
+    var r=confirm("Do you really want to unpark this post?");
+  }
+  
     if (r==true){
       url = baseUrl+"post/updatePostSeenStatus";
       user_data='postId='+leafId+"&userId="+userId+"&seenStatus="+seenStatus;

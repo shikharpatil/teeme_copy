@@ -2395,8 +2395,19 @@ cursor: pointer;
 	padding:10% !important;
 	width:35px;
 }
-
 .blue_following
 {
 	width:50px;
+}
+.leftTabUl
+{
+  /*
+	float:left;
+	width:50%;
+  */
+}
+.rightTabUl
+{
+	float:left;
+	width:50%;
 }
