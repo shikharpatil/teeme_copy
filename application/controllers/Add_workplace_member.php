@@ -50,8 +50,8 @@ class Add_workplace_member extends CI_Controller
 			$objIdentity->updateLogin();
 			$arrDetails['workSpaceId'] = 0;
 			$arrDetails['workSpaceType'] = 1;
-			$arrDetails['countryDetails'] 		= $this->identity_db_manager->getCountries();
-			$arrDetails['communityDetails'] 	= $this->identity_db_manager->getUserCommunities();	
+			//$arrDetails['countryDetails'] 		= $this->identity_db_manager->getCountries();
+			//$arrDetails['communityDetails'] 	= $this->identity_db_manager->getUserCommunities();	
 			/*Get all timezone name*/
 			$arrDetails['timezoneDetails'] 	= $this->identity_db_manager->getTimezoneNames();
 
@@ -713,8 +713,8 @@ class Add_workplace_member extends CI_Controller
 			$objIdentity->updateLogin();
 			$arrDetails['workSpaceId'] = 0;
 			$arrDetails['workSpaceType'] = 1;
-			$arrDetails['countryDetails'] 		= $this->identity_db_manager->getCountries();
-			$arrDetails['communityDetails'] 	= $this->identity_db_manager->getUserCommunities();	
+			//$arrDetails['countryDetails'] 		= $this->identity_db_manager->getCountries();
+			//$arrDetails['communityDetails'] 	= $this->identity_db_manager->getUserCommunities();	
 			#*********************** js validation **************************************
 			$arrDetails['jsFirstName'] = $this->lang->line('jserror_first_name');
 			

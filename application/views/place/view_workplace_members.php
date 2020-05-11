@@ -348,7 +348,8 @@ function confirmDeleteMember2 ()
 
 				$objIdentity	= $this->identity_db_manager;			
 
-				$userCommunityName = $this->identity_db_manager->getUserCommunityNameByCommunityId($workPlaceMemberData['userCommunityId']);						
+				//$userCommunityName = $this->identity_db_manager->getUserCommunityNameByCommunityId($workPlaceMemberData['userCommunityId']);	
+
 
 			?>
 
