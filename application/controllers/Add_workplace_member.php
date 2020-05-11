@@ -233,7 +233,8 @@ class Add_workplace_member extends CI_Controller
 				$objTime	= $this->time_manager;	
 
 				$userCommunityId = 1;
-				$userCommunityName = $objIdentity->getUserCommunityNameByCommunityId($userCommunityId);		
+				//$userCommunityName = $objIdentity->getUserCommunityNameByCommunityId($userCommunityId);	
+				$userCommunityName = "Teeme";	
 				
 				
 	
