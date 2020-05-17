@@ -1508,8 +1508,27 @@ class timeline_db_manager extends CI_Model
 				}elseif($postType=='all')
 				{
 					//$result_count1 = $this->db->query("SELECT a.workSpaceId as workSpaceId, a.workSpaceType as workSpaceType, a.id, a.successors, a.predecessor, a.nodeOrder, b.id as leafId, b.authors, b.userId, b.contents, DATE_FORMAT(b.createdDate, '%Y-%m-%d %H:%i:%s') as TimelineCreatedDate FROM teeme_node a, teeme_leaf b, teeme_posts_shared r WHERE r.postId =a.id and b.id=a.leafId and (a.predecessor='0' or a.predecessor='') and a.treeIds=".$treeId." ORDER BY b.editedDate DESC");
-					$q = "SELECT a.id FROM teeme_node a, teeme_leaf b, teeme_post_web_post_store c WHERE c.post_id=a.id AND c.participant_id='".$_SESSION['userId']."' AND b.id=a.leafId AND (a.predecessor='0' OR a.predecessor='') AND a.treeIds=".$treeId." AND c.seen_status=0";
-					$result_count1 = $this->db->query($q);
+					$arrPostIds = array();
+					$this->load->model('dal/identity_db_manager');
+					$q = "SELECT post_id,post_type_id,post_type_object_id FROM teeme_post_web_post_store WHERE participant_id='".$_SESSION['userId']."' AND seen_status=0";
+					$query = $this->db->query($q);
+						foreach($query->result() as $row){		
+							if($row->post_type_id==9){
+								$objectFollowStatus==$this->identity_db_manager->get_follow_status($_SESSION['userId'],$row->post_type_object_id,'',10);
+								if($objectFollowStatus['preference'] || $this->identity_db_manager->isWorkSpaceMember($row->post_type_object_id,$_SESSION['userId'])){
+									$arrPostIds[]=$row->post_id;
+								}
+							}else{
+								$arrPostIds[]=$row->post_id;
+							}
+						}
+					//$q = "SELECT a.id FROM teeme_node a, teeme_leaf b, teeme_post_web_post_store c WHERE c.post_id=a.id AND c.participant_id='".$_SESSION['userId']."' AND b.id=a.leafId AND (a.predecessor='0' OR a.predecessor='') AND a.treeIds=".$treeId." AND c.seen_status=0";
+					$q2 = "SELECT a.id FROM teeme_node a, teeme_leaf b, teeme_post_web_post_store c WHERE c.post_id=a.id AND c.participant_id='".$_SESSION['userId']."' AND b.id=a.leafId AND (a.predecessor='0' OR a.predecessor='') AND a.treeIds=".$treeId." AND c.seen_status=0";							
+					if(count($arrPostIds)>0){
+						$postIds = implode(",",$arrPostIds);
+						$q2 .= " AND c.post_id IN ($postIds)";
+					}
+					$result_count1 = $this->db->query($q2);
 				}elseif($postType=='bookmark')
 				{
 					$q = "SELECT a.id as row_count FROM teeme_node a, teeme_leaf b, teeme_bookmark c, teeme_post_web_post_store d WHERE b.id=a.leafId AND b.id=d.post_id AND a.leafId=d.post_id AND c.node_id=d.post_id AND d.participant_id='".$_SESSION['userId']."' AND d.seen_status=0 AND (a.predecessor='0' OR a.predecessor='') AND a.treeIds=".$treeId." AND c.node_id=a.id AND c.bookmarked=1 AND c.user_id='".$_SESSION['userId']."' ORDER BY c.bookmark_date DESC";
