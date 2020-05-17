@@ -546,7 +546,7 @@ $(document).ready(function()
 								<div class="post_web_sidebar_col2">
 									<div class="post_web_sidebar_user_time">
 									<span class="post_web_sidebar_username_data">
-										<?php if ($arrVal['post_type_id']==1 || $arrVal['post_type_id']==2 || $arrVal['post_type_id']==3 || $arrVal['post_type_id']==5 || $arrVal['post_type_id']==7) {
+										<?php if ($arrVal['post_type_id']==1 || $arrVal['post_type_id']==2 || $arrVal['post_type_id']==3 || $arrVal['post_type_id']==5 || $arrVal['post_type_id']==7 || $arrVal['post_type_id']==9) {
 										?>
 											<a href="<?php echo base_url();?>post/web/<?php echo $workSpaceId;?>/<?php echo $workSpaceType; ?>/one/<?php echo $arrVal['sender_id']; ?>" class="blue-link-underline" title="<?php echo $arrVal['sender_name']; ?>" style="word-wrap:break-word;float:left;"><?php echo wordwrap($arrVal['sender_name'],true); ?> </a>
 
@@ -1056,6 +1056,7 @@ $(document).ready(function()
 			<?php 
 			} // end if a user profile
 			// if a space or subspace profile
+			/*
 			else if ($post_type_id==2 && count($Profiledetail)>0){				
 				?>				
 				<div class="timelineProfImg">
@@ -1065,9 +1066,11 @@ $(document).ready(function()
 					<span class="profileLeftLabel">
 						<?php echo $Profiledetail['workSpaceName'] .' (space)'; ?>
 						<?php
-							$treeDetails['seedId']=$post_type_object_id; 
-							$treeDetails['object_id']=10; // 10 is for space object. Look in notification_objects table for reference
-							$this->load->view('common/section_follow_post',$treeDetails);
+							if(!$isSpaceProfileMember){
+								$treeDetails['seedId']=$post_type_object_id; 
+								$treeDetails['object_id']=10; // 10 is for space object. Look in notification_objects table for reference
+								$this->load->view('common/section_follow_post',$treeDetails);
+							}
 						?>
 					</span>
 					<!--
@@ -1078,7 +1081,7 @@ $(document).ready(function()
 					-->
 				</div>
 				<?php
-			}
+			}*/
 			else if ($post_type_id==3 && count($Profiledetail)>0){				
 				?>
 				<div class="timelineProfImg">
@@ -1088,9 +1091,11 @@ $(document).ready(function()
 					<span class="profileLeftLabel">
 						<?php echo $Profiledetail['subWorkSpaceName'] .' (sub-space)'; ?>
 						<?php
+						if(!$isSubSpaceProfileMember){
 							$treeDetails['seedId']=$post_type_object_id; 
 							$treeDetails['object_id']=11; // 11 is for sub-space object. Look in notification_objects table for reference
 							$this->load->view('common/section_follow_post',$treeDetails);
+						}
 						?>
 					</span>
 					<!--
@@ -1117,19 +1122,34 @@ $(document).ready(function()
 			?>
 				<div class="post_web_tab_menu_2 main_tabs">
 					<ul class="post_web_tab_menu_list_2">
-						<li class="active"><a href="#TimelinePost">Posts</a></li>
-						<li><a href="#divProfile">Profile</a></li>						
-						<!--
-						<li><a href="#divPhotos">Photos</a></li>
-						<li><a href="#divVideos">Videos</a></li>
-						-->
+						<li class="active"><a href="#TimelinePost">Internal</a></li>
+						<li><a href="#divProfile">External</a></li>						
 					</ul>
 					<div class="clr"></div>
 				</div>
-				
+
 			<?php 
 			} */?>
-			<?php
+			<?php 
+			if ($post_type_id==2 || $post_type_id==9){
+				$link1 = base_url()."post/web/".$workSpaceId."/".$workSpaceType."/space/".$workSpaceId;
+				$link2 = base_url()."post/web/".$workSpaceId."/".$workSpaceType."/space_ex/".$workSpaceId;
+				if ($myProfileDetail['userGroup']>0) { ?>
+					<div class="post_web_tab_menu_2 main_tabs">
+						<ul class="post_web_tab_menu_list_2">
+							<li <?php if($this->uri->segment(5)=='space'){ echo 'class="active"'; }?>><a href="<?php echo $link1;?>">Internal</a></li>
+							<li <?php if($this->uri->segment(5)=='space_ex'){ echo 'class="active"'; }?>><a href="<?php echo $link2;?>">External</a></li>						
+						</ul>
+						<div class="clr"></div>
+					</div>
+				<?php
+				}
+			}/*
+			else{
+				$link = base_url()."post/web/".$workSpaceId."/".$workSpaceType."/subspace/".$workSpaceId;
+			}*/
+			
+
 			/*
 			if(count($Profiledetail)>0){
 			?>
@@ -1173,20 +1193,34 @@ $(document).ready(function()
 		<?php
 			}
 		}
-		if(($this->uri->segment('5') == 'space' || $this->uri->segment('5') == 'subspace') && ($this->uri->segment('6')==$workSpaceId))
+		if(($this->uri->segment('5') == 'space' || $this->uri->segment('5') == 'space_ex' || $this->uri->segment('5') == 'subspace') && ($this->uri->segment('6')==$workSpaceId))
 		{
 			if($this->uri->segment('6')>0)
 			{ 				
 				if ($this->uri->segment('5') == 'subspace'){
 					$wsDetails = $this->identity_db_manager->getWorkSpaceDetailsBySubWorkSpaceId($this->uri->segment('6'));
 					$wsId = $wsDetails['workSpaceId'];
+					if($isSubSpaceProfileMember){$allowAddPost=1;}
+					else{$allowAddPost=0;}
+				}
+				else if ($this->uri->segment('5') == 'space_ex'){
+					$wsId =$this->uri->segment('6');
+					if ($this->identity_db_manager->getManagerStatus($_SESSION['userId'], $wsId, 3)){
+						$allowAddPost=1;
+					}
+					else{
+						$allowAddPost=0;
+					}
 				}
 				else{
 					$wsId =$this->uri->segment('6');
+					if($isSpaceProfileMember){$allowAddPost=1;}
+					else{$allowAddPost=0;}
 				}
 				//if(isset($_SESSION['WSManagerAccess']) && $_SESSION['WSManagerAccess'] == 1)
 				//echo 'wsid= ' .$wsId; exit;
-				if($wsId!='-1' && $this->identity_db_manager->getManagerStatus($_SESSION['userId'], $wsId, 3))
+				//if($wsId!='-1' && $this->identity_db_manager->getManagerStatus($_SESSION['userId'], $wsId, 3))
+				if($allowAddPost)
 				{
 					?>		
 					<div class="postAddIcon">
@@ -1240,7 +1274,15 @@ $(document).ready(function()
 			<?php 
 			} 
 		} 	
-		*/			
+		*/		
+		if($_SESSION['all'] && !$_SESSION['public'] && $this->uri->segment('5')!='bookmark' && $this->uri->segment('5')!='space' && $this->uri->segment('5')!='one'){ ?>
+			<?php //if($this->uri->segment('5')!='bookmark' && $_SESSION['userId']==$post_type_object_id){ 
+				?>
+				<div class="postAddIcon">
+				<a id="add" style="cursor:pointer;" onclick="showTimelineEditor();"><img border="0" title="Add" src="<?php echo base_url(); ?>/images/addnew.png" ></a>
+				</div>
+			<?php 
+		} 			
 		?>
 		<!--Plus icon end here-->
 		</div>
@@ -1297,7 +1339,7 @@ $(document).ready(function()
 	<div class="clr"></div>
 		</div>
 		<div class="clr"></div>
-		<div id="divProfile" class="post_web_tab_menu_tab_2" style="display:none;">
+								<div id="divProfile" class="post_web_tab_menu_tab_2" <?php if($this->uri->segment('5')=='space_ex'){ ?> style="display:block;"<?php } else {?> style="display:none;"<?php } ?>>
 			<div class="divProfileContainer">
 				<?php if ($post_type_id==1) {?>
 				<div class="divProfileRow"><span class="divProfileColumn1"><b>Name</b></span><span class="divProfileColumn2"><?php if($Profiledetail['firstName']!='' && $Profiledetail['lastName']!='') { ?><?php echo $Profiledetail['firstName'].' '.$Profiledetail['lastName']; ?><?php } ?></span></div>														
@@ -1318,12 +1360,36 @@ $(document).ready(function()
 				<div class="divProfileRow"><span class="divProfileColumn1"><b>Other</b></span><span class="divProfileColumn2"><?php if($Profiledetail['other']!='') { ?><?php echo $Profiledetail['other'];?><?php } ?></span></div>
 				<div class="divProfileRow"><span class="divProfileColumn1"><b>Skills</b></span><span class="divProfileColumn2"><?php if($Profiledetail['skills']!='') { ?><?php echo $Profiledetail['skills'];?><?php } ?></span></div>
 				<div class="divProfileRow"><span class="divProfileColumn1"><b>Department</b></span><span class="divProfileColumn2"><?php if($Profiledetail['department']!='') { ?><?php echo $Profiledetail['department'];?><?php } ?></span></div>
-				<?php } else if ($post_type_id==2) {?>
+				<?php } else if ($post_type_id==9) {?>
+					<div style="display:flex;width:100%;margin:1em 0;">
+						<div class="timelineProfImg">
+							<img class="rounded_profile_pic" id="imgName" alt="image" src="<?php echo base_url();?>images/noimage.jpg" width="65" height="65">
+						</div>
+						<div class="postUserDetailsBox">
+							<span class="profileLeftLabel">
+								<?php echo $Profiledetail['workSpaceName'] .' (space)'; ?>
+								<?php
+									if(!$isSpaceProfileMember){
+										$treeDetails['seedId']=$post_type_object_id; 
+										$treeDetails['object_id']=10; // 10 is for space object. Look in notification_objects table for reference
+										$this->load->view('common/section_follow_post',$treeDetails);
+									}
+								?>
+							</span>
+							<!--
+							<div>
+								<span>Created on:<?php echo $this->time_manager->getUserTimeFromGMTTime($Profiledetail['workSpaceCreatedDate'],$this->config->item('date_format')); ?></span>
+								<span>Created by:<?php echo $Profiledetail['workSpaceCreatorUsername']; ?></span>
+							</div>
+							-->
+						</div>
+					</div>
 					<div class="divProfileRow"><span class="divProfileColumn1"><b>Space name</b></span><span class="divProfileColumn2"><?php if($Profiledetail['workSpaceName']!='') { ?><?php echo $Profiledetail['workSpaceName']; ?><?php } ?></span></div>														
 					<div class="divProfileRow"><span class="divProfileColumn1"><b>Created on</b></span><span class="divProfileColumn2"><?php if($Profiledetail['workSpaceCreatedDate']!='') { ?><?php echo $this->time_manager->getUserTimeFromGMTTime($Profiledetail['workSpaceCreatedDate'],$this->config->item('date_format'));?><?php } ?></span></div>
 					<div class="divProfileRow"><span class="divProfileColumn1"><b>Created by</b></span><span class="divProfileColumn2"><?php if($Profiledetail['workSpaceCreatorUsername']!='') { ?><?php echo $Profiledetail['workSpaceCreatorUsername']; ?><?php } ?></span></div>														
 					<?php 
 					//echo "<pre>";print_r($spaceProfileMembers);
+					/*
 					if (count($spaceProfileMembers )>0){
 						echo "<div class='profileLeftLabel' style='align:left;'>Members</div>";
 						foreach($spaceProfileMembers as $keyVal=>$arrVal){
@@ -1352,7 +1418,7 @@ $(document).ready(function()
 							</div>
 						<?php 
 						} 
-					}?>
+					}*/?>
 				<?php } else if ($post_type_id==3) {?>
 					<div class="divProfileRow"><span class="divProfileColumn1"><b>Sub-space name</b></span><span class="divProfileColumn2"><?php if($Profiledetail['subWorkSpaceName']!='') { ?><?php echo $Profiledetail['subWorkSpaceName']; ?><?php } ?></span></div>														
 					<div class="divProfileRow"><span class="divProfileColumn1"><b>Created on</b></span><span class="divProfileColumn2"><?php if($Profiledetail['subWorkSpaceCreatedDate']!='') { ?><?php echo $this->time_manager->getUserTimeFromGMTTime($Profiledetail['subWorkSpaceCreatedDate'],$this->config->item('date_format'));?><?php } ?></span></div>
@@ -1412,7 +1478,7 @@ $(document).ready(function()
 				 
 				<?php
 				
-				if($workSpaceId=='0' && $_SESSION['public'] != 'public')
+				if(($workSpaceId=='0' || $_SESSION['all']) && !$_SESSION['public'])
 				{
 				?>
 									
@@ -1622,6 +1688,7 @@ $(document).ready(function()
 <?php //$this->load->view('common/datepicker_js.php'); ?>
 <script>
 $(document).ready(function(){
+	$("#showMan").hide();
 	$(window).scroll(function(){
       if ($(this).scrollTop() > 60) {
           	$('#postTabUI').addClass('postTabUIFixed');
@@ -1654,7 +1721,7 @@ $(document).ready(function(){
   });
 
 
-
+/*
   $(".post_web_tab_menu_list_2 li a").click(function(e){
      e.preventDefault();
   	});
@@ -1669,6 +1736,7 @@ $(document).ready(function(){
 		$(this).addClass("active"); //  adding active class to clicked tab
 		//$("#post_web_sidebar_loader").show();
   });
+  */
 
   $(".postUserDetailsBox li a").click(function(e){
      e.preventDefault();

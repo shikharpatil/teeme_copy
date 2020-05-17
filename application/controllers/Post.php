@@ -2812,6 +2812,10 @@ class Post extends CI_Controller {
 			$post_type = $this->uri->segment(5);
 			$post_type_object_id = $this->uri->segment(6);
 
+			if($workSpaceType=='type'){
+				redirect('post/web/'.$workSpaceId.'/'.$this->uri->segment(5).'/home', 'location');
+			}
+
 			if ($post_type=='one'){
 				$post_type_id = 1;
 			} else if($post_type=='space') {
@@ -2832,7 +2836,9 @@ class Post extends CI_Controller {
 			}		
 			else if($post_type=='parked') {
 				$post_type_id = 8;
-			}	
+			}else if($post_type=='space_ex') {
+				$post_type_id = 9;
+			}
 
 			// Update seen status of the current object
 			/*
@@ -2857,21 +2863,38 @@ class Post extends CI_Controller {
 				$userId	= $_SESSION['userId'];	
 			}
 			*/
+			$arrDetails['workSpaceId'] 		= $workSpaceId;
+			$arrDetails['workSpaceType'] 	= $workSpaceType;
 
 				if ($workSpaceType==2)
 				{
 					$workSpaceDetails=$this->identity_db_manager->getSubWorkSpaceDetailsBySubWorkSpaceId($workSpaceId);
 					$arrDetails['workSpaceName'] = $workSpaceDetails['subWorkSpaceName'];
+					$arrDetails['workSpaceMembers']	= $objIdentity->getSubWorkSpaceMembersIdBySubWorkSpaceId($workSpaceId);	
 				}
 				else
 				{
 					$workSpaceDetails=$this->identity_db_manager->getWorkSpaceDetailsByWorkSpaceId($workSpaceId);
 					$arrDetails['workSpaceName'] = $workSpaceDetails['workSpaceName'];
+					$arrDetails['workSpaceMembers']	= $objIdentity->getWorkSpaceMembersByWorkSpaceId($workSpaceId);
 				}
-			$arrDetails['workSpaceId'] 		= $workSpaceId;
-			$arrDetails['workSpaceType'] 	= $workSpaceType;				
-			$arrDetails['workPlaceDetails'] = $this->identity_db_manager->getWorkPlaceDetails($_SESSION['workPlaceId']);					
-			//$arrDetails['Profiledetail'] = $this->profile_manager->getUserDetailsByUserId($userId);
+
+			
+			$arrDetails['workPlaceDetails'] = $this->identity_db_manager->getWorkPlaceDetails($_SESSION['workPlaceId']);	
+			$arrDetails['workPlaceMembers']= $this->profile_manager->getAllUsersByWorkPlaceId($_SESSION['workPlaceId']);	
+			//echo "<pre>";print_r($arrDetails['workSpaceMembers']);exit;
+			$arrSpaceMembersIds = array();
+			foreach($arrDetails['workSpaceMembers'] as $key=>$val){
+				$arrSpaceMembersIds[] = $val['userId'];
+			}
+			//echo "<pre>";print_r($arrSpaceMembersIds);exit;
+				if(in_array($_SESSION['userId'],$arrSpaceMembersIds)){
+					$arrDetails['isSpaceMember']=1;
+				}
+				else{
+					$arrDetails['isSpaceMember']=0;
+				}
+			//echo "isspacemember= " .$arrDetails['isSpaceMember'];exit;
 
 			//All space post showing start
 			/*
@@ -2908,7 +2931,7 @@ class Post extends CI_Controller {
 					$arrDetails['Profiledetail'] = $this->profile_manager->getUserDetailsByUserId($post_type_object_id);
 					$arrDetails['arrTimeline']	= $this->timeline_db_manager->get_timeline_web($treeId,$arrDetails['workSpaceId'],$arrDetails['workSpaceType'],0,$_SESSION['userId'],$post_type_id,$post_type_object_id);
 				}
-				else if($post_type_id==2) {			
+				else if($post_type_id==2 || $post_type_id==9) {			
 					if ($post_type_object_id==$workSpaceId){
 						$arrDetails['Profiledetail'] = $workSpaceDetails;
 					}
@@ -2918,11 +2941,33 @@ class Post extends CI_Controller {
 					}					
 					$arrDetails['arrTimeline']	= $this->timeline_db_manager->get_timeline_web($treeId,$arrDetails['workSpaceId'],$arrDetails['workSpaceType'],0,$_SESSION['userId'],$post_type_id,$post_type_object_id);
 					$arrDetails['spaceProfileMembers'] = $this->identity_db_manager->getWorkSpaceMembersByWorkSpaceId($post_type_object_id);
+					$arrSpaceProfileMembersIds = array();
+						foreach($arrDetails['spaceProfileMembers'] as $key=>$val){
+							$arrSpaceProfileMembersIds[] = $val['userId'];
+						}
+						//echo "<pre>";print_r($arrSpaceMembersIds);exit;
+							if(in_array($_SESSION['userId'],$arrSpaceProfileMembersIds)){
+								$arrDetails['isSpaceProfileMember']=1;
+							}
+							else{
+								$arrDetails['isSpaceProfileMember']=0;
+							}
 				}
 				else if($post_type_id==3) {
 					$arrDetails['Profiledetail'] = $this->identity_db_manager->getSubWorkSpaceDetailsBySubWorkSpaceId($post_type_object_id);
 					$arrDetails['arrTimeline']	= $this->timeline_db_manager->get_timeline_web($treeId,$arrDetails['workSpaceId'],$arrDetails['workSpaceType'],0,$_SESSION['userId'],$post_type_id,$post_type_object_id);
 					$arrDetails['subSpaceProfileMembers'] = $this->identity_db_manager->getSubWorkSpaceMembersBySubWorkSpaceId($post_type_object_id);
+					$arrSubSpaceProfileMembersIds = array();
+						foreach($arrDetails['subSpaceProfileMembers'] as $key=>$val){
+							$arrSubSpaceProfileMembersIds[] = $val['userId'];
+						}
+						//echo "<pre>";print_r($arrSpaceMembersIds);exit;
+							if(in_array($_SESSION['userId'],$arrSubSpaceProfileMembersIds)){
+								$arrDetails['isSubSpaceProfileMember']=1;
+							}
+							else{
+								$arrDetails['isSubSpaceProfileMember']=0;
+							}
 				}
 				else if($post_type_id==4) {
 					$arrDetails['Profiledetail']=$this->identity_db_manager->getGroupDetailsByGroupId($post_type_object_id);
@@ -2952,13 +2997,15 @@ class Post extends CI_Controller {
 				$arrDetails['post_type_id'] = $post_type_id;
 				$arrDetails['post_type_object_id'] = $post_type_object_id;
 			
+			
 			$workSpaceId_search_user= $this->uri->segment(3);	
 			$workSpaceType_search_user=$this->uri->segment(7);
-
+			
 			$arrDetails['workSpaceId_search_user'] = $this->uri->segment(3);	
 			$arrDetails['workSpaceType_search_user'] = $this->uri->segment(7);
 			
 			$arrDetails['search']='';	
+
 			
 			/*
 			$placeType=$workSpaceType+2;
@@ -3077,11 +3124,13 @@ class Post extends CI_Controller {
 				}
 				else{
 					$arrDetails['totalParkedPosts'] = $this->timeline_db_manager->getPostCountTimeline($workSpaceId, $workSpaceType, 0, 'parked');
-				}						
-			$arrDetails['workSpaceMembers']	= $this->profile_manager->getAllUsersByWorkPlaceId($_SESSION['workPlaceId']);
+				}	
+
+			
 			$arrDetails['userAllSpaces']	= $objIdentity->getAllUserSpacesByWorkPlaceId($_SESSION['workPlaceId'],$_SESSION['userId']);
 			$arrDetails['userAllSubSpaces']	= $objIdentity->getAllUserSubSpacesByWorkPlaceId($_SESSION['workPlaceId'],$_SESSION['userId']);
 			$arrDetails['userActivePosts'] = $this->timeline_db_manager->getUserActivePostsByUserId($_SESSION['userId']);
+
 			$workSpaceMembers = array();
 			if(count($arrDetails['workSpaceMembers']) > 0)
 			{		
@@ -3147,14 +3196,11 @@ class Post extends CI_Controller {
 			$arrDetails['treeId'] =$treeId;
 			$arrDetails['workSpaceManagers']	= $this->identity_db_manager->getTeemeManagersDetailsByWorkSpaceId($workSpaceId, 3);	
 			$arrDetails['managerIds']			= $this->identity_db_manager->getWorkSpaceManagersByWorkSpaceId($workSpaceId, 3);
-			$arrDetails['workPlaceMembers'] = $this->identity_db_manager->getWorkSpaceMembersByWorkSpaceId($workSpaceId);
+			
 			$arrDetails['myProfileDetail']= $this->profile_manager->getUserDetailsByUserId($_SESSION['userId']);
 			
 			//Online users code end here
 
-			
-			
-			
 			//For dashboard tag and link
 			/*
 			if($this->uri->segment(9) != '' && $this->uri->segment(9) != 0)
@@ -4005,8 +4051,8 @@ class Post extends CI_Controller {
 					{
 						$this->identity_db_manager->updatePostsMemCache($workSpaceId,$workSpaceType,$postNodeId);
 					}
-					
-					//Manoj: Insert post create notification start
+					/* Parv: Disable notification till post is finished
+								//Manoj: Insert post create notification start
 								$notificationDetails=array();
 													
 								$notification_url='';
@@ -4018,25 +4064,25 @@ class Post extends CI_Controller {
 								//Added by dashrath
 								$notificationDetails['parent_object_id']='3';
 								
-								if($allSpace!='1' && $allSpace!='2')
-								{
-									$notification_url='post/web/'.$workSpaceId.'/type/'.$workSpaceType.'/'.$workSpaceId.'/1/0/'.$postNodeId.'/#form'.$postNodeId;
-									//post/index/44/type/1/44/1/0/3024/#form3024
-								}
-								else if($allSpace=='2')
-								{
-									//$notification_url='post/index/'.$workSpaceId.'/type/'.$workSpaceType.'/0/1/public/'.$postNodeId.'/#form'.$postNodeId;
-									//post/index/44/type/1/0/1/public/3025/#form3025
-									$notification_url='';
-								}
+									if($allSpace!='1' && $allSpace!='2')
+									{
+										$notification_url='post/web/'.$workSpaceId.'/type/'.$workSpaceType.'/'.$workSpaceId.'/1/0/'.$postNodeId.'/#form'.$postNodeId;
+										//post/index/44/type/1/44/1/0/3024/#form3024
+									}
+									else if($allSpace=='2')
+									{
+										//$notification_url='post/index/'.$workSpaceId.'/type/'.$workSpaceType.'/0/1/public/'.$postNodeId.'/#form'.$postNodeId;
+										//post/index/44/type/1/0/1/public/3025/#form3025
+										$notification_url='';
+									}
 								
 								$notificationDetails['url']=$notification_url;
 								
 								$notificationDetails['workSpaceId']= $workSpaceId;
-									$notificationDetails['workSpaceType']= $workSpaceType;
-									$notificationDetails['object_instance_id']=$postNodeId;
-									$notificationDetails['user_id']=$_SESSION['userId'];
-									$notification_id = $this->notification_db_manager->set_notification($notificationDetails); 
+								$notificationDetails['workSpaceType']= $workSpaceType;
+								$notificationDetails['object_instance_id']=$postNodeId;
+								$notificationDetails['user_id']=$_SESSION['userId'];
+								$notification_id = $this->notification_db_manager->set_notification($notificationDetails); 
 				
 								if($notification_id!='')
 								{
@@ -4067,10 +4113,10 @@ class Post extends CI_Controller {
 												{
 													//get user object action preference
 													//$userObjectActionPreference=$this->notification_db_manager->get_notification_user_preference($user_data['userId']);
-													/*foreach($userObjectActionPreference as $keyVal=>$userPreferenceData)
-													{
-														if($userPreferenceData['notification_type_id']==$notificationDetails['object_id'] && $userPreferenceData['notification_action_type_id']==$notificationDetails['action_id'] && $userPreferenceData['preference']==1)
-														{*/
+													//foreach($userObjectActionPreference as $keyVal=>$userPreferenceData)
+													//{
+													//	if($userPreferenceData['notification_type_id']==$notificationDetails['object_id'] && $userPreferenceData['notification_action_type_id']==$notificationDetails['action_id'] && $userPreferenceData['preference']==1)
+														//{
 															//get user language preference
 															$userLanguagePreference=$this->identity_db_manager->getUserDetailsByUserId($user_data['userId']);
 															if(count($userLanguagePreference)>0 && $userLanguagePreference['notification_language_id']!=0)
@@ -4095,12 +4141,12 @@ class Post extends CI_Controller {
 															$getUserName = $this->identity_db_manager->getUserDetailsByUserId($_SESSION['userId']);
 															$recepientUserName = $getUserName['firstName'].' '.$getUserName['lastName'];
 															//$notifyUrl = '<a class="notificatonUrl" href='.base_url().''.$notificationDetails['url'].'>'.base_url().''.$notificationDetails['url'].'</a>';
-															/*$tree_type_val=$this->identity_db_manager->getTreeTypeByTreeId($treeId);
-															if ($tree_type_val==1) $tree_type = 'document';
-															if ($tree_type_val==3) $tree_type = 'discuss';	
-															if ($tree_type_val==4) $tree_type = 'task';	
-															if ($tree_type_val==6) $tree_type = 'notes';	
-															if ($tree_type_val==5) $tree_type = 'contact';*/	
+															//$tree_type_val=$this->identity_db_manager->getTreeTypeByTreeId($treeId);
+															//if ($tree_type_val==1) $tree_type = 'document';
+															//if ($tree_type_val==3) $tree_type = 'discuss';	
+															//if ($tree_type_val==4) $tree_type = 'task';	
+															//if ($tree_type_val==6) $tree_type = 'notes';	
+															//if ($tree_type_val==5) $tree_type = 'contact';
 															
 															$user_template = array("{username}", "{spacename}");
 															
@@ -4125,12 +4171,12 @@ class Post extends CI_Controller {
 															$notificationDispatchDetails['notification_language_id']=$notification_language_id;
 															
 															//Set notification data 
-															/*$notification_data_id=$this->notification_db_manager->set_notification_data($notificationDispatchDetails);*/ 
+															//$notification_data_id=$this->notification_db_manager->set_notification_data($notificationDispatchDetails);
 															
 															$notificationDispatchDetails['recepient_id']=$user_data['userId'];
 															$notificationDispatchDetails['create_time']=$objTime->getGMTTime();
 															$notificationDispatchDetails['notification_mode_id']='1';
-															/*$notificationDispatchDetails['notification_data_id']=$notification_data_id;*/
+															//$notificationDispatchDetails['notification_data_id']=$notification_data_id;
 															
 															//get user mode preference
 															$userModePreference=$this->notification_db_manager->get_notification_email_preference($user_data['userId']);
@@ -4175,8 +4221,8 @@ class Post extends CI_Controller {
 																}
 													
 															 
-														/*}
-													}*/
+														//}
+													//}
 													
 												
 												}
@@ -4199,10 +4245,10 @@ class Post extends CI_Controller {
 												{
 													//get user object action preference
 													//$userObjectActionPreference=$this->notification_db_manager->get_notification_user_preference($user_data['userId']);
-													/*foreach($userObjectActionPreference as $keyVal=>$userPreferenceData)
-													{
-														if($userPreferenceData['notification_type_id']==$notificationDetails['object_id'] && $userPreferenceData['notification_action_type_id']==$notificationDetails['action_id'] && $userPreferenceData['preference']==1)
-														{*/
+													//foreach($userObjectActionPreference as $keyVal=>$userPreferenceData)
+													//{
+														//if($userPreferenceData['notification_type_id']==$notificationDetails['object_id'] && $userPreferenceData['notification_action_type_id']==$notificationDetails['action_id'] && $userPreferenceData['preference']==1)
+														//{
 															//get user language preference
 															$userLanguagePreference=$this->identity_db_manager->getUserDetailsByUserId($user_data['userId']);
 															if(count($userLanguagePreference)>0 && $userLanguagePreference['notification_language_id']!=0)
@@ -4248,12 +4294,12 @@ class Post extends CI_Controller {
 															$notificationDispatchDetails['notification_language_id']=$notification_language_id;
 															
 															//Set notification data 
-															/*$notification_data_id=$this->notification_db_manager->set_notification_data($notificationDispatchDetails);*/ 
+															//$notification_data_id=$this->notification_db_manager->set_notification_data($notificationDispatchDetails); 
 															
 															$notificationDispatchDetails['recepient_id']=$user_data['userId'];
 															$notificationDispatchDetails['create_time']=$objTime->getGMTTime();
 															$notificationDispatchDetails['notification_mode_id']='1';
-															/*$notificationDispatchDetails['notification_data_id']=$notification_data_id;*/
+															//$notificationDispatchDetails['notification_data_id']=$notification_data_id;
 															
 															//get user mode preference
 															$userModePreference=$this->notification_db_manager->get_notification_email_preference($user_data['userId']);
@@ -4298,8 +4344,8 @@ class Post extends CI_Controller {
 																}
 													
 															 
-														/*}
-													}*/
+														//}
+													//}
 													
 												
 												}
@@ -4478,12 +4524,12 @@ class Post extends CI_Controller {
 															$notificationDispatchDetails['notification_language_id']=$notification_language_id;
 															
 															//Set notification data 
-															/*$notification_data_id=$this->notification_db_manager->set_notification_data($notificationDispatchDetails);*/ 
+															//$notification_data_id=$this->notification_db_manager->set_notification_data($notificationDispatchDetails);
 															
 															$notificationDispatchDetails['recepient_id']=$userIds;
 															$notificationDispatchDetails['create_time']=$objTime->getGMTTime();
 															$notificationDispatchDetails['notification_mode_id']='1';
-															/*$notificationDispatchDetails['notification_data_id']=$notification_data_id;*/
+															//$notificationDispatchDetails['notification_data_id']=$notification_data_id;
 															
 															$userModePreference=$this->notification_db_manager->get_notification_email_preference($userIds);
 															$userPersonalizeModePreference=$this->notification_db_manager->get_notification_email_preference($userIds,'6');
@@ -4532,9 +4578,9 @@ class Post extends CI_Controller {
 									}
 								}
 							}
-							}	
+						}	
 								//Manoj: add post share notification end
-					
+						*/
 				}
 				//echo 'done';exit;
 				if($workSpaceId==0){
