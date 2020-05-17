@@ -1908,6 +1908,40 @@ teeme_leaf a,teeme_node b where a.id=b.leafId and b.treeIds='".$inserted_tree_id
 		}	
 		return $workSpaceDetails;	
 	}
+	public function getAllSubSpacesByWorkPlaceId($workPlaceId, $userId, $config=0)
+    {	
+		$workSpaceDetails = array();	
+		
+		$q = "SELECT b.workSpaceId, b.subWorkSpaceId, b.subWorkSpaceName, b.subWorkSpaceManagerId, b.subWorkSpaceCreatedDate, b.status, b.status1 FROM teeme_work_space a,teeme_sub_work_space b WHERE a.workPlaceId='".$workPlaceId."' AND a.status=1 AND a.workSpaceId=b.workSpaceId";
+
+		/*Changed by Dashrath- Add if else condition for load db*/
+		if ($config!=0)
+        {
+            $placedb = $this->load->database($config,TRUE);
+			$query = $placedb->query($q);
+        }
+		else
+		{
+			$query = $this->db->query($q);
+		}
+		/*Dashrath- changes end*/	
+
+		if($query->num_rows()){
+			$i = 0;	
+			foreach($query->result() as $row){
+				$workSpaceDetails[$i]['workSpaceId'] 			= $row->workSpaceId;
+				$workSpaceDetails[$i]['subWorkSpaceId'] 		= $row->subWorkSpaceId;
+				$workSpaceDetails[$i]['subWorkSpaceName'] 		= $row->subWorkSpaceName;
+				$workSpaceDetails[$i]['subWorkSpaceManagerId'] 	= $row->subWorkSpaceManagerId;
+				$workSpaceDetails[$i]['subWorkSpaceCreatedDate']= $row->subWorkSpaceCreatedDate;
+				$workSpaceDetails[$i]['status'] 				= $row->status;
+				$workSpaceDetails[$i]['status1'] 				= $row->status1;
+				$i++;
+			}
+		}			
+		
+		return $workSpaceDetails;	
+	}
 	/**	
 	* @return all the sub work spaces of current work space
 	*/

@@ -625,8 +625,8 @@ $(document).ready(function()
 		<div class="clr"></div>
 
 		<?php				
-				if(count($workSpaceMembers) > 0)
-
+				//if(count($workSpaceMembers) > 0)
+				if(count($workPlaceMembers) > 0)
 				{
 
 						$rowColor1='rowColor2';
@@ -656,7 +656,8 @@ $(document).ready(function()
 						if ($showMemberList)
 						{		
 	
-							foreach($workSpaceMembers as $keyVal=>$arrVal)
+							//foreach($workSpaceMembers as $keyVal=>$arrVal)
+							foreach($workPlaceMembers as $keyVal=>$arrVal)
 							{
 							
 								/*if(in_array($arrVal['userId'],$arrayUsers))
@@ -736,10 +737,9 @@ $(document).ready(function()
 	
 							/*}*/
 							}
-	
-							
-	
-							foreach($workSpaceMembers as $keyVal=>$arrVal)
+
+							//foreach($workSpaceMembers as $keyVal=>$arrVal)
+							foreach($workPlaceMembers as $keyVal=>$arrVal)
 							{
 								/*if(in_array($arrVal['userId'],$arrayUsers))
 								{*/
@@ -948,9 +948,11 @@ $(document).ready(function()
 					
 				</li>	
 			<?php } ?>
+				<!--
 				<li>			
 					<a href="<?php echo base_url(); ?>post/web/<?php echo $workSpaceId; ?>/<?php echo $workSpaceType; ?>/one/<?php echo $_SESSION['userId']?>" style="padding-left:12px;margin-left:17px;<?php if($this->uri->segment(5)=='one' && $this->uri->segment(6)==$_SESSION['userId']) { ?>" class="active <?php } ?>"><?php echo 'My Posts'.' ('.$totalMyPosts.')'; ?></a>
 				</li>
+				-->
 				<li>			
 					<a href="<?php echo base_url(); ?>post/web/<?php echo $workSpaceId; ?>/<?php echo $workSpaceType; ?>/parked/<?php echo $_SESSION['userId']?>" style="padding-left:12px;margin-left:17px;<?php if($this->uri->segment(5)=='parked' && $this->uri->segment(6)==$_SESSION['userId']) { ?>" class="active <?php } ?>"><?php echo 'Parked'.' ('.$totalParkedPosts.')'; ?></a>
 				</li>
@@ -1132,8 +1134,8 @@ $(document).ready(function()
 			} */?>
 			<?php 
 			if ($post_type_id==2 || $post_type_id==9){
-				$link1 = base_url()."post/web/".$workSpaceId."/".$workSpaceType."/space/".$workSpaceId;
-				$link2 = base_url()."post/web/".$workSpaceId."/".$workSpaceType."/space_ex/".$workSpaceId;
+				$link1 = base_url()."post/web/".$workSpaceId."/".$workSpaceType."/space/".$post_type_object_id;
+				$link2 = base_url()."post/web/".$workSpaceId."/".$workSpaceType."/space_ex/".$post_type_object_id;
 				if ($myProfileDetail['userGroup']>0) { ?>
 					<div class="post_web_tab_menu_2 main_tabs">
 						<ul class="post_web_tab_menu_list_2">
@@ -1470,75 +1472,89 @@ $(document).ready(function()
 			<form name="formTimeline" id="formTimeline" method="post" action="" >
 				 <textarea name="replyDiscussion" id="replyDiscussion"></textarea>
 				 <input name="list" value="" id="list" type="hidden" />
-				 <input name="listSpace" value="" id="listSpace" type="hidden" />
-				 <input name="listSubSpace" value="" id="listSubSpace" type="hidden" />
+				 <input name="listSpaces" value="" id="listSpaces" type="hidden" />
+				 <input name="listSubSpaces" value="" id="listSubSpaces" type="hidden" />
 				 <input name="listGroup" value="" id="listGroup" type="hidden" />
 				 <!--Myspace select recepient code start-->
 				 
 				 
 				<?php
 				
-				if(($workSpaceId=='0' || $_SESSION['all']) && !$_SESSION['public'])
+				if((($workSpaceId=='0' && $post_type_id==2) || $_SESSION['all']) && !$_SESSION['public'])
 				{
-				?>
-									
+				?>									
 						<!--Group feature start here-->
-						<?php if(count($groupList)>0){ ?>
+						<?php /* if(count($groupList)>0){ ?>
 						<div style="margin-top:3%;">
-						<div style="width:40%; float:left;">
+							<div style="width:40%; float:left;">						
+								<?php
+								echo $this->lang->line('txt_Select_Group')." : <br><br>"; 
+								echo $this->lang->line('txt_Search')." : "; 
+								?>
+								<input type="text" id="searchGroup" name="searchGroup" onKeyUp="searchGroups()" size="50"/>						
+								<div id="showManGroup" style="height:150px;margin-left:50px; overflow:scroll; margin-bottom:30px; margin-top:20px; width:65%; ">
+									<?php if(count($groupList)>0){ ?>			
+									<input type="checkbox" name="checkAllGroup" id="checkAllGroup" onclick="checkAllGroups();" />		
+									<?php echo $this->lang->line('txt_All');?><br />
 						
-						<?php
-				 		echo $this->lang->line('txt_Select_Group')." : <br><br>"; 
-						echo $this->lang->line('txt_Search')." : "; 
-						?>
-						<input type="text" id="searchGroup" name="searchGroup" onKeyUp="searchGroups()" size="50"/>
-						
-						<div id="showManGroup" style="height:150px;margin-left:50px; overflow:scroll; margin-bottom:30px; margin-top:20px; width:65%; ">
-
-						<?php if(count($groupList)>0){ ?>
-			
-						<input type="checkbox" name="checkAllGroup" id="checkAllGroup" onclick="checkAllGroups();" />
-			
-						<?php echo $this->lang->line('txt_All');?><br />
-			
-						<?php } ?>
-			
-						<?php
-			
-						$i=1;			
-			
-						foreach($groupList as $keyVal=>$groupData)
-						{
-						
-							$groupAllUsersList	= $this->identity_db_manager->getGroupUsersListByGroupId($groupData['groupId']);
-							
-							?>
-
-							<input type="checkbox" name="groupRecipients[]" id="<?php echo 'groupRecipients_'.$i ; ?>" value="<?php echo $groupData['groupId'];?>" class="clsCheckGroup removeGroup<?php echo $groupData['groupId'];?>"  data-myval="<?php echo $groupData['groupName'];?>" data-myusers="<?php echo $groupAllUsersList;?>"  />
-							
-							<?php echo $groupData['groupName'];?><br />
-							
-							<?php
-
-								$i++;
-		
-							
-		
-						}
-		
-						?>
-
-						</div>
-						</div>
-						<!--Select user div end-->
-						<div style="float:left; width:60%;">
-							<div class="sol-current-selection-groups" style="max-height:250px; overflow-y:scroll;"></div>
-						</div>
-						<!--Select user label end-->
-						<div class="clr"></div>
-						</div>
-						<?php } ?>			
+									<?php } 			
+									$i=1;						
+									foreach($groupList as $keyVal=>$groupData)
+									{						
+										$groupAllUsersList	= $this->identity_db_manager->getGroupUsersListByGroupId($groupData['groupId']);							
+										?>
+										<input type="checkbox" name="groupRecipients[]" id="<?php echo 'groupRecipients_'.$i ; ?>" value="<?php echo $groupData['groupId'];?>" class="clsCheckGroup removeGroup<?php echo $groupData['groupId'];?>"  data-myval="<?php echo $groupData['groupName'];?>" data-myusers="<?php echo $groupAllUsersList;?>"  />							
+										<?php echo $groupData['groupName'];?><br />							
+										<?php
+											$i++;
+									}		
+									?>
+								</div>
+							</div>
+							<!--Select user div end-->
+							<div style="float:left; width:60%;">
+								<div class="sol-current-selection-groups" style="max-height:250px; overflow-y:scroll;"></div>
+							</div>
+							<!--Select user label end-->
+							<div class="clr"></div>
+							</div>
+						<?php } */?>			
 						<!--Group feature end here-->
+						<!--Space and subspace selection start here-->
+						<?php if(count($userAllSpaces)>0){ ?>
+						<div style="margin-top:3%;">
+							<div style="width:40%; float:left;">						
+								<?php
+								echo "Send to multiple spaces: "; 
+								?>
+								<input type="text" id="searchSpaces" name="searchSpaces" onKeyUp="searchUserSpaces()" size="50" placeholder="Search..."/>						
+								<div id="showManSpaces" style="height:150px;margin-left:50px; overflow:scroll; margin-bottom:30px; margin-top:20px; width:65%; ">
+									<?php if(count($userAllSpaces)>0){ ?>			
+									<input type="checkbox" name="checkAllSpaces" id="checkAllSpaces" onclick="checkAllUserSpaces();" />		
+									<?php echo $this->lang->line('txt_All');?><br />
+						
+									<?php } 			
+									$i=1;						
+									foreach($userAllSpaces as $keyVal=>$arrVal)
+									{													
+										?>
+										<input type="checkbox" name="spaceRecipients[]" id="<?php echo 'spaceRecipients_'.$i ; ?>" value="<?php echo $arrVal['workSpaceId'];?>" class="clsCheckSpace removeSpace<?php echo $arrVal['workSpaceId'];?>"  data-myval="<?php echo $arrVal['workSpaceName'];?>"/>							
+										<?php echo $arrVal['workSpaceName'];?><br />							
+										<?php
+											$i++;
+									}		
+									?>
+								</div>
+							</div>
+							<!--Select user div end-->
+							<div style="float:left; width:60%;">
+								<div class="sol-current-selection-spaces" style="max-height:250px; overflow-y:scroll;"></div>
+							</div>
+							<!--Select user label end-->
+							<div class="clr"></div>
+							</div>
+						<?php } ?>			
+						<!--Space and subspace selection end here-->
 						
 						<div style="margin-top:1%;">
 						<div style="width:50%; float:left;">
@@ -1546,9 +1562,9 @@ $(document).ready(function()
 						<?php
 				 		//echo 'Send to multiple: '." : <br><br>"; 
 						//echo $this->lang->line('txt_Search')." : "; 
-						echo "Send to multiple recipients: "; 
+						echo "Send to multiple users: "; 
 						?>
-						<input type="text" id="searchTags" name="searchTags" onKeyUp="showTags()" size="50" placeholder="Search"/>
+						<input type="text" id="searchTags" name="searchTags" onKeyUp="showTags()" size="50" placeholder="Search..."/>
 						
 						<div id="showMan">
 						
@@ -1814,8 +1830,13 @@ function insertTimeline()
 		{
 			var groupRecipients=document.getElementById("listGroup").value.split(",");
 		}
+		if(document.getElementById("listSpaces"))
+		{
+			var spaceRecipients=document.getElementById("listSpaces").value.split(",");
+		}
 		//alert (recipients); return false;
-		data_user = data_user+'&replyDiscussion='+encodeURIComponent(getvalue)+'&recipients='+recipients+'&groupRecipients='+groupRecipients; 
+		//data_user = data_user+'&replyDiscussion='+encodeURIComponent(getvalue)+'&recipients='+recipients+'&groupRecipients='+groupRecipients; 
+		data_user = data_user+'&replyDiscussion='+encodeURIComponent(getvalue)+'&recipients='+recipients+'&groupRecipients='+groupRecipients+'&spaceRecipients='+spaceRecipients; 
 		//var pnodeId=$("#pnodeId").val();
 		var request = $.ajax({
 			  url: baseUrl+"post/insert_timeline_web/",
@@ -1842,6 +1863,7 @@ function insertTimeline()
 						$('.clsChecks').prop("checked",false);
 						$('.sol-current-selection').html('');
 						$('.sol-current-selection-groups').html('');
+						$('.sol-current-selection-spaces').html('');
 					 }
 				 }
 				  /*if(result=='0'){
@@ -2272,7 +2294,6 @@ function showMySpaceTags(nodeId,originatorUserId,currentUserId)
 
 //Search multiple recipients
 function showTags()
-
 {
 	if(document.getElementById('searchTags') !== null)
 	{
@@ -2967,96 +2988,93 @@ function getPostUserStatus()
 			}
 		});
 }
-//Code end
+function searchUserSpaces()
+{
+	if(document.getElementById('searchSpaces') !== null)
+	{
+		var toMatch = document.getElementById('searchSpaces').value;
+		var val = '';
+		val += '<div class="dashboard_fee_right_title">Spaces</div>';
+		val += '<input type="checkbox" name="checkAllSpaces" id="checkAllSpaces" onclick="checkAllUserSpaces();" /><?php echo $this->lang->line('txt_All');?><br />';
+		//if (toMatch!='')
+		if(1)
+		{
+			var count = '';
+			var sectionChecked = '';
+			<?php
+			$i=1;
+			foreach($userAllSpaces as $keyVal=>$arrVal)
+			{								
+				?>
+					var str = '<?php echo $arrVal['workSpaceName']; ?>';
+					var pattern = new RegExp('\^'+toMatch, 'gi');
+					if (str.match(pattern))
+					{
+						val +=  '<input class="clsCheckSpace removeSpace<?php echo $arrVal['workSpaceId'];?>" type="checkbox" id="spaceRecipients_<?php echo $i;?>" name="spaceRecipients[]" value="<?php echo $arrVal['workSpaceId'];?>"  data-myval="<?php echo $arrVal['workSpaceName'];?>"/><?php echo $arrVal['workSpaceName'];?><br>';
+					}
+					<?php
+					$i++;	
+				?>
+				<?php
+			}?>
+			document.getElementById('showManSpaces').innerHTML = val;
+			document.getElementById('showManSpaces').style.display = 'block';
+			var list = $("#listSpaces").val();
+			var val1 = list.split(",");
+			$(".clsCheckSpace").each(function(){
+				if(val1.indexOf($(this).val())!=-1){
+					$(this).attr("checked",true);
+				}
+			});
+		}
+		else
+		{
+			document.getElementById('showManSpaces').style.display = 'none';
+		}
+	}
+}
 function searchGroups()
-
 {
 	if(document.getElementById('searchGroup') !== null)
 	{
    	var toMatch = document.getElementById('searchGroup').value;
-
 	var val = '<input type="checkbox" name="checkAllGroup" id="checkAllGroup" onclick="checkAllGroups();" /><?php echo $this->lang->line('txt_All');?><br />';
-
 	//if (toMatch!='')
-
 	if(1)
-
 	{
-
 		var count = '';
-
 		var sectionChecked = '';
-
 		<?php
-
 		$i=1;
-
 		foreach($groupList as $keyVal=>$groupData)
 		{
-			$groupAllUsersList	= $this->identity_db_manager->getGroupUsersListByGroupId($groupData['groupId']);
-									
+			$groupAllUsersList	= $this->identity_db_manager->getGroupUsersListByGroupId($groupData['groupId']);								
 			?>
-
 				var str = '<?php echo $groupData['groupName']; ?>';
-
-				
-
 				var pattern = new RegExp('\^'+toMatch, 'gi');
-
-				
-
 				if (str.match(pattern))
-
 				{
-
 					val +=  '<input class="clsCheckGroup removeGroup<?php echo $groupData['groupId'];?>" type="checkbox" id="groupRecipients_<?php echo $i;?>" name="groupRecipients[]" value="<?php echo $groupData['groupId'];?>"  data-myval="<?php echo $groupData['groupName'];?>" data-myusers="<?php echo $groupAllUsersList;?>" /><?php echo $groupData['groupName'];?><br>';
-
 				}
-
 				<?php
-
 				$i++;	
-
-			
-
-		
-
 			?>
 			<?php
-
 		}?>
-
 		document.getElementById('showManGroup').innerHTML = val;
-
 		document.getElementById('showManGroup').style.display = 'block';
-
 		var list = $("#listGroup").val();
-
 		var val1 = list.split(",");
-
-		
-
 		$(".clsCheckGroup").each(function(){
-
 			 if(val1.indexOf($(this).val())!=-1){
-
 				$(this).attr("checked",true);
-
 			 }
-
 		});
-
 	}
-
 	else
-
 	{
-
 		document.getElementById('showManGroup').style.display = 'none';
-
 	}
-
-
 	}
 }
 </script>

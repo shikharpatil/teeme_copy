@@ -3127,8 +3127,10 @@ class Post extends CI_Controller {
 				}	
 
 			
-			$arrDetails['userAllSpaces']	= $objIdentity->getAllUserSpacesByWorkPlaceId($_SESSION['workPlaceId'],$_SESSION['userId']);
-			$arrDetails['userAllSubSpaces']	= $objIdentity->getAllUserSubSpacesByWorkPlaceId($_SESSION['workPlaceId'],$_SESSION['userId']);
+			//$arrDetails['userAllSpaces']	= $objIdentity->getAllUserSpacesByWorkPlaceId($_SESSION['workPlaceId'],$_SESSION['userId']);
+			$arrDetails['userAllSpaces']	= $objIdentity->getAllWorkSpacesByWorkPlaceId($_SESSION['workPlaceId'],$_SESSION['userId']);
+			//$arrDetails['userAllSubSpaces']	= $objIdentity->getAllUserSubSpacesByWorkPlaceId($_SESSION['workPlaceId'],$_SESSION['userId']);
+			$arrDetails['userAllSubSpaces']	= $objIdentity->getAllSubSpacesByWorkPlaceId($_SESSION['workPlaceId'],$_SESSION['userId']);
 			$arrDetails['userActivePosts'] = $this->timeline_db_manager->getUserActivePostsByUserId($_SESSION['userId']);
 
 			$workSpaceMembers = array();
@@ -3950,6 +3952,7 @@ class Post extends CI_Controller {
 				$workSpaceType	= $this->input->post('workSpaceType');
 				$publicPost	= $this->input->post('publicPost');
 				$recipients=$this->input->post('recipients');
+				$spaceRecipients=$this->input->post('spaceRecipients');
 				$post_type_id=$this->input->post('post_type_id');
 				$post_type_object_id=$this->input->post('post_type_object_id');
 				$post_content=trim($this->input->post($this->input->post('editorname1')));
@@ -4035,15 +4038,43 @@ class Post extends CI_Controller {
 						$workSpaceId = '0';
 						$workSpaceType = '0';
 					}
-			
-				//My space recepients end
+					// Adding multiple users individually and multiple users from spaces
+					if($spaceRecipients!=''){
+						$arrSpaceIds = array();
+						$arrSpaceIds = array_filter(explode (",",$spaceRecipients));
+						/*
+						foreach($arrSpaceIds as $spaceId){
+							if($spaceId!=''){
+								$spaceUsersData = $this->identity_db_manager->getWorkSpaceMembersByWorkSpaceId($spaceId);
+								foreach($spaceUsersData as $spaceUser)
+								{
+									$arrSpaceUserIds[] = $spaceUser['userId'];
+								}							
+							}
+						}
+						*/
+					}				
+					if ($recipients!=''){	
+						$arrRecipientIds = array();					
+						$arrRecipientIds = array_filter(explode(",",$recipients));
+					}
+				$arrAllRecipientIds = array();
+					if(count($arrSpaceIds)>0 || count($arrRecipientIds)>0){
+						if(count($arrSpaceIds)>0){
+							$arrAllRecipientIds['spaceIds']=$arrSpaceIds;
+						}
+						if(count($arrRecipientIds)>0){
+							$arrAllRecipientIds['recipientIds']=$arrRecipientIds;
+						}
+					}
 				
 				//if(trim($this->input->post($this->input->post('editorname1')))!='')
 				if($post_content!='')
 				{
 					$postCreatedDate=$objTime->getGMTTime();
 					//$postNodeId	= $this->timeline_db_manager->insert_timeline_web($treeId,$this->input->post($this->input->post('editorname1')),$_SESSION['userId'],$postCreatedDate,0,0,$workSpaceId,$workSpaceType,$recipients);	
-					$postNodeId	= $this->timeline_db_manager->insert_timeline_web($treeId,$post_content,$_SESSION['userId'],$postCreatedDate,0,0,$workSpaceId,$workSpaceType,$recipients,'','',1,1,0,$post_type_id,$post_type_object_id);	
+					$postNodeId	= $this->timeline_db_manager->insert_timeline_web($treeId,$post_content,$_SESSION['userId'],$postCreatedDate,0,0,$workSpaceId,$workSpaceType,$arrAllRecipientIds,'','',1,1,0,$post_type_id,$post_type_object_id);	
+							
 					//echo "<li>postnodeid= " .$postNodeId; exit;
 					//$groupSharedId = $this->identity_db_manager->add_group_recipients($postNodeId,$workSpaceId,$groupRecipients,$groupUserRecipients);	
 

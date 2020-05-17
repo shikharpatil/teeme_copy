@@ -1,4 +1,4 @@
-//Copyrights © 2008-2009 B3 Technologies Pty Ltd. All rights reserved.
+//Copyrights ï¿½ 2008-2009 B3 Technologies Pty Ltd. All rights reserved.
 
  /***********************************************************************************************************
 
@@ -7265,6 +7265,54 @@ $('.clsCheckGroup').live("click",function(){
 
 });
 
+$('.clsCheckSpace').live("click",function(){
+	//alert('dfsd');
+	val = $("#listSpaces").val();
+
+	val1 = val.split(",");	
+	
+	var data = $(this).data('myval');
+	//var usersData = $(this).data('myusers');
+	var usersData = '';
+	var value = $(this).val();
+
+	if($(this).prop("checked")==true){
+
+		if($("#listSpaces").val()==''){
+
+			$("#listSpaces").val($(this).val());
+
+		}
+
+		else{
+
+			if(val1.indexOf($(this).val())==-1){
+
+				$("#listSpaces").val(val+","+$(this).val());
+
+			}
+
+		}
+		addSelectionDisplayItemSpace(data,value,$(this),usersData);
+
+	}
+
+	else{
+
+		var index = val1.indexOf($(this).val());
+
+		val1.splice(index, 1);
+
+		var arr = val1.join(",");
+
+		$("#listSpaces").val(arr);
+		
+		removeSelectionDisplayItemSpace(value);
+
+	}
+
+});
+
 
 function checkAllGroups(){
 
@@ -7327,16 +7375,82 @@ function checkAllGroups(){
 		}
 
 }
+function checkAllUserSpaces(){
+
+	var htmlContent='';
+	
+	if($("#checkAllSpaces").prop("checked")==true){
+
+		$('.clsCheckSpace').prop("checked",true);
+
+		$(".clsCheckSpace").each(function(){
+
+			value = $("#listSpaces").val();
+
+			val1 = value.split(",");	
+
+			if(val1.indexOf($(this).val())==-1){
+
+				$("#listSpaces").val(value+","+$(this).val());
+
+			}
+			//Show checked label at top
+				var data = $(this).data('myval');
+				//var usersData = $(this).data('myusers');
+				var value = $(this).val();
+				htmlContent += '<div class="sol-head sol-selected-display-item sol_check_space'+value+'"><span class="sol-quick-delete" onclick="removeSelectionDisplayItemSpace('+value+',1)">x</span><span class="sol-selected-display-item-text">'+data+'</span></div>';
+				
+				//htmlContent += '<div class="sol-selected-display-item sol_check_space'+value+'"><span class="sol-selected-display-item-text">'+usersData+'</span></div><div style="clear:both"></div>';
+			//Code end
+
+		});
+		
+		$('.sol-current-selection-spaces').html(htmlContent);
+
+	}
+
+	else{
+
+		//change prop to attr for server - Monika
+
+		$('.clsCheckSpace').prop("checked",false);
+
+		$(".clsCheckSpace").each(function(){
+
+			value = $("#listSpaces").val();
+
+			val1 = value.split(",");	
+
+			var index = val1.indexOf($(this).val());
+
+			val1.splice(index);	
+
+			var arr = val1.join(",")
+
+			$("#listSpaces").val(arr);
+
+		});
+		
+		$('.sol-current-selection-spaces').html('');
+
+	}
+
+}
 
 function addSelectionDisplayItemGroup(data,value,changedItem,usersData)
-	{
-		$('.sol-current-selection-groups').append('<div class="sol-head sol-selected-display-item sol_check_group'+value+'"><span class="sol-quick-delete" onclick="removeSelectionDisplayItemGroup('+value+',1)">x</span><span class="sol-selected-display-item-text">'+data+'</span></div><div style="clear:both"></div>');
-		$('.sol-current-selection-groups').append('<div class="sol-selected-display-item sol_check_group'+value+'"><span class="sol-selected-display-item-text">'+usersData+'</span></div><div style="clear:both"></div>');
+{
+	$('.sol-current-selection-groups').append('<div class="sol-head sol-selected-display-item sol_check_group'+value+'"><span class="sol-quick-delete" onclick="removeSelectionDisplayItemGroup('+value+',1)">x</span><span class="sol-selected-display-item-text">'+data+'</span></div><div style="clear:both"></div>');
+	$('.sol-current-selection-groups').append('<div class="sol-selected-display-item sol_check_group'+value+'"><span class="sol-selected-display-item-text">'+usersData+'</span></div><div style="clear:both"></div>');
 		
-	}
+}
+function addSelectionDisplayItemSpace(data,value,changedItem,usersData)
+{
+	$('.sol-current-selection-spaces').append('<div class="sol-head sol-selected-display-item sol_check_space'+value+'"><span class="sol-quick-delete" onclick="removeSelectionDisplayItemSpace('+value+',1)">x</span><span class="sol-selected-display-item-text">'+data+'</span></div>');
+	//$('.sol-current-selection-spaces').append('<div class="sol-selected-display-item sol_check_space'+value+'"><span class="sol-selected-display-item-text">'+usersData+'</span></div><div style="clear:both"></div>');	
+}
 	
 function removeSelectionDisplayItemGroup(value,uncheck)
-	{
+{
 		$('.sol_check_group'+value).remove();
 		
 		if(uncheck=='1')
@@ -7357,7 +7471,21 @@ function removeSelectionDisplayItemGroup(value,uncheck)
 			$("#listGroup").val(arr);
 		}
 		
-	}
+}
+function removeSelectionDisplayItemSpace(value,uncheck)
+{
+	$('.sol_check_space'+value).remove();		
+	if(uncheck=='1')
+	{		
+		$('.removeSpace'+value).prop('checked', false);			
+		val = $("#listSpaces").val();
+		val1 = val.split(",");			
+		var index = val1.indexOf($('.removeSpace'+value).val());	
+		val1.splice(index, 1);
+		var arr = val1.join(",");	
+		$("#listSpaces").val(arr);
+	}		
+}
 	
 //Edit group 
 function checkAllGroupsEdit(nodeId){
