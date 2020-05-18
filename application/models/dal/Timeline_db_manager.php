@@ -698,6 +698,7 @@ class timeline_db_manager extends CI_Model
 							}
 						}
 					*/	
+
 					$this->load->model('dal/notification_db_manager');	
 					$followers = array();
 					$followers = $this->notification_db_manager->getFollowersByOjectId(15, $post_type_object_id);
@@ -718,7 +719,8 @@ class timeline_db_manager extends CI_Model
 					$q = "INSERT INTO teeme_post_web_post_store (post_id,post_type_id,post_type_object_id,participant_id,sender_id,delivery_status_id,seen_status,sent_timestamp,data) VALUES $val";
 					$query = $this->db->query($q);
 				}
-				else if ($post_type_id==2){							
+				else if ($post_type_id==2 || $post_type_id==5){		
+					$post_type_id=2;					
 					//if ($workSpaceId>0){
 					if ($post_type_object_id>0){
 						$this->load->model('dal/identity_db_manager');	
@@ -809,7 +811,7 @@ class timeline_db_manager extends CI_Model
 					$query = $this->db->query($q);				
 				}
 				else if ($post_type_id==3){
-					/*
+					
 					$this->load->model('dal/identity_db_manager');
 					$arrSubSpaceRecipients = array();
 					$arrSubSpaceRecipientIds = array();
@@ -819,9 +821,10 @@ class timeline_db_manager extends CI_Model
 						if($recipientsUserId['userId']>0){
 							$values[] = "('".$nodeId."','".$post_type_id."','".$post_type_object_id."','".$recipientsUserId['userId']."','".$userId."','".$delivery_status_id."','".$seen_status."','".$createdDate."','".$this->db->escape_str($data)."')"; 	
 						}	
-						$arrSubSpaceRecipientIds[] = $recipientsUserId['userId'];
+						//$arrSubSpaceRecipientIds[] = $recipientsUserId['userId'];
 					}
-					*/
+					
+					/*
 					$this->load->model('dal/notification_db_manager');	
 					$followers = array();
 					$arrSubSpaceRecipientIds = array();
@@ -849,6 +852,7 @@ class timeline_db_manager extends CI_Model
 							}
 						}
 					}
+					*/
 					$val = implode(',', $values);
 					$q = "INSERT INTO teeme_post_web_post_store (post_id,post_type_id,post_type_object_id,participant_id,sender_id,delivery_status_id,seen_status,sent_timestamp,data) VALUES $val";
 					$query = $this->db->query($q);				
@@ -1137,19 +1141,26 @@ class timeline_db_manager extends CI_Model
 			else if ($post_type_id==5) {
 				$arrPostIds = array();
 				$this->load->model('dal/identity_db_manager');
-				$q = "SELECT post_id,post_type_id,post_type_object_id FROM teeme_post_web_post_store WHERE participant_id='".$user_id."' AND seen_status=0";
+				$q = "SELECT post_id,post_type_id,post_type_object_id,sender_id FROM teeme_post_web_post_store WHERE participant_id='".$user_id."' AND seen_status=0";
 				$query = $this->db->query($q);
 					foreach($query->result() as $row){		
 						if($row->post_type_id==9){
-							$objectFollowStatus==$this->identity_db_manager->get_follow_status($user_id,$row->post_type_object_id,'',10);
+							$objectFollowStatus=$this->identity_db_manager->get_follow_status($user_id,$row->post_type_object_id,'',10);
 							if($objectFollowStatus['preference'] || $this->identity_db_manager->isWorkSpaceMember($row->post_type_object_id,$user_id)){
 								$arrPostIds[]=$row->post_id;
 							}
-						}else{
+						}else if($row->post_type_id==2 && $row->post_type_object_id==0 && $row->sender_id!=$user_id){
+							$objectFollowStatus=$this->identity_db_manager->get_follow_status($user_id,$row->sender_id,'',15);
+							if($objectFollowStatus['preference']){
+								$arrPostIds[]=$row->post_id;
+							}							
+						}
+						else{
 							$arrPostIds[]=$row->post_id;
 						}
 					}	
-				$q2 = "SELECT a.workSpaceId as workSpaceId, a.workSpaceType as workSpaceType, a.id, a.successors, a.predecessor, a.nodeOrder, b.id as leafId, b.authors, b.userId, b.contents, DATE_FORMAT(b.createdDate, '%Y-%m-%d %H:%i:%s') as TimelineCreatedDate, b.leafStatus FROM teeme_node a, teeme_leaf b, teeme_post_web_post_store c WHERE c.post_id=a.id AND c.participant_id='".$user_id."' AND b.id=a.leafId AND (a.predecessor='0' OR a.predecessor='') AND a.treeIds=".$treeId." AND c.seen_status=0";			
+				//echo "<pre>"; print_r(array_unique($arrPostIds)); exit;
+				$q2 = "SELECT DISTINCT a.workSpaceId as workSpaceId, a.workSpaceType as workSpaceType, a.id, a.successors, a.predecessor, a.nodeOrder, b.id as leafId, b.authors, b.userId, b.contents, DATE_FORMAT(b.createdDate, '%Y-%m-%d %H:%i:%s') as TimelineCreatedDate, b.leafStatus FROM teeme_node a, teeme_leaf b, teeme_post_web_post_store c WHERE c.post_id=a.id AND c.participant_id='".$user_id."' AND b.id=a.leafId AND (a.predecessor='0' OR a.predecessor='') AND a.treeIds=".$treeId." AND c.seen_status=0";			
 				if(count($arrPostIds)>0){
 					$postIds = implode(",",$arrPostIds);
 					$q2 .= " AND c.post_id IN ($postIds)";
@@ -1311,7 +1322,7 @@ class timeline_db_manager extends CI_Model
 			if (count($arrPostIds)>0){
 				foreach($arrPostIds as $key=>$value){
 					//$post_ids = implode(',', $arrPostIds);
-					$q7 = "SELECT * FROM teeme_post_web_post_store WHERE participant_id=$userId AND seen_status=0  AND post_id=$value";
+					$q7 = "SELECT * FROM teeme_post_web_post_store WHERE participant_id=$userId AND seen_status=0 AND post_id=$value";
 					$query7 = $this->db->query($q7);	
 		
 					if($query7->num_rows()){					
@@ -1517,7 +1528,8 @@ class timeline_db_manager extends CI_Model
 				}	
 				elseif($postType=='space'){
 					if($workSpaceId == 0){
-						$q = "SELECT a.id FROM `teeme_post_web_post_store` AS a WHERE a.sender_id='".$_SESSION['userId']."' AND a.post_type_object_id=0 AND a.participant_id='".$_SESSION['userId']."' AND a.seen_status=0 GROUP BY a.post_id";
+						//$q = "SELECT a.id FROM `teeme_post_web_post_store` AS a WHERE a.sender_id='".$_SESSION['userId']."' AND a.post_type_object_id=0 AND a.participant_id='".$_SESSION['userId']."' AND a.seen_status=0 GROUP BY a.post_id";
+						$q = "SELECT a.id FROM `teeme_post_web_post_store` AS a WHERE a.post_type_object_id=0 AND a.participant_id='".$_SESSION['userId']."' AND a.seen_status=0 GROUP BY a.post_id";
 					}else{
 						$q = "SELECT a.id FROM `teeme_post_web_post_store` AS a WHERE a.post_type_id=$post_type_id AND a.post_type_object_id=$workSpaceId AND a.participant_id='".$_SESSION['userId']."' AND a.seen_status=0 GROUP BY a.post_id";
 					}
@@ -1541,7 +1553,7 @@ class timeline_db_manager extends CI_Model
 							}
 						}
 					//$q = "SELECT a.id FROM teeme_node a, teeme_leaf b, teeme_post_web_post_store c WHERE c.post_id=a.id AND c.participant_id='".$_SESSION['userId']."' AND b.id=a.leafId AND (a.predecessor='0' OR a.predecessor='') AND a.treeIds=".$treeId." AND c.seen_status=0";
-					$q2 = "SELECT a.id FROM teeme_node a, teeme_leaf b, teeme_post_web_post_store c WHERE c.post_id=a.id AND c.participant_id='".$_SESSION['userId']."' AND b.id=a.leafId AND (a.predecessor='0' OR a.predecessor='') AND a.treeIds=".$treeId." AND c.seen_status=0";							
+					$q2 = "SELECT DISTINCT a.id FROM teeme_node a, teeme_leaf b, teeme_post_web_post_store c WHERE c.post_id=a.id AND c.participant_id='".$_SESSION['userId']."' AND b.id=a.leafId AND (a.predecessor='0' OR a.predecessor='') AND a.treeIds=".$treeId." AND c.seen_status=0";							
 					if(count($arrPostIds)>0){
 						$postIds = implode(",",$arrPostIds);
 						$q2 .= " AND c.post_id IN ($postIds)";

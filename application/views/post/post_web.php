@@ -1058,7 +1058,7 @@ $(document).ready(function()
 			<?php 
 			} // end if a user profile
 			// if a space or subspace profile
-			/*
+			
 			else if ($post_type_id==2 && count($Profiledetail)>0){				
 				?>				
 				<div class="timelineProfImg">
@@ -1068,11 +1068,13 @@ $(document).ready(function()
 					<span class="profileLeftLabel">
 						<?php echo $Profiledetail['workSpaceName'] .' (space)'; ?>
 						<?php
+						/*
 							if(!$isSpaceProfileMember){
 								$treeDetails['seedId']=$post_type_object_id; 
 								$treeDetails['object_id']=10; // 10 is for space object. Look in notification_objects table for reference
 								$this->load->view('common/section_follow_post',$treeDetails);
 							}
+						*/
 						?>
 					</span>
 					<!--
@@ -1083,7 +1085,7 @@ $(document).ready(function()
 					-->
 				</div>
 				<?php
-			}*/
+			}
 			else if ($post_type_id==3 && count($Profiledetail)>0){				
 				?>
 				<div class="timelineProfImg">
@@ -1093,11 +1095,12 @@ $(document).ready(function()
 					<span class="profileLeftLabel">
 						<?php echo $Profiledetail['subWorkSpaceName'] .' (sub-space)'; ?>
 						<?php
+						/*
 						if(!$isSubSpaceProfileMember){
 							$treeDetails['seedId']=$post_type_object_id; 
 							$treeDetails['object_id']=11; // 11 is for sub-space object. Look in notification_objects table for reference
 							$this->load->view('common/section_follow_post',$treeDetails);
-						}
+						}*/
 						?>
 					</span>
 					<!--
@@ -1106,6 +1109,16 @@ $(document).ready(function()
 						<span>Created by:<?php echo $Profiledetail['subWorkSpaceCreatorUsername']; ?></span>
 					</div>
 					-->
+				</div>
+				<?php
+			}
+			else if ($post_type_id==7){				
+				?>
+				<div class="timelineProfImg">
+					<img class="rounded_profile_pic" id="imgName" alt="image" src="<?php echo base_url();?>images/noimage.jpg" border="0"  width="45" height="45">
+				</div>
+				<div class="postUserDetailsBox">
+					<span class="profileLeftLabel">Public</span>
 				</div>
 				<?php
 			}
@@ -1133,7 +1146,7 @@ $(document).ready(function()
 			<?php 
 			} */?>
 			<?php 
-			if ($post_type_id==2 || $post_type_id==9){
+			if (($post_type_id==2 || $post_type_id==9) && $post_type_object_id>0){
 				$link1 = base_url()."post/web/".$workSpaceId."/".$workSpaceType."/space/".$post_type_object_id;
 				$link2 = base_url()."post/web/".$workSpaceId."/".$workSpaceType."/space_ex/".$post_type_object_id;
 				if ($myProfileDetail['userGroup']>0) { ?>
@@ -1241,7 +1254,8 @@ $(document).ready(function()
 		}
 		if($this->uri->segment('5') == 'public')
 		{
-			if((isset($_SESSION['WSManagerAccess']) && $_SESSION['WSManagerAccess'] == 1) || (isset($_SESSION['workPlaceManagerName']) && $_SESSION['workPlaceManagerName']!='')) 
+			//if((isset($_SESSION['WSManagerAccess']) && $_SESSION['WSManagerAccess'] == 1) || (isset($_SESSION['workPlaceManagerName']) && $_SESSION['workPlaceManagerName']!='')) 
+			if((isset($_SESSION['workPlaceManagerName']) && $_SESSION['workPlaceManagerName']!='')) 
 			{ 
 		?>
 		

@@ -3125,7 +3125,7 @@ class Post extends CI_Controller {
 				else{
 					$arrDetails['totalParkedPosts'] = $this->timeline_db_manager->getPostCountTimeline($workSpaceId, $workSpaceType, 0, 'parked');
 				}	
-
+				//echo "space my= " .$arrDetails['totalSpacePosts']; exit;
 			
 			//$arrDetails['userAllSpaces']	= $objIdentity->getAllUserSpacesByWorkPlaceId($_SESSION['workPlaceId'],$_SESSION['userId']);
 			$arrDetails['userAllSpaces']	= $objIdentity->getAllWorkSpacesByWorkPlaceId($_SESSION['workPlaceId'],$_SESSION['userId']);
