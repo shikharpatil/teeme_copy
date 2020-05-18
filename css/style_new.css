@@ -8823,7 +8823,7 @@ span.reserve a
 .replyCancelButtons{
 	margin:25px 0 0 0;
 }
-#showMan{
+#showMan,#showManSpaces{
 	max-height:150px;
 	overflow:auto;
 	/*
@@ -8831,9 +8831,9 @@ span.reserve a
 	margin:10px 0 10px 175px; 
 	*/
 }
-#multipleRecipientArea{
+#multipleRecipientArea,#multipleSpaceRecipientArea{
 	display:none;
-	margin-top:3%; 
+	margin: 3% 1% 0 1%;
 	float:left; 
 }
 .sol-current-selection{

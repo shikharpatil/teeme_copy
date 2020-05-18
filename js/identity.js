@@ -7266,7 +7266,7 @@ $('.clsCheckGroup').live("click",function(){
 });
 
 $('.clsCheckSpace').live("click",function(){
-	//alert('dfsd');
+	$("#multipleSpaceRecipientArea").show();
 	val = $("#listSpaces").val();
 
 	val1 = val.split(",");	
@@ -7376,10 +7376,12 @@ function checkAllGroups(){
 
 }
 function checkAllUserSpaces(){
-
+	$("#multipleSpaceRecipientArea").show();
 	var htmlContent='';
 	
 	if($("#checkAllSpaces").prop("checked")==true){
+
+		$("#showManSpaces").show();
 
 		$('.clsCheckSpace').prop("checked",true);
 
@@ -7410,6 +7412,8 @@ function checkAllUserSpaces(){
 	}
 
 	else{
+
+		$("#showManSpaces").hide();
 
 		//change prop to attr for server - Monika
 

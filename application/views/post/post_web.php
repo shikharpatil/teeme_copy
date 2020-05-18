@@ -1536,13 +1536,13 @@ $(document).ready(function()
 						<!--Group feature end here-->
 						<!--Space and subspace selection start here-->
 						<?php if(count($userAllSpaces)>0){ ?>
-						<div style="margin-top:3%;">
-							<div style="width:40%; float:left;">						
+						<div style="margin-top:1%;">
+							<div style="width:50%; float:left;">						
 								<?php
 								echo "Send to multiple spaces: "; 
 								?>
 								<input type="text" id="searchSpaces" name="searchSpaces" onKeyUp="searchUserSpaces()" size="50" placeholder="Search..."/>						
-								<div id="showManSpaces" style="height:150px;margin-left:50px; overflow:scroll; margin-bottom:30px; margin-top:20px; width:65%; ">
+								<div id="showManSpaces">
 									<?php if(count($userAllSpaces)>0){ ?>			
 									<input type="checkbox" name="checkAllSpaces" id="checkAllSpaces" onclick="checkAllUserSpaces();" />		
 									<?php echo $this->lang->line('txt_All');?><br />
@@ -1561,8 +1561,8 @@ $(document).ready(function()
 								</div>
 							</div>
 							<!--Select user div end-->
-							<div style="float:left; width:60%;">
-								<div class="sol-current-selection-spaces" style="max-height:250px; overflow-y:scroll;"></div>
+							<div id="multipleSpaceRecipientArea">
+								<div class="sol-current-selection-spaces"></div>
 							</div>
 							<!--Select user label end-->
 							<div class="clr"></div>
@@ -1718,7 +1718,8 @@ $(document).ready(function()
 <?php //$this->load->view('common/datepicker_js.php'); ?>
 <script>
 $(document).ready(function(){
-	$("#showMan").hide();
+	//$("#showMan").hide();
+	//$("#showManSpaces").hide();
 	$(window).scroll(function(){
       if ($(this).scrollTop() > 60) {
           	$('#postTabUI').addClass('postTabUIFixed');
@@ -1866,6 +1867,7 @@ function insertTimeline()
 					// $('#TimelinePost').html(result);
 					$('#postArea').html(result);
 					$("#showMan").hide();
+					$("#showManSpaces").hide();
 					 if($('#TimelineEditor').is(':visible'))
 					 {
 						$("#TimelineEditor").hide();
@@ -2120,7 +2122,9 @@ function showTimelineEditor()
 		$('.sol-current-selection').html('');
 		$("#list").val("");
 		$("#showMan").hide();
+		$("#showManSpaces").hide();
 		$("#multipleRecipientArea").hide();
+		$("#multipleSpaceRecipientArea").hide();
 	}
 	else
 	{
