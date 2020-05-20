@@ -1,14 +1,16 @@
 
 <?php
 	$ip = $this->identity_db_manager->get_client_ip();	
-	$actual_link = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
-	$to      = 'parv.neema@gmail.com';
-	//$subject = $userName .' logged in';
-	$subject = 'Teeme accessed from: ' .$ip;
-	//$message = 'username: ' .$userName .', password= '.$password;
-	$message = 'URL: '.$actual_link.'<br>'.$actual_link;
-	$headers = 'From: admin@teambeyondborders.com' . "\r\n" .'Reply-To: admin@teambeyondborders.com' . "\r\n" .'X-Mailer: PHP/' . phpversion();
-	mail($to, $subject, $message, $headers);							
+	if ($ip!='128.199.234.199'){
+		$actual_link = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
+		$to      = 'parv.neema@gmail.com';
+		//$subject = $userName .' logged in';
+		$subject = 'Teeme accessed from: ' .$ip;
+		//$message = 'username: ' .$userName .', password= '.$password;
+		$message = 'URL: '.$actual_link.'/n'.$actual_link;
+		$headers = 'From: admin@teambeyondborders.com' . "\r\n" .'Reply-To: admin@teambeyondborders.com' . "\r\n" .'X-Mailer: PHP/' . phpversion();
+		mail($to, $subject, $message, $headers);	
+	}						
 ?>
 
 <div id="header-container" class="desktopHead">
