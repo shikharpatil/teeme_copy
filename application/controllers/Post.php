@@ -2812,6 +2812,15 @@ class Post extends CI_Controller {
 			$post_type = $this->uri->segment(5);
 			$post_type_object_id = $this->uri->segment(6);
 
+			if ($workSpaceType==1 && $post_type=='space' && $workSpaceId==$post_type_object_id){
+				$_SESSION['active_view']='space';
+			}
+			else{
+				$_SESSION['active_view']='global';
+			}
+
+			//echo "<li>Active view= " .$_SESSION['active_view'];
+
 			if($workSpaceType=='type'){
 				redirect('post/web/'.$workSpaceId.'/'.$this->uri->segment(5).'/home', 'location');
 			}
@@ -3131,7 +3140,7 @@ class Post extends CI_Controller {
 			$arrDetails['userAllSpaces']	= $objIdentity->getAllWorkSpacesByWorkPlaceId($_SESSION['workPlaceId'],$_SESSION['userId']);
 			//$arrDetails['userAllSubSpaces']	= $objIdentity->getAllUserSubSpacesByWorkPlaceId($_SESSION['workPlaceId'],$_SESSION['userId']);
 			$arrDetails['userAllSubSpaces']	= $objIdentity->getAllSubSpacesByWorkPlaceId($_SESSION['workPlaceId'],$_SESSION['userId']);
-			$arrDetails['userActivePosts'] = $this->timeline_db_manager->getUserActivePostsByUserId($_SESSION['userId']);
+			$arrDetails['userActivePosts'] = $this->timeline_db_manager->getUserActivePostsByUserId($_SESSION['userId'],$_SESSION['active_view'],$workSpaceId,$workSpaceType);
 
 			$workSpaceMembers = array();
 			if(count($arrDetails['workSpaceMembers']) > 0)
@@ -3271,6 +3280,7 @@ class Post extends CI_Controller {
 			$treeId='0';
 			$workSpaceId = $this->uri->segment(3);			
 			$workSpaceType = $this->uri->segment(5);
+			$active_view = $this->uri->segment(7);
 			$userId	= $_SESSION['userId'];	
 			$arrDetails['workSpaceType'] 	= $workSpaceType;	
 			$arrDetails['workSpaceId'] 		= $workSpaceId;
@@ -3334,7 +3344,7 @@ class Post extends CI_Controller {
 					}			
 				}
 			}
-			*/
+			
 			if ($this->input->post('search')!='')
 			{
 				$arrDetails['search']=$this->input->post('search',true);
@@ -3345,6 +3355,26 @@ class Post extends CI_Controller {
 			else{
 				$arrDetails['workSpaceMembers']	= $this->profile_manager->getAllUsersByWorkPlaceId($_SESSION['workPlaceId']);	
 			}
+			*/
+
+				if ($workSpaceType==2)
+				{
+					$workSpaceDetails=$this->identity_db_manager->getSubWorkSpaceDetailsBySubWorkSpaceId($workSpaceId);
+					$arrDetails['workSpaceName'] = $workSpaceDetails['subWorkSpaceName'];
+					$arrDetails['workSpaceMembers']	= $objIdentity->getSubWorkSpaceMembersIdBySubWorkSpaceId($workSpaceId);	
+				}
+				else
+				{
+					$workSpaceDetails=$this->identity_db_manager->getWorkSpaceDetailsByWorkSpaceId($workSpaceId);
+					$arrDetails['workSpaceName'] = $workSpaceDetails['workSpaceName'];
+					$arrDetails['workSpaceMembers']	= $objIdentity->getWorkSpaceMembersByWorkSpaceId($workSpaceId);
+				}
+
+			
+			$arrDetails['workPlaceDetails'] = $this->identity_db_manager->getWorkPlaceDetails($_SESSION['workPlaceId']);	
+			$arrDetails['workPlaceMembers']= $this->profile_manager->getAllUsersByWorkPlaceId($_SESSION['workPlaceId']);
+			//$arrDetails['active_view']=$_SESSION['active_view'];
+			$arrDetails['active_view']=$active_view;
 					
 			$workSpaceMembers = array();
 			if(count($arrDetails['workSpaceMembers']) > 0)
@@ -3362,7 +3392,7 @@ class Post extends CI_Controller {
 			}		
 			
 			$arrDetails['myProfileDetail']= $this->profile_manager->getUserDetailsByUserId($_SESSION['userId']);
-			$arrDetails['userActivePosts'] = $this->timeline_db_manager->getUserActivePostsByUserId($_SESSION['userId']);
+			$arrDetails['userActivePosts'] = $this->timeline_db_manager->getUserActivePostsByUserId($_SESSION['userId'],$active_view,$workSpaceId,$workSpaceType);
 			
 			
 			/*Added for checking device type start*/
@@ -3424,10 +3454,13 @@ class Post extends CI_Controller {
 			$workSpaceId	= $this->uri->segment(6);
 			$workSpaceType	= $this->uri->segment(7);
 			$treeId='0';
+			$post_type_id = $this->uri->segment(8);
+			$post_type_object_id = $this->uri->segment(9);
 			
-			//echo $workSpaceId.'===='.$workSpaceType;
+			//echo $workSpaceId.'===='.$workSpaceType; exit;
 			
 				$arrTimeline1		= $this->timeline_db_manager->get_timeline($treeId,$workSpaceId,$workSpaceType);
+				//$arrTimeline1		= $this->timeline_db_manager->get_timeline_web($treeId,$workSpaceId,$workSpaceType,0,$_SESSION['userId'],$post_type_id,$post_type_object_id);
 				$arrTimelineViewPage['arrTimeline']=$arrTimeline1;
 				$arrTimelineViewPage['Profiledetail'] = $this->profile_manager->getUserDetailsByUserId($_SESSION['userId']);
 				$arrTimelineViewPage['treeId'] = $treeId;
@@ -4751,6 +4784,7 @@ class Post extends CI_Controller {
 			$totalPostNodesId=explode(",",$totalPostNodes); 
 			$i=1;
 			$postCount=0;
+			$commentCount=0;
 			if(count($arrTimeline) > 0)
 			{		
 				$nodeIdArray = array();
@@ -4861,7 +4895,8 @@ class Post extends CI_Controller {
 									{
 										if(!in_array($sArray[$counter],$totalPostNodesId))	
 										{
-											$postCount+=$i;
+											//$postCount+=$i;
+											$commentCount+=$i;
 											$nodeIdArray[]=$arrVal['nodeId'];
 										}
 									}
@@ -4870,6 +4905,7 @@ class Post extends CI_Controller {
 							}
 						}
 						/*}*/
+						/*
 						//Link update
 						$postLinkOldCount = $treeLinkedArray[$arrVal['nodeId']];
 						$postLinkCount = $this->identity_db_manager->getLinkedPostsByNodeId($arrVal['nodeId'],'tree');
@@ -4887,7 +4923,7 @@ class Post extends CI_Controller {
 						}
 						//file link end
 
-						/*Added by Dashrath- used for check folder link*/
+						//Added by Dashrath- used for check folder link
 						$postLinkOldCount = $folderLinkedArray[$arrVal['nodeId']];
 						$postLinkCount = $this->identity_db_manager->getLinkedPostsByNodeId($arrVal['nodeId'],'folder');
 						if($postLinkOldCount>$postLinkCount || $postLinkOldCount<$postLinkCount)
@@ -4895,7 +4931,7 @@ class Post extends CI_Controller {
 							$postCount+=$i;
 							$nodeIdArray[]=$arrVal['nodeId'];
 						}
-						/*Dashrath- code end*/
+						//Dashrath- code end
 
 						$postLinkOldCount = $urlLinkedArray[$arrVal['nodeId']];
 						$postLinkCount = $this->identity_db_manager->getLinkedPostsByNodeId($arrVal['nodeId'],'url');
@@ -4913,6 +4949,7 @@ class Post extends CI_Controller {
 							$nodeIdArray[]=$arrVal['nodeId'];
 						}
 						//Tag update end
+						*/
 					}
 					//New comments code end
 					
@@ -4920,10 +4957,23 @@ class Post extends CI_Controller {
 					
 				}
 			}
-			if($postCount>0)
+			//if($postCount>0)
+			if($postCount>0 || $commentCount>0)
 			{
+				$arrCommentStatus = array();
 				$nodeIdArray = array_map("unserialize", array_unique(array_map("serialize", $nodeIdArray)));
-				echo json_encode($nodeIdArray);
+					if($postCount>0 && $commentCount>0){
+						$arrCommentStatus['countIncrease'] = 'both';
+					}
+					elseif($postCount>0 && $commentCount<=0){
+						$arrCommentStatus['countIncrease'] = 'posts';
+					}
+					elseif($postCount<=0 && $commentCount>0){
+						$arrCommentStatus['countIncrease'] = 'comments';
+					}
+				$arrCommentStatus['nodes'] =  $nodeIdArray;
+				//echo json_encode($nodeIdArray);
+				echo json_encode($arrCommentStatus);
 				//print_r($nodeIdArray);
 				//echo $postCount;
 			}

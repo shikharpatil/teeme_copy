@@ -634,7 +634,8 @@ setTimeout("getTreeUpdates()", 10000);
 
 function getTreeUpdates(){
 	var url= "<?php echo base_url();?>workspace_home2/getTreeCountAjax/0/<?php echo $workSpaceId;?>/type/<?php echo $workSpaceType;?>";
-	$.post(url,{dataString:'<?php echo $total_documents.",".$total_chats.",".$total_tasks.",".$total_notes.",".$total_contacts.",".$total_posts;?>'},function(data){console.log(data);
+	$.post(url,{dataString:'<?php echo $total_documents.",".$total_chats.",".$total_tasks.",".$total_notes.",".$total_contacts.",".$total_posts;?>'},function(data){
+		//console.log(data);
 		var obj = data.split(',');
 		//documents
 		if(obj[0].trim()!=0){//alert(obj[0]);

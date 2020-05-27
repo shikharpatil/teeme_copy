@@ -38,7 +38,8 @@
 				{*/
 			?>
 			<!--Changed by Dashrath- change width 94% to 100% in inline css-->		
-			<div id="<?php echo $position++;?>" style="width:100%;float:left;padding-left:0%;padding-top:20px;" onClick=""  class="<?php echo $nodeBgColor."1";?> handCursor" >
+			<!--<div id="<?php echo $position++;?>" style="width:100%;float:left;padding-left:0%;padding-top:20px;" onClick=""  class="<?php echo $nodeBgColor."1";?> handCursor">-->
+			<div id="comment<?php echo $arrDiscussions['nodeId'];?>" style="width:100%;float:left;padding-left:0%;padding-top:20px;" onClick=""  class="<?php echo $nodeBgColor."1";?> handCursor">
 		  	
 			 <!--Add comment profile pic start-->
   <div style="width:30%;" class="commentUserName">

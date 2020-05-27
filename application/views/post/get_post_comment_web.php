@@ -14,6 +14,7 @@
 				$sArray=explode(',',$arrparent['successors']);
 				//$sArray=array_reverse($sArray);
 				$counter=0;
+
 				while($counter < count($sArray))
 				{
 					$arrDiscussions	= $this->chat_db_manager->getPerentInfo($sArray[$counter]);	
@@ -37,7 +38,8 @@
 				if($_SESSION['userId']==$arrDiscussions['userId'] && $reatTimeStatus=='false')
 				{
 			?>		
-			<div id="<?php echo $position++;?>" style="width:94%;float:left;padding-left:0%;padding-top:20px;" onClick=""  class="<?php echo $nodeBgColor."1";?> handCursor" >
+			<!--<div id="<?php echo $position++;?>" style="width:94%;float:left;padding-left:0%;padding-top:20px;" onClick=""  class="<?php echo $nodeBgColor."1";?> handCursor">-->
+			<div id="comment<?php echo $arrDiscussions['nodeId'];?>" style="width:94%;float:left;padding-left:0%;padding-top:20px;" onClick=""  class="<?php echo $nodeBgColor."1";?> handCursor">
 		  	
 			 <!--Add comment profile pic start-->
   <div style="width:30%;" class="commentUserName">
@@ -94,4 +96,4 @@
 		}		
 }
 ?>
-<?php /*?><input type="hidden" id="totalTimelineCommentNodes<?php echo $nodeId; ?>" value="<?php echo implode(',',$totalTimelineCommentNodes);?>"><?php */?>
+<?php ?><input type="hidden" id="totalTimelineCommentNodes<?php echo $nodeId; ?>" value="<?php echo implode(',',$totalTimelineCommentNodes);?>"><?php ?>

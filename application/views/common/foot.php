@@ -818,6 +818,8 @@ function leftMenuHideShow()
 
 	//get data type is notification or timeline (used for check condition)
 	var myDataTypeValue1 = getRightSidebarDataType();
+
+	//console.log('left menu= '+isLeftMenu);
 	
 	if(isLeftMenu=='')
 	{

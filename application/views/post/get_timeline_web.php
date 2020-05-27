@@ -829,7 +829,8 @@
           			</li>
 		  
 		  			<!--shared tab start here-->
-		   			<?php
+					   <?php
+					   /*
 					if($workSpaceId=='0' && $_SESSION['public'] != 'public' && $_SESSION['all'] != 'all' && $this->uri->segment(8)!='bookmark')
 					{
 					?>
@@ -837,7 +838,7 @@
 							<a href="javascript:void(0);" style="" id="tab2m<?php echo $arrVal['nodeId']; ?>" onclick="showPopWin('<?php echo base_url();?>post/share/0/type/1/0/1/<?php echo $arrVal['nodeId']; ?>', 710, 600, null, '');"><img src="<?php  echo base_url().'images/tab-icon/post_share.png'; ?>" title="share" style="height:12px;  margin-top: 4px;" /></a>
 					 	</li>	 
 		 			<?php
-		 			} ?> 
+		 			} */?> 
 		  
 		  			<!--Shared tab end here-->
 		  
@@ -956,8 +957,8 @@
     <div class="discussionComments" style="width:100%;background-color:#FFFFFF;">
 
       <!-- Changed by Dashrath- change padding-left:0px; to padding:0px; in inline css for new ui-->
-      <div id="<?php echo $position++;?>" style=" width:100%; padding:0px;"  class="<?php echo $nodeBgColor."1";?> handCursor">
-       
+      <!--<div id="<?php echo $position++;?>" style=" width:100%; padding:0px;"  class="<?php echo $nodeBgColor."1";?> handCursor">-->
+	  <div id="comment<?php echo $arrVal['nodeId'];?>" style=" width:100%; padding:0px;"  class="<?php echo $nodeBgColor."1";?> handCursor">
 	   	<div style="width:80%; float:left;"> </div>
         <span id="spanArtifactLinks<?php echo $arrVal['nodeId'];?>" style="display:none;"></span> <span id="spanTagView<?php echo $arrVal['nodeId'];?>" style="display:none;"> <span id="spanTagViewInner<?php echo $arrVal['nodeId'];?>"> </span>
         <div style="width:80%; float:left;">
@@ -1027,7 +1028,9 @@
 					 if($counter<($totalCommentsCount-3))
 					 { ?>
 					 	<!--Changed by Dashrath- change width 94% to 100% in inline css-->		
-						<div id="<?php echo $position++;?>" style="width:100%;float:left;padding-left:0%;padding-top:20px;" onClick=""  class="<?php echo $nodeBgColor."1";?> handCursor"s>
+						<!--<div id="<?php echo $position++;?>" style="width:100%;float:left;padding-left:0%;padding-top:20px;" onClick=""  class="<?php echo $nodeBgColor."1";?> handCursor">-->
+						<div id="comment<?php echo $arrDiscussions['nodeId'];?>" style="width:100%;float:left;padding-left:0%;padding-top:20px;" onClick=""  class="<?php echo $nodeBgColor."1";?> handCursor">
+
 							<!--Add comment profile pic start-->
 							<div style="width:30%;" class="commentUserName">
 								<div style="float:left;">
@@ -1157,10 +1160,11 @@
 					if($counter>($totalCommentsCount-4))
 					{ ?>
 						<!--Changed by Dashrath- change width 94% to 100% in inline css-->
-          				<div id="<?php echo $position++;?>" style="width:100%;float:left;padding-left:0%;padding-top:20px;" onClick=""  class="<?php echo $nodeBgColor."1";?> handCursor" >
-		  	
+          				<!--<div id="<?php echo $position++;?>" style="width:100%;float:left;padding-left:0%;padding-top:20px;" onClick=""  class="<?php echo $nodeBgColor."1";?> handCursor">-->
+						  <div id="comment<?php echo $arrDiscussions['nodeId'];?>" style="width:100%;float:left;padding-left:0%;padding-top:20px;" onClick=""  class="<?php echo $nodeBgColor."1";?>">
 						<!--Add comment profile pic start-->
-						<div style="width:30%;" class="commentUserName" >
+						
+						<div style="width:30%;" class="commentUserName">
 						  <div style="float:left;">
 							<?php
 								if ($TimelineProfileCommentdetail['photo']!='noimage.jpg')

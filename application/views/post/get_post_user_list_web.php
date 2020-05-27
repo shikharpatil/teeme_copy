@@ -1,6 +1,15 @@
 <?php
 				//echo "<pre>"; print_r($workSpaceMembers); exit;
-				if(count($workSpaceMembers) > 0)
+				//echo "<pre>"; print_r($workPlaceMembers); exit;
+				//echo "active view= ".$active_view; exit;
+				$arrActiveMembers = array();
+				if ($active_view=='space'){
+					$arrActiveMembers = $workSpaceMembers;
+				}	
+				else{
+					$arrActiveMembers = $workPlaceMembers;
+				}	
+				if(count($arrActiveMembers) > 0)
 
 				{
 
@@ -29,7 +38,7 @@
 						if ($showMemberList)
 						{		
 	
-							foreach($workSpaceMembers as $keyVal=>$arrVal)
+							foreach($arrActiveMembers as $keyVal=>$arrVal)
 							{
 							
 								/*if(in_array($arrVal['userId'],$arrayUsers))
@@ -118,7 +127,7 @@
 	
 							
 	
-							foreach($workSpaceMembers as $keyVal=>$arrVal)
+							foreach($arrActiveMembers as $keyVal=>$arrVal)
 							{
 								/*if(in_array($arrVal['userId'],$arrayUsers))
 								{*/

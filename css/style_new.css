@@ -7400,8 +7400,11 @@ input:checked + .slider:before {
 }
 .postAddIcon
 {
+	/*
 	float:left;
 	padding: 0.5% 6% 0 0;
+	*/
+	padding: 10px 10px 10px 0;
 }
 .tab_menu_new_up_for_mobile a
 {

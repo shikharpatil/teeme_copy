@@ -514,7 +514,9 @@ $(document).ready(function()
 					<ul class="post_web_tab_menu_list">
 						<li class="active"><a href="#divChats">Live feed</a></li>
 						<li><a href="#divSearchUser">Users</a></li>
-						<li><a href="#divSpaces">Spaces</a></li>
+						<?php if ($_SESSION['active_view']!='space'){?>
+							<li><a href="#divSpaces">Spaces</a></li>
+						<?php } ?>
 						<!--<li><a href="#divGroups">Groups</a></li>-->
 					</ul>
 					<div class="clr"></div>
@@ -624,9 +626,17 @@ $(document).ready(function()
 		<div id="divGroups" name="divGroups" class="post_web_tab_menu_tab" style="display:none;">Groups feature not currently available</div>
 		<div class="clr"></div>
 
-		<?php				
+		<?php		
+			$arrActiveMembers = array();
+				if ($_SESSION['active_view']=='space'){
+					$arrActiveMembers = $workSpaceMembers;
+				}	
+				else{
+					$arrActiveMembers = $workPlaceMembers;
+				}	
 				//if(count($workSpaceMembers) > 0)
-				if(count($workPlaceMembers) > 0)
+				//if(count($workPlaceMembers) > 0)
+				if(count($arrActiveMembers) > 0)
 				{
 
 						$rowColor1='rowColor2';
@@ -657,7 +667,8 @@ $(document).ready(function()
 						{		
 	
 							//foreach($workSpaceMembers as $keyVal=>$arrVal)
-							foreach($workPlaceMembers as $keyVal=>$arrVal)
+							//foreach($workPlaceMembers as $keyVal=>$arrVal)
+							foreach($arrActiveMembers as $keyVal=>$arrVal)
 							{
 							
 								/*if(in_array($arrVal['userId'],$arrayUsers))
@@ -739,7 +750,8 @@ $(document).ready(function()
 							}
 
 							//foreach($workSpaceMembers as $keyVal=>$arrVal)
-							foreach($workPlaceMembers as $keyVal=>$arrVal)
+							//foreach($workPlaceMembers as $keyVal=>$arrVal)
+							foreach($arrActiveMembers as $keyVal=>$arrVal)
 							{
 								/*if(in_array($arrVal['userId'],$arrayUsers))
 								{*/
@@ -856,123 +868,131 @@ $(document).ready(function()
   <!--Tab section start here-->
 	
   	<div id="postTabUI" class="postTabUI">
-		<div class="leftTabUl">
-    		<ul class="tab_menu_new">
-
-
-			<?php if($workSpaceDetails['workSpaceName']!="Try Teeme"){ ?>
-<li>
-	<?php /*?> <a href="javascript:void(0);" id="profile" style="padding-left:12px;margin-left:17px;" title="profile" class="<?php if($profileForm=='1' && $passwordForm!='1'){ ?> active <?php } ?>" onclick="$('#profile').addClass('active');$('#passwordForm').removeClass('active');$('#notification').removeClass('active');$('#password_form').hide();$('#notificationSection').hide();$('#profileForm').show(); clearSessionMsg();"><?php echo $this->lang->line('profile_txt'); ?></a><?php */?>
-	
-	<?php if ($workSpaceDetails['workSpaceName']!="Try Teeme") { ?>
-	<!--<a href="<?php echo base_url(); ?>post/web/<?php echo $workSpaceId; ?>/<?php echo $workSpaceType; ?>/0/1/all<?php if($this->uri->segment(10)!=''){ echo '/0/'.$userPostSearch; }?>" style="padding-left:12px;margin-left:17px; <?php if($_SESSION['all']) { ?>" class="active <?php } ?>" id="all"><?php echo $this->lang->line('all_post_txt').' ('.$allPosts.')'; ?></a>-->
-	<a href="<?php echo base_url(); ?>post/web/<?php echo $workSpaceId; ?>/<?php echo $workSpaceType; ?>/home" style="padding-left:12px; <?php if($_SESSION['all']) { ?>" class="active <?php } ?>" id="all"><?php echo $this->lang->line('all_post_txt').' ('.$allPosts.')'; ?></a>				
-	<?php } ?>
-</li>
-
-	<?php } ?>
-
-
-			<li>
-
-            <?php /*?><a href="javascript:void(0);" style="padding-left:12px;margin-left:2px;" id="notification" title="notification" class="<?php if($profileForm!='1' && $passwordForm!='1'){ ?> active <?php } ?>" onclick="$('#notification').addClass('active');$('#profile').removeClass('active');$('#passwordForm').removeClass('active');$('#profileForm').hide();$('#password_form').hide();$('#notificationSection').show(); clearSessionMsg();">
-			</a><?php */?>
+	  	<div class="leftTabUl">
+		<!--Plus icon for public post start here-->
+		<?php /*if($treeAccess==1  ||  $workSpaceId==0  || in_array($_SESSION['userId'],$managerIds) || isset($_SESSION['workPlaceManagerName']) && $_SESSION['workPlaceManagerName']!='')*/
+		//echo $_SESSION['WSManagerAccess'].'===='.$_SESSION['workPlaceManagerName'];
+		/*
+		if((isset($_SESSION['WSManagerAccess']) && $_SESSION['WSManagerAccess'] == 1) || (isset($_SESSION['workPlaceManagerName']) && $_SESSION['workPlaceManagerName']!='')) 
+		{ 
+			//if($_SESSION['public'] == 'public')
+			if($this->uri->segment('5') == 'public')
+			{
+		?>
 			
+				<div class="postAddIcon">
+				<a id="add" style="cursor:pointer;" onclick="showTimelineEditor();"><img border="0" title="Add" src="<?php echo base_url(); ?>/images/addnew.png" ></a>
+				</div>
+			
+		<?php
+			}
+		}
+		*/
+		if($this->uri->segment('5') == 'one')
+		{
+			if($this->uri->segment('6')==$_SESSION['userId']) 
+			{ 
+		?>
+		
+			<div class="postAddIcon">
+			<a id="add" style="cursor:pointer;" onclick="showTimelineEditor();"><img title="Add" src="<?php echo base_url(); ?>/images/addnew.png" ></a>
+			</div>	
+		<?php
+			}
+		}
+		if(($this->uri->segment('5') == 'space' || $this->uri->segment('5') == 'space_ex' || $this->uri->segment('5') == 'subspace') && ($this->uri->segment('6')==$workSpaceId))
+		{
+			if($this->uri->segment('6')>0)
+			{ 				
+				if ($this->uri->segment('5') == 'subspace'){
+					$wsDetails = $this->identity_db_manager->getWorkSpaceDetailsBySubWorkSpaceId($this->uri->segment('6'));
+					$wsId = $wsDetails['workSpaceId'];
+					if($isSubSpaceProfileMember){$allowAddPost=1;}
+					else{$allowAddPost=0;}
+				}
+				else if ($this->uri->segment('5') == 'space_ex'){
+					$wsId =$this->uri->segment('6');
+					if ($this->identity_db_manager->getManagerStatus($_SESSION['userId'], $wsId, 3)){
+						$allowAddPost=1;
+					}
+					else{
+						$allowAddPost=0;
+					}
+				}
+				else{
+					$wsId =$this->uri->segment('6');
+					if($isSpaceProfileMember){$allowAddPost=1;}
+					else{$allowAddPost=0;}
+				}
+				//if(isset($_SESSION['WSManagerAccess']) && $_SESSION['WSManagerAccess'] == 1)
+				//echo 'wsid= ' .$wsId; exit;
+				//if($wsId!='-1' && $this->identity_db_manager->getManagerStatus($_SESSION['userId'], $wsId, 3))
+				if($allowAddPost)
+				{
+					?>		
+					<div class="postAddIcon">
+					<a id="add" style="cursor:pointer;" onclick="showTimelineEditor();"><img title="Add" src="<?php echo base_url(); ?>/images/addnew.png" ></a>
+					</div>	
+					<?php
+				}
+			}
+			else if(($this->uri->segment('5') == 'space') && ($this->uri->segment('6') == 0) && ($workSpaceId==0)) {
+			?>
+				<div class="postAddIcon">
+				<a id="add" style="cursor:pointer;" onclick="showTimelineEditor();"><img title="Add" src="<?php echo base_url(); ?>/images/addnew.png" ></a>
+				</div>	
+			<?php
+			}
+		}
+		if($this->uri->segment('5') == 'public')
+		{
+			//if((isset($_SESSION['WSManagerAccess']) && $_SESSION['WSManagerAccess'] == 1) || (isset($_SESSION['workPlaceManagerName']) && $_SESSION['workPlaceManagerName']!='')) 
+			if((isset($_SESSION['workPlaceManagerName']) && $_SESSION['workPlaceManagerName']!='')) 
+			{ 
+		?>
+		
+			<div class="postAddIcon">
+			<a id="add" style="cursor:pointer;" onclick="showTimelineEditor();"><img title="Add" src="<?php echo base_url(); ?>/images/addnew.png" ></a>
+			</div>	
+		<?php
+			}
+		}
+		?>
+		<!--Plus icon for public post end here-->
+		
+		<?php 			
+		/*
+		if(!$_SESSION['all'] && !$_SESSION['public']){ ?>
+			<?php if($this->uri->segment('8')!='bookmark'){ ?>
+				<div class="postAddIcon">
+				<a id="add" style="cursor:pointer;" onclick="showTimelineEditor();"><img border="0" title="Add" src="<?php echo base_url(); ?>/images/addnew.png" ></a>
+				</div>
 			<?php 
-			if ($workSpaceType==1){
-				$link = base_url()."post/web/".$workSpaceId."/".$workSpaceType."/space/".$workSpaceId;
-			}
-			else{
-				$link = base_url()."post/web/".$workSpaceId."/".$workSpaceType."/subspace/".$workSpaceId;
-			}
-			
-			if ($myProfileDetail['userGroup']>0) { ?>
-		
-			<!--<a style="padding-left:12px;margin-left:2px;<?php if(!$_SESSION['all'] && !$_SESSION['public'] && $this->uri->segment(8)!='bookmark') { ?>" class="active <?php } ?>" title="<?php echo $workSpaceName ?>"  id="curr" href="<?php echo base_url(); ?>post/web/<?php echo $workSpaceId; ?>/<?php echo $workSpaceType; ?>/<?php echo $workSpaceId; ?>/<?php echo $workSpaceType; ?><?php if($this->uri->segment(10)!=''){ echo '/0/0/'.$userPostSearch; }?>">-->
-			<a style="padding-left:12px;margin-left:2px;<?php if(!$_SESSION['all'] && !$_SESSION['public'] && $this->uri->segment(5)!='bookmark' && (($this->uri->segment(5)=='space' || $this->uri->segment(5)=='subspace') && $this->uri->segment(6)==$workSpaceId)) { ?>" class="active <?php } ?>" title="<?php echo $workSpaceName ?>"  id="curr" href="<?php echo $link;?>">
-
-			<span>
-
-          <?php /*<a href="<?php echo base_url();?>post/web/<?php echo $workSpaceId;?>/type/<?php echo $workSpaceType; ?>/<?php echo $workSpaceId; ?>/<?php echo $workSpaceType; ?>/0/0/<?php echo $_SESSION['userId']; ?>"*/
-		  //$_SESSION['all'] condition for hiding option for all tab
-
-		  if($workSpaceId){ ?>
-
-          <?php echo $workSpaceName.' ('.$totalSpacePosts.')'; ?>
-
-          <?php } else { ?>
-
-          <?php echo $this->lang->line('txt_My_Workspace').' ('.$totalSpacePosts.')'; ?>
-
-          <?php } ?>
-
-          </span></a>
-		  <?php } else if ($workSpaceId>0){ ?>
-			<a style="padding-left:12px;margin-left:2px;<?php if(!$_SESSION['all'] && $this->uri->segment(5)!='bookmark') { ?>" class="active <?php } ?>" title="<?php echo $workSpaceName ?>"  id="curr" href="<?php echo base_url(); ?>post/web/<?php echo $workSpaceId; ?>/type/<?php echo $workSpaceType; ?>/<?php echo $workSpaceId; ?>/<?php echo $workSpaceType; ?>"><span>
-
-          <?php 
-
-		  //$_SESSION['all'] condition for hiding option for all tab
-
-		  if($workSpaceId){ ?>
-
-          <?php echo $workSpaceName.' ('.$totalSpacePosts.')'; ?>
-
-          <?php } else { ?>
-
-          <?php echo $this->lang->line('txt_My_Workspace').' ('.$totalSpacePosts.')'; ?>
-
-          <?php } ?>
-
-          </span></a>
-		  <?php } ?>
-
-        	</li>	
-		
-			<?php if($workSpaceDetails['workSpaceName']!="Try Teeme"){ ?>
-				<?php if($myProfileDetail['userGroup']>0){ ?>
-				<li>
-
-				<?php /*?><a href="javascript:void(0);" id="passwordForm" style="padding-left:12px;margin-left:17px;" title="password" class="<?php if($passwordForm=='1'){ ?> active <?php } ?>" onclick="$('#passwordForm').addClass('active');$('#profile').removeClass('active');$('#notification').removeClass('active');$('#profileForm').hide();$('#notificationSection').hide();$('#password_form').show(); clearSessionMsg();"><?php echo $this->lang->line('txt_Password'); ?></a><?php */?>
-				
-				<!--<a href="<?php echo base_url(); ?>post/web/<?php echo $workSpaceId; ?>/type/<?php echo $workSpaceType; ?>/0/1/public<?php if($this->uri->segment(10)!=''){ echo '/0/'.$userPostSearch; }?>" style="padding-left:12px;margin-left:17px;  <?php if($_SESSION['public']) { ?>" class="active <?php } ?>" id="public"><?php echo $this->lang->line('public_txt').' ('.$totalPublicPosts.')'; ?></a>-->
-				<a href="<?php echo base_url(); ?>post/web/<?php echo $workSpaceId; ?>/<?php echo $workSpaceType; ?>/public/<?php echo $_SESSION['userId']?>" style="padding-left:12px;margin-left:17px;  <?php if($_SESSION['public']) { ?>" class="active <?php } ?>" id="public"><?php echo $this->lang->line('public_txt').' ('.$totalPublicPosts.')'; ?></a>
-
-				</li>
-				<?php } ?>	
-				<li>
-
-					<?php /*?><a href="javascript:void(0);" id="passwordForm" style="padding-left:12px;margin-left:17px;" title="password" class="<?php if($passwordForm=='1'){ ?> active <?php } ?>" onclick="$('#passwordForm').addClass('active');$('#profile').removeClass('active');$('#notification').removeClass('active');$('#profileForm').hide();$('#notificationSection').hide();$('#password_form').show(); clearSessionMsg();"><?php echo $this->lang->line('txt_Password'); ?></a><?php */?>
-					
-					<a href="<?php echo base_url(); ?>post/web/<?php echo $workSpaceId; ?>/<?php echo $workSpaceType; ?>/bookmark/<?php echo $_SESSION['userId']?>" style="padding-left:12px;margin-left:17px;<?php if($this->uri->segment(5)=='bookmark') { ?>" class="active <?php } ?>" id="bookmark"><?php echo $this->lang->line('txt_post_starred').' ('.$totalBookmarkPosts.')'; ?></a>
-					
-				</li>	
-			<?php } ?>
-				<!--
-				<li>			
-					<a href="<?php echo base_url(); ?>post/web/<?php echo $workSpaceId; ?>/<?php echo $workSpaceType; ?>/one/<?php echo $_SESSION['userId']?>" style="padding-left:12px;margin-left:17px;<?php if($this->uri->segment(5)=='one' && $this->uri->segment(6)==$_SESSION['userId']) { ?>" class="active <?php } ?>"><?php echo 'My Posts'.' ('.$totalMyPosts.')'; ?></a>
-				</li>
-				-->
-				<li>			
-					<a href="<?php echo base_url(); ?>post/web/<?php echo $workSpaceId; ?>/<?php echo $workSpaceType; ?>/parked/<?php echo $_SESSION['userId']?>" style="padding-left:12px;margin-left:17px;<?php if($this->uri->segment(5)=='parked' && $this->uri->segment(6)==$_SESSION['userId']) { ?>" class="active <?php } ?>"><?php echo 'Parked'.' ('.$totalParkedPosts.')'; ?></a>
-				</li>
-				<!--	
-				<li>			
-					<a href="<?php echo base_url(); ?>post/web/<?php echo $workSpaceId; ?>/<?php echo $workSpaceType; ?>/following/<?php echo $_SESSION['userId']?>" style="padding-left:12px;margin-left:17px;<?php if($this->uri->segment(5)=='following' && $this->uri->segment(6)==$_SESSION['userId']) { ?>" class="active <?php } ?>"><?php echo 'Following'; ?></a>
-				</li>
-				<li>			
-					<a href="<?php echo base_url(); ?>post/web/<?php echo $workSpaceId; ?>/<?php echo $workSpaceType; ?>/followers/<?php echo $_SESSION['userId']?>" style="padding-left:12px;margin-left:17px;<?php if($this->uri->segment(5)=='followers' && $this->uri->segment(6)==$_SESSION['userId']) { ?>" class="active <?php } ?>"><?php echo 'Followers'; ?></a>
-				</li>
-				-->
-		
-			<?php /*?><li>
-
-				<a href="javascript:void(0);" style="padding-left:12%;margin-left:2%;" id="preferences" title="preferences" class="" onclick="$('#preferences').addClass('active');$('#profile').removeClass('active');$('#notification').removeClass('active');$('#profileForm').hide();$('#notificationSection').hide();$('#editorChoice').show();"><?php echo $this->lang->line('preferences_txt'); ?></a>
-
-			</li><?php */?>
-
-		
-			</ul>
+			} 
+		} 
+		*/
+		/*
+		if(!$_SESSION['all'] && !$_SESSION['public']){ ?>
+			<?php //if($this->uri->segment('5')!='bookmark' && $_SESSION['userId']==$post_type_object_id){ 
+				if($this->uri->segment('5')!='bookmark'){
+				?>
+				<div class="postAddIcon">
+				<a id="add" style="cursor:pointer;" onclick="showTimelineEditor();"><img border="0" title="Add" src="<?php echo base_url(); ?>/images/addnew.png" ></a>
+				</div>
+			<?php 
+			} 
+		} 	
+		*/		
+		if($_SESSION['all'] && !$_SESSION['public'] && $this->uri->segment('5')!='bookmark' && $this->uri->segment('5')!='space' && $this->uri->segment('5')!='one'){ ?>
+			<?php //if($this->uri->segment('5')!='bookmark' && $_SESSION['userId']==$post_type_object_id){ 
+				?>
+				<div class="postAddIcon">
+				<a id="add" style="cursor:pointer;" onclick="showTimelineEditor();"><img border="0" title="Add" src="<?php echo base_url(); ?>/images/addnew.png" ></a>
+				</div>
+			<?php 
+		} 			
+		?>
+		<!--Plus icon end here-->
 		</div>
 		<?php /* if($workSpaceDetails['workSpaceName']!="Try Teeme"){ ?>
 		<div class="rightTabUl">
@@ -998,6 +1018,120 @@ $(document).ready(function()
 			</ul>
 		</div>
 		<?php } */?>
+		<div class="leftTabUl">
+    		<ul class="tab_menu_new">
+			<?php if($workSpaceDetails['workSpaceName']!="Try Teeme"){ ?>
+			<li>
+				<?php /*?> <a href="javascript:void(0);" id="profile" style="padding-left:12px;margin-left:17px;" title="profile" class="<?php if($profileForm=='1' && $passwordForm!='1'){ ?> active <?php } ?>" onclick="$('#profile').addClass('active');$('#passwordForm').removeClass('active');$('#notification').removeClass('active');$('#password_form').hide();$('#notificationSection').hide();$('#profileForm').show(); clearSessionMsg();"><?php echo $this->lang->line('profile_txt'); ?></a><?php */?>
+				
+				<?php if ($workSpaceDetails['workSpaceName']!="Try Teeme" && $_SESSION['active_view']!='space') { ?>
+				<!--<a href="<?php echo base_url(); ?>post/web/<?php echo $workSpaceId; ?>/<?php echo $workSpaceType; ?>/0/1/all<?php if($this->uri->segment(10)!=''){ echo '/0/'.$userPostSearch; }?>" style="padding-left:12px;margin-left:17px; <?php if($_SESSION['all']) { ?>" class="active <?php } ?>" id="all"><?php echo $this->lang->line('all_post_txt').' ('.$allPosts.')'; ?></a>-->
+				<a href="<?php echo base_url(); ?>post/web/<?php echo $workSpaceId; ?>/<?php echo $workSpaceType; ?>/home" style="padding-left:12px; <?php if($_SESSION['all']) { ?>" class="active <?php } ?>" id="all"><?php echo $this->lang->line('all_post_txt').' ('.$allPosts.')'; ?></a>				
+				<?php } ?>
+			</li>
+			<?php } ?>
+			<li>
+            <?php /*?><a href="javascript:void(0);" style="padding-left:12px;margin-left:2px;" id="notification" title="notification" class="<?php if($profileForm!='1' && $passwordForm!='1'){ ?> active <?php } ?>" onclick="$('#notification').addClass('active');$('#profile').removeClass('active');$('#passwordForm').removeClass('active');$('#profileForm').hide();$('#password_form').hide();$('#notificationSection').show(); clearSessionMsg();">
+			</a><?php */?>
+			
+			<?php 
+			if ($workSpaceType==1){
+				$link = base_url()."post/web/".$workSpaceId."/".$workSpaceType."/space/".$workSpaceId;
+			}
+			else{
+				$link = base_url()."post/web/".$workSpaceId."/".$workSpaceType."/subspace/".$workSpaceId;
+			}
+			/*
+			if ($myProfileDetail['userGroup']>0) { ?>
+		
+			<!--<a style="padding-left:12px;margin-left:2px;<?php if(!$_SESSION['all'] && !$_SESSION['public'] && $this->uri->segment(8)!='bookmark') { ?>" class="active <?php } ?>" title="<?php echo $workSpaceName ?>"  id="curr" href="<?php echo base_url(); ?>post/web/<?php echo $workSpaceId; ?>/<?php echo $workSpaceType; ?>/<?php echo $workSpaceId; ?>/<?php echo $workSpaceType; ?><?php if($this->uri->segment(10)!=''){ echo '/0/0/'.$userPostSearch; }?>">-->
+			<a style="padding-left:12px;margin-left:2px;<?php if(!$_SESSION['all'] && !$_SESSION['public'] && $this->uri->segment(5)!='bookmark' && (($this->uri->segment(5)=='space' || $this->uri->segment(5)=='subspace') && $this->uri->segment(6)==$workSpaceId)) { ?>" class="active <?php } ?>" title="<?php echo $workSpaceName ?>"  id="curr" href="<?php echo $link;?>">
+
+			<span>
+
+			<!--<a href="<?php echo base_url();?>post/web/<?php echo $workSpaceId;?>/type/<?php echo $workSpaceType; ?>/<?php echo $workSpaceId; ?>/<?php echo $workSpaceType; ?>/0/0/<?php echo $_SESSION['userId']; ?>"-->
+			//$_SESSION['all'] condition for hiding option for all tab
+
+			if($workSpaceId){ ?>
+
+			<?php echo $workSpaceName.' ('.$totalSpacePosts.')'; ?>
+
+			<?php } else { ?>
+
+			<?php echo $this->lang->line('txt_My_Workspace').' ('.$totalSpacePosts.')'; ?>
+
+			<?php } ?>
+
+			</span></a>
+		  <?php } 
+		  else if ($workSpaceId>0){ ?>
+			<a style="padding-left:12px;margin-left:2px;<?php if(!$_SESSION['all'] && $this->uri->segment(5)!='bookmark') { ?>" class="active <?php } ?>" title="<?php echo $workSpaceName ?>"  id="curr" href="<?php echo base_url(); ?>post/web/<?php echo $workSpaceId; ?>/type/<?php echo $workSpaceType; ?>/<?php echo $workSpaceId; ?>/<?php echo $workSpaceType; ?>"><span>
+          <?php 
+
+		  //$_SESSION['all'] condition for hiding option for all tab
+
+		  if($workSpaceId){ ?>
+
+          <?php echo $workSpaceName.' ('.$totalSpacePosts.')'; ?>
+
+          <?php } else { ?>
+
+          <?php echo $this->lang->line('txt_My_Workspace').' ('.$totalSpacePosts.')'; ?>
+
+          <?php } ?>
+
+          </span></a>
+		  <?php } */?>
+
+        	</li>	
+		
+				<?php if($workSpaceDetails['workSpaceName']!="Try Teeme" && $_SESSION['active_view']!='space'){ ?>
+				<?php if($myProfileDetail['userGroup']>0){ ?>
+				<li>
+
+				<?php /*?><a href="javascript:void(0);" id="passwordForm" style="padding-left:12px;margin-left:17px;" title="password" class="<?php if($passwordForm=='1'){ ?> active <?php } ?>" onclick="$('#passwordForm').addClass('active');$('#profile').removeClass('active');$('#notification').removeClass('active');$('#profileForm').hide();$('#notificationSection').hide();$('#password_form').show(); clearSessionMsg();"><?php echo $this->lang->line('txt_Password'); ?></a><?php */?>
+				
+				<!--<a href="<?php echo base_url(); ?>post/web/<?php echo $workSpaceId; ?>/type/<?php echo $workSpaceType; ?>/0/1/public<?php if($this->uri->segment(10)!=''){ echo '/0/'.$userPostSearch; }?>" style="padding-left:12px;margin-left:17px;  <?php if($_SESSION['public']) { ?>" class="active <?php } ?>" id="public"><?php echo $this->lang->line('public_txt').' ('.$totalPublicPosts.')'; ?></a>-->
+				<a href="<?php echo base_url(); ?>post/web/<?php echo $workSpaceId; ?>/<?php echo $workSpaceType; ?>/public/<?php echo $_SESSION['userId']?>" style="padding-left:12px;margin-left:17px;  <?php if($_SESSION['public']) { ?>" class="active <?php } ?>" id="public"><?php echo $this->lang->line('public_txt').' ('.$totalPublicPosts.')'; ?></a>
+
+				</li>
+				<?php } ?>	
+				<li>
+
+					<?php /*?><a href="javascript:void(0);" id="passwordForm" style="padding-left:12px;margin-left:17px;" title="password" class="<?php if($passwordForm=='1'){ ?> active <?php } ?>" onclick="$('#passwordForm').addClass('active');$('#profile').removeClass('active');$('#notification').removeClass('active');$('#profileForm').hide();$('#notificationSection').hide();$('#password_form').show(); clearSessionMsg();"><?php echo $this->lang->line('txt_Password'); ?></a><?php */?>
+					
+					<a href="<?php echo base_url(); ?>post/web/<?php echo $workSpaceId; ?>/<?php echo $workSpaceType; ?>/bookmark/<?php echo $_SESSION['userId']?>" style="padding-left:12px;margin-left:17px;<?php if($this->uri->segment(5)=='bookmark') { ?>" class="active <?php } ?>" id="bookmark"><?php echo $this->lang->line('txt_post_starred').' ('.$totalBookmarkPosts.')'; ?></a>
+					
+				</li>	
+				<?php } ?>
+				<!--
+				<li>			
+					<a href="<?php echo base_url(); ?>post/web/<?php echo $workSpaceId; ?>/<?php echo $workSpaceType; ?>/one/<?php echo $_SESSION['userId']?>" style="padding-left:12px;margin-left:17px;<?php if($this->uri->segment(5)=='one' && $this->uri->segment(6)==$_SESSION['userId']) { ?>" class="active <?php } ?>"><?php echo 'My Posts'.' ('.$totalMyPosts.')'; ?></a>
+				</li>
+				-->
+				<?php if($_SESSION['active_view']!='space'){?>
+				<li>			
+					<a href="<?php echo base_url(); ?>post/web/<?php echo $workSpaceId; ?>/<?php echo $workSpaceType; ?>/parked/<?php echo $_SESSION['userId']?>" style="padding-left:12px;margin-left:17px;<?php if($this->uri->segment(5)=='parked' && $this->uri->segment(6)==$_SESSION['userId']) { ?>" class="active <?php } ?>"><?php echo 'Parked'.' ('.$totalParkedPosts.')'; ?></a>
+				</li>
+				<?php } ?>
+				<!--	
+				<li>			
+					<a href="<?php echo base_url(); ?>post/web/<?php echo $workSpaceId; ?>/<?php echo $workSpaceType; ?>/following/<?php echo $_SESSION['userId']?>" style="padding-left:12px;margin-left:17px;<?php if($this->uri->segment(5)=='following' && $this->uri->segment(6)==$_SESSION['userId']) { ?>" class="active <?php } ?>"><?php echo 'Following'; ?></a>
+				</li>
+				<li>			
+					<a href="<?php echo base_url(); ?>post/web/<?php echo $workSpaceId; ?>/<?php echo $workSpaceType; ?>/followers/<?php echo $_SESSION['userId']?>" style="padding-left:12px;margin-left:17px;<?php if($this->uri->segment(5)=='followers' && $this->uri->segment(6)==$_SESSION['userId']) { ?>" class="active <?php } ?>"><?php echo 'Followers'; ?></a>
+				</li>
+				-->
+		
+			<?php /*?><li>
+
+				<a href="javascript:void(0);" style="padding-left:12%;margin-left:2%;" id="preferences" title="preferences" class="" onclick="$('#preferences').addClass('active');$('#profile').removeClass('active');$('#notification').removeClass('active');$('#profileForm').hide();$('#notificationSection').hide();$('#editorChoice').show();"><?php echo $this->lang->line('preferences_txt'); ?></a>
+
+			</li><?php */?>
+
+		
+			</ul>
+		</div>
 		<div class="clr"></div>
 	</div>
 	
@@ -1177,133 +1311,8 @@ $(document).ready(function()
 		<!--Timeline profile end here-->
 	<div>
 		<div class="leftAddBox">
-		<!--Plus icon for public post start here-->
-		<?php /*if($treeAccess==1  ||  $workSpaceId==0  || in_array($_SESSION['userId'],$managerIds) || isset($_SESSION['workPlaceManagerName']) && $_SESSION['workPlaceManagerName']!='')*/
-		//echo $_SESSION['WSManagerAccess'].'===='.$_SESSION['workPlaceManagerName'];
-		/*
-		if((isset($_SESSION['WSManagerAccess']) && $_SESSION['WSManagerAccess'] == 1) || (isset($_SESSION['workPlaceManagerName']) && $_SESSION['workPlaceManagerName']!='')) 
-		{ 
-			//if($_SESSION['public'] == 'public')
-			if($this->uri->segment('5') == 'public')
-			{
-		?>
-			
-				<div class="postAddIcon">
-				<a id="add" style="cursor:pointer;" onclick="showTimelineEditor();"><img border="0" title="Add" src="<?php echo base_url(); ?>/images/addnew.png" ></a>
-				</div>
-			
-		<?php
-			}
-		}
-		*/
-		if($this->uri->segment('5') == 'one')
-		{
-			if($this->uri->segment('6')==$_SESSION['userId']) 
-			{ 
-		?>
-		
-			<div class="postAddIcon">
-			<a id="add" style="cursor:pointer;" onclick="showTimelineEditor();"><img title="Add" src="<?php echo base_url(); ?>/images/addnew.png" ></a>
-			</div>	
-		<?php
-			}
-		}
-		if(($this->uri->segment('5') == 'space' || $this->uri->segment('5') == 'space_ex' || $this->uri->segment('5') == 'subspace') && ($this->uri->segment('6')==$workSpaceId))
-		{
-			if($this->uri->segment('6')>0)
-			{ 				
-				if ($this->uri->segment('5') == 'subspace'){
-					$wsDetails = $this->identity_db_manager->getWorkSpaceDetailsBySubWorkSpaceId($this->uri->segment('6'));
-					$wsId = $wsDetails['workSpaceId'];
-					if($isSubSpaceProfileMember){$allowAddPost=1;}
-					else{$allowAddPost=0;}
-				}
-				else if ($this->uri->segment('5') == 'space_ex'){
-					$wsId =$this->uri->segment('6');
-					if ($this->identity_db_manager->getManagerStatus($_SESSION['userId'], $wsId, 3)){
-						$allowAddPost=1;
-					}
-					else{
-						$allowAddPost=0;
-					}
-				}
-				else{
-					$wsId =$this->uri->segment('6');
-					if($isSpaceProfileMember){$allowAddPost=1;}
-					else{$allowAddPost=0;}
-				}
-				//if(isset($_SESSION['WSManagerAccess']) && $_SESSION['WSManagerAccess'] == 1)
-				//echo 'wsid= ' .$wsId; exit;
-				//if($wsId!='-1' && $this->identity_db_manager->getManagerStatus($_SESSION['userId'], $wsId, 3))
-				if($allowAddPost)
-				{
-					?>		
-					<div class="postAddIcon">
-					<a id="add" style="cursor:pointer;" onclick="showTimelineEditor();"><img title="Add" src="<?php echo base_url(); ?>/images/addnew.png" ></a>
-					</div>	
-					<?php
-				}
-			}
-			else if(($this->uri->segment('5') == 'space') && ($this->uri->segment('6') == 0) && ($workSpaceId==0)) {
-			?>
-				<div class="postAddIcon">
-				<a id="add" style="cursor:pointer;" onclick="showTimelineEditor();"><img title="Add" src="<?php echo base_url(); ?>/images/addnew.png" ></a>
-				</div>	
-			<?php
-			}
-		}
-		if($this->uri->segment('5') == 'public')
-		{
-			//if((isset($_SESSION['WSManagerAccess']) && $_SESSION['WSManagerAccess'] == 1) || (isset($_SESSION['workPlaceManagerName']) && $_SESSION['workPlaceManagerName']!='')) 
-			if((isset($_SESSION['workPlaceManagerName']) && $_SESSION['workPlaceManagerName']!='')) 
-			{ 
-		?>
-		
-			<div class="postAddIcon">
-			<a id="add" style="cursor:pointer;" onclick="showTimelineEditor();"><img title="Add" src="<?php echo base_url(); ?>/images/addnew.png" ></a>
-			</div>	
-		<?php
-			}
-		}
-		?>
-		<!--Plus icon for public post end here-->
-		
-		<?php 			
-		/*
-		if(!$_SESSION['all'] && !$_SESSION['public']){ ?>
-			<?php if($this->uri->segment('8')!='bookmark'){ ?>
-				<div class="postAddIcon">
-				<a id="add" style="cursor:pointer;" onclick="showTimelineEditor();"><img border="0" title="Add" src="<?php echo base_url(); ?>/images/addnew.png" ></a>
-				</div>
-			<?php 
-			} 
-		} 
-		*/
-		/*
-		if(!$_SESSION['all'] && !$_SESSION['public']){ ?>
-			<?php //if($this->uri->segment('5')!='bookmark' && $_SESSION['userId']==$post_type_object_id){ 
-				if($this->uri->segment('5')!='bookmark'){
-				?>
-				<div class="postAddIcon">
-				<a id="add" style="cursor:pointer;" onclick="showTimelineEditor();"><img border="0" title="Add" src="<?php echo base_url(); ?>/images/addnew.png" ></a>
-				</div>
-			<?php 
-			} 
-		} 	
-		*/		
-		if($_SESSION['all'] && !$_SESSION['public'] && $this->uri->segment('5')!='bookmark' && $this->uri->segment('5')!='space' && $this->uri->segment('5')!='one'){ ?>
-			<?php //if($this->uri->segment('5')!='bookmark' && $_SESSION['userId']==$post_type_object_id){ 
-				?>
-				<div class="postAddIcon">
-				<a id="add" style="cursor:pointer;" onclick="showTimelineEditor();"><img border="0" title="Add" src="<?php echo base_url(); ?>/images/addnew.png" ></a>
-				</div>
-			<?php 
-		} 			
-		?>
-		<!--Plus icon end here-->
-		</div>
-		
-			<div class="rightAddBox">
+		</div>		
+		<div class="rightAddBox">
 					<div style="float:right;">
 					<!--Show all post(s) created by user-->
 							<?php 
@@ -1795,8 +1804,28 @@ $(document).ready(function(){
   });
 
   //leftMenuHideShow();
-  document.getElementById("leftSideBar").style.display = "none";
-		document.getElementById("rightSideBar").style.width = "100%";
+  //document.getElementById("leftSideBar").style.display = "none";
+  //document.getElementById("rightSideBar").style.width = "100%";
+
+  	var workSpaceId = '<?php echo $workSpaceId;?>';
+	var workSpaceType = '<?php echo $workSpaceType;?>';
+	<?php 
+		if($workSpaceType==1 && $this->uri->segment(5)=='space' && $workSpaceId==$this->uri->segment(6)){
+			$active_view = 'space';
+		}
+		else{
+			$active_view = 'global';
+		}
+	?>
+	var active_view = '<?php echo $active_view;?>';
+	if(active_view!='space'){
+		document.getElementById("leftSideBar").style.display = "none";
+  		document.getElementById("rightSideBar").style.width = "100%";
+	}
+	else{
+		document.getElementById("leftSideBar").style.display = "block";
+  		//document.getElementById("rightSideBar").style.width = "100%";
+	}
 	/*$('.timelineExpDate').datepicker({
 			
 			minDate:0,
@@ -1913,7 +1942,7 @@ function insertTimelineComment(nodeId)
 	{
 		realTimeTimelineDivIds=document.getElementById('totalTimelineCommentNodes'+nodeId).value;
 	}
-	//alert(realTimeTimelineDivIds);
+	//console.log(realTimeTimelineDivIds);
 	//$("#totalTimelineCommentNodes"+nodeId).remove();
 	//return false;
 	chatReplyNodeId = nodeId;
@@ -1992,6 +2021,7 @@ function insertPostComment(nodeId)
 	{
 		realTimeTimelineDivIds=document.getElementById('totalTimelineCommentNodes'+nodeId).value;
 	}
+	//console.log('realTimeTimelineDivIds= '+realTimeTimelineDivIds);
 	chatReplyNodeId = nodeId;
 	var error	= ''
 	
@@ -2040,10 +2070,10 @@ function insertPostComment(nodeId)
 			  data: data_user,
 			  dataType: "html",
 			  success:function(result){
-			    //alert('testing'+result);
+			  // console.log(result);
 				//return false;
-			    //$("#totalTimelineCommentNodes"+nodeId).remove();
-				//$("#commentRefreshDiv"+nodeId).append(result);		
+			    $("#totalTimelineCommentNodes"+nodeId).remove();
+				$("#commentRefreshDiv"+nodeId).append(result);		
 				//$("#commentRefreshDiv"+nodeId).html(result);				
 				$('.CommentTextBox'+nodeId+' .fr-element').html("");
 				//$('.CommentTextBox'+nodeId+' .fr-element').focus();
@@ -2565,7 +2595,8 @@ function postCommentUpdate()
 		  if(data!=null && data!=undefined)
 		  {
 			  $.each(data, function(i, node) {
-					postCommentRefresh(node);
+				 // console.log('Before postCommentRefresh');
+					postCommentRefresh(node,postTypeId,postTypeObjectId);
 			  });
 			  //$('#treeTitle').val('');
 		  }
@@ -2615,14 +2646,35 @@ function findNewPostComment()
 			//console.log('Second= '+data);
 			 //if($('#TimelineEditor').is(':hidden'))
 			// {
-				 
+				 //console.log('data= '+data);
 				 if(data!=0)
 				 {
-					$("#newPostCommentMessage").show();				
+					$("#newPostCommentMessage").show();	
+					/*			
 					$.each(data, function(i, node) {
 						//alert(node);
+						//console.log('index= '+i+' Nodecomment= '+node);
 						$('#form'+node).css({'background':'#eee'});
 						$('#form'+node+' .discussionComments').css({'background-color':'#eee'});
+					});
+					*/
+					//console.log('count what= '+data['countIncrease']);
+					if(data['countIncrease']=='posts'){
+						$('.newPostMsg').html('<span>New posts are available</span>');
+					}else if(data['countIncrease']=='comments'){
+						$('.newPostMsg').html('<span>New comments are available</span>');
+					}else{
+						$('.newPostMsg').html('<span>New posts and comments are available</span>');
+					}
+					//console.log('nodes= '+data['nodes']);
+					$.each(data['nodes'], function(i, node) {
+						//alert(node);
+						//console.log('index= '+i+' Nodecomment= '+arrComments);
+						//console.log('Count_status= '+val);
+							//console.log('Node= ' +node);
+							$('#form'+node).css({'background':'#eee'});
+							$('#form'+node+' .discussionComments').css({'background-color':'#eee'});
+
 					});
 					//$('#updateImage').attr('src',baseUrl+'images/tab-icon/update-view-green.png');
 				  }
@@ -2638,9 +2690,9 @@ function findNewPostComment()
 //Manoj: Post comment refresh start
 var http2 = getHTTPObjectm();
 
-function postCommentRefresh(nodeId){
-
-		//alert(nodeId);
+function postCommentRefresh(nodeId,postTypeId,postTypeObjectId){
+		//console.log('here');
+		//console.log('posttypeid= '+postTypeId+'posttypeobjectid= '+postTypeObjectId);
 		
 		var realTimeTimelineDivIds;
 		
@@ -2655,12 +2707,12 @@ function postCommentRefresh(nodeId){
 		}
 		
 		var request = $.ajax({
-			  url: baseUrl+"post/getRealTimePostCommentWeb/"+treeId+"/1/"+nodeId+"/"+workSpaceId+"/"+workSpaceType+"?realTimeTimelineDivIds="+realTimeTimelineDivIds,
+			//url: baseUrl+"post/getRealTimePostCommentWeb/"+treeId+"/1/"+nodeId+"/"+workSpaceId+"/"+workSpaceType+"?realTimeTimelineDivIds="+realTimeTimelineDivIds,
+			url: baseUrl+"post/getRealTimePostCommentWeb/"+treeId+"/1/"+nodeId+"/"+workSpaceId+"/"+workSpaceType+"/"+postTypeId+"/"+postTypeObjectId+"?realTimeTimelineDivIds="+realTimeTimelineDivIds,
 			  type: "POST",
 			  dataType: "html",
 			  success:function(result){
-			    //alert('testing'+result);
-				//return false;
+			   //console.log('Result= ' +result);
 			    $("#totalTimelineCommentNodes"+nodeId).remove();
 				//$("#commentRefreshDiv"+nodeId).prepend(result);
 				$("#commentRefreshDiv"+nodeId).append(result);		
@@ -2990,10 +3042,20 @@ function getPostUserStatus()
 	var workSpaceId = '<?php echo $workSpaceId;?>';
 	var workSpaceType = '<?php echo $workSpaceType;?>';
 	var toMatch = document.getElementById('search').value;
+	<?php 
+		if($workSpaceType==1 && $this->uri->segment(5)=='space' && $workSpaceId==$this->uri->segment(6)){
+			$active_view = 'space';
+		}
+		else{
+			$active_view = 'global';
+		}
+	?>
+	var active_view = '<?php echo $active_view;?>';
+	//console.log('active_view= ' +active_view);
 	//alert(workSpaceId+'===='+workSpaceType+'====<?php //echo $this->uri->segment(8) ?>');
 		$.ajax({
 			type: "POST",
-			url: baseUrl+"post/getPostUserStatusWeb/"+workSpaceId+"/type/"+workSpaceType,
+			url: baseUrl+"post/getPostUserStatusWeb/"+workSpaceId+"/type/"+workSpaceType+"/active_view/"+active_view,
 			data: 'search='+toMatch,
 			dataType: 'html',
 			async: true,
