@@ -1872,20 +1872,24 @@ teeme_leaf a,teeme_node b where a.id=b.leafId and b.treeIds='".$inserted_tree_id
 	}
 
 	/*Changed by Dashrath- Add $config for load db*/
-	public function getAllWorkSpacesByWorkPlaceId($workPlaceId, $userId, $config=0)
+	public function getAllWorkSpacesByWorkPlaceId($workPlaceId, $userId, $config=0,$search='')
     {	
 		$workSpaceDetails = array();	
+		$q = 'SELECT b.workSpaceId, b.workPlaceId, b.workSpaceName, b.workSpaceCreatedDate, status, deleted FROM teeme_work_space b WHERE b.workPlaceId = '.$workPlaceId.' AND b.status = 1';
+			if($search!=''){
+				$q .= ' AND b.workSpaceName LIKE (\''.$search.'%\')';
+			}
+		$q .= ' ORDER BY b.workSpaceName ASC';
 		
 		/*Changed by Dashrath- Add if else condition for load db*/
 		if ($config!=0)
         {
-            $placedb = $this->load->database($config,TRUE);
-
-            $query = $placedb->query('SELECT b.workSpaceId, b.workPlaceId, b.workSpaceName, b.workSpaceCreatedDate, status, deleted FROM teeme_work_space b WHERE b.workPlaceId = '.$workPlaceId.' AND b.status = 1 ORDER BY b.workSpaceName ASC');
+			$placedb = $this->load->database($config,TRUE);
+            $query = $placedb->query($q);
         }
 		else
-		{
-			$query = $this->db->query('SELECT b.workSpaceId, b.workPlaceId, b.workSpaceName, b.workSpaceCreatedDate, status, deleted FROM teeme_work_space b WHERE b.workPlaceId = '.$workPlaceId.' AND b.status = 1 ORDER BY b.workSpaceName ASC');
+		{	
+			$query = $this->db->query($q);
 		}
 		/*Dashrath- changes end*/	
 
@@ -1908,12 +1912,15 @@ teeme_leaf a,teeme_node b where a.id=b.leafId and b.treeIds='".$inserted_tree_id
 		}	
 		return $workSpaceDetails;	
 	}
-	public function getAllSubSpacesByWorkPlaceId($workPlaceId, $userId, $config=0)
+	public function getAllSubSpacesByWorkPlaceId($workPlaceId, $userId, $config=0,$search='')
     {	
 		$workSpaceDetails = array();	
 		
 		$q = "SELECT b.workSpaceId, b.subWorkSpaceId, b.subWorkSpaceName, b.subWorkSpaceManagerId, b.subWorkSpaceCreatedDate, b.status, b.status1 FROM teeme_work_space a,teeme_sub_work_space b WHERE a.workPlaceId='".$workPlaceId."' AND a.status=1 AND a.workSpaceId=b.workSpaceId";
-
+			if($search!=''){
+				$q .= ' AND b.subWorkSpaceName LIKE (\''.$search.'%\')';
+			}
+		$q .= ' ORDER BY b.subWorkSpaceName ASC';
 		/*Changed by Dashrath- Add if else condition for load db*/
 		if ($config!=0)
         {

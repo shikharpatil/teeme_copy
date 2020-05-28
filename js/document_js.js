@@ -590,7 +590,8 @@ if(disableEditor==0)
 		toolbarButtons: ['insertImage', 'myButton',  'insertVideo', 'insertFile', 'bold', 'italic', 'underline', 'strikeThrough', 'subscript', 'superscript', 'fontFamily', 'fontSize', '|', 'specialCharacters', 'color', '|', 'paragraphFormat', 'align', 'formatOL', 'formatUL', 'outdent', 'indent', 'insertLink',  'insertTable', '|', 'html', 'applyFormat', 'removeFormat', 'fullscreen'],
 	   
       //Changed by dashrath- change height 250 to 150
-	 	  height: 150,
+       height: 150,
+       width: '80%',
 		  
 		  //imageUploadURL: baseUrl+'froala_editor/upload.php',
       imageUploadURL: baseUrl+'image_editing/imageUpload',
@@ -1022,8 +1023,10 @@ function getCookie(c_name)
 
 function setValueIntoEditor(editorId,data)
 { 
+  
 	if(disableEditor==0){
-		//CKEDITOR.instances[editorId].setData(data);
+    //CKEDITOR.instances[editorId].setData(data);
+    $('#'+editorId).froalaEditor('html.set', data);
 	}
 
 	else{
@@ -1036,7 +1039,8 @@ function setValueIntoEditor(editorId,data)
 
 function getvaluefromEditor(editorId){
 
-	//condition to disable editor functions for android and ios<5
+  //condition to disable editor functions for android and ios<5
+
 	if(disableEditor==0){
 
 		

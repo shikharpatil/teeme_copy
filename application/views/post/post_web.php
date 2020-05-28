@@ -909,8 +909,8 @@ $(document).ready(function()
 			{ 
 		?>
 		
-			<div class="postAddIcon">
-			<a id="add" style="cursor:pointer;" onclick="showTimelineEditor();"><img title="Add" src="<?php echo base_url(); ?>/images/addnew.png" ></a>
+			<div class="postAddIcon" id="myBtn">
+				<a id="add" style="cursor:pointer;" onclick="showTimelineEditor();"><img title="Add" src="<?php echo base_url(); ?>/images/addnew.png" ></a>
 			</div>	
 		<?php
 			}
@@ -945,7 +945,7 @@ $(document).ready(function()
 				if($allowAddPost)
 				{
 					?>		
-					<div class="postAddIcon">
+					<div class="postAddIcon" id="myBtn">
 					<a id="add" style="cursor:pointer;" onclick="showTimelineEditor();"><img title="Add" src="<?php echo base_url(); ?>/images/addnew.png" ></a>
 					</div>	
 					<?php
@@ -953,7 +953,7 @@ $(document).ready(function()
 			}
 			else if(($this->uri->segment('5') == 'space') && ($this->uri->segment('6') == 0) && ($workSpaceId==0)) {
 			?>
-				<div class="postAddIcon">
+				<div class="postAddIcon" id="myBtn">
 				<a id="add" style="cursor:pointer;" onclick="showTimelineEditor();"><img title="Add" src="<?php echo base_url(); ?>/images/addnew.png" ></a>
 				</div>	
 			<?php
@@ -966,7 +966,7 @@ $(document).ready(function()
 			{ 
 		?>
 		
-			<div class="postAddIcon">
+			<div class="postAddIcon" id="myBtn">
 			<a id="add" style="cursor:pointer;" onclick="showTimelineEditor();"><img title="Add" src="<?php echo base_url(); ?>/images/addnew.png" ></a>
 			</div>	
 		<?php
@@ -1001,7 +1001,7 @@ $(document).ready(function()
 		if($_SESSION['all'] && !$_SESSION['public'] && $this->uri->segment('5')!='bookmark' && $this->uri->segment('5')!='space' && $this->uri->segment('5')!='one'){ ?>
 			<?php //if($this->uri->segment('5')!='bookmark' && $_SESSION['userId']==$post_type_object_id){ 
 				?>
-				<div class="postAddIcon">
+				<div class="postAddIcon" id="myBtn">
 				<a id="add" style="cursor:pointer;" onclick="showTimelineEditor();"><img border="0" title="Add" src="<?php echo base_url(); ?>/images/addnew.png" ></a>
 				</div>
 			<?php 
@@ -1506,8 +1506,10 @@ $(document).ready(function()
 			
 		<!--Timeline editor start here-->
 		<!--Changed by Dashrath- add handCursor class in div for editor content line spacing issue-->
-		<div id="TimelineEditor" class="timeline_editor" style="display:none;">
-			<form name="formTimeline" id="formTimeline" method="post" action="" >
+		<div id="TimelineEditor" class="timeline_editor modal" style="display:none;">			
+			<form name="formTimeline" class="modal-content" id="formTimeline" method="post" action="">
+				<span id="postFormHeader"></span>
+				<span class="close">&times;</span>
 				 <textarea name="replyDiscussion" id="replyDiscussion"></textarea>
 				 <input name="list" value="" id="list" type="hidden" />
 				 <input name="listSpaces" value="" id="listSpaces" type="hidden" />
@@ -1519,8 +1521,10 @@ $(document).ready(function()
 				<?php
 				
 				if((($workSpaceId=='0' && $post_type_id==2) || $_SESSION['all']) && !$_SESSION['public'])
+				//if(1)
 				{
-				?>									
+				?>		
+					<div id="multiSend">							
 						<!--Group feature start here-->
 						<?php /* if(count($groupList)>0){ ?>
 						<div style="margin-top:3%;">
@@ -1590,81 +1594,81 @@ $(document).ready(function()
 							</div>
 							<!--Select user label end-->
 							<div class="clr"></div>
-							</div>
+						</div>
 						<?php } ?>			
 						<!--Space and subspace selection end here-->
 						
 						<div style="margin-top:1%;">
-						<div style="width:50%; float:left;">
+							<div style="width:50%; float:left;">
 						
-						<?php
-				 		//echo 'Send to multiple: '." : <br><br>"; 
-						//echo $this->lang->line('txt_Search')." : "; 
-						echo "Send to multiple users: "; 
-						?>
-						<input type="text" id="searchTags" name="searchTags" onKeyUp="showTags()" size="50" placeholder="Search..."/>
-						
-						<div id="showMan">
-						
-							<?php if(count($workSpaceMembers_search_user)>0){ ?>
-			
-							<input type="checkbox" name="checkAll" id="checkAll" onclick="checkAllFunctions();" />
-			
-							<?php echo $this->lang->line('txt_All');?><br />
-			
-							<?php } ?>
-			
-							<?php
-			
-							$i=1;			
-			
-							foreach($workSpaceMembers_search_user as $keyVal=>$workPlaceMemberData)
-							{
-									if ($_SESSION['all'])
-									{
-										if ($workPlaceMemberData['userGroup']>0)
+								<?php
+								//echo 'Send to multiple: '." : <br><br>"; 
+								//echo $this->lang->line('txt_Search')." : "; 
+								echo "Send to multiple users: "; 
+								?>
+								<input type="text" id="searchTags" name="searchTags" onKeyUp="showTags()" size="50" placeholder="Search..."/>
+							
+								<div id="showMan">
+							
+								<?php if(count($workSpaceMembers_search_user)>0){ ?>
+				
+								<input type="checkbox" name="checkAll" id="checkAll" onclick="checkAllFunctions();" />
+				
+								<?php echo $this->lang->line('txt_All');?><br />
+				
+								<?php } ?>
+				
+								<?php
+				
+								$i=1;			
+				
+								foreach($workSpaceMembers_search_user as $keyVal=>$workPlaceMemberData)
+								{
+										if ($_SESSION['all'])
+										{
+											if ($workPlaceMemberData['userGroup']>0)
+												$showGuestUser = 1;
+											else
+												$showGuestUser = 0;
+										}
+										else if ($workSpaceId>0)
+										{
 											$showGuestUser = 1;
+										}
 										else
-											$showGuestUser = 0;
-									}
-									else if ($workSpaceId>0)
-									{
-										$showGuestUser = 1;
-									}
-									else
-									{
-										if ($workPlaceMemberData['userGroup']>0)
-											$showGuestUser = 1;
-										else
-											$showGuestUser = 0;
-									}	
-							if($_SESSION['userId'] != $workPlaceMemberData['userId'] && $this->uri->segment(3)!=$workPlaceMemberData['userId'] && $showGuestUser){						
-
+										{
+											if ($workPlaceMemberData['userGroup']>0)
+												$showGuestUser = 1;
+											else
+												$showGuestUser = 0;
+										}	
+									if($_SESSION['userId'] != $workPlaceMemberData['userId'] && $this->uri->segment(3)!=$workPlaceMemberData['userId'] && $showGuestUser){						
 										?>
 
-							<input type="checkbox" name="recipients[]" id="<?php echo 'recipients_'.$i ; ?>" value="<?php echo $workPlaceMemberData['userId'];?>" class="clsChecks remove<?php echo $workPlaceMemberData['userId'];?>"  data-myval="<?php echo $workPlaceMemberData['tagName'];?>" />
+										<input type="checkbox" name="recipients[]" id="<?php echo 'recipients_'.$i ; ?>" value="<?php echo $workPlaceMemberData['userId'];?>" class="clsChecks remove<?php echo $workPlaceMemberData['userId'];?>"  data-myval="<?php echo $workPlaceMemberData['tagName'];?>" />
 
-							<?php echo $workPlaceMemberData['tagName'];?><br />
+										<?php echo $workPlaceMemberData['tagName'];?><br />
 
-							<?php
+										<?php
 
-										$i++;
+												$i++;
 
-						}
+									}
 
-					}
-					
-							?>
+								}
+						
+								?>
 
+							</div>
 						</div>
-					</div>
-					<!--Select user div end-->
-					<div id="multipleRecipientArea">
-						<div class="sol-current-selection"></div>
-					</div>
-					<!--Select user label end-->
-					<div class="clr"></div>
-					</div>
+						<!--Select user div end-->
+						<div id="multipleRecipientArea">
+							<div class="sol-current-selection"></div>
+						</div>
+						<!--Select user label end-->
+						<div class="clr"></div>
+						</div>
+					</div>	
 					<?php	
 				}
 				
@@ -1677,13 +1681,13 @@ $(document).ready(function()
 					if(isset($_SESSION['WSManagerAccess']) && $_SESSION['WSManagerAccess'] == 1 && $_SESSION['public'] == 'public')
 					{
 					?>
-					<input type="button" name="Replybutton" value="<?php echo $this->lang->line('txt_Post');?>" onClick="insertTimeline();" style="float:left; margin-top:-1%;" >		 
+					<input type="button" id="postSubmitButton" name="Replybutton" value="<?php echo $this->lang->line('txt_Post');?>" onClick="insertTimeline();" style="float:left; margin-top:-1%;" >		 
 					<input type="button" name="Replybutton" value="<?php echo $this->lang->line('txt_Cancel');?>" onClick="showTimelineEditor();" style="float:left; margin-left:1%;margin-top:-1%;" >				
 					<?php 
 					}
 					else
 					{ ?>
-					<input type="button" name="Replybutton" value="<?php echo $this->lang->line('txt_Post');?>" onClick="insertTimeline();" style="float:left; margin-top:-1%;" >		 
+					<input type="button" id="postSubmitButton" name="Replybutton" value="<?php echo $this->lang->line('txt_Post');?>" onClick="insertTimeline();" style="float:left; margin-top:-1%;" >		 
 					<input type="button" name="Replybutton" value="<?php echo $this->lang->line('txt_Cancel');?>" onClick="showTimelineEditor();" style="float:left; margin-left:1%;margin-top:-1%;" >	
 					<?php
 					}
@@ -1744,6 +1748,7 @@ $(document).ready(function()
 $(document).ready(function(){
 	//$("#showMan").hide();
 	//$("#showManSpaces").hide();
+	//$("#multiSend").hide();
 	$(window).scroll(function(){
       if ($(this).scrollTop() > 60) {
           	$('#postTabUI').addClass('postTabUIFixed');
@@ -2153,7 +2158,7 @@ function writeSearh()
 
 }
 
-function showTimelineEditor()
+function showTimelineEditor(data='')
 {
 	if($('#TimelineEditor').is(':visible'))
 	{
@@ -2176,9 +2181,27 @@ function showTimelineEditor()
 		$("#newPostCommentMessage").hide();	
 		$("#TimelineEditor").show();
 		chnage_textarea_to_editor('replyDiscussion');
+		if(data!=''){
+			setValueIntoEditor('replyDiscussion',data);
+		}
+		else{
+			$("#postFormHeader").html('<b>New post</b><br><br>');	
+			$('#postSubmitButton').prop("value", "Post");
+			$("#replyDiscussion").froalaEditor('edit.on');
+			$("#replyDiscussion").froalaEditor('toolbar.show');
+			setValueIntoEditor('replyDiscussion','');
+		}
 	}
 }
 
+function forwardPost(data){
+	//console.log('data= '+data);	
+	showTimelineEditor(data);
+	$("#replyDiscussion").froalaEditor('edit.off');
+	$("#replyDiscussion").froalaEditor('toolbar.hide');
+	$("#postFormHeader").html('<b>Forward post</b><br><br>');	
+	$('#postSubmitButton').prop("value", "Forward");
+}
 //check all function start
 
 function checkAllFunction(nodeId){
@@ -2456,8 +2479,9 @@ function showSearchUser()
 			$("#post_web_sidebar_loader").hide();
 			//$('#divChats').html(res[1]);		
 			/*$('#divSearchUser').html(res[0]);*/
+			//console.log('space_search= '+res[2]);
 
-			$('#divSearchResult').html('<b>Search results</b><br>'+res[0]);
+			$('#divSearchResult').html('<b>Search results</b><br>'+res[2]);
 		}
 		});
 	}
@@ -3190,6 +3214,33 @@ function searchGroups()
 		document.getElementById('showManGroup').style.display = 'none';
 	}
 	}
+}
+
+// Get the modal
+//var modal = document.getElementById("myModal");
+var modal = document.getElementById("TimelineEditor");
+
+// Get the button that opens the modal
+var btn = document.getElementById("myBtn");
+
+// Get the <span> element that closes the modal
+var span = document.getElementsByClassName("close")[0];
+
+// When the user clicks the button, open the modal 
+btn.onclick = function() {
+  modal.style.display = "block";
+}
+
+// When the user clicks on <span> (x), close the modal
+span.onclick = function() {
+  modal.style.display = "none";
+}
+
+// When the user clicks anywhere outside of the modal, close it
+window.onclick = function(event) {
+  if (event.target == modal) {
+    modal.style.display = "none";
+  }
 }
 </script>
 </body>

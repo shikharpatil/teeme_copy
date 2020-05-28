@@ -929,6 +929,11 @@
 				?>
 			</span>
 			<!-- delete button end-->
+			<!-- Forward a post -->
+			<?php if($_SESSION['active_view']=='global'){?>
+				<span class="commonSeedLeafSpanRight" id="forward<?php echo $arrVal['nodeId'];?>"><a href="javascript:void(0)" onclick="forwardPost('<?php echo stripslashes($arrVal['contents']);?>');">Forward</a></span>
+			<?php } ?>
+				<!-- Forward a post end -->
 		</div>
 		<!-- footer right content end -->
   </div>

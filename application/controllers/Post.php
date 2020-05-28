@@ -3374,6 +3374,8 @@ class Post extends CI_Controller {
 					//echo "<pre>";print_r($arrDetails['workSpaceMembers']);exit;
 				}
 				$arrDetails['workPlaceMembers']= $this->profile_manager->getAllUsersByWorkPlaceId($_SESSION['workPlaceId'], $this->input->post('search'));
+				$arrDetails['userAllSpaces']	= $objIdentity->getAllWorkSpacesByWorkPlaceId($_SESSION['workPlaceId'],$_SESSION['userId'],0,$this->input->post('search'));
+				$arrDetails['userAllSubSpaces']	= $objIdentity->getAllSubSpacesByWorkPlaceId($_SESSION['workPlaceId'],$_SESSION['userId'],0,$this->input->post('search'));
 			}
 			else{
 				if ($workSpaceType==2)
@@ -3390,6 +3392,8 @@ class Post extends CI_Controller {
 					//echo "<pre>active view= ".$active_view;print_r($arrDetails['workSpaceMembers']);exit;
 				}
 				$arrDetails['workPlaceMembers']= $this->profile_manager->getAllUsersByWorkPlaceId($_SESSION['workPlaceId']);
+				$arrDetails['userAllSpaces']	= $objIdentity->getAllWorkSpacesByWorkPlaceId($_SESSION['workPlaceId'],$_SESSION['userId']);
+				$arrDetails['userAllSubSpaces']	= $objIdentity->getAllSubSpacesByWorkPlaceId($_SESSION['workPlaceId'],$_SESSION['userId']);
 			}	
 
 			
@@ -3441,6 +3445,7 @@ class Post extends CI_Controller {
 
 				$data = $this->load->view('post/get_post_user_list_web',$arrDetails,TRUE);	
 				$data .= '|@#$%^&|'.$this->load->view('post/get_post_active_posts_web',$arrDetails,TRUE);
+				$data .= '|@#$%^&|'.$this->load->view('post/get_post_search_results_web',$arrDetails,TRUE);
 				echo $data;	
 			/*}*/
 		}		
