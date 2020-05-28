@@ -6532,7 +6532,8 @@ function setPostTabBarWidth()
   else if(isLeftMenu1!='1' && isNotificationSidebar=='1')
   {
     //alert('timeline menu hide left menu show');
-    var subWidth = '-=596px';
+    //var subWidth = '-=596px';
+    var subWidth = '-=690px';
     $('.postTabUIFixed').css('width', screen.width).css('width', subWidth);
   }
   else

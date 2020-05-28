@@ -8698,11 +8698,12 @@ span.reserve a
 	word-wrap: break-word !important;
 }
 .post_web_sidebar_row{
-	width: 100%;
-	height: 72px;
+	/*width: 100%;*/
+	/*height: 72px;*/
 	background-color: white !important;
 	border-top: solid 1px #DDDFE2 !important;
 	display: flex;
+	padding:10px;
 }
 .post_web_sidebar_col1{
 	padding: 0 15px 0 13px;
@@ -8716,7 +8717,7 @@ span.reserve a
 	min-width: 0;
     flex-direction: column;
 	justify-content: center;
-	padding-right:15px;
+	padding-right:5px;
 }
 .post_web_search{
 	margin: 0 0 13px 0;
@@ -8812,6 +8813,10 @@ span.reserve a
 }
 .post_web_sidebar_data{
 	display:flex;
+	padding:3px 0;
+}
+.post_web_sidebar_timestamp{
+	padding:0 5px 0 0;
 }
 .loader{
 	margin:10px 0;
@@ -8874,4 +8879,7 @@ span.reserve a
 	flex: 1;
 	*/
 	flex:85%;
+  }
+  #divSearchResult{
+	  padding:10px 0;
   }

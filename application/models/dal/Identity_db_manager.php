@@ -2310,15 +2310,15 @@ teeme_leaf a,teeme_node b where a.id=b.leafId and b.treeIds='".$inserted_tree_id
 		if($workSpaceId == 0 && $chat ==0)
 		{
 			$q = 'SELECT * FROM teeme_users WHERE workPlaceId ='.$workplaceId.' AND tagName LIKE (\''.$search.'%\') ORDER BY tagName ASC';
-			$query = $this->db->query('SELECT * FROM teeme_users WHERE workPlaceId ='.$workplaceId.' AND tagName LIKE (\''.$search.'%\') ORDER BY tagName ASC');
+			$query = $this->db->query('SELECT DISTINCT * FROM teeme_users WHERE workPlaceId ='.$workplaceId.' AND tagName LIKE (\''.$search.'%\') ORDER BY tagName ASC');
 		}
 		else if($workSpaceId == 0 && $chat ==1)
 		{
-			$query = $this->db->query('SELECT * FROM teeme_users WHERE workPlaceId ='.$workplaceId.' AND tagName LIKE (\''.$search.'%\') ORDER BY tagName ASC');
+			$query = $this->db->query('SELECT DISTINCT * FROM teeme_users WHERE workPlaceId ='.$workplaceId.' AND tagName LIKE (\''.$search.'%\') ORDER BY tagName ASC');
 		}
 		else
 		{
-			$query = $this->db->query('SELECT b.* FROM teeme_work_space_members a, teeme_users b WHERE a.workSpaceUserId = b.userId AND a.workSpaceId='.$workSpaceId.' AND tagName LIKE (\''.$search.'%\') ORDER BY tagName ASC');
+			$query = $this->db->query('SELECT DISTINCT b.* FROM teeme_work_space_members a, teeme_users b WHERE a.workSpaceUserId = b.userId AND a.workSpaceId='.$workSpaceId.' AND tagName LIKE (\''.$search.'%\') ORDER BY tagName ASC');
 		}
 		
 	

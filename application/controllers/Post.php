@@ -3357,6 +3357,25 @@ class Post extends CI_Controller {
 			}
 			*/
 
+			if ($this->input->post('search')!='')
+			{
+				$arrDetails['search']=$this->input->post('search',true);
+				if ($workSpaceType==2)
+				{
+					$workSpaceDetails=$this->identity_db_manager->getSubWorkSpaceDetailsBySubWorkSpaceId($workSpaceId);
+					$arrDetails['workSpaceName'] = $workSpaceDetails['subWorkSpaceName'];
+					$arrDetails['workSpaceMembers']	= $objIdentity->getSubWorkSpaceMembersIdBySubWorkSpaceIdSearch($workSpaceId,0,$this->input->post('search'));	
+				}
+				else
+				{
+					$workSpaceDetails=$this->identity_db_manager->getWorkSpaceDetailsByWorkSpaceId($workSpaceId);
+					$arrDetails['workSpaceName'] = $workSpaceDetails['workSpaceName'];
+					$arrDetails['workSpaceMembers']	= $objIdentity->getWorkSpaceMembersByWorkSpaceIdSearch($workSpaceId,0,$this->input->post('search'));
+					//echo "<pre>";print_r($arrDetails['workSpaceMembers']);exit;
+				}
+				$arrDetails['workPlaceMembers']= $this->profile_manager->getAllUsersByWorkPlaceId($_SESSION['workPlaceId'], $this->input->post('search'));
+			}
+			else{
 				if ($workSpaceType==2)
 				{
 					$workSpaceDetails=$this->identity_db_manager->getSubWorkSpaceDetailsBySubWorkSpaceId($workSpaceId);
@@ -3368,11 +3387,14 @@ class Post extends CI_Controller {
 					$workSpaceDetails=$this->identity_db_manager->getWorkSpaceDetailsByWorkSpaceId($workSpaceId);
 					$arrDetails['workSpaceName'] = $workSpaceDetails['workSpaceName'];
 					$arrDetails['workSpaceMembers']	= $objIdentity->getWorkSpaceMembersByWorkSpaceId($workSpaceId);
+					//echo "<pre>active view= ".$active_view;print_r($arrDetails['workSpaceMembers']);exit;
 				}
+				$arrDetails['workPlaceMembers']= $this->profile_manager->getAllUsersByWorkPlaceId($_SESSION['workPlaceId']);
+			}	
 
 			
 			$arrDetails['workPlaceDetails'] = $this->identity_db_manager->getWorkPlaceDetails($_SESSION['workPlaceId']);	
-			$arrDetails['workPlaceMembers']= $this->profile_manager->getAllUsersByWorkPlaceId($_SESSION['workPlaceId']);
+			
 			//$arrDetails['active_view']=$_SESSION['active_view'];
 			$arrDetails['active_view']=$active_view;
 					

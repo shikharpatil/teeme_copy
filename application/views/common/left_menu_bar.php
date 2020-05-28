@@ -395,11 +395,11 @@ if ($userGroup==0 && $workSpaceId==0)
 				<!--<a title="<?php echo $this->lang->line('txt_Post'); ?>" href="<?php echo base_url();?>post/index/<?php echo $workSpaceId;?>/type/<?php echo $workSpaceType; ?>/<?php echo $workSpaceId; ?>/<?php echo $workSpaceType; ?>" >-->
 				<?php if ($workSpaceType==1){
 					?>
-									<a title="<?php echo $this->lang->line('txt_Post'); ?>" target="_blank" href="<?php echo base_url(); ?>post/web/<?php echo $workSpaceId;?>/<?php echo $workSpaceType; ?>/space/<?php echo $workSpaceId;?>" >
+									<a title="<?php echo $this->lang->line('txt_Post'); ?>" href="<?php echo base_url(); ?>post/web/<?php echo $workSpaceId;?>/<?php echo $workSpaceType; ?>/space/<?php echo $workSpaceId;?>" >
 					<?php
 					}else{
 						?>
-						<a title="<?php echo $this->lang->line('txt_Post'); ?>" target="_blank" href="<?php echo base_url(); ?>post/web/<?php echo $workSpaceId;?>/<?php echo $workSpaceType; ?>/subspace/<?php echo $workSpaceId;?>" >
+						<a title="<?php echo $this->lang->line('txt_Post'); ?>" href="<?php echo base_url(); ?>post/web/<?php echo $workSpaceId;?>/<?php echo $workSpaceType; ?>/subspace/<?php echo $workSpaceId;?>" >
 						<?php
 					}?>
 
