@@ -1520,8 +1520,8 @@ $(document).ready(function()
 				 
 				<?php
 				
-				if((($workSpaceId=='0' && $post_type_id==2) || $_SESSION['all']) && !$_SESSION['public'])
-				//if(1)
+				//if((($workSpaceId=='0' && $post_type_id==2) || $_SESSION['all']) && !$_SESSION['public'])
+				if(1)
 				{
 				?>		
 					<div id="multiSend">							
@@ -1748,7 +1748,9 @@ $(document).ready(function()
 $(document).ready(function(){
 	//$("#showMan").hide();
 	//$("#showManSpaces").hide();
-	//$("#multiSend").hide();
+	<?php if($_SESSION['active_view']=='space'){?>
+		$("#multiSend").hide();
+	<?php } ?>
 	$(window).scroll(function(){
       if ($(this).scrollTop() > 60) {
           	$('#postTabUI').addClass('postTabUIFixed');
@@ -2183,6 +2185,7 @@ function showTimelineEditor(data='')
 		chnage_textarea_to_editor('replyDiscussion');
 		if(data!=''){
 			setValueIntoEditor('replyDiscussion',data);
+			$("#multiSend").show();
 		}
 		else{
 			$("#postFormHeader").html('<b>New post</b><br><br>');	
@@ -2190,6 +2193,9 @@ function showTimelineEditor(data='')
 			$("#replyDiscussion").froalaEditor('edit.on');
 			$("#replyDiscussion").froalaEditor('toolbar.show');
 			setValueIntoEditor('replyDiscussion','');
+			<?php if($_SESSION['active_view']=='space'){?>
+				$("#multiSend").hide();
+			<?php } ?>
 		}
 	}
 }
