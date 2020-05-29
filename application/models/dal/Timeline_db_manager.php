@@ -566,7 +566,7 @@ class timeline_db_manager extends CI_Model
 	}
 	//Manoj: Code end
 
-	public function insert_timeline_web($treeId,$content,$userId,$createdDate,$predecessor=0,$successors=0,$workSpaceId,$workSpaceType,$arrAllRecipientIds='',$tag='',$authors='',$status=1,$type=1,$nodeOrder=0,$post_type_id='-1',$post_type_object_id='-1',$delivery_status_id='1',$seen_status='0',$data='')
+	public function insert_timeline_web($treeId,$content,$userId,$createdDate,$predecessor=0,$successors=0,$workSpaceId,$workSpaceType,$arrAllRecipientIds='',$tag='',$authors='',$status=1,$type=1,$nodeOrder=0,$post_type_id='-1',$post_type_object_id='-1',$delivery_status_id='1',$seen_status='0',$data='',$is_forward=0)
 	{
 		//echo "<li>recipients= " .$recipients;exit;
 		//echo "<li>post_type_id= " .$post_type_id;exit;
@@ -581,6 +581,7 @@ class timeline_db_manager extends CI_Model
 		//echo "<pre>recipients"; print_r($arrRecipients);exit;
 		//echo "<li>individual recipients count= " .count($arrAllRecipientIds['recipientIds']);
 		//echo "<li>space recipients count= " .count($arrAllRecipientIds['spaceIds']);
+		//echo "<li>is_forward= " .$is_forward;exit;
 		//exit;
 
 		if(!empty($userId)){
@@ -665,91 +666,50 @@ class timeline_db_manager extends CI_Model
 				*/
 				// If one-to-one
 				if ($post_type_id==1){
-					$values = array();
-					/*
-					$arrPlaceUsers = array();
-					$this->load->model('dal/profile_manager');
-					$arrPlaceUsers = $this->profile_manager->getAllUsersByWorkPlaceId($_SESSION['workPlaceId']);
-						foreach($arrPlaceUsers  as $keyVal=>$arrVal){
-							if ($post_type_object_id!=''){
-								if(in_array($arrVal['userId'],$arrRecipients)){
-									$values[] = "('".$nodeId."','".$post_type_id."','".$arrVal['userId']."','".$arrVal['userId']."','".$userId."','".$delivery_status_id."','".$seen_status."','".$createdDate."','".$this->db->escape_str($data)."')"; 	
+					if($is_forward==0){
+						$values = array();
+						/*
+						$arrPlaceUsers = array();
+						$this->load->model('dal/profile_manager');
+						$arrPlaceUsers = $this->profile_manager->getAllUsersByWorkPlaceId($_SESSION['workPlaceId']);
+							foreach($arrPlaceUsers  as $keyVal=>$arrVal){
+								if ($post_type_object_id!=''){
+									if(in_array($arrVal['userId'],$arrRecipients)){
+										$values[] = "('".$nodeId."','".$post_type_id."','".$arrVal['userId']."','".$arrVal['userId']."','".$userId."','".$delivery_status_id."','".$seen_status."','".$createdDate."','".$this->db->escape_str($data)."')"; 	
+									}
+									else{
+										$values[] = "('".$nodeId."','".$post_type_id."','".$post_type_object_id."','".$arrVal['userId']."','".$userId."','".$delivery_status_id."','".$seen_status."','".$createdDate."','".$this->db->escape_str($data)."')"; 	
+									}
 								}
-								else{
-									$values[] = "('".$nodeId."','".$post_type_id."','".$post_type_object_id."','".$arrVal['userId']."','".$userId."','".$delivery_status_id."','".$seen_status."','".$createdDate."','".$this->db->escape_str($data)."')"; 	
+								else if ($post_type_object_id=='') {
+									if(in_array($arrVal['userId'],$arrRecipients)){
+										$values[] = "('".$nodeId."','".$post_type_id."','".$arrVal['userId']."','".$arrVal['userId']."','".$userId."','".$delivery_status_id."','".$seen_status."','".$createdDate."','".$this->db->escape_str($data)."')"; 							
+									}
+									else {
+										$values[] = "('".$nodeId."','".$post_type_id."','".$userId."','".$arrVal['userId']."','".$userId."','".$delivery_status_id."','".$seen_status."','".$createdDate."','".$this->db->escape_str($data)."')"; 	
+									}
 								}
 							}
-							else if ($post_type_object_id=='') {
-								if(in_array($arrVal['userId'],$arrRecipients)){
-									$values[] = "('".$nodeId."','".$post_type_id."','".$arrVal['userId']."','".$arrVal['userId']."','".$userId."','".$delivery_status_id."','".$seen_status."','".$createdDate."','".$this->db->escape_str($data)."')"; 							
-								}
-								else {
-									$values[] = "('".$nodeId."','".$post_type_id."','".$userId."','".$arrVal['userId']."','".$userId."','".$delivery_status_id."','".$seen_status."','".$createdDate."','".$this->db->escape_str($data)."')"; 	
-								}
-							}
-						}
-					*/	
+						*/	
 
-					$this->load->model('dal/notification_db_manager');	
-					$followers = array();
-					$followers = $this->notification_db_manager->getFollowersByOjectId(15, $post_type_object_id);
-					foreach($followers as $recipientsUserId)
-					{ 
-						if($recipientsUserId['userId']>0 && $recipientsUserId['userId']!=$_SESSION['userId']){
-							$values[] = "('".$nodeId."','".$post_type_id."','".$post_type_object_id."','".$recipientsUserId['userId']."','".$userId."','".$delivery_status_id."','".$seen_status."','".$createdDate."','".$this->db->escape_str($data)."')"; 	
-						}	
-					}
-					$values[] = "('".$nodeId."','".$post_type_id."','".$userId."','".$userId."','".$userId."','".$delivery_status_id."','".$seen_status."','".$createdDate."','".$this->db->escape_str($data)."')"; 						
-					/*
-					if ($userId!=$recipients){
-						$values[] = "('".$nodeId."','".$post_type_id."','".$post_type_object_id."','".$recipients."','".$userId."','".$delivery_status_id."','".$seen_status."','".$createdDate."','".$this->db->escape_str($data)."')"; 	
-					}
-					$values[] = "('".$nodeId."','".$post_type_id."','".$post_type_object_id."','".$userId."','".$userId."','".$delivery_status_id."','".$seen_status."','".$createdDate."','".$this->db->escape_str($data)."')"; 	
-					*/
-					$val = implode(',', $values);
-					$q = "INSERT INTO teeme_post_web_post_store (post_id,post_type_id,post_type_object_id,participant_id,sender_id,delivery_status_id,seen_status,sent_timestamp,data) VALUES $val";
-					$query = $this->db->query($q);
-				}
-				else if ($post_type_id==2 || $post_type_id==5){		
-					$post_type_id=2;					
-					//if ($workSpaceId>0){
-					if ($post_type_object_id>0){
-						$this->load->model('dal/identity_db_manager');	
-						$arrSpaceRecipients = array();
-						$arrSpaceRecipientIds = array();
-						$arrSpaceRecipients = $this->identity_db_manager->getWorkSpaceMembersByWorkSpaceId($post_type_object_id);
-
-						// Space members are recipients by default
-						foreach($arrSpaceRecipients as $recipientsUserId)
+						$this->load->model('dal/notification_db_manager');	
+						$followers = array();
+						$followers = $this->notification_db_manager->getFollowersByOjectId(15, $post_type_object_id);
+						foreach($followers as $recipientsUserId)
 						{ 
 							if($recipientsUserId['userId']>0 && $recipientsUserId['userId']!=$_SESSION['userId']){
 								$values[] = "('".$nodeId."','".$post_type_id."','".$post_type_object_id."','".$recipientsUserId['userId']."','".$userId."','".$delivery_status_id."','".$seen_status."','".$createdDate."','".$this->db->escape_str($data)."')"; 	
 							}	
-							$arrSpaceRecipientIds[] = $recipientsUserId['userId'];
 						}
+						$values[] = "('".$nodeId."','".$post_type_id."','".$userId."','".$userId."','".$userId."','".$delivery_status_id."','".$seen_status."','".$createdDate."','".$this->db->escape_str($data)."')"; 						
 						/*
-						$this->load->model('dal/notification_db_manager');	
-						$followers = array();
-						$arrSpaceRecipientIds = array();
-						$followers = $this->notification_db_manager->getFollowersByOjectId(10, $post_type_object_id);
-						// Non-space members who are followers are also recipients
-						foreach($followers as $recipientsUserId)
-						{ 
-							if($recipientsUserId['userId']>0){
-								$values[] = "('".$nodeId."','".$post_type_id."','".$post_type_object_id."','".$recipientsUserId['userId']."','".$userId."','".$delivery_status_id."','".$seen_status."','".$createdDate."','".$this->db->escape_str($data)."')"; 	
-							}	
-							$arrSpaceRecipientIds[] = $recipientsUserId['userId'];
+						if ($userId!=$recipients){
+							$values[] = "('".$nodeId."','".$post_type_id."','".$post_type_object_id."','".$recipients."','".$userId."','".$delivery_status_id."','".$seen_status."','".$createdDate."','".$this->db->escape_str($data)."')"; 	
 						}
-						*/
-						//Current user himself is a recipient
 						$values[] = "('".$nodeId."','".$post_type_id."','".$post_type_object_id."','".$userId."','".$userId."','".$delivery_status_id."','".$seen_status."','".$createdDate."','".$this->db->escape_str($data)."')"; 	
-						$arrSpaceRecipientIds[] = $userId;
+						*/
 					}
-					else {
-						$values[] = "('".$nodeId."','".$post_type_id."','0','".$userId."','".$userId."','".$delivery_status_id."','".$seen_status."','".$createdDate."','".$this->db->escape_str($data)."')"; 	
-						$arrSpaceRecipientIds[] = $userId;
-					}
-
+					// For multiple individual recipients
 					if(count($arrAllRecipientIds['recipientIds'])>0){
 						$arrPlaceUsers = array();
 						$this->load->model('dal/profile_manager');
@@ -783,6 +743,7 @@ class timeline_db_manager extends CI_Model
 							}
 						}
 					}
+					// For multiple spaces
 					if(count($arrAllRecipientIds['spaceIds'])>0){
 						$this->load->model('dal/identity_db_manager');	
 						foreach($arrAllRecipientIds['spaceIds'] as $spaceId){
@@ -791,7 +752,103 @@ class timeline_db_manager extends CI_Model
 							// Space members are recipients by default
 							foreach($arrSpaceRecipients as $recipientsUserId)
 							{ 
+								//if($recipientsUserId['userId']>0 && $recipientsUserId['userId']!=$_SESSION['userId']){
+								if($recipientsUserId['userId']>0){
+									$values[] = "('".$nodeId."','".$post_type_id."','".$spaceId."','".$recipientsUserId['userId']."','".$userId."','".$delivery_status_id."','".$seen_status."','".$createdDate."','".$this->db->escape_str($data)."')"; 	
+								}	
+							}	
+						}
+					}
+					$val = implode(',', $values);
+					$q = "INSERT INTO teeme_post_web_post_store (post_id,post_type_id,post_type_object_id,participant_id,sender_id,delivery_status_id,seen_status,sent_timestamp,data) VALUES $val";
+					$query = $this->db->query($q);
+				}
+				else if ($post_type_id==2 || $post_type_id==5){		
+					$post_type_id=2;					
+					//if ($workSpaceId>0){
+					if($is_forward==0){
+						if ($post_type_object_id>0){
+							$this->load->model('dal/identity_db_manager');	
+							$arrSpaceRecipients = array();
+							$arrSpaceRecipientIds = array();
+							$arrSpaceRecipients = $this->identity_db_manager->getWorkSpaceMembersByWorkSpaceId($post_type_object_id);
+
+							// Space members are recipients by default
+							foreach($arrSpaceRecipients as $recipientsUserId)
+							{ 
 								if($recipientsUserId['userId']>0 && $recipientsUserId['userId']!=$_SESSION['userId']){
+									$values[] = "('".$nodeId."','".$post_type_id."','".$post_type_object_id."','".$recipientsUserId['userId']."','".$userId."','".$delivery_status_id."','".$seen_status."','".$createdDate."','".$this->db->escape_str($data)."')"; 	
+								}	
+								$arrSpaceRecipientIds[] = $recipientsUserId['userId'];
+							}
+							/*
+							$this->load->model('dal/notification_db_manager');	
+							$followers = array();
+							$arrSpaceRecipientIds = array();
+							$followers = $this->notification_db_manager->getFollowersByOjectId(10, $post_type_object_id);
+							// Non-space members who are followers are also recipients
+							foreach($followers as $recipientsUserId)
+							{ 
+								if($recipientsUserId['userId']>0){
+									$values[] = "('".$nodeId."','".$post_type_id."','".$post_type_object_id."','".$recipientsUserId['userId']."','".$userId."','".$delivery_status_id."','".$seen_status."','".$createdDate."','".$this->db->escape_str($data)."')"; 	
+								}	
+								$arrSpaceRecipientIds[] = $recipientsUserId['userId'];
+							}
+							*/
+							//Current user himself is a recipient
+							$values[] = "('".$nodeId."','".$post_type_id."','".$post_type_object_id."','".$userId."','".$userId."','".$delivery_status_id."','".$seen_status."','".$createdDate."','".$this->db->escape_str($data)."')"; 	
+							$arrSpaceRecipientIds[] = $userId;
+						}
+						else {
+							$values[] = "('".$nodeId."','".$post_type_id."','0','".$userId."','".$userId."','".$delivery_status_id."','".$seen_status."','".$createdDate."','".$this->db->escape_str($data)."')"; 	
+							$arrSpaceRecipientIds[] = $userId;
+						}
+					}
+					// For multiple individual recipients
+					if(count($arrAllRecipientIds['recipientIds'])>0){
+						$arrPlaceUsers = array();
+						$this->load->model('dal/profile_manager');
+						//if ($workSpaceId>0){
+						if ($post_type_object_id>0){
+							$arrPlaceUsers = $this->profile_manager->getAllUsersByWorkPlaceId($_SESSION['workPlaceId']);
+							foreach($arrPlaceUsers  as $keyVal=>$arrVal){
+								if(in_array($arrVal['userId'],$arrAllRecipientIds['recipientIds'])){
+									if ($workSpaceId>0){
+										$values[] = "('".$nodeId."','".$post_type_id."','".$arrVal['userId']."','".$arrVal['userId']."','".$userId."','".$delivery_status_id."','".$seen_status."','".$createdDate."','".$this->db->escape_str($data)."')"; 	
+									}
+									else {
+										$values[] = "('".$nodeId."','".$post_type_id."','0','".$arrVal['userId']."','".$userId."','".$delivery_status_id."','".$seen_status."','".$createdDate."','".$this->db->escape_str($data)."')"; 	
+									}
+								}
+								else if ((!in_array($arrVal['userId'],$arrAllRecipientIds['recipientIds'])) && (!in_array($arrVal['userId'],$arrSpaceRecipientIds))) {
+									if ($workSpaceId>0){
+										$values[] = "('".$nodeId."','".$post_type_id."','".$userId."','".$arrVal['userId']."','".$userId."','".$delivery_status_id."','".$seen_status."','".$createdDate."','".$this->db->escape_str($data)."')"; 							
+									}
+									else{
+										$values[] = "('".$nodeId."','".$post_type_id."','0','".$arrVal['userId']."','".$userId."','".$delivery_status_id."','".$seen_status."','".$createdDate."','".$this->db->escape_str($data)."')"; 	
+									}
+								}
+							}							
+						}
+						else{
+							foreach($arrAllRecipientIds['recipientIds'] as $recipientsUserId){
+								if($recipientsUserId['userId']>0 && $recipientsUserId['userId']!=$userId){
+									$values[] = "('".$nodeId."','".$post_type_id."','0','".$recipientsUserId['userId']."','".$userId."','".$delivery_status_id."','".$seen_status."','".$createdDate."','".$this->db->escape_str($data)."')"; 								
+								}
+							}
+						}
+					}
+					// For multiple spaces
+					if(count($arrAllRecipientIds['spaceIds'])>0){
+						$this->load->model('dal/identity_db_manager');	
+						foreach($arrAllRecipientIds['spaceIds'] as $spaceId){
+							$arrSpaceRecipients = array();
+							$arrSpaceRecipients = $this->identity_db_manager->getWorkSpaceMembersByWorkSpaceId($spaceId);
+							// Space members are recipients by default
+							foreach($arrSpaceRecipients as $recipientsUserId)
+							{ 
+								//if($recipientsUserId['userId']>0 && $recipientsUserId['userId']!=$_SESSION['userId']){
+								if($recipientsUserId['userId']>0){
 									$values[] = "('".$nodeId."','".$post_type_id."','".$spaceId."','".$recipientsUserId['userId']."','".$userId."','".$delivery_status_id."','".$seen_status."','".$createdDate."','".$this->db->escape_str($data)."')"; 	
 								}	
 							}	
@@ -802,94 +859,214 @@ class timeline_db_manager extends CI_Model
 					$query = $this->db->query($q);				
 				}
 				else if ($post_type_id==3){
-					
-					$this->load->model('dal/identity_db_manager');
-					$arrSubSpaceRecipients = array();
-					$arrSubSpaceRecipientIds = array();
-					$arrSubSpaceRecipients = $this->identity_db_manager->getSubWorkSpaceMembersBySubWorkSpaceId($post_type_object_id);
-					foreach($arrSubSpaceRecipients as $recipientsUserId)
-					{ 
-						if($recipientsUserId['userId']>0){
-							$values[] = "('".$nodeId."','".$post_type_id."','".$post_type_object_id."','".$recipientsUserId['userId']."','".$userId."','".$delivery_status_id."','".$seen_status."','".$createdDate."','".$this->db->escape_str($data)."')"; 	
-						}	
-						//$arrSubSpaceRecipientIds[] = $recipientsUserId['userId'];
+					if($is_forward==0){
+						$this->load->model('dal/identity_db_manager');
+						$arrSubSpaceRecipients = array();
+						$arrSubSpaceRecipientIds = array();
+						$arrSubSpaceRecipients = $this->identity_db_manager->getSubWorkSpaceMembersBySubWorkSpaceId($post_type_object_id);
+						foreach($arrSubSpaceRecipients as $recipientsUserId)
+						{ 
+							if($recipientsUserId['userId']>0){
+								$values[] = "('".$nodeId."','".$post_type_id."','".$post_type_object_id."','".$recipientsUserId['userId']."','".$userId."','".$delivery_status_id."','".$seen_status."','".$createdDate."','".$this->db->escape_str($data)."')"; 	
+							}	
+							//$arrSubSpaceRecipientIds[] = $recipientsUserId['userId'];
+						}
 					}
-					
-					/*
-					$this->load->model('dal/notification_db_manager');	
-					$followers = array();
-					$arrSubSpaceRecipientIds = array();
-					$followers = $this->notification_db_manager->getFollowersByOjectId(11, $post_type_object_id);
-					foreach($followers as $recipientsUserId)
-					{ 
-						if($recipientsUserId['userId']>0 && $recipientsUserId['userId']!=$_SESSION['userId']){
-							$values[] = "('".$nodeId."','".$post_type_id."','".$post_type_object_id."','".$recipientsUserId['userId']."','".$userId."','".$delivery_status_id."','".$seen_status."','".$createdDate."','".$this->db->escape_str($data)."')"; 	
-						}	
-						$arrSubSpaceRecipientIds[] = $recipientsUserId['userId'];
-					}
-					$values[] = "('".$nodeId."','".$post_type_id."','".$post_type_object_id."','".$userId."','".$userId."','".$delivery_status_id."','".$seen_status."','".$createdDate."','".$this->db->escape_str($data)."')"; 	
-					$arrSubSpaceRecipientIds[] = $userId;
-					
-					if(count($arrRecipients)>0){
+					// For multiple individual recipients
+					if(count($arrAllRecipientIds['recipientIds'])>0){
 						$arrPlaceUsers = array();
 						$this->load->model('dal/profile_manager');
-						$arrPlaceUsers = $this->profile_manager->getAllUsersByWorkPlaceId($_SESSION['workPlaceId']);
-						foreach($arrPlaceUsers  as $keyVal=>$arrVal){
-							if(in_array($arrVal['userId'],$arrRecipients)){
-								$values[] = "('".$nodeId."','".$post_type_id."','".$arrVal['userId']."','".$arrVal['userId']."','".$userId."','".$delivery_status_id."','".$seen_status."','".$createdDate."','".$this->db->escape_str($data)."')"; 	
-							}
-							else if ((!in_array($arrVal['userId'],$arrRecipients)) && (!in_array($arrVal['userId'],$arrSubSpaceRecipientIds))) {
-								$values[] = "('".$nodeId."','".$post_type_id."','".$userId."','".$arrVal['userId']."','".$userId."','".$delivery_status_id."','".$seen_status."','".$createdDate."','".$this->db->escape_str($data)."')"; 	
+						//if ($workSpaceId>0){
+						if ($post_type_object_id>0){
+							$arrPlaceUsers = $this->profile_manager->getAllUsersByWorkPlaceId($_SESSION['workPlaceId']);
+							foreach($arrPlaceUsers  as $keyVal=>$arrVal){
+								if(in_array($arrVal['userId'],$arrAllRecipientIds['recipientIds'])){
+									if ($workSpaceId>0){
+										$values[] = "('".$nodeId."','".$post_type_id."','".$arrVal['userId']."','".$arrVal['userId']."','".$userId."','".$delivery_status_id."','".$seen_status."','".$createdDate."','".$this->db->escape_str($data)."')"; 	
+									}
+									else {
+										$values[] = "('".$nodeId."','".$post_type_id."','0','".$arrVal['userId']."','".$userId."','".$delivery_status_id."','".$seen_status."','".$createdDate."','".$this->db->escape_str($data)."')"; 	
+									}
+								}
+								else if ((!in_array($arrVal['userId'],$arrAllRecipientIds['recipientIds'])) && (!in_array($arrVal['userId'],$arrSpaceRecipientIds))) {
+									if ($workSpaceId>0){
+										$values[] = "('".$nodeId."','".$post_type_id."','".$userId."','".$arrVal['userId']."','".$userId."','".$delivery_status_id."','".$seen_status."','".$createdDate."','".$this->db->escape_str($data)."')"; 							
+									}
+									else{
+										$values[] = "('".$nodeId."','".$post_type_id."','0','".$arrVal['userId']."','".$userId."','".$delivery_status_id."','".$seen_status."','".$createdDate."','".$this->db->escape_str($data)."')"; 	
+									}
+								}
+							}							
+						}
+						else{
+							foreach($arrAllRecipientIds['recipientIds'] as $recipientsUserId){
+								if($recipientsUserId['userId']>0 && $recipientsUserId['userId']!=$userId){
+									$values[] = "('".$nodeId."','".$post_type_id."','0','".$recipientsUserId['userId']."','".$userId."','".$delivery_status_id."','".$seen_status."','".$createdDate."','".$this->db->escape_str($data)."')"; 								
+								}
 							}
 						}
 					}
-					*/
+					// For multiple spaces
+					if(count($arrAllRecipientIds['spaceIds'])>0){
+						$this->load->model('dal/identity_db_manager');	
+						foreach($arrAllRecipientIds['spaceIds'] as $spaceId){
+							$arrSpaceRecipients = array();
+							$arrSpaceRecipients = $this->identity_db_manager->getWorkSpaceMembersByWorkSpaceId($spaceId);
+							// Space members are recipients by default
+							foreach($arrSpaceRecipients as $recipientsUserId)
+							{ 
+								//if($recipientsUserId['userId']>0 && $recipientsUserId['userId']!=$_SESSION['userId']){
+								if($recipientsUserId['userId']>0){
+									$values[] = "('".$nodeId."','".$post_type_id."','".$spaceId."','".$recipientsUserId['userId']."','".$userId."','".$delivery_status_id."','".$seen_status."','".$createdDate."','".$this->db->escape_str($data)."')"; 	
+								}	
+							}	
+						}
+					}
 					$val = implode(',', $values);
 					$q = "INSERT INTO teeme_post_web_post_store (post_id,post_type_id,post_type_object_id,participant_id,sender_id,delivery_status_id,seen_status,sent_timestamp,data) VALUES $val";
 					$query = $this->db->query($q);				
 				}
 				else if ($post_type_id==7){
-					$values = array();
-					$arrPlaceUsers = array();
-					$this->load->model('dal/profile_manager');
-					$arrPlaceUsers = $this->profile_manager->getAllUsersByWorkPlaceId($_SESSION['workPlaceId']);
-						foreach($arrPlaceUsers  as $keyVal=>$arrVal){
-							if ($post_type_object_id!=''){
-								if(in_array($arrVal['userId'],$arrRecipients)){
-									$values[] = "('".$nodeId."','".$post_type_id."','".$arrVal['userId']."','".$arrVal['userId']."','".$userId."','".$delivery_status_id."','".$seen_status."','".$createdDate."','".$this->db->escape_str($data)."')"; 	
+					if($is_forward==0){
+						$values = array();
+						$arrPlaceUsers = array();
+						$this->load->model('dal/profile_manager');
+						$arrPlaceUsers = $this->profile_manager->getAllUsersByWorkPlaceId($_SESSION['workPlaceId']);
+							foreach($arrPlaceUsers  as $keyVal=>$arrVal){
+								if ($post_type_object_id!=''){
+									if(in_array($arrVal['userId'],$arrRecipients)){
+										$values[] = "('".$nodeId."','".$post_type_id."','".$arrVal['userId']."','".$arrVal['userId']."','".$userId."','".$delivery_status_id."','".$seen_status."','".$createdDate."','".$this->db->escape_str($data)."')"; 	
+									}
+									else{
+										$values[] = "('".$nodeId."','".$post_type_id."','".$post_type_object_id."','".$arrVal['userId']."','".$userId."','".$delivery_status_id."','".$seen_status."','".$createdDate."','".$this->db->escape_str($data)."')"; 	
+									}
 								}
-								else{
-									$values[] = "('".$nodeId."','".$post_type_id."','".$post_type_object_id."','".$arrVal['userId']."','".$userId."','".$delivery_status_id."','".$seen_status."','".$createdDate."','".$this->db->escape_str($data)."')"; 	
+								else if ($post_type_object_id=='') {
+									if(in_array($arrVal['userId'],$arrRecipients)){
+										$values[] = "('".$nodeId."','".$post_type_id."','".$arrVal['userId']."','".$arrVal['userId']."','".$userId."','".$delivery_status_id."','".$seen_status."','".$createdDate."','".$this->db->escape_str($data)."')"; 							
+									}
+									else {
+										$values[] = "('".$nodeId."','".$post_type_id."','".$userId."','".$arrVal['userId']."','".$userId."','".$delivery_status_id."','".$seen_status."','".$createdDate."','".$this->db->escape_str($data)."')"; 	
+									}
 								}
 							}
-							else if ($post_type_object_id=='') {
-								if(in_array($arrVal['userId'],$arrRecipients)){
-									$values[] = "('".$nodeId."','".$post_type_id."','".$arrVal['userId']."','".$arrVal['userId']."','".$userId."','".$delivery_status_id."','".$seen_status."','".$createdDate."','".$this->db->escape_str($data)."')"; 							
+					}
+					// For multiple individual recipients
+					if(count($arrAllRecipientIds['recipientIds'])>0){
+						$arrPlaceUsers = array();
+						$this->load->model('dal/profile_manager');
+						//if ($workSpaceId>0){
+						if ($post_type_object_id>0){
+							$arrPlaceUsers = $this->profile_manager->getAllUsersByWorkPlaceId($_SESSION['workPlaceId']);
+							foreach($arrPlaceUsers  as $keyVal=>$arrVal){
+								if(in_array($arrVal['userId'],$arrAllRecipientIds['recipientIds'])){
+									if ($workSpaceId>0){
+										$values[] = "('".$nodeId."','".$post_type_id."','".$arrVal['userId']."','".$arrVal['userId']."','".$userId."','".$delivery_status_id."','".$seen_status."','".$createdDate."','".$this->db->escape_str($data)."')"; 	
+									}
+									else {
+										$values[] = "('".$nodeId."','".$post_type_id."','0','".$arrVal['userId']."','".$userId."','".$delivery_status_id."','".$seen_status."','".$createdDate."','".$this->db->escape_str($data)."')"; 	
+									}
 								}
-								else {
-									$values[] = "('".$nodeId."','".$post_type_id."','".$userId."','".$arrVal['userId']."','".$userId."','".$delivery_status_id."','".$seen_status."','".$createdDate."','".$this->db->escape_str($data)."')"; 	
+								else if ((!in_array($arrVal['userId'],$arrAllRecipientIds['recipientIds'])) && (!in_array($arrVal['userId'],$arrSpaceRecipientIds))) {
+									if ($workSpaceId>0){
+										$values[] = "('".$nodeId."','".$post_type_id."','".$userId."','".$arrVal['userId']."','".$userId."','".$delivery_status_id."','".$seen_status."','".$createdDate."','".$this->db->escape_str($data)."')"; 							
+									}
+									else{
+										$values[] = "('".$nodeId."','".$post_type_id."','0','".$arrVal['userId']."','".$userId."','".$delivery_status_id."','".$seen_status."','".$createdDate."','".$this->db->escape_str($data)."')"; 	
+									}
+								}
+							}							
+						}
+						else{
+							foreach($arrAllRecipientIds['recipientIds'] as $recipientsUserId){
+								if($recipientsUserId['userId']>0 && $recipientsUserId['userId']!=$userId){
+									$values[] = "('".$nodeId."','".$post_type_id."','0','".$recipientsUserId['userId']."','".$userId."','".$delivery_status_id."','".$seen_status."','".$createdDate."','".$this->db->escape_str($data)."')"; 								
 								}
 							}
 						}
-					/*
-					if ($userId!=$recipients){
-						$values[] = "('".$nodeId."','".$post_type_id."','".$post_type_object_id."','".$recipients."','".$userId."','".$delivery_status_id."','".$seen_status."','".$createdDate."','".$this->db->escape_str($data)."')"; 	
 					}
-					$values[] = "('".$nodeId."','".$post_type_id."','".$post_type_object_id."','".$userId."','".$userId."','".$delivery_status_id."','".$seen_status."','".$createdDate."','".$this->db->escape_str($data)."')"; 	
-					*/
+					// For multiple spaces
+					if(count($arrAllRecipientIds['spaceIds'])>0){
+						$this->load->model('dal/identity_db_manager');	
+						foreach($arrAllRecipientIds['spaceIds'] as $spaceId){
+							$arrSpaceRecipients = array();
+							$arrSpaceRecipients = $this->identity_db_manager->getWorkSpaceMembersByWorkSpaceId($spaceId);
+							// Space members are recipients by default
+							foreach($arrSpaceRecipients as $recipientsUserId)
+							{ 
+								//if($recipientsUserId['userId']>0 && $recipientsUserId['userId']!=$_SESSION['userId']){
+								if($recipientsUserId['userId']>0){
+									$values[] = "('".$nodeId."','".$post_type_id."','".$spaceId."','".$recipientsUserId['userId']."','".$userId."','".$delivery_status_id."','".$seen_status."','".$createdDate."','".$this->db->escape_str($data)."')"; 	
+								}	
+							}	
+						}
+					}
 					$val = implode(',', $values);
 					$q = "INSERT INTO teeme_post_web_post_store (post_id,post_type_id,post_type_object_id,participant_id,sender_id,delivery_status_id,seen_status,sent_timestamp,data) VALUES $val";
 					$query = $this->db->query($q);
 				}
-				else if ($post_type_id==9){							
-					$arrPlaceUsers = array();
-					$this->load->model('dal/profile_manager');					
-					$arrPlaceUsers = $this->profile_manager->getAllUsersByWorkPlaceId($_SESSION['workPlaceId']);
+				else if ($post_type_id==9){	
+					if($is_forward==0){						
+						$arrPlaceUsers = array();
+						$this->load->model('dal/profile_manager');					
+						$arrPlaceUsers = $this->profile_manager->getAllUsersByWorkPlaceId($_SESSION['workPlaceId']);
+							
 						if (count($arrPlaceUsers)>0 && $workSpaceId>0){
-							foreach($arrPlaceUsers  as $keyVal=>$arrVal){
-								$values[] = "('".$nodeId."','".$post_type_id."','".$post_type_object_id."','".$arrVal['userId']."','".$userId."','".$delivery_status_id."','".$seen_status."','".$createdDate."','".$this->db->escape_str($data)."')"; 	
-							}					
+								foreach($arrPlaceUsers  as $keyVal=>$arrVal){
+									$values[] = "('".$nodeId."','".$post_type_id."','".$post_type_object_id."','".$arrVal['userId']."','".$userId."','".$delivery_status_id."','".$seen_status."','".$createdDate."','".$this->db->escape_str($data)."')"; 	
+								}					
 						}
+					}
+					// For multiple individual recipients
+					if(count($arrAllRecipientIds['recipientIds'])>0){
+						$arrPlaceUsers = array();
+						$this->load->model('dal/profile_manager');
+						//if ($workSpaceId>0){
+						if ($post_type_object_id>0){
+							$arrPlaceUsers = $this->profile_manager->getAllUsersByWorkPlaceId($_SESSION['workPlaceId']);
+							foreach($arrPlaceUsers  as $keyVal=>$arrVal){
+								if(in_array($arrVal['userId'],$arrAllRecipientIds['recipientIds'])){
+									if ($workSpaceId>0){
+										$values[] = "('".$nodeId."','".$post_type_id."','".$arrVal['userId']."','".$arrVal['userId']."','".$userId."','".$delivery_status_id."','".$seen_status."','".$createdDate."','".$this->db->escape_str($data)."')"; 	
+									}
+									else {
+										$values[] = "('".$nodeId."','".$post_type_id."','0','".$arrVal['userId']."','".$userId."','".$delivery_status_id."','".$seen_status."','".$createdDate."','".$this->db->escape_str($data)."')"; 	
+									}
+								}
+								else if ((!in_array($arrVal['userId'],$arrAllRecipientIds['recipientIds'])) && (!in_array($arrVal['userId'],$arrSpaceRecipientIds))) {
+									if ($workSpaceId>0){
+										$values[] = "('".$nodeId."','".$post_type_id."','".$userId."','".$arrVal['userId']."','".$userId."','".$delivery_status_id."','".$seen_status."','".$createdDate."','".$this->db->escape_str($data)."')"; 							
+									}
+									else{
+										$values[] = "('".$nodeId."','".$post_type_id."','0','".$arrVal['userId']."','".$userId."','".$delivery_status_id."','".$seen_status."','".$createdDate."','".$this->db->escape_str($data)."')"; 	
+									}
+								}
+							}							
+						}
+						else{
+							foreach($arrAllRecipientIds['recipientIds'] as $recipientsUserId){
+								if($recipientsUserId['userId']>0 && $recipientsUserId['userId']!=$userId){
+									$values[] = "('".$nodeId."','".$post_type_id."','0','".$recipientsUserId['userId']."','".$userId."','".$delivery_status_id."','".$seen_status."','".$createdDate."','".$this->db->escape_str($data)."')"; 								
+								}
+							}
+						}
+					}
+					// For multiple spaces
+					if(count($arrAllRecipientIds['spaceIds'])>0){
+						$this->load->model('dal/identity_db_manager');	
+						foreach($arrAllRecipientIds['spaceIds'] as $spaceId){
+							$arrSpaceRecipients = array();
+							$arrSpaceRecipients = $this->identity_db_manager->getWorkSpaceMembersByWorkSpaceId($spaceId);
+							// Space members are recipients by default
+							foreach($arrSpaceRecipients as $recipientsUserId)
+							{ 
+								//if($recipientsUserId['userId']>0 && $recipientsUserId['userId']!=$_SESSION['userId']){
+								if($recipientsUserId['userId']>0){
+									$values[] = "('".$nodeId."','".$post_type_id."','".$spaceId."','".$recipientsUserId['userId']."','".$userId."','".$delivery_status_id."','".$seen_status."','".$createdDate."','".$this->db->escape_str($data)."')"; 	
+								}	
+							}	
+						}
+					}
 					$val = implode(',', $values);
 					$q = "INSERT INTO teeme_post_web_post_store (post_id,post_type_id,post_type_object_id,participant_id,sender_id,delivery_status_id,seen_status,sent_timestamp,data) VALUES $val";
 					$query = $this->db->query($q);				

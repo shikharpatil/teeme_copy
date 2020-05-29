@@ -1508,14 +1508,14 @@ $(document).ready(function()
 		<!--Changed by Dashrath- add handCursor class in div for editor content line spacing issue-->
 		<div id="TimelineEditor" class="timeline_editor modal" style="display:none;">			
 			<form name="formTimeline" class="modal-content" id="formTimeline" method="post" action="">
-				<span id="postFormHeader"></span>
 				<span class="close">&times;</span>
-				 <textarea name="replyDiscussion" id="replyDiscussion"></textarea>
-				 <input name="list" value="" id="list" type="hidden" />
-				 <input name="listSpaces" value="" id="listSpaces" type="hidden" />
-				 <input name="listSubSpaces" value="" id="listSubSpaces" type="hidden" />
-				 <input name="listGroup" value="" id="listGroup" type="hidden" />
-				 <!--Myspace select recepient code start-->
+				<span id="postFormHeader"></span>				
+				<textarea name="replyDiscussion" id="replyDiscussion"></textarea>
+				<input name="list" value="" id="list" type="hidden" />
+				<input name="listSpaces" value="" id="listSpaces" type="hidden" />
+				<input name="listSubSpaces" value="" id="listSubSpaces" type="hidden" />
+				<input name="listGroup" value="" id="listGroup" type="hidden" />
+				<!--Myspace select recepient code start-->
 				 
 				 
 				<?php
@@ -1699,6 +1699,7 @@ $(document).ready(function()
 				 <input type="hidden" name="publicPost" value="<?php echo $_SESSION['public']; ?>" id="publicPost">
 				 <input type="hidden" name="post_type_id" value="<?php echo $post_type_id;?>" id="post_type_id">
 				 <input type="hidden" name="post_type_object_id" value="<?php echo $post_type_object_id;?>" id="post_type_object_id">
+				 <input type="hidden" name="isForward" value="0" id="isForward">
 				 <input name="editorname1" id="editorname1" type="hidden"  value="replyDiscussion">
 				<?php /*?><div class="timelineExpiryDate" style="float:left; padding-left:20px;">
 					Expiry Date: <input name="timeline_exp_date" type="text"  id="timeline_exp_date" class="timelineExpDate" value="" readonly>
@@ -1900,9 +1901,10 @@ function insertTimeline()
 		{
 			var spaceRecipients=document.getElementById("listSpaces").value.split(",");
 		}
+		var is_forward = document.getElementById("isForward").value;
 		//alert (recipients); return false;
 		//data_user = data_user+'&replyDiscussion='+encodeURIComponent(getvalue)+'&recipients='+recipients+'&groupRecipients='+groupRecipients; 
-		data_user = data_user+'&replyDiscussion='+encodeURIComponent(getvalue)+'&recipients='+recipients+'&groupRecipients='+groupRecipients+'&spaceRecipients='+spaceRecipients; 
+		data_user = data_user+'&replyDiscussion='+encodeURIComponent(getvalue)+'&recipients='+recipients+'&groupRecipients='+groupRecipients+'&spaceRecipients='+spaceRecipients+'&is_forward='+is_forward; 
 		//var pnodeId=$("#pnodeId").val();
 		var request = $.ajax({
 			  url: baseUrl+"post/insert_timeline_web/",
@@ -1917,8 +1919,9 @@ function insertTimeline()
 				 {
 					// $('#TimelinePost').html(result);
 					$('#postArea').html(result);
-					$("#showMan").hide();
-					$("#showManSpaces").hide();
+					//$("#showMan").hide();
+					//$("#showManSpaces").hide();
+					
 					 if($('#TimelineEditor').is(':visible'))
 					 {
 						$("#TimelineEditor").hide();
@@ -1927,11 +1930,14 @@ function insertTimeline()
 						$("#buttons").html("");
 						document.getElementById('formTimeline').reset();
 						$('#checkAll').prop("checked",false);
+						$('#checkAllSpaces').prop("checked",false);
 						$('.clsChecks').prop("checked",false);
+						$('.clsCheckSpace').prop("checked",false);
 						$('.sol-current-selection').html('');
-						$('.sol-current-selection-groups').html('');
+						//$('.sol-current-selection-groups').html('');
 						$('.sol-current-selection-spaces').html('');
 					 }
+					 return true;
 				 }
 				  /*if(result=='0'){
 				  	jAlert('No Post Found');return;
@@ -2170,19 +2176,31 @@ function showTimelineEditor(data='')
 		$(".fr-element").html("");
 		document.getElementById('formTimeline').reset();
 		$('#checkAll').prop("checked",false);
+		$('#checkAllSpaces').prop("checked",false);
 		$('.clsChecks').prop("checked",false);
+		$('.clsCheckSpace').prop("checked",false);
 		$('.sol-current-selection').html('');
 		$("#list").val("");
-		$("#showMan").hide();
-		$("#showManSpaces").hide();
+		//$("#showMan").hide();
+		//$("#showManSpaces").hide();
 		$("#multipleRecipientArea").hide();
 		$("#multipleSpaceRecipientArea").hide();
+		$("#list").val('');
+		$("#listSpaces").val('');
+		$("#listSubSpaces").val('');
 	}
 	else
 	{
 		$("#newPostCommentMessage").hide();	
 		$("#TimelineEditor").show();
+		$("#list").val('');
+		$("#listSpaces").val('');
+		$("#listSubSpaces").val('');
+		//$("#listGroups").val('');
+
+
 		chnage_textarea_to_editor('replyDiscussion');
+
 		if(data!=''){
 			setValueIntoEditor('replyDiscussion',data);
 			$("#multiSend").show();
@@ -2192,6 +2210,7 @@ function showTimelineEditor(data='')
 			$('#postSubmitButton').prop("value", "Post");
 			$("#replyDiscussion").froalaEditor('edit.on');
 			$("#replyDiscussion").froalaEditor('toolbar.show');
+			$('#isForward').prop("value", "0");
 			setValueIntoEditor('replyDiscussion','');
 			<?php if($_SESSION['active_view']=='space'){?>
 				$("#multiSend").hide();
@@ -2207,6 +2226,7 @@ function forwardPost(data){
 	$("#replyDiscussion").froalaEditor('toolbar.hide');
 	$("#postFormHeader").html('<b>Forward post</b><br><br>');	
 	$('#postSubmitButton').prop("value", "Forward");
+	$('#isForward').prop("value", "1");
 }
 //check all function start
 

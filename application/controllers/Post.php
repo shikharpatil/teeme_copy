@@ -4016,6 +4016,7 @@ class Post extends CI_Controller {
 				$post_type_id=$this->input->post('post_type_id');
 				$post_type_object_id=$this->input->post('post_type_object_id');
 				$post_content=trim($this->input->post($this->input->post('editorname1')));
+				$is_forward=$this->input->post('is_forward');
 
 				//allspace 1 for myspace and 2 for public space
 				//My space recepients start
@@ -4133,7 +4134,7 @@ class Post extends CI_Controller {
 				{
 					$postCreatedDate=$objTime->getGMTTime();
 					//$postNodeId	= $this->timeline_db_manager->insert_timeline_web($treeId,$this->input->post($this->input->post('editorname1')),$_SESSION['userId'],$postCreatedDate,0,0,$workSpaceId,$workSpaceType,$recipients);	
-					$postNodeId	= $this->timeline_db_manager->insert_timeline_web($treeId,$post_content,$_SESSION['userId'],$postCreatedDate,0,0,$workSpaceId,$workSpaceType,$arrAllRecipientIds,'','',1,1,0,$post_type_id,$post_type_object_id);	
+					$postNodeId	= $this->timeline_db_manager->insert_timeline_web($treeId,$post_content,$_SESSION['userId'],$postCreatedDate,0,0,$workSpaceId,$workSpaceType,$arrAllRecipientIds,'','',1,1,0,$post_type_id,$post_type_object_id,1,0,'',$is_forward);	
 							
 					//echo "<li>postnodeid= " .$postNodeId; exit;
 					//$groupSharedId = $this->identity_db_manager->add_group_recipients($postNodeId,$workSpaceId,$groupRecipients,$groupUserRecipients);	
