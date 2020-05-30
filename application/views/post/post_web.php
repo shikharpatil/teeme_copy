@@ -2226,7 +2226,9 @@ function forwardPost(data){
 	$("#replyDiscussion").froalaEditor('toolbar.hide');
 	$("#postFormHeader").html('<b>Forward post</b><br><br>');	
 	$('#postSubmitButton').prop("value", "Forward");
-	$('#isForward').prop("value", "1");
+	$('#isForward').prop("value", "1");//Yes it's a forward
+	$('#post_type_id').prop("value", "5");//Global post
+	$('#post_type_object_id').prop("value", "");//Global post
 }
 //check all function start
 
