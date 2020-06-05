@@ -499,7 +499,7 @@ $(document).ready(function()
 				if ($showSearchBox)	
 				{
 				?>
-					<input type="text" name="search" id="search" value="" placeholder="Search users..."  onKeyUp="showSearchUser()" onclick="removeSearh()" onblur="writeSearh()" style="width:95%"/>
+					<input type="text" name="search" id="search" value="" placeholder="Search..."  onKeyUp="showSearchUser()" onclick="removeSearh()" onblur="writeSearh()" style="width:95%"/>
 				<?php
 				}
 				?>
@@ -915,7 +915,7 @@ $(document).ready(function()
 		<?php
 			}
 		}
-		if(($this->uri->segment('5') == 'space' || $this->uri->segment('5') == 'space_ex' || $this->uri->segment('5') == 'subspace') && ($this->uri->segment('6')==$workSpaceId))
+		else if(($this->uri->segment('5') == 'space' || $this->uri->segment('5') == 'space_ex' || $this->uri->segment('5') == 'subspace') && ($this->uri->segment('6')==$workSpaceId))
 		{
 			if($this->uri->segment('6')>0)
 			{ 				
@@ -959,7 +959,7 @@ $(document).ready(function()
 			<?php
 			}
 		}
-		if($this->uri->segment('5') == 'public')
+		elseif($this->uri->segment('5') == 'public')
 		{
 			//if((isset($_SESSION['WSManagerAccess']) && $_SESSION['WSManagerAccess'] == 1) || (isset($_SESSION['workPlaceManagerName']) && $_SESSION['workPlaceManagerName']!='')) 
 			if((isset($_SESSION['workPlaceManagerName']) && $_SESSION['workPlaceManagerName']!='')) 
@@ -971,6 +971,13 @@ $(document).ready(function()
 			</div>	
 		<?php
 			}
+		}
+		else{
+		?>
+			<div class="postAddIcon" id="myBtn">
+			<a id="add" style="cursor:pointer;" onclick="showTimelineEditor();"><img border="0" title="Add" src="<?php echo base_url(); ?>/images/addnew.png" ></a>
+			</div>
+		<?php
 		}
 		?>
 		<!--Plus icon for public post end here-->
@@ -997,15 +1004,18 @@ $(document).ready(function()
 			<?php 
 			} 
 		} 	
-		*/		
-		if($_SESSION['all'] && !$_SESSION['public'] && $this->uri->segment('5')!='bookmark' && $this->uri->segment('5')!='space' && $this->uri->segment('5')!='one'){ ?>
+		*/
+		/*		
+		if($_SESSION['all'] && !$_SESSION['public'] && $this->uri->segment('5')!='bookmark' && $this->uri->segment('5')!='space' && $this->uri->segment('5')!='one'){ 			
+		?>
 			<?php //if($this->uri->segment('5')!='bookmark' && $_SESSION['userId']==$post_type_object_id){ 
 				?>
 				<div class="postAddIcon" id="myBtn">
 				<a id="add" style="cursor:pointer;" onclick="showTimelineEditor();"><img border="0" title="Add" src="<?php echo base_url(); ?>/images/addnew.png" ></a>
 				</div>
 			<?php 
-		} 			
+		} 
+		*/			
 		?>
 		<!--Plus icon end here-->
 		</div>
@@ -1506,9 +1516,12 @@ $(document).ready(function()
 			
 		<!--Timeline editor start here-->
 		<!--Changed by Dashrath- add handCursor class in div for editor content line spacing issue-->
-		<div id="TimelineEditor" class="timeline_editor modal" style="display:none;">			
-			<form name="formTimeline" class="modal-content" id="formTimeline" method="post" action="">
-				<span class="close">&times;</span>
+		<!-- Parv: uncomment below two lines for modal UI instead of talk window UI
+			<div id="TimelineEditor" class="timeline_editor modal" style="display:none;">			
+			<form name="formTimeline" class="modal-content" id="formTimeline" method="post" action="">-->
+			<div id="TimelineEditor" style="display:none;">			
+			<form name="formTimeline" id="formTimeline" method="post" action="">
+				<!--<span class="close">&times;</span>-->
 				<span id="postFormHeader"></span>				
 				<textarea name="replyDiscussion" id="replyDiscussion"></textarea>
 				<input name="list" value="" id="list" type="hidden" />
@@ -1567,9 +1580,9 @@ $(document).ready(function()
 						<div style="margin-top:1%;">
 							<div style="width:50%; float:left;">						
 								<?php
-								echo "Send to multiple spaces: "; 
+								//echo "Send to multiple spaces: "; 
 								?>
-								<input type="text" id="searchSpaces" name="searchSpaces" onKeyUp="searchUserSpaces()" size="50" placeholder="Search..."/>						
+								<input type="text" id="searchSpaces" name="searchSpaces" onKeyUp="searchUserSpaces()" size="50" placeholder="Send to multiple spaces..."/>						
 								<div id="showManSpaces">
 									<?php if(count($userAllSpaces)>0){ ?>			
 									<input type="checkbox" name="checkAllSpaces" id="checkAllSpaces" onclick="checkAllUserSpaces();" />		
@@ -1604,9 +1617,9 @@ $(document).ready(function()
 								<?php
 								//echo 'Send to multiple: '." : <br><br>"; 
 								//echo $this->lang->line('txt_Search')." : "; 
-								echo "Send to multiple users: "; 
+								//echo "Send to multiple users: "; 
 								?>
-								<input type="text" id="searchTags" name="searchTags" onKeyUp="showTags()" size="50" placeholder="Search..."/>
+								<input type="text" id="searchTags" name="searchTags" onKeyUp="showTags()" size="50" placeholder="Send to multiple users..."/>
 							
 								<div id="showMan">
 							
@@ -1747,11 +1760,22 @@ $(document).ready(function()
 <?php //$this->load->view('common/datepicker_js.php'); ?>
 <script>
 $(document).ready(function(){
-	//$("#showMan").hide();
-	//$("#showManSpaces").hide();
-	<?php if($_SESSION['active_view']=='space'){?>
+	$("#showMan").hide();
+	$("#showManSpaces").hide();
+	<?php if($_SESSION['active_view']=='space' || isset($_SESSION['public'])){?>
 		$("#multiSend").hide();
+		<?php if(!isset($_SESSION['public'])){?>
+			document.getElementById("postArea").style.width = '64%';
+			//$('.post_web_tab_menu_tab').css('width', '22%');
+		<?php }?>
+	<?php }else{?>
+		document.getElementById("postArea").style.width = '73%';
+		//$('.post_web_tab_menu_tab').css('width', '25%');	
+		setLeftMenuSideBarCookie(1);	
 	<?php } ?>
+
+
+	
 	$(window).scroll(function(){
       if ($(this).scrollTop() > 60) {
           	$('#postTabUI').addClass('postTabUIFixed');
@@ -1829,6 +1853,7 @@ $(document).ready(function(){
   //leftMenuHideShow();
   //document.getElementById("leftSideBar").style.display = "none";
   //document.getElementById("rightSideBar").style.width = "100%";
+
 
   	var workSpaceId = '<?php echo $workSpaceId;?>';
 	var workSpaceType = '<?php echo $workSpaceType;?>';
@@ -1937,6 +1962,7 @@ function insertTimeline()
 						//$('.sol-current-selection-groups').html('');
 						$('.sol-current-selection-spaces').html('');
 					 }
+					 closeNewPostWindow();
 					 return true;
 				 }
 				  /*if(result=='0'){
@@ -2170,6 +2196,8 @@ function showTimelineEditor(data='')
 {
 	if($('#TimelineEditor').is(':visible'))
 	{
+		alert('There is already a window open.');
+		return false;
 		$("#TimelineEditor").hide();
 		$("#searchTags").val("");
 		showTags();
@@ -2180,9 +2208,8 @@ function showTimelineEditor(data='')
 		$('.clsChecks').prop("checked",false);
 		$('.clsCheckSpace').prop("checked",false);
 		$('.sol-current-selection').html('');
-		$("#list").val("");
-		//$("#showMan").hide();
-		//$("#showManSpaces").hide();
+		$("#showMan").hide();
+		$("#showManSpaces").hide();
 		$("#multipleRecipientArea").hide();
 		$("#multipleSpaceRecipientArea").hide();
 		$("#list").val('');
@@ -2193,11 +2220,12 @@ function showTimelineEditor(data='')
 	{
 		$("#newPostCommentMessage").hide();	
 		$("#TimelineEditor").show();
+		$("#showMan").hide();
+		$("#showManSpaces").hide();
 		$("#list").val('');
 		$("#listSpaces").val('');
 		$("#listSubSpaces").val('');
 		//$("#listGroups").val('');
-
 
 		chnage_textarea_to_editor('replyDiscussion');
 
@@ -2216,7 +2244,11 @@ function showTimelineEditor(data='')
 				$("#multiSend").hide();
 			<?php } ?>
 		}
+		openNewPostWindow();
+		$("#myBtn").hide();
 	}
+	
+	
 }
 
 function forwardPost(data){
@@ -2507,7 +2539,7 @@ function showSearchUser()
 			$("#post_web_sidebar_loader").hide();
 			//$('#divChats').html(res[1]);		
 			/*$('#divSearchUser').html(res[0]);*/
-			//console.log('space_search= '+res[2]);
+			//console.log('results= '+res[2]);
 
 			$('#divSearchResult').html('<b>Search results</b><br>'+res[2]);
 		}
@@ -2749,8 +2781,32 @@ function findNewPostComment()
 						$('.newPostMsg').html('<span>New posts are available</span>');
 					}else if(data['countIncrease']=='comments'){
 						$('.newPostMsg').html('<span>New comments are available</span>');
-					}else{
+					}else if(data['countIncrease']=='tags'){
+						$('.newPostMsg').html('<span>New tags are available</span>');
+					}else if(data['countIncrease']=='links'){
+						$('.newPostMsg').html('<span>New links are available</span>');
+					}else if(data['countIncrease']=='tags-links'){
+						$('.newPostMsg').html('<span>New tags and links are available</span>');
+					}else if(data['countIncrease']=='comments-tags'){
+						$('.newPostMsg').html('<span>New comments and tags are available</span>');
+					}else if(data['countIncrease']=='comments-links'){
+						$('.newPostMsg').html('<span>New comments and links are available</span>');
+					}else if(data['countIncrease']=='posts-tags'){
+						$('.newPostMsg').html('<span>New posts and tags are available</span>');
+					}else if(data['countIncrease']=='posts-links'){
+						$('.newPostMsg').html('<span>New posts and links are available</span>');
+					}else if(data['countIncrease']=='posts-comments'){
 						$('.newPostMsg').html('<span>New posts and comments are available</span>');
+					}else if(data['countIncrease']=='posts-comments-links'){
+						$('.newPostMsg').html('<span>New posts, comments and links are available</span>');
+					}else if(data['countIncrease']=='posts-comments-tags'){
+						$('.newPostMsg').html('<span>New posts, comments and tags are available</span>');
+					}else if(data['countIncrease']=='posts-links-tags'){
+						$('.newPostMsg').html('<span>New posts, links and tags are available</span>');
+					}else if(data['countIncrease']=='comments-links-tags'){
+						$('.newPostMsg').html('<span>New comments, links and tags are available</span>');
+					}else if(data['countIncrease']=='all'){
+						$('.newPostMsg').html('<span>New posts, comments, links and tags are available</span>');
 					}
 					//console.log('nodes= '+data['nodes']);
 					$.each(data['nodes'], function(i, node) {
@@ -3127,7 +3183,7 @@ function getPostUserStatus()
 { 
 	var workSpaceId = '<?php echo $workSpaceId;?>';
 	var workSpaceType = '<?php echo $workSpaceType;?>';
-	var toMatch = document.getElementById('search').value;
+	//var toMatch = document.getElementById('search').value;
 	<?php 
 		if($workSpaceType==1 && $this->uri->segment(5)=='space' && $workSpaceId==$this->uri->segment(6)){
 			$active_view = 'space';
@@ -3142,7 +3198,7 @@ function getPostUserStatus()
 		$.ajax({
 			type: "POST",
 			url: baseUrl+"post/getPostUserStatusWeb/"+workSpaceId+"/type/"+workSpaceType+"/active_view/"+active_view,
-			data: 'search='+toMatch,
+			//data: 'search='+toMatch,
 			dataType: 'html',
 			async: true,
 			success:  function(data){				
@@ -3243,7 +3299,7 @@ function searchGroups()
 	}
 	}
 }
-
+/* Parv: Uncomment below for modal UI instead of talk window UI
 // Get the modal
 //var modal = document.getElementById("myModal");
 var modal = document.getElementById("TimelineEditor");
@@ -3270,6 +3326,7 @@ window.onclick = function(event) {
     modal.style.display = "none";
   }
 }
+*/
 </script>
 </body>
 </html>

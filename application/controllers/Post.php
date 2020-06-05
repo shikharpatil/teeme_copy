@@ -3374,8 +3374,11 @@ class Post extends CI_Controller {
 					//echo "<pre>";print_r($arrDetails['workSpaceMembers']);exit;
 				}
 				$arrDetails['workPlaceMembers']= $this->profile_manager->getAllUsersByWorkPlaceId($_SESSION['workPlaceId'], $this->input->post('search'));
-				$arrDetails['userAllSpaces']	= $objIdentity->getAllWorkSpacesByWorkPlaceId($_SESSION['workPlaceId'],$_SESSION['userId'],0,$this->input->post('search'));
-				$arrDetails['userAllSubSpaces']	= $objIdentity->getAllSubSpacesByWorkPlaceId($_SESSION['workPlaceId'],$_SESSION['userId'],0,$this->input->post('search'));
+				if ($active_view!='space'){
+					$arrDetails['userAllSpaces']	= $objIdentity->getAllWorkSpacesByWorkPlaceId($_SESSION['workPlaceId'],$_SESSION['userId'],0,$this->input->post('search'));
+					$arrDetails['userAllSubSpaces']	= $objIdentity->getAllSubSpacesByWorkPlaceId($_SESSION['workPlaceId'],$_SESSION['userId'],0,$this->input->post('search'));
+				}
+				$arrDetails['userActivePosts'] = $this->timeline_db_manager->getUserActivePostsByUserId($_SESSION['userId'],$active_view,$workSpaceId,$workSpaceType,$this->input->post('search'));
 			}
 			else{
 				if ($workSpaceType==2)
@@ -3392,8 +3395,11 @@ class Post extends CI_Controller {
 					//echo "<pre>active view= ".$active_view;print_r($arrDetails['workSpaceMembers']);exit;
 				}
 				$arrDetails['workPlaceMembers']= $this->profile_manager->getAllUsersByWorkPlaceId($_SESSION['workPlaceId']);
-				$arrDetails['userAllSpaces']	= $objIdentity->getAllWorkSpacesByWorkPlaceId($_SESSION['workPlaceId'],$_SESSION['userId']);
-				$arrDetails['userAllSubSpaces']	= $objIdentity->getAllSubSpacesByWorkPlaceId($_SESSION['workPlaceId'],$_SESSION['userId']);
+				if ($active_view!='space'){
+					$arrDetails['userAllSpaces']	= $objIdentity->getAllWorkSpacesByWorkPlaceId($_SESSION['workPlaceId'],$_SESSION['userId']);
+					$arrDetails['userAllSubSpaces']	= $objIdentity->getAllSubSpacesByWorkPlaceId($_SESSION['workPlaceId'],$_SESSION['userId']);
+				}
+				$arrDetails['userActivePosts'] = $this->timeline_db_manager->getUserActivePostsByUserId($_SESSION['userId'],$active_view,$workSpaceId,$workSpaceType);
 			}	
 
 			
@@ -3418,7 +3424,7 @@ class Post extends CI_Controller {
 			}		
 			
 			$arrDetails['myProfileDetail']= $this->profile_manager->getUserDetailsByUserId($_SESSION['userId']);
-			$arrDetails['userActivePosts'] = $this->timeline_db_manager->getUserActivePostsByUserId($_SESSION['userId'],$active_view,$workSpaceId,$workSpaceType);
+			//$arrDetails['userActivePosts'] = $this->timeline_db_manager->getUserActivePostsByUserId($_SESSION['userId'],$active_view,$workSpaceId,$workSpaceType);
 			
 			
 			/*Added for checking device type start*/
@@ -4017,6 +4023,58 @@ class Post extends CI_Controller {
 				$post_type_object_id=$this->input->post('post_type_object_id');
 				$post_content=trim($this->input->post($this->input->post('editorname1')));
 				$is_forward=$this->input->post('is_forward');
+				$allowAddPost=1;// If it's a space, subspace or space external post, we need this.
+
+				// If the post is made from a space, we check whether the user has privileges to post in that space, if not we convert the post to a global post
+				if ($post_type_object_id>0 && ($post_type_id==2 || $post_type_id==3 || $post_type_id==9)){
+					if ($post_type_id==3){
+						$arrSubSpaceProfileMembers = array();
+						$arrSubSpaceProfileMembers = $this->identity_db_manager->getSubWorkSpaceMembersBySubWorkSpaceId($post_type_object_id);
+						$arrSubSpaceProfileMembersIds = array();
+							foreach($arrSubSpaceProfileMembers as $key=>$val){
+								$arrSubSpaceProfileMembersIds[] = $val['userId'];
+							}
+							if(in_array($_SESSION['userId'],$arrSubSpaceProfileMembersIds)){
+								$arrDetails['isSubSpaceProfileMember']=1;
+							}
+							else{
+								$arrDetails['isSubSpaceProfileMember']=0;
+							}
+
+						if($isSubSpaceProfileMember){$allowAddPost=1;}
+						else{$allowAddPost=0;}
+					}
+					else if ($post_type_id==9){
+						if ($this->identity_db_manager->getManagerStatus($_SESSION['userId'], $post_type_object_id, 3)){
+							$allowAddPost=1;
+						}
+						else{
+							$allowAddPost=0;
+						}
+					}
+					elseif ($post_type_id==2){
+						$arrSpaceProfileMembers = array();
+						$arrSpaceProfileMembers = $this->identity_db_manager->getWorkSpaceMembersByWorkSpaceId($post_type_object_id);
+						$arrSpaceProfileMembersIds = array();
+							foreach($arrSpaceProfileMembers as $key=>$val){
+								$arrSpaceProfileMembersIds[] = $val['userId'];
+							}
+							if(in_array($_SESSION['userId'],$arrSpaceProfileMembersIds)){
+								$isSpaceProfileMember=1;
+							}
+							else{
+								$isSpaceProfileMember=0;
+							}
+
+						if($isSpaceProfileMember){$allowAddPost=1;}
+						else{$allowAddPost=0;}
+					}	
+				}
+				// If post arrives from starred(6) or parked(8), we treat it as a global post (i.e. arriving as 'home' post type) 
+				if ($post_type_id==6 || $post_type_id==8 || $allowAddPost==0){
+					$post_type_id=5;
+					$post_type_object_id='';
+				}			
 
 				//allspace 1 for myspace and 2 for public space
 				//My space recepients start
@@ -4813,6 +4871,8 @@ class Post extends CI_Controller {
 			$i=1;
 			$postCount=0;
 			$commentCount=0;
+			$linkCount=0;
+			$tagCount=0;
 			if(count($arrTimeline) > 0)
 			{		
 				$nodeIdArray = array();
@@ -4933,20 +4993,22 @@ class Post extends CI_Controller {
 							}
 						}
 						/*}*/
-						/*
+						
 						//Link update
 						$postLinkOldCount = $treeLinkedArray[$arrVal['nodeId']];
 						$postLinkCount = $this->identity_db_manager->getLinkedPostsByNodeId($arrVal['nodeId'],'tree');
 						if($postLinkOldCount>$postLinkCount || $postLinkOldCount<$postLinkCount)
 						{
-							$postCount+=$i;
+							//$postCount+=$i;
+							$linkCount+=$i;
 							$nodeIdArray[]=$arrVal['nodeId'];
 						}
 						$postLinkOldCount = $fileLinkedArray[$arrVal['nodeId']];
 						$postLinkCount = $this->identity_db_manager->getLinkedPostsByNodeId($arrVal['nodeId'],'file');
 						if($postLinkOldCount>$postLinkCount || $postLinkOldCount<$postLinkCount)
 						{
-							$postCount+=$i;
+							//$postCount+=$i;
+							$linkCount+=$i;
 							$nodeIdArray[]=$arrVal['nodeId'];
 						}
 						//file link end
@@ -4956,7 +5018,8 @@ class Post extends CI_Controller {
 						$postLinkCount = $this->identity_db_manager->getLinkedPostsByNodeId($arrVal['nodeId'],'folder');
 						if($postLinkOldCount>$postLinkCount || $postLinkOldCount<$postLinkCount)
 						{
-							$postCount+=$i;
+							//$postCount+=$i;
+							$linkCount+=$i;
 							$nodeIdArray[]=$arrVal['nodeId'];
 						}
 						//Dashrath- code end
@@ -4965,7 +5028,8 @@ class Post extends CI_Controller {
 						$postLinkCount = $this->identity_db_manager->getLinkedPostsByNodeId($arrVal['nodeId'],'url');
 						if($postLinkOldCount>$postLinkCount || $postLinkOldCount<$postLinkCount)
 						{
-							$postCount+=$i;
+							//$postCount+=$i;
+							$linkCount+=$i;
 							$nodeIdArray[]=$arrVal['nodeId'];
 						}
 						//url link end
@@ -4973,11 +5037,12 @@ class Post extends CI_Controller {
 						$postTagCount = $this->identity_db_manager->getTaggedPostByNodeId($arrVal['nodeId']);
 						if($postTagOldCount>$postTagCount || $postTagOldCount<$postTagCount)
 						{
-							$postCount+=$i;
+							//$postCount+=$i;
+							$tagCount+=$i;
 							$nodeIdArray[]=$arrVal['nodeId'];
 						}
 						//Tag update end
-						*/
+						
 					}
 					//New comments code end
 					
@@ -4986,19 +5051,55 @@ class Post extends CI_Controller {
 				}
 			}
 			//if($postCount>0)
-			if($postCount>0 || $commentCount>0)
+			if($postCount>0 || $commentCount>0 || $linkCount || $tagCount)
 			{
 				$arrCommentStatus = array();
 				$nodeIdArray = array_map("unserialize", array_unique(array_map("serialize", $nodeIdArray)));
-					if($postCount>0 && $commentCount>0){
-						$arrCommentStatus['countIncrease'] = 'both';
+					if($postCount>0 && $commentCount>0 && $linkCount>0 && $tagCount>0){
+						$arrCommentStatus['countIncrease'] = 'all';
 					}
-					elseif($postCount>0 && $commentCount<=0){
+					elseif($postCount<=0 && $commentCount>0 && $linkCount>0 && $tagCount>0){
+						$arrCommentStatus['countIncrease'] = 'comments-links-tags';
+					}
+					elseif($postCount>0 && $commentCount<=0 && $linkCount>0 && $tagCount>0){
+						$arrCommentStatus['countIncrease'] = 'posts-links-tags';
+					}
+					elseif($postCount>0 && $commentCount>0 && $linkCount<=0 && $tagCount>0){
+						$arrCommentStatus['countIncrease'] = 'posts-comments-tags';
+					}
+					elseif($postCount>0 && $commentCount>0 && $linkCount>0 && $tagCount<=0){
+						$arrCommentStatus['countIncrease'] = 'posts-comments-links';
+					}	
+					elseif($postCount>0 && $commentCount>0 && $linkCount<=0 && $tagCount<=0){
+						$arrCommentStatus['countIncrease'] = 'posts-comments';
+					}		
+					elseif($postCount>0 && $commentCount<=0 && $linkCount>0 && $tagCount<=0){
+						$arrCommentStatus['countIncrease'] = 'posts-links';
+					}	
+					elseif($postCount>0 && $commentCount<=0 && $linkCount<=0 && $tagCount>0){
+						$arrCommentStatus['countIncrease'] = 'posts-tags';
+					}	
+					elseif($postCount<=0 && $commentCount>0 && $linkCount>0 && $tagCount<=0){
+						$arrCommentStatus['countIncrease'] = 'comments-links';
+					}	
+					elseif($postCount<=0 && $commentCount>0 && $linkCount<=0 && $tagCount>0){
+						$arrCommentStatus['countIncrease'] = 'comments-tags';
+					}	
+					elseif($postCount<=0 && $commentCount<=0 && $linkCount>0 && $tagCount>0){
+						$arrCommentStatus['countIncrease'] = 'tags-links';
+					}	
+					elseif($postCount>0 && $commentCount<=0 && $linkCount<=0 && $tagCount<=0){
 						$arrCommentStatus['countIncrease'] = 'posts';
-					}
-					elseif($postCount<=0 && $commentCount>0){
+					}		
+					elseif($postCount<=0 && $commentCount>0 && $linkCount<=0 && $tagCount<=0){
 						$arrCommentStatus['countIncrease'] = 'comments';
-					}
+					}	
+					elseif($postCount<=0 && $commentCount<=0 && $linkCount>0 && $tagCount<=0){
+						$arrCommentStatus['countIncrease'] = 'links';
+					}	
+					elseif($postCount<=0 && $commentCount<=0 && $linkCount<=0 && $tagCount>0){
+						$arrCommentStatus['countIncrease'] = 'tags';
+					}	
 				$arrCommentStatus['nodes'] =  $nodeIdArray;
 				//echo json_encode($nodeIdArray);
 				echo json_encode($arrCommentStatus);

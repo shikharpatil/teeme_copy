@@ -1091,6 +1091,39 @@ class timeline_db_manager extends CI_Model
 
 	}
 
+	// 1 for add, 0 for remove
+	public function add_remove_post_participant($post_type_id='-1',$post_type_object_id='-1',$arrMemberIds='',$add=1){
+		$arrPostIds = array();
+		$data='';
+		//$this->load->model('dal/identity_db_manager');
+		$this->load->model('dal/time_manager');
+		$createdDate=$this->time_manager->getGMTTime();
+		$q = "SELECT DISTINCT post_id,sender_id FROM teeme_post_web_post_store WHERE post_type_id='".$post_type_id."' AND post_type_object_id='".$post_type_object_id."'";
+		$query = $this->db->query($q);
+		$i=0;
+			foreach($query->result() as $row){		
+				$arrPost[$i]['post_id']=$row->post_id;	
+				$arrPost[$i]['sender_id']=$row->sender_id;	
+				$i++;			
+			}	
+			if($add==1){
+				foreach($arrPost as $arrKey=>$arrVal){
+					foreach($arrMemberIds as $member_id){
+						$values[] = "('".$arrVal['post_id']."','".$post_type_id."','".$post_type_object_id."','".$member_id."','".$arrVal['sender_id']."','1','0','".$createdDate."','".$this->db->escape_str($data)."')"; 				
+					}	
+				}	
+				$val = implode(',', $values);
+				$q = "INSERT INTO teeme_post_web_post_store (post_id,post_type_id,post_type_object_id,participant_id,sender_id,delivery_status_id,seen_status,sent_timestamp,data) VALUES $val";
+				$query = $this->db->query($q);	
+			}
+			elseif($add==0){
+				foreach($arrMemberIds as $member_id){
+					$q = "DELETE FROM teeme_post_web_post_store WHERE post_type_id='".$post_type_id."' AND post_type_object_id='".$post_type_object_id."' AND participant_id='".$member_id."'";
+					$query = $this->db->query($q);
+				}
+			}
+	}
+
 	public function get_timeline_web($treeId,$workSpaceId,$workSpaceType,$allSpace=0,$user_id=0,$post_type_id='-1',$post_type_object_id='-1')
 	{
 		$treeId = '0';	
@@ -1384,7 +1417,7 @@ class timeline_db_manager extends CI_Model
 		return $treeData;	
 
 	}
-	public function getUserActivePostsByUserId ($userId=0,$active_view='',$workSpaceId=0,$workSpaceType=1)
+	public function getUserActivePostsByUserId ($userId=0,$active_view='',$workSpaceId=0,$workSpaceType=1,$search='')
 	{
 		/*
 		$id = array();
@@ -1478,13 +1511,25 @@ class timeline_db_manager extends CI_Model
 			
 			if($workSpaceType==1 && $active_view=='space'){
 				//$q = "SELECT post_id FROM teeme_post_web_post_store WHERE participant_id='".$userId."' AND seen_status=0 AND post_type_id=2 AND post_type_object_id=$workSpaceId ORDER BY post_id DESC";
-				$q = "SELECT DISTINCT b.id as post_id FROM teeme_node a, teeme_leaf b, teeme_post_web_post_store c WHERE (c.post_id=a.id OR c.post_id=a.predecessor) AND c.participant_id='".$userId."' AND (b.id=a.leafId OR b.id=a.predecessor) AND a.treeIds=0 AND c.seen_status=0 AND c.post_type_id=2 AND c.post_type_object_id=$workSpaceId AND c.post_type_object_id=a.workSpaceId ORDER BY b.editedDate DESC";
+				$q = 'SELECT DISTINCT b.id as post_id FROM teeme_node a, teeme_leaf b, teeme_post_web_post_store c WHERE (c.post_id=a.id OR c.post_id=a.predecessor) AND c.participant_id='.$userId.' AND (b.id=a.leafId OR b.id=a.predecessor) AND a.treeIds=0 AND c.seen_status=0 AND c.post_type_id=2 AND c.post_type_object_id='.$workSpaceId.' AND c.post_type_object_id=a.workSpaceId';
+				if ($search!=''){
+					$q .= ' AND b.contents LIKE (\''.$search.'%\')';
+				}
+				$q .= ' ORDER BY b.editedDate DESC';
 			}
 			else{
-				$q = "SELECT post_id FROM teeme_post_web_post_store WHERE participant_id='".$userId."' AND seen_status=0 ORDER BY post_id DESC";
+				//$q = "SELECT post_id FROM teeme_post_web_post_store WHERE participant_id='".$userId."' AND seen_status=0 ORDER BY post_id DESC";
+				
+				$q = 'SELECT DISTINCT a.post_id FROM teeme_post_web_post_store a, teeme_leaf b WHERE a.participant_id='.$userId.' AND a.seen_status=0 AND a.post_id=b.id';
+				if ($search!=''){
+					$q .= ' AND b.contents LIKE (\'<p>'.$search.'%\')';
+				}
+				$q .= ' ORDER BY a.post_id DESC';
+				
 			}
-			
+
 			$query = $this->db->query($q);
+			//echo $q; exit;
 
 			if ($query->num_rows() > 0) {	
 				foreach($query->result() as $row){

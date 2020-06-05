@@ -591,7 +591,7 @@ if(disableEditor==0)
 	   
       //Changed by dashrath- change height 250 to 150
        height: 150,
-       width: '80%',
+       width: '98%',
 		  
 		  //imageUploadURL: baseUrl+'froala_editor/upload.php',
       imageUploadURL: baseUrl+'image_editing/imageUpload',
@@ -4527,7 +4527,8 @@ function startAudioRecord(editorId)
 //Manoj: Talk chat box code start
 
 $(document).ready(function(){
-	$("#container").append('<div id="mainTalkBox"><div class="otherarea"></div></div>');						   
+  $("#container").append('<div id="mainTalkBox"><div class="otherarea"></div></div>');	
+  $("#container").append('<div id="mainPostBox"><div class="otherarea2"></div></div>');		   
 });
 //Added by Dashrath- changed container id to newContainer
 //Commented by Dashrath- changed newContainer id to container
@@ -4720,28 +4721,28 @@ function talkOpen(leafTreeId,workSpaceId,workSpaceType,treeId,talkTitle,talkseed
 		{
 			urlLink = baseUrl+"view_talk_tree/node/"+leafTreeId+"/"+workSpaceId+"/type/"+workSpaceType+"/ptid/"+treeId+"?talkNodeId="+talkNodeId;
 		}
-	$.ajax({
+    $.ajax({
 
-		  type: 'POST',
-			
-		  url: urlLink,
-		  
-		  success: function(data){
-			  
-			 //alert(data);
-			 if($(".talk"+leafTreeId).length == 0)
-			 {
-				 $('.otherarea').append('<div class="talk'+leafTreeId+' abs"><div class="abs_head talk_head'+leafTreeId+'"><div class="talktxtTitle"><span class="shortTitle"><img src="'+baseUrl+'images/talk.gif" alt="Talk" border=0 ><b>'+talkShortTitle+'</b><span class="tooltip"><span id="tooltiptext'+leafTreeId+'" class="tooltiptext">'+talkhtmlTitle+'</span></span></span></div><div class="talkChatMinClose"><span class="talk_chat_close" onclick="closeTalkChat('+leafTreeId+','+talkNodeId+','+treeId+','+workSpaceId+','+artifactType+','+treeType+','+talkseed+')"><b>x </b>&nbsp;</span><span class="talk_chat_close talk_chat_size'+leafTreeId+'" onclick="hideTalkChat('+leafTreeId+','+talkNodeId+','+treeId+','+workSpaceId+','+artifactType+','+treeType+','+talkseed+')"><b>_ </b>&nbsp;&nbsp;</span></div></div><div class="'+className+' talk_content'+leafTreeId+'">'+data+'</div></div>');
-			 }
-			 
-			 if(talkseed!=1)
-			 {
-				$("#versionLoader"+talkNodeId).html("");
-			 }
-			
-			},
+        type: 'POST',
+        
+        url: urlLink,
+        
+        success: function(data){
+          
+        //alert(data);
+        if($(".talk"+leafTreeId).length == 0)
+        {
+          $('.otherarea').append('<div class="talk'+leafTreeId+' abs"><div class="abs_head talk_head'+leafTreeId+'"><div class="talktxtTitle"><span class="shortTitle"><img src="'+baseUrl+'images/talk.gif" alt="Talk" border=0 ><b>'+talkShortTitle+'</b><span class="tooltip"><span id="tooltiptext'+leafTreeId+'" class="tooltiptext">'+talkhtmlTitle+'</span></span></span></div><div class="talkChatMinClose"><span class="talk_chat_close" onclick="closeTalkChat('+leafTreeId+','+talkNodeId+','+treeId+','+workSpaceId+','+artifactType+','+treeType+','+talkseed+')"><b>x </b>&nbsp;</span><span class="talk_chat_close talk_chat_size'+leafTreeId+'" onclick="hideTalkChat('+leafTreeId+','+talkNodeId+','+treeId+','+workSpaceId+','+artifactType+','+treeType+','+talkseed+')"><b>_ </b>&nbsp;&nbsp;</span></div></div><div class="'+className+' talk_content'+leafTreeId+'">'+data+'</div></div>');
+        }
+        
+        if(talkseed!=1)
+        {
+          $("#versionLoader"+talkNodeId).html("");
+        }
+        
+        },
 
-		});
+      });
 	}
 	else
 	{
@@ -4755,6 +4756,38 @@ function talkOpen(leafTreeId,workSpaceId,workSpaceType,treeId,talkTitle,talkseed
 		$(".talk_head"+leafTreeId).removeClass('talkBlink');
 	}
 	//setInterval("testing("+leafTreeId+","+workSpaceId+","+workSpaceType+","+treeId+")",10000);
+}
+
+function openNewPostWindow(){
+  if($('.newPostWindow').length){
+    $(".newPostWindow").show();	
+  }else{
+    $('.otherarea2').append('<div class="newPostWindow abs2"><div class="abs_head post_head"><div class="talktxtTitle"><span class="shortTitle"><b>New post</b></div><div class="talkChatMinClose"><span class="talk_chat_close" onclick="closeNewPostWindow();"><b>&times;</b>&nbsp;</span><span class="talk_chat_close post_chat_size" onclick="minimizeMaximizeNewPostWindow()"><b>_ </b>&nbsp;&nbsp;</span></div></div><div id="newPostAdd" class="abs_content2 post_content"></div></div>');
+  }
+  $('#TimelineEditor').appendTo('#newPostAdd');
+  //$('#newPostAdd').append($('#TimelineEditor').clone());
+}
+function closeNewPostWindow(){
+  //$(".talkLoader"+leafTreeId).html("");
+  //$(".newPostWindow").remove();	 
+  $(".newPostWindow").hide();	
+  $("#myBtn").show();
+}
+function minimizeMaximizeNewPostWindow(){
+	if($(".post_content").is(":visible"))
+	{
+		$(".post_content").hide();	
+		$(".post_chat_size").html('<i class="fa fa-window-maximize" aria-hidden="true"></i>&nbsp;&nbsp;');
+		//$("#tooltiptext"+leafTreeId).removeClass('tooltiptext').addClass('tooltiptextBottom');
+		
+	}
+	else
+	{
+		$(".post_content").show();
+		$(".post_chat_size").html('<b>_ </b>&nbsp;&nbsp;');
+	//$("#tooltiptext"+leafTreeId).removeClass('tooltiptextBottom').addClass('tooltiptext');
+		//$(".post_head").removeClass('talkBlink');
+	}  
 }
 
 function CommentBoxOpen(nodeId,workSpaceId,workSpaceType,treeId,talkTitle,talkseed,talkhtmlTitle)

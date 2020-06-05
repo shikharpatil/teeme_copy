@@ -1,4 +1,4 @@
-<?php /*Copyright © 2008-2014. Team Beyond Borders Pty Ltd. All rights reserved.*/  ?><?php
+<?php /*Copyright ï¿½ 2008-2014. Team Beyond Borders Pty Ltd. All rights reserved.*/  ?><?php
 	/***********************************************************************************************************
 	*  *  *  *  *  *  *  *  *  *  *   I D E AV A T E   S O L U T I O N S   *  *  *  *  *  *  *  *   *
 	************************************************************************************************************
@@ -80,6 +80,7 @@ class Edit_workspace extends CI_Controller
 		else
 		{
 			$this->load->model('dal/identity_db_manager');
+			$this->load->model('dal/timeline_db_manager');
 			$objIdentity	= $this->identity_db_manager;				
 			$this->load->model('identity/teeme_managers');
 			$objTeemeManagers	= $this->teeme_managers;
@@ -97,9 +98,53 @@ class Edit_workspace extends CI_Controller
 			//$this->db->trans_begin();
 			$this->db->trans_start();
 
-			/*Added by Dashrath- Get workspace details for event data table*/
+			//Added by Dashrath- Get workspace details for event data table
 			$workSpaceDetails 	= $this->identity_db_manager->getWorkSpaceDetailsByWorkSpaceId($workSpaceId);
-			/*Dashrath- code end*/
+			//Dashrath- code end
+			$oldMemberIds = array();
+			$newMemberIds = array();
+			$arrOldWorkSpaceMembers = array();
+			$arrNewWorkSpaceMembers = array();
+			$membersToAdd = array();
+			$membersToRemove = array();
+
+			$arrOldWorkSpaceMembers = $this->identity_db_manager->getWorkSpaceMembersByWorkSpaceId($workSpaceId);
+				foreach($arrOldWorkSpaceMembers as $membersData){
+					$oldMemberIds[] = $membersData['userId'];
+				}
+			$arrNewWorkSpaceMembers = explode(',',$this->input->post('memberslist'));
+				foreach($arrNewWorkSpaceMembers as $workSpaceMemberId)
+				{
+					$newMemberIds[] = $workSpaceMemberId;
+				}
+			//echo "<pre>Old Members ids= "; print_r($oldMemberIds);
+			//echo "<pre>New Members ids= "; print_r($newMemberIds);
+			//exit;
+			
+
+				// Find newly added members
+				foreach($newMemberIds as $member){
+					if (!in_array($member,$oldMemberIds)){
+						//echo "<li>Added= ".$member;
+						$membersToAdd[] = $member;
+					}
+				}
+
+				// Find removed members
+				foreach($oldMemberIds as $member){
+					if (!in_array($member,$newMemberIds)){
+						//echo "<li>Removed= ".$member;
+						$membersToRemove[] = $member;
+					}
+				}
+				//echo "<pre>Members to remove= "; print_r($membersToRemove);			
+				//exit;
+				if(count($membersToAdd)>0){
+					$this->timeline_db_manager->add_remove_post_participant(2,$workSpaceId,$membersToAdd,1);
+				}
+				if(count($membersToRemove)>0){
+					$this->timeline_db_manager->add_remove_post_participant(2,$workSpaceId,$membersToRemove,0);
+				}			
 
 			$objWorkSpace->setWorkSpaceName( $this->input->post('workSpaceName') );
 			$objWorkSpace->setTreeAccessValue( $this->input->post('treeAccess') );

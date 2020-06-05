@@ -819,7 +819,7 @@ function leftMenuHideShow()
 	//get data type is notification or timeline (used for check condition)
 	var myDataTypeValue1 = getRightSidebarDataType();
 
-	//console.log('left menu= '+isLeftMenu);
+	///alert('left menu= '+isLeftMenu);
 	
 	if(isLeftMenu=='')
 	{
@@ -829,6 +829,8 @@ function leftMenuHideShow()
 		// document.getElementById("left-menu-nav1").style.display = "none";
 		document.getElementById("leftSideBar").style.display = "none";
 		document.getElementById("rightSideBar").style.width = "100%";
+		document.getElementById("postArea").style.width = '73%';
+		//$('.post_web_tab_menu_tab').css('width', '25%');
 
 		
 		/*Commented by Dashrath- Comment this code for when hide left menu right side bar not open*/
@@ -902,6 +904,8 @@ function leftMenuHideShow()
 		// document.getElementById("leftSideBar").style.width = "180px";
 		// document.getElementById("left-menu-nav1").style.display = "inline";
 		document.getElementById("leftSideBar").style.display = "inline";
+		document.getElementById("postArea").style.width = '64%';
+		//$('.post_web_tab_menu_tab').css('width', '22%');
 
 		if(myDataTypeValue1=='notification' || myDataTypeValue1=='timeline' || myDataTypeValue1=='draftleaf')
 		{

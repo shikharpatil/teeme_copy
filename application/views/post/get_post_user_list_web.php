@@ -1,3 +1,4 @@
+<!--<div id="divSearchUser" name="divSearchUser">-->
 <?php
 				//echo "<pre>"; print_r($workSpaceMembers); exit;
 				//echo "<pre>"; print_r($workPlaceMembers); exit;
@@ -20,8 +21,6 @@
 						$i = 1;
 
 						?>
-
-						<div id="divSearchUser" name="divSearchUser">
 
         				<?php
 						if ($_SESSION['all'])
@@ -114,7 +113,7 @@
 												</div>
 											</div>	  		
 										</div>
-					</div>
+					
 	
 										<?php
 										}
@@ -204,7 +203,7 @@
 												</div>	  		
 											</div>
 									
-								</div>
+								
 										<?php
 										}
 								$i++;
@@ -233,3 +232,4 @@
 				}
 
 				?>
+<!--</div>-->

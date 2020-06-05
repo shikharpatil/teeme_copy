@@ -1,4 +1,4 @@
-<div id="divChats" name="divChats" class="post_web_tab_menu_tab">
+<!--<div id="divChats" name="divChats" class="post_web_tab_menu_tab">-->
 			<?php //echo "<pre>"; print_r($userActivePosts);?>
 			<?php 	
 					if (count($userActivePosts)>0) {
@@ -63,4 +63,4 @@
 						}
 					}
 			?>
-		</div>
+		<!--</div>-->
