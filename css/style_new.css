@@ -8733,8 +8733,8 @@ span.reserve a
 .post_web_sidebar_row{
 	/*width: 100%;*/
 	/*height: 72px;*/
-	background-color: white !important;
-	border-top: solid 1px #DDDFE2 !important;
+	background-color: white;
+	border-top: solid 1px #DDDFE2;
 	display: flex;
 	padding:10px;
 }
@@ -8931,6 +8931,9 @@ span.reserve a
   #divSearchResult{
 	  padding:5px 0;
   }
+.timelineContentDivStyle {
+	background-color: #CCFF33;
+}
 /* The Modal (background) */
 .modal {
 	display: none; /* Hidden by default */

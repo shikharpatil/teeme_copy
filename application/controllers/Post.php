@@ -2818,6 +2818,7 @@ class Post extends CI_Controller {
 			else{
 				$_SESSION['active_view']='global';
 			}
+			$arrDetails['active_view'] = $_SESSION['active_view'];
 
 			//echo "<li>Active view= " .$_SESSION['active_view'];
 

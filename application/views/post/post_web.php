@@ -531,7 +531,7 @@ $(document).ready(function()
 					if (count($userActivePosts)>0) {
 						foreach($userActivePosts as $keyVal=>$arrVal){
 							?>
-							<div class="post_web_sidebar_row">
+							<div class="post_web_sidebar_row" id="row_<?php echo $arrVal['last_post_id'];?>">
 								<!--
 								<div class="post_web_sidebar_col1">
 									<div class="post_web_sidebar_profile_pic">	
@@ -568,7 +568,7 @@ $(document).ready(function()
 									</div>
 									-->
 									<div class="post_web_sidebar_data">
-										<span class="post_web_sidebar_secondary post_web_sidebar_username_data"><a href="<?php echo base_url().$arrVal['url'];?>"><?php echo $arrVal['last_post_data']; ?></a></span>
+										<span class="post_web_sidebar_secondary post_web_sidebar_username_data"><a onclick="postHighlight('<?php echo $arrVal['last_post_id'];?>','<?php echo $arrVal['last_post_id'];?>','<?php echo $active_view;?>');" href="<?php echo base_url().$arrVal['url'];?>"><?php echo $arrVal['last_post_data']; ?></a></span>
 										<?php if($arrVal['unseen_post_count']>0){?>
 										<div><span class="post_web_post_count"><?php echo $arrVal['unseen_post_count']; ?></span></div>
 										<?php } ?>
@@ -1044,7 +1044,11 @@ $(document).ready(function()
 		</div>
 		<?php } */?>
 		<div class="leftTabUl">
-    		<ul class="tab_menu_new">
+			<!--Parv: Uncomment this for tab menu instead. Also disable the javascript for the dropdown in the scripts section at the bottom. Search by 'drop_down_menu'.
+			<ul class="tab_menu_new">
+				-->
+			<ul class="drop_menu_new">
+			<li><a href="javascript:void(0);">--Select--</a><li>
 			<?php if($workSpaceDetails['workSpaceName']!="Try Teeme"){ ?>
 			<li>
 				<?php /*?> <a href="javascript:void(0);" id="profile" style="padding-left:12px;margin-left:17px;" title="profile" class="<?php if($profileForm=='1' && $passwordForm!='1'){ ?> active <?php } ?>" onclick="$('#profile').addClass('active');$('#passwordForm').removeClass('active');$('#notification').removeClass('active');$('#password_form').hide();$('#notificationSection').hide();$('#profileForm').show(); clearSessionMsg();"><?php echo $this->lang->line('profile_txt'); ?></a><?php */?>
@@ -1714,6 +1718,7 @@ $(document).ready(function()
 				 <input type="hidden" name="post_type_object_id" value="<?php echo $post_type_object_id;?>" id="post_type_object_id">
 				 <input type="hidden" name="isForward" value="0" id="isForward">
 				 <input name="editorname1" id="editorname1" type="hidden"  value="replyDiscussion">
+				 <input type="hidden" id="previousLiveFeedClickId" name="previousLiveFeedClickId" value="0" >
 				<?php /*?><div class="timelineExpiryDate" style="float:left; padding-left:20px;">
 					Expiry Date: <input name="timeline_exp_date" type="text"  id="timeline_exp_date" class="timelineExpDate" value="" readonly>
 				 </div><?php */?>
@@ -1760,6 +1765,10 @@ $(document).ready(function()
 <?php //$this->load->view('common/datepicker_js.php'); ?>
 <script>
 $(document).ready(function(){
+	//alert(location.hash);
+	if(location.hash!=''){
+		$(location.hash).addClass('nodeBgColorSelect');
+	}
 	$("#showMan").hide();
 	$("#showManSpaces").hide();
 	<?php if($_SESSION['active_view']=='space' || isset($_SESSION['public'])){?>
@@ -1808,6 +1817,7 @@ $(document).ready(function(){
   });
 
 
+
 /*
   $(".post_web_tab_menu_list_2 li a").click(function(e){
      e.preventDefault();
@@ -1853,6 +1863,23 @@ $(document).ready(function(){
   //leftMenuHideShow();
   //document.getElementById("leftSideBar").style.display = "none";
   //document.getElementById("rightSideBar").style.width = "100%";
+
+$('ul.drop_menu_new').each(function(){
+var list=$(this),
+    select=$(document.createElement('select')).insertBefore($(this).hide()).change(function(){
+  window.location.href=$(this).val();
+});
+$('>li a', this).each(function(){
+  var option=$(document.createElement('option'))
+   .appendTo(select)
+   .val(this.href)
+   .html($(this).html()); 
+  if($(this).attr('class') === 'active '){
+	option.attr('selected',true);	
+  }
+});
+list.remove();
+});
 
 
   	var workSpaceId = '<?php echo $workSpaceId;?>';
@@ -2236,6 +2263,7 @@ function showTimelineEditor(data='')
 		else{
 			$("#postFormHeader").html('<b>New post</b><br><br>');	
 			$('#postSubmitButton').prop("value", "Post");
+			$(".shortTitle").html('<b>New post</b>');
 			$("#replyDiscussion").froalaEditor('edit.on');
 			$("#replyDiscussion").froalaEditor('toolbar.show');
 			$('#isForward').prop("value", "0");
@@ -2256,7 +2284,8 @@ function forwardPost(data){
 	showTimelineEditor(data);
 	$("#replyDiscussion").froalaEditor('edit.off');
 	$("#replyDiscussion").froalaEditor('toolbar.hide');
-	$("#postFormHeader").html('<b>Forward post</b><br><br>');	
+	$("#postFormHeader").html('<b>Forward post</b>');	
+	$(".shortTitle").html('<b>Forward post</b><br><br>');	
 	$('#postSubmitButton').prop("value", "Forward");
 	$('#isForward').prop("value", "1");//Yes it's a forward
 	$('#post_type_id').prop("value", "5");//Global post

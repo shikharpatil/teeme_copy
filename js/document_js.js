@@ -6274,6 +6274,54 @@ function getTimelineData(workSpaceId, workSpaceType, treeId, treeType, viewType)
 }
 /*Dashrath- code end*/
 
+function postHighlight(postId=0,clickId=0,active_view='global'){
+  if(postId>0)
+  {
+    var previousClickId = document.getElementById("previousLiveFeedClickId").value;
+    //var previousLeafContentId = document.getElementById("previousLiveFeedLeafContentId").value;
+    
+    var currentContentId = '#form'+postId;
+    var previousContentId = '#form'+previousClickId;
+    var currentTimelineContentId = '#row_'+postId;
+    var previousTimelineContentId = '#row_'+previousClickId;
+
+    var currentAddClassName = 'nodeBgColorSelect';
+   // var oppositeClassRemove = 'nodeBgColorSelect';
+   var previousRemoveClassName = 'nodeBgColorSelect';
+
+   // $('#'+oppositePreviousContentId).addClass(oppositeClassAdd);
+   // $('#'+oppositePreviousContentId).removeClass(oppositeClassRemove);
+
+    if(previousClickId>0)
+    {
+      //used for leaf content
+      //$('#'+previousContentId).addClass(previousAddClassName);
+      $(previousContentId).removeClass(previousRemoveClassName);
+
+      //used for timeline content
+      $(previousTimelineContentId).removeClass('timelineContentDivStyle');
+    }
+    
+
+    //used for leaf content
+    //$('#'+currentContentId).removeClass(currentRemoveClassName);
+    $(currentContentId).addClass(currentAddClassName);
+
+    //used for timeline content
+    $(currentTimelineContentId).addClass('timelineContentDivStyle');
+
+    document.getElementById("previousLiveFeedClickId").value = clickId;
+    //document.getElementById("previousLiveFeedLeafContentId").value = nodeId;
+
+    if($(window).scrollTop() > 130)
+    {
+      $(window).scrollTop($('#'+currentContentId).offset().top - $(window).scrollTop());
+    }
+      
+    document.getElementById(currentContentId).focus();
+  }
+}
+
 /*Added by Dashrath- leaf content highlight*/
 function leafContentHighlight(nodeId, treeType, clickId, contentType, viewType, predecessorId)
 {
@@ -6498,6 +6546,7 @@ function leafContentHighlight(nodeId, treeType, clickId, contentType, viewType, 
   }
 }
 /*Dashrath- code end*/
+
 
 /*Added by Dashrath- documentTreeFixed class add and remove on seed in window scroll for seed fixed*/
 function addAndRemoveClassOnSeed(height)

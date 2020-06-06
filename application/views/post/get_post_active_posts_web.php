@@ -4,7 +4,7 @@
 					if (count($userActivePosts)>0) {
 						foreach($userActivePosts as $keyVal=>$arrVal){
 							?>
-							<div class="post_web_sidebar_row">
+							<div class="post_web_sidebar_row" id="row_<?php echo $arrVal['last_post_id'];?>">
 								<!--
 								<div class="post_web_sidebar_col1">
 									<div class="post_web_sidebar_profile_pic">	
@@ -40,7 +40,7 @@
 									</div>
 									-->
 									<div class="post_web_sidebar_data">
-										<span class="post_web_sidebar_secondary post_web_sidebar_username_data"><a href="<?php echo base_url().$arrVal['url'];?>"><?php echo $arrVal['last_post_data']; ?></a></span>
+										<span class="post_web_sidebar_secondary post_web_sidebar_username_data"><a onclick="postHighlight('<?php echo $arrVal['last_post_id'];?>','<?php echo $arrVal['last_post_id'];?>','<?php echo $active_view;?>');" href="<?php echo base_url().$arrVal['url'];?>"><?php echo $arrVal['last_post_data']; ?></a></span>
 										<?php if($arrVal['unseen_post_count']>0){?>
 										<div><span class="post_web_post_count"><?php echo $arrVal['unseen_post_count']; ?></span></div>
 										<?php } ?>
