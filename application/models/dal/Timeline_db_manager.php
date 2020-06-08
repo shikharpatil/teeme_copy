@@ -2108,4 +2108,24 @@ class timeline_db_manager extends CI_Model
 		$arrParticipantIds['spaces'] = array_values(array_unique($arrSpaceParticipantIds));
 		return $arrParticipantIds;
 	}
+
+	public function deleteDraft($post_id=0){
+		$this->db->trans_begin();
+		$q = "UPDATE teeme_leaf SET leafStatus='deleted' WHERE nodeId='".$post_id."'";
+		$query = $this->db->query($q);		
+
+		$q2 = "DELETE FROM teeme_post_web_post_store WHERE post_id='".$post_id."'";
+		$query = $this->db->query($q2);	
+
+			if($this->db->trans_status()=== FALSE)
+			{
+				$this->db->trans_rollback();
+				return false;
+			}
+			else
+			{
+				$this->db->trans_commit();
+				return true;
+			}	
+	}
 }

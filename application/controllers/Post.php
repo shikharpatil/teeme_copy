@@ -5264,7 +5264,7 @@ class Post extends CI_Controller {
 		}
 	}
 
-	function get_post_participants(){
+	public function get_post_participants(){
 		if(!isset($_SESSION['userName']) || $_SESSION['userName'] =='')
 		{
 			$_SESSION['errorMsg']	= 	$this->lang->line('msg_session_expire'); 
@@ -5285,7 +5285,25 @@ class Post extends CI_Controller {
 				}	
 		}		
 	}
+	public function delete_draft(){
+		if(!isset($_SESSION['userName']) || $_SESSION['userName'] =='')
+		{
+			$_SESSION['errorMsg']	= 	$this->lang->line('msg_session_expire'); 
+			$this->load->model('dal/identity_db_manager');						
+			$objIdentity	= $this->identity_db_manager;	
+			$arrDetails['workPlaceDetails'] 	= $objIdentity->getWorkPlaces();	
+			$this->load->view('login', $arrDetails);
+		}
+		else{
+			$this->load->model('dal/timeline_db_manager');
+			$post_id=$this->input->post('post_id');	
 
+				if ($post_id!=0){				
+					$result = $this->timeline_db_manager->deleteDraft($post_id);
+					if($result) {echo "success";} else{echo "failure";}
+				}	
+		}		
+	}
 }
 
 ?>

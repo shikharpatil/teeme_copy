@@ -2337,7 +2337,7 @@ function forwardPost(post_id){
 
 function editDraft(post_type_id,post_type_object_id,post_id){
 	//console.log('data= '+data);	
-	console.log ('post type id= ' + post_type_id);
+	//console.log ('post type id= ' + post_type_id);
 	//console.log ('post type object id= ' + post_type_object_id);
 	//return false;
 	var data = document.getElementById('post_content'+post_id).value;
@@ -2373,7 +2373,22 @@ function editDraft(post_type_id,post_type_object_id,post_id){
 				}
 		});
 	}
+}
 
+function deleteDraft(post_type_id,post_type_object_id,post_id){
+	var r=confirm("Do you really want to discard this draft?");
+	if (r==true){
+		var data_user = 'post_id='+post_id;
+		var request = $.ajax({
+			url: baseUrl+"post/delete_draft/",
+			type: "POST",
+			data: data_user,
+			dataType: "html",
+			  	success:function(result){
+					$("#form"+post_id).hide();
+				}
+		});
+	}
 }
 
 function checkMembers(members){

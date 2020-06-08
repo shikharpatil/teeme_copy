@@ -931,14 +931,19 @@
 			<!-- delete button end-->
 			<!-- Forward a post start -->
 			<?php if($arrVal['leafStatus']=='publish'){?>
-				<span class="commonSeedLeafSpanRight" id="forward<?php echo $arrVal['nodeId'];?>"><a href="javascript:void(0)" onclick="forwardPost('<?php echo $arrVal['nodeId'];?>');">Forward</a></span>
+				<span class="commonSeedLeafSpanRight" id="draftForward<?php echo $arrVal['nodeId'];?>"><a href="javascript:void(0)" onclick="forwardPost('<?php echo $arrVal['nodeId'];?>');">Forward</a></span>
 			<?php } ?>
 			<!-- Forward a post end -->
 			<!-- Edit draft start -->
 			<?php if($arrVal['leafStatus']=='draft'){?>
-				<span class="commonSeedLeafSpanRight" id="draft<?php echo $arrVal['nodeId'];?>"><a href="javascript:void(0)" onclick="editDraft('<?php echo $arrVal['post_type_id'];?>','<?php echo $arrVal['post_type_object_id'];?>','<?php echo $arrVal['nodeId'];?>');">Edit draft</a></span>
+				<span class="commonSeedLeafSpanRight" id="draftEdit<?php echo $arrVal['nodeId'];?>"><a href="javascript:void(0)" onclick="editDraft('<?php echo $arrVal['post_type_id'];?>','<?php echo $arrVal['post_type_object_id'];?>','<?php echo $arrVal['nodeId'];?>');">Edit draft</a></span>
 			<?php } ?>
 			<!-- Edit draft end -->
+			<!-- Delete draft start -->
+			<?php if($arrVal['leafStatus']=='draft'){?>
+				<span class="commonSeedLeafSpanRight" id="draftDelete<?php echo $arrVal['nodeId'];?>"><a href="javascript:void(0)" onclick="deleteDraft('<?php echo $arrVal['post_type_id'];?>','<?php echo $arrVal['post_type_object_id'];?>','<?php echo $arrVal['nodeId'];?>');">Discard draft</a></span>
+			<?php } ?>
+			<!-- Delete draft end -->
 		</div>
 		<!-- footer right content end -->
   </div>
