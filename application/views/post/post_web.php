@@ -1143,6 +1143,9 @@ $(document).ready(function()
 					<a href="<?php echo base_url(); ?>post/web/<?php echo $workSpaceId; ?>/<?php echo $workSpaceType; ?>/parked/<?php echo $_SESSION['userId']?>" style="padding-left:12px;margin-left:17px;<?php if($this->uri->segment(5)=='parked' && $this->uri->segment(6)==$_SESSION['userId']) { ?>" class="active <?php } ?>"><?php echo 'Parked'.' ('.$totalParkedPosts.')'; ?></a>
 				</li>
 				<?php } ?>
+				<li>
+					<a href="<?php echo base_url(); ?>post/web/<?php echo $workSpaceId; ?>/<?php echo $workSpaceType; ?>/drafts" style="padding-left:12px; <?php if($this->uri->segment(5)=='drafts') { ?>" class="active <?php } ?>" id="drafts"><?php echo 'Drafts ('.$totalDraftPosts.')'; ?></a>	
+				</li>
 				<!--	
 				<li>			
 					<a href="<?php echo base_url(); ?>post/web/<?php echo $workSpaceId; ?>/<?php echo $workSpaceType; ?>/following/<?php echo $_SESSION['userId']?>" style="padding-left:12px;margin-left:17px;<?php if($this->uri->segment(5)=='following' && $this->uri->segment(6)==$_SESSION['userId']) { ?>" class="active <?php } ?>"><?php echo 'Following'; ?></a>
@@ -1698,18 +1701,19 @@ $(document).ready(function()
 					if(isset($_SESSION['WSManagerAccess']) && $_SESSION['WSManagerAccess'] == 1 && $_SESSION['public'] == 'public')
 					{
 					?>
-					<input type="button" id="postSubmitButton" name="Replybutton" value="<?php echo $this->lang->line('txt_Post');?>" onClick="insertTimeline();" style="float:left; margin-top:-1%;" >		 
+					<input type="button" id="postSubmitButton" name="Replybutton" value="<?php echo $this->lang->line('txt_Post');?>" onClick="insertTimeline('publish');" style="float:left; margin-top:-1%;" >		 
 					<input type="button" name="Replybutton" value="<?php echo $this->lang->line('txt_Cancel');?>" onClick="showTimelineEditor();" style="float:left; margin-left:1%;margin-top:-1%;" >				
 					<?php 
 					}
 					else
 					{ ?>
-					<input type="button" id="postSubmitButton" name="Replybutton" value="<?php echo $this->lang->line('txt_Post');?>" onClick="insertTimeline();" style="float:left; margin-top:-1%;" >		 
+					<input type="button" id="postSubmitButton" name="Replybutton" value="<?php echo $this->lang->line('txt_Post');?>" onClick="insertTimeline('publish');" style="float:left; margin-top:-1%;" >		 
 					<input type="button" name="Replybutton" value="<?php echo $this->lang->line('txt_Cancel');?>" onClick="showTimelineEditor();" style="float:left; margin-left:1%;margin-top:-1%;" >	
 					<?php
 					}
 					?>
 				 </div>
+				 <input type="button" id="postDraftButton" name="draftButton" value="<?php echo 'Save as draft';?>" onClick="insertTimeline('draft');" style="float:left; margin-left:1%; margin-top:-1%;" >		 
 				 <input name="reply" id="reply" type="hidden"  value="1">
 				 <input type="hidden" name="workSpaceId" value="<?php echo $workSpaceId;?>" id="workSpaceId">
           		 <input type="hidden" name="workSpaceType" value="<?php echo $workSpaceType;?>" id="workSpaceType">
@@ -1717,6 +1721,8 @@ $(document).ready(function()
 				 <input type="hidden" name="post_type_id" value="<?php echo $post_type_id;?>" id="post_type_id">
 				 <input type="hidden" name="post_type_object_id" value="<?php echo $post_type_object_id;?>" id="post_type_object_id">
 				 <input type="hidden" name="isForward" value="0" id="isForward">
+				 <input type="hidden" name="isDraft" value="0" id="isDraft">
+				 <input type="hidden" name="post_id" value="0" id="post_id">
 				 <input name="editorname1" id="editorname1" type="hidden"  value="replyDiscussion">
 				 <input type="hidden" id="previousLiveFeedClickId" name="previousLiveFeedClickId" value="0" >
 				<?php /*?><div class="timelineExpiryDate" style="float:left; padding-left:20px;">
@@ -1865,10 +1871,13 @@ $(document).ready(function(){
   //document.getElementById("rightSideBar").style.width = "100%";
 
 $('ul.drop_menu_new').each(function(){
+var obj = document.createElement('select');
+obj.style.cssText = 'height:33px';
 var list=$(this),
-    select=$(document.createElement('select')).insertBefore($(this).hide()).change(function(){
-  window.location.href=$(this).val();
-});
+    select=$(obj).insertBefore($(this).hide()).change(function(){
+		  window.location.href=$(this).val();	 
+	});
+	
 $('>li a', this).each(function(){
   var option=$(document.createElement('option'))
    .appendTo(select)
@@ -1878,6 +1887,8 @@ $('>li a', this).each(function(){
 	option.attr('selected',true);	
   }
 });
+
+
 list.remove();
 });
 
@@ -1918,10 +1929,9 @@ list.remove();
 //chnage_textarea_to_editor('replyDiscussion','simple');
 //showTimelineEditor();
 //Insert timeline post content
-function insertTimeline()
+function insertTimeline(postStatus='publish')
 {  
-	
-	var error	= ''	
+	var error	= '';
 	var replyDiscussion = 'replyDiscussion'; 
     var INSTANCE_NAME = $("#replyDiscussion").attr('name');
 	
@@ -1954,9 +1964,12 @@ function insertTimeline()
 			var spaceRecipients=document.getElementById("listSpaces").value.split(",");
 		}
 		var is_forward = document.getElementById("isForward").value;
+		var is_draft = document.getElementById("isDraft").value;
+		var post_id = document.getElementById("post_id").value;
+		var post_status = postStatus;
 		//alert (recipients); return false;
 		//data_user = data_user+'&replyDiscussion='+encodeURIComponent(getvalue)+'&recipients='+recipients+'&groupRecipients='+groupRecipients; 
-		data_user = data_user+'&replyDiscussion='+encodeURIComponent(getvalue)+'&recipients='+recipients+'&groupRecipients='+groupRecipients+'&spaceRecipients='+spaceRecipients+'&is_forward='+is_forward; 
+		data_user = data_user+'&replyDiscussion='+encodeURIComponent(getvalue)+'&recipients='+recipients+'&groupRecipients='+groupRecipients+'&spaceRecipients='+spaceRecipients+'&is_forward='+is_forward+'&post_status='+post_status+'&is_draft='+is_draft+'&post_id='+post_id; 
 		//var pnodeId=$("#pnodeId").val();
 		var request = $.ajax({
 			  url: baseUrl+"post/insert_timeline_web/",
@@ -1966,7 +1979,6 @@ function insertTimeline()
 			  success:function(result)
 			  {
 			  	  //$("#buttons").html("");
-				 //alert(result);
 				 if(result!='' && result!='0')
 				 {
 					// $('#TimelinePost').html(result);
@@ -1988,9 +2000,24 @@ function insertTimeline()
 						$('.sol-current-selection').html('');
 						//$('.sol-current-selection-groups').html('');
 						$('.sol-current-selection-spaces').html('');
+
+
+						$("#showMan").hide();
+						$("#showManSpaces").hide();
+						$("#multipleRecipientArea").hide();
+						$("#multipleSpaceRecipientArea").hide();
+						$("#list").val('');
+						$("#listSpaces").val('');
+						$("#listSubSpaces").val('');
+						$('#isForward').prop("value", "0");
+						$('#isDraft').prop("value", "0");
+						$('#post_id').prop("value", "0");
+						$('#post_type_id').prop("value", "<?php echo $post_type_id;?>");
+						$('#post_type_object_id').prop("value", "<?php echo $post_type_object_id;?>");
 					 }
 					 closeNewPostWindow();
-					 return true;
+					//alert ('Here');
+					return true;
 				 }
 				  /*if(result=='0'){
 				  	jAlert('No Post Found');return;
@@ -2219,12 +2246,10 @@ function writeSearh()
 
 }
 
-function showTimelineEditor(data='')
+function showTimelineEditor(data='',post_type_id=0)
 {
 	if($('#TimelineEditor').is(':visible'))
 	{
-		alert('There is already a window open.');
-		return false;
 		$("#TimelineEditor").hide();
 		$("#searchTags").val("");
 		showTags();
@@ -2235,6 +2260,7 @@ function showTimelineEditor(data='')
 		$('.clsChecks').prop("checked",false);
 		$('.clsCheckSpace').prop("checked",false);
 		$('.sol-current-selection').html('');
+		$('.sol-current-selection-spaces').html('');
 		$("#showMan").hide();
 		$("#showManSpaces").hide();
 		$("#multipleRecipientArea").hide();
@@ -2242,6 +2268,12 @@ function showTimelineEditor(data='')
 		$("#list").val('');
 		$("#listSpaces").val('');
 		$("#listSubSpaces").val('');
+		$('#isForward').prop("value", "0");
+		$('#isDraft').prop("value", "0");
+		$('#post_id').prop("value", "0");
+		$('#post_type_id').prop("value", "<?php echo $post_type_id;?>");
+		$('#post_type_object_id').prop("value", "<?php echo $post_type_object_id;?>");
+		closeNewPostWindow();
 	}
 	else
 	{
@@ -2258,7 +2290,11 @@ function showTimelineEditor(data='')
 
 		if(data!=''){
 			setValueIntoEditor('replyDiscussion',data);
-			$("#multiSend").show();
+			if(post_type_id!=7){
+				$("#multiSend").show();
+			}else{
+				$("#multiSend").hide();
+			}		
 		}
 		else{
 			$("#postFormHeader").html('<b>New post</b><br><br>');	
@@ -2267,11 +2303,14 @@ function showTimelineEditor(data='')
 			$("#replyDiscussion").froalaEditor('edit.on');
 			$("#replyDiscussion").froalaEditor('toolbar.show');
 			$('#isForward').prop("value", "0");
+			$('#isDraft').prop("value", "0");
+			$('#post_id').prop("value", "0");
 			setValueIntoEditor('replyDiscussion','');
 			<?php if($_SESSION['active_view']=='space'){?>
 				$("#multiSend").hide();
 			<?php } ?>
 		}
+		//alert('Here');return false;
 		openNewPostWindow();
 		$("#myBtn").hide();
 	}
@@ -2279,8 +2318,11 @@ function showTimelineEditor(data='')
 	
 }
 
-function forwardPost(data){
+function forwardPost(post_id){
 	//console.log('data= '+data);	
+	//alert(document.getElementById('post_content'+post_id).value);
+	//return false;
+	var data = document.getElementById('post_content'+post_id).value;
 	showTimelineEditor(data);
 	$("#replyDiscussion").froalaEditor('edit.off');
 	$("#replyDiscussion").froalaEditor('toolbar.hide');
@@ -2290,6 +2332,97 @@ function forwardPost(data){
 	$('#isForward').prop("value", "1");//Yes it's a forward
 	$('#post_type_id').prop("value", "5");//Global post
 	$('#post_type_object_id').prop("value", "");//Global post
+}
+//check all function start
+
+function editDraft(post_type_id,post_type_object_id,post_id){
+	//console.log('data= '+data);	
+	console.log ('post type id= ' + post_type_id);
+	//console.log ('post type object id= ' + post_type_object_id);
+	//return false;
+	var data = document.getElementById('post_content'+post_id).value;
+	showTimelineEditor(data,post_type_id);
+	$("#postFormHeader").html('<b>Edit draft</b>');	
+	$(".shortTitle").html('<b>Edit draft</b><br><br>');	
+	$('#postSubmitButton').prop("value", "Post");
+	$('#isForward').prop("value", "0");//No it's not a forward
+	$('#isDraft').prop("value", "1");//Yes it's a draft
+	$('#post_id').prop("value", post_id);//Set post id if it's a draft 
+	$('#post_type_id').prop("value", post_type_id);
+	$('#post_type_object_id').prop("value", post_type_object_id);
+
+	// Get saved participant list (members and spaces) if not a public draft
+	if (post_type_id!=7){
+		var data_user = 'post_id='+post_id;
+		var request = $.ajax({
+			url: baseUrl+"post/get_post_participants/",
+			type: "POST",
+			data: data_user,
+			dataType: "html",
+			  	success:function(result){
+					var obj = JSON.parse(result);
+					//console.log(obj);
+					//console.log('members= '+ obj.members);
+					//console.log('spaces= '+ obj.spaces);
+					if (obj.memberCount>0){
+						checkMembers(obj.members);
+					}
+					if (obj.spaceCount>0){
+						checkSpaces(obj.spaces);
+					}
+				}
+		});
+	}
+
+}
+
+function checkMembers(members){
+	$("#multipleRecipientArea").show();
+	var htmlContent='';
+		$("#showMan").show();
+			$(".clsChecks").each(function(){			
+				if (jQuery.inArray($(this).val(), members)!='-1'){
+					//$('.clsChecks').prop("checked",true);
+					$(this).prop('checked',true);
+					value = $("#list").val();
+					val1 = value.split(",");	
+					if(val1.indexOf($(this).val())==-1){
+						$("#list").val(value+","+$(this).val());
+					}
+					//Show checked label at top
+						var data = $(this).data('myval');
+						var value = $(this).val();
+						htmlContent += '<div class="sol-selected-display-item sol_check'+value+'"><span class="sol-quick-delete" onclick="removeSelectionDisplayItem('+value+',1)">x</span><span class="sol-selected-display-item-text">'+data+'</span></div>';
+					//Code end
+				}
+			});			
+			$('.sol-current-selection').html(htmlContent);
+}
+
+function checkSpaces(spaces){
+	$("#multipleSpaceRecipientArea").show();
+	var htmlContent='';	
+	$("#showManSpaces").show();
+		$(".clsCheckSpace").each(function(){
+			if (jQuery.inArray($(this).val(), spaces)!='-1'){
+				//$('.clsCheckSpace').prop("checked",true);
+				$(this).prop('checked',true);
+				value = $("#listSpaces").val();
+				val1 = value.split(",");	
+				if(val1.indexOf($(this).val())==-1){
+					$("#listSpaces").val(value+","+$(this).val());
+				}
+				//Show checked label at top
+					var data = $(this).data('myval');
+					//var usersData = $(this).data('myusers');
+					var value = $(this).val();
+					htmlContent += '<div class="sol-head sol-selected-display-item sol_check_space'+value+'"><span class="sol-quick-delete" onclick="removeSelectionDisplayItemSpace('+value+',1)">x</span><span class="sol-selected-display-item-text">'+data+'</span></div>';
+					
+					//htmlContent += '<div class="sol-selected-display-item sol_check_space'+value+'"><span class="sol-selected-display-item-text">'+usersData+'</span></div><div style="clear:both"></div>';
+				//Code end
+			}
+		});		
+	$('.sol-current-selection-spaces').html(htmlContent);
 }
 //check all function start
 
@@ -2776,6 +2909,9 @@ function findNewPostComment()
 	}
 	else if(postType=='home'){
 		postTypeId = 5;
+	}	
+	else if(postType=='drafts'){
+		postTypeId = 10;
 	}	
 	//var userPostSearch = '<?php echo $this->uri->segment(10)?>';
 	var postTypeObjectId = '<?php echo $this->uri->segment(6)?>';

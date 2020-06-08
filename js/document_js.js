@@ -4762,7 +4762,7 @@ function openNewPostWindow(){
   if($('.newPostWindow').length){
     $(".newPostWindow").show();	
   }else{
-    $('.otherarea2').append('<div class="newPostWindow abs2"><div class="abs_head post_head"><div class="talktxtTitle"><span class="shortTitle"><b>New post</b></div><div class="talkChatMinClose"><span class="talk_chat_close" onclick="closeNewPostWindow();"><b>&times;</b>&nbsp;</span><span class="talk_chat_close post_chat_size" onclick="minimizeMaximizeNewPostWindow()"><b>_ </b>&nbsp;&nbsp;</span></div></div><div id="newPostAdd" class="abs_content2 post_content"></div></div>');
+    $('.otherarea2').append('<div class="newPostWindow abs2"><div class="abs_head post_head"><div class="talktxtTitle"><span class="shortTitle"><b>New post</b></div><div class="talkChatMinClose"><span class="talk_chat_close" onclick="showTimelineEditor();"><b>&times;</b>&nbsp;</span><span class="talk_chat_close post_chat_size" onclick="minimizeMaximizeNewPostWindow()"><b>_ </b>&nbsp;&nbsp;</span></div></div><div id="newPostAdd" class="abs_content2 post_content"></div></div>');
   }
   $('#TimelineEditor').appendTo('#newPostAdd');
   //$('#newPostAdd').append($('#TimelineEditor').clone());

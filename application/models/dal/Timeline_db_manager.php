@@ -566,7 +566,7 @@ class timeline_db_manager extends CI_Model
 	}
 	//Manoj: Code end
 
-	public function insert_timeline_web($treeId,$content,$userId,$createdDate,$predecessor=0,$successors=0,$workSpaceId,$workSpaceType,$arrAllRecipientIds='',$tag='',$authors='',$status=1,$type=1,$nodeOrder=0,$post_type_id='-1',$post_type_object_id='-1',$delivery_status_id='1',$seen_status='0',$data='',$is_forward=0)
+	public function insert_timeline_web($treeId,$content,$userId,$createdDate,$predecessor=0,$successors=0,$workSpaceId,$workSpaceType,$arrAllRecipientIds='',$tag='',$authors='',$status=1,$type=1,$nodeOrder=0,$post_type_id='-1',$post_type_object_id='-1',$delivery_status_id='1',$seen_status='0',$data='',$is_forward=0,$post_status='publish',$is_draft=0,$post_id=0)
 	{
 		//echo "<li>recipients= " .$recipients;exit;
 		//echo "<li>post_type_id= " .$post_type_id;exit;
@@ -586,38 +586,32 @@ class timeline_db_manager extends CI_Model
 
 		if(!empty($userId)){
 			$this->db->trans_begin();
-			if ($nodeOrder==0)
-
-			{
-
-				$query = $this->db->query("insert into teeme_node(predecessor,successors,treeIds,workSpaceId,workSpaceType) values ('".$predecessor."','".$successors."',".$treeId.",'".$workSpaceId."',".$workSpaceType.")");
-
+			if ($is_draft!=1){
+				if ($nodeOrder==0){
+					$query = $this->db->query("insert into teeme_node(predecessor,successors,treeIds,workSpaceId,workSpaceType) values ('".$predecessor."','".$successors."',".$treeId.",'".$workSpaceId."',".$workSpaceType.")");
+				}
+				else{
+					$query = $this->db->query("insert into teeme_node(predecessor,successors,treeIds,nodeOrder,workSpaceId,workSpaceType) values ('".$predecessor."','".$successors."',".$treeId.",".$nodeOrder.",'".$workSpaceId."',".$workSpaceType.")");
+				}		
+				$nodeId=$this->db->insert_id();
+	
+				$query = $this->db->query("insert into teeme_leaf  (type,authors,status,userId,createdDate,editedDate,contents,nodeId,leafStatus) values 
+				(".$type.",'".addslashes ($authors)."',".$status.",".$userId.",'".$createdDate."','".$createdDate."','".$this->db->escape_str($content)."',".$nodeId.",'".$post_status."')");
+	
+				$leafId=$this->db->insert_id();	
+	
+				$query = $this->db->query("update teeme_node set leafId=".$leafId." where id=".$nodeId);
+			}else if ($is_draft==1 && $post_id>0){
+				if ($post_status=="publish"){
+					$q = "UPDATE teeme_leaf SET contents='".$this->db->escape_str($content)."',leafStatus='".$post_status."' WHERE nodeId=".$post_id;
+				}else{
+					$q = "UPDATE teeme_leaf SET contents='".$this->db->escape_str($content)."' WHERE nodeId=".$post_id;
+				}				
+				$query = $this->db->query($q);
+				$nodeId = $post_id; 
 			}
 
-			else
-
-			{
-
-				$query = $this->db->query("insert into teeme_node(predecessor,successors,treeIds,nodeOrder,workSpaceId,workSpaceType) values ('".$predecessor."','".$successors."',".$treeId.",".$nodeOrder.",'".$workSpaceId."',".$workSpaceType.")");
-
-			}
-
-			
-			$nodeId=$this->db->insert_id();
-
-			//Manoj: replace mysql_escape_str function
-
-			$query = $this->db->query("insert into teeme_leaf  (type,authors,status,userId,createdDate,editedDate,contents,nodeId) values 
-
-			(".$type.",'".addslashes ($authors)."',".$status.",".$userId.",'".$createdDate."','".$createdDate."','".$this->db->escape_str($content)."',".$nodeId.")");
-
-			$leafId=$this->db->insert_id();	
-
-			$query = $this->db->query("update teeme_node set leafId=".$leafId." where id=".$nodeId);
-			
-			
-			//$query = $this->db->query("INSERT INTO teeme_wall_recipients(commentId,recipientId) VALUES ('".$nodeId."','".$userId."')");
-			
+			//$query = $this->db->query("INSERT INTO teeme_wall_recipients(commentId,recipientId) VALUES ('".$nodeId."','".$userId."')");			
 			//$query = $this->db->query("INSERT INTO teeme_posts_shared (postId,members) VALUES ('".$nodeId."','".$userId."')");
 			/*
 			if($workSpaceId==0)
@@ -664,6 +658,10 @@ class timeline_db_manager extends CI_Model
 				}
 				$query = $this->db->query("INSERT INTO teeme_posts_shared (postId,members) VALUES ('".$nodeId."','".$recipients."')");
 				*/
+				// If it's a draft edit, we first remove the old participant entries before adding the latest ones.
+				if ($is_draft==1 && $post_id>0){
+					$query = $this->db->query("DELETE FROM teeme_post_web_post_store WHERE post_id=".$post_id);
+				}
 				// If one-to-one
 				if ($post_type_id==1){
 					if($is_forward==0){
@@ -763,8 +761,8 @@ class timeline_db_manager extends CI_Model
 					$q = "INSERT INTO teeme_post_web_post_store (post_id,post_type_id,post_type_object_id,participant_id,sender_id,delivery_status_id,seen_status,sent_timestamp,data) VALUES $val";
 					$query = $this->db->query($q);
 				}
-				else if ($post_type_id==2 || $post_type_id==5){		
-					$post_type_id=2;					
+				else if ($post_type_id==2 || $post_type_id==5 || $post_type_id==10){		
+					$post_type_id=2;// If a post is initiated from 'home' or 'draft' menu, we treat it as a space post				
 					//if ($workSpaceId>0){
 					if($is_forward==0){
 						if ($post_type_object_id>0){
@@ -1318,25 +1316,25 @@ class timeline_db_manager extends CI_Model
 				*/
 				//$q2 = "SELECT a.workSpaceId as workSpaceId, a.workSpaceType as workSpaceType, a.id, a.successors, a.predecessor, a.nodeOrder, b.id as leafId, b.authors, b.userId, b.contents, DATE_FORMAT(b.createdDate, '%Y-%m-%d %H:%i:%s') as TimelineCreatedDate, b.leafStatus FROM teeme_node a, teeme_leaf b, teeme_post_web_post_store c WHERE c.post_id=a.id AND (c.post_type_id=1 OR c.post_type_id=5)  AND c.post_type_object_id='".$post_type_object_id."' AND c.participant_id='".$post_type_object_id."' AND b.id=a.leafId AND (a.predecessor='0' OR a.predecessor='') AND a.treeIds=".$treeId." ORDER BY b.editedDate DESC";
 				//$q2 = "SELECT a.workSpaceId as workSpaceId, a.workSpaceType as workSpaceType, a.id, a.successors, a.predecessor, a.nodeOrder, b.id as leafId, b.authors, b.userId, b.contents, DATE_FORMAT(b.createdDate, '%Y-%m-%d %H:%i:%s') as TimelineCreatedDate, b.leafStatus FROM teeme_node a, teeme_leaf b, teeme_post_web_post_store c WHERE c.post_id=a.id AND c.post_type_id=1  AND (c.participant_id='".$post_type_object_id."' AND c.sender_id='".$post_type_object_id."') AND b.id=a.leafId AND (a.predecessor='0' OR a.predecessor='') AND a.treeIds=".$treeId." AND b.userId=".$post_type_object_id." AND c.seen_status=0 ORDER BY b.editedDate DESC";
-				$q2 = "SELECT a.workSpaceId as workSpaceId, a.workSpaceType as workSpaceType, a.id, a.successors, a.predecessor, a.nodeOrder, b.id as leafId, b.authors, b.userId, b.contents, DATE_FORMAT(b.createdDate, '%Y-%m-%d %H:%i:%s') as TimelineCreatedDate, b.leafStatus FROM teeme_node a, teeme_leaf b, teeme_post_web_post_store c WHERE c.post_id=a.id AND c.post_type_id=1 AND c.participant_id='".$post_type_object_id."' AND c.sender_id='".$post_type_object_id."' AND b.id=a.leafId AND (a.predecessor='0' OR a.predecessor='') AND a.treeIds=".$treeId." AND b.userId=".$post_type_object_id." AND c.seen_status=0 ORDER BY b.editedDate DESC";
+				$q2 = "SELECT a.workSpaceId as workSpaceId, a.workSpaceType as workSpaceType, a.id, a.successors, a.predecessor, a.nodeOrder, b.id as leafId, b.authors, b.userId, b.contents, DATE_FORMAT(b.createdDate, '%Y-%m-%d %H:%i:%s') as TimelineCreatedDate, b.leafStatus, c.post_type_id, c.post_type_object_id FROM teeme_node a, teeme_leaf b, teeme_post_web_post_store c WHERE c.post_id=a.id AND c.post_type_id=1 AND c.participant_id='".$post_type_object_id."' AND c.sender_id='".$post_type_object_id."' AND b.id=a.leafId AND (a.predecessor='0' OR a.predecessor='') AND a.treeIds=".$treeId." AND b.userId=".$post_type_object_id." AND b.leafStatus='publish' AND c.seen_status=0 ORDER BY b.editedDate DESC";
 
 			}
 			else if ($post_type_id==2) {
 				if ($post_type_object_id>0){
-					$q2 = "SELECT a.workSpaceId as workSpaceId, a.workSpaceType as workSpaceType, a.id, a.successors, a.predecessor, a.nodeOrder, b.id as leafId, b.authors, b.userId, b.contents, DATE_FORMAT(b.createdDate, '%Y-%m-%d %H:%i:%s') as TimelineCreatedDate, b.leafStatus FROM teeme_node a, teeme_leaf b, teeme_post_web_post_store c WHERE c.post_id=a.id AND c.post_type_id=2  AND c.participant_id='".$user_id."' AND c.post_type_object_id='".$post_type_object_id."' AND b.id=a.leafId AND (a.predecessor='0' OR a.predecessor='') AND a.treeIds=".$treeId." AND c.seen_status=0 ORDER BY b.editedDate DESC";
+					$q2 = "SELECT a.workSpaceId as workSpaceId, a.workSpaceType as workSpaceType, a.id, a.successors, a.predecessor, a.nodeOrder, b.id as leafId, b.authors, b.userId, b.contents, DATE_FORMAT(b.createdDate, '%Y-%m-%d %H:%i:%s') as TimelineCreatedDate, b.leafStatus, c.post_type_id, c.post_type_object_id FROM teeme_node a, teeme_leaf b, teeme_post_web_post_store c WHERE c.post_id=a.id AND c.post_type_id=2  AND c.participant_id='".$user_id."' AND c.post_type_object_id='".$post_type_object_id."' AND b.id=a.leafId AND (a.predecessor='0' OR a.predecessor='') AND a.treeIds=".$treeId." AND b.leafStatus='publish' AND c.seen_status=0 ORDER BY b.editedDate DESC";
 				}
 				else{
 					//$q2 = "SELECT a.workSpaceId as workSpaceId, a.workSpaceType as workSpaceType, a.id, a.successors, a.predecessor, a.nodeOrder, b.id as leafId, b.authors, b.userId, b.contents, DATE_FORMAT(b.createdDate, '%Y-%m-%d %H:%i:%s') as TimelineCreatedDate, b.leafStatus FROM teeme_node a, teeme_leaf b, teeme_post_web_post_store c WHERE c.post_id=a.id AND c.post_type_id=2  AND c.participant_id='".$user_id."' AND c.sender_id='".$user_id."' AND c.post_type_object_id='".$post_type_object_id."' AND b.id=a.leafId AND (a.predecessor='0' OR a.predecessor='') AND a.treeIds=".$treeId." AND c.seen_status=0 ORDER BY b.editedDate DESC";
-					$q2 = "SELECT a.workSpaceId as workSpaceId, a.workSpaceType as workSpaceType, a.id, a.successors, a.predecessor, a.nodeOrder, b.id as leafId, b.authors, b.userId, b.contents, DATE_FORMAT(b.createdDate, '%Y-%m-%d %H:%i:%s') as TimelineCreatedDate, b.leafStatus FROM teeme_node a, teeme_leaf b, teeme_post_web_post_store c WHERE c.post_id=a.id AND c.post_type_id=2  AND c.participant_id='".$user_id."' AND c.post_type_object_id='".$post_type_object_id."' AND b.id=a.leafId AND (a.predecessor='0' OR a.predecessor='') AND a.treeIds=".$treeId." AND c.seen_status=0 ORDER BY b.editedDate DESC";
+					$q2 = "SELECT a.workSpaceId as workSpaceId, a.workSpaceType as workSpaceType, a.id, a.successors, a.predecessor, a.nodeOrder, b.id as leafId, b.authors, b.userId, b.contents, DATE_FORMAT(b.createdDate, '%Y-%m-%d %H:%i:%s') as TimelineCreatedDate, b.leafStatus, c.post_type_id, c.post_type_object_id FROM teeme_node a, teeme_leaf b, teeme_post_web_post_store c WHERE c.post_id=a.id AND c.post_type_id=2  AND c.participant_id='".$user_id."' AND c.post_type_object_id='".$post_type_object_id."' AND b.id=a.leafId AND (a.predecessor='0' OR a.predecessor='') AND a.treeIds=".$treeId." AND b.leafStatus='publish' AND c.seen_status=0 ORDER BY b.editedDate DESC";
 				}
 				//echo "<pre>"; print_r($query2->result());exit;
 			}
 			else if ($post_type_id==3) {
 				if ($post_type_object_id>0){
-					$q2 = "SELECT a.workSpaceId as workSpaceId, a.workSpaceType as workSpaceType, a.id, a.successors, a.predecessor, a.nodeOrder, b.id as leafId, b.authors, b.userId, b.contents, DATE_FORMAT(b.createdDate, '%Y-%m-%d %H:%i:%s') as TimelineCreatedDate, b.leafStatus FROM teeme_node a, teeme_leaf b, teeme_post_web_post_store c WHERE c.post_id=a.id AND c.post_type_id=3  AND c.participant_id='".$user_id."' AND c.post_type_object_id='".$post_type_object_id."' AND b.id=a.leafId AND (a.predecessor='0' OR a.predecessor='') AND a.treeIds=".$treeId." AND c.seen_status=0 ORDER BY b.editedDate DESC";
+					$q2 = "SELECT a.workSpaceId as workSpaceId, a.workSpaceType as workSpaceType, a.id, a.successors, a.predecessor, a.nodeOrder, b.id as leafId, b.authors, b.userId, b.contents, DATE_FORMAT(b.createdDate, '%Y-%m-%d %H:%i:%s') as TimelineCreatedDate, b.leafStatus, c.post_type_id, c.post_type_object_id FROM teeme_node a, teeme_leaf b, teeme_post_web_post_store c WHERE c.post_id=a.id AND c.post_type_id=3  AND c.participant_id='".$user_id."' AND c.post_type_object_id='".$post_type_object_id."' AND b.id=a.leafId AND (a.predecessor='0' OR a.predecessor='') AND a.treeIds=".$treeId." AND b.leafStatus='publish' AND c.seen_status=0 ORDER BY b.editedDate DESC";
 				}
 				else{
-					$q2 = "SELECT a.workSpaceId as workSpaceId, a.workSpaceType as workSpaceType, a.id, a.successors, a.predecessor, a.nodeOrder, b.id as leafId, b.authors, b.userId, b.contents, DATE_FORMAT(b.createdDate, '%Y-%m-%d %H:%i:%s') as TimelineCreatedDate, b.leafStatus FROM teeme_node a, teeme_leaf b, teeme_post_web_post_store c WHERE c.post_id=a.id AND c.post_type_id=3  AND c.participant_id='".$user_id."' AND c.sender_id='".$user_id."' AND c.post_type_object_id='".$post_type_object_id."' AND b.id=a.leafId AND (a.predecessor='0' OR a.predecessor='') AND a.treeIds=".$treeId." AND c.seen_status=0 ORDER BY b.editedDate DESC";
+					$q2 = "SELECT a.workSpaceId as workSpaceId, a.workSpaceType as workSpaceType, a.id, a.successors, a.predecessor, a.nodeOrder, b.id as leafId, b.authors, b.userId, b.contents, DATE_FORMAT(b.createdDate, '%Y-%m-%d %H:%i:%s') as TimelineCreatedDate, b.leafStatus, c.post_type_id, c.post_type_object_id FROM teeme_node a, teeme_leaf b, teeme_post_web_post_store c WHERE c.post_id=a.id AND c.post_type_id=3  AND c.participant_id='".$user_id."' AND c.sender_id='".$user_id."' AND c.post_type_object_id='".$post_type_object_id."' AND b.id=a.leafId AND (a.predecessor='0' OR a.predecessor='') AND a.treeIds=".$treeId." AND b.leafStatus='publish' AND c.seen_status=0 ORDER BY b.editedDate DESC";
 				}		
 			}
 			else if ($post_type_id==5) {
@@ -1361,7 +1359,7 @@ class timeline_db_manager extends CI_Model
 						}
 					}	
 				//echo "<pre>"; print_r(array_unique($arrPostIds)); exit;
-				$q2 = "SELECT DISTINCT a.workSpaceId as workSpaceId, a.workSpaceType as workSpaceType, a.id, a.successors, a.predecessor, a.nodeOrder, b.id as leafId, b.authors, b.userId, b.contents, DATE_FORMAT(b.createdDate, '%Y-%m-%d %H:%i:%s') as TimelineCreatedDate, b.leafStatus FROM teeme_node a, teeme_leaf b, teeme_post_web_post_store c WHERE c.post_id=a.id AND c.participant_id='".$user_id."' AND b.id=a.leafId AND (a.predecessor='0' OR a.predecessor='') AND a.treeIds=".$treeId." AND c.seen_status=0";			
+				$q2 = "SELECT DISTINCT a.workSpaceId as workSpaceId, a.workSpaceType as workSpaceType, a.id, a.successors, a.predecessor, a.nodeOrder, b.id as leafId, b.authors, b.userId, b.contents, DATE_FORMAT(b.createdDate, '%Y-%m-%d %H:%i:%s') as TimelineCreatedDate, b.leafStatus, c.post_type_id, c.post_type_object_id FROM teeme_node a, teeme_leaf b, teeme_post_web_post_store c WHERE c.post_id=a.id AND c.participant_id='".$user_id."' AND b.id=a.leafId AND (a.predecessor='0' OR a.predecessor='') AND a.treeIds=".$treeId." AND b.leafStatus='publish' AND c.seen_status=0";			
 				if(count($arrPostIds)>0){
 					$postIds = implode(",",$arrPostIds);
 					$q2 .= " AND c.post_id IN ($postIds)";
@@ -1370,26 +1368,30 @@ class timeline_db_manager extends CI_Model
 			}
 			else if ($post_type_id==6) {
 				//$q2 = "SELECT a.workSpaceId as workSpaceId, a.workSpaceType as workSpaceType, a.id, a.successors, a.predecessor, a.nodeOrder, b.id as leafId, b.authors, b.userId, b.contents, DATE_FORMAT(b.createdDate, '%Y-%m-%d %H:%i:%s') as TimelineCreatedDate, b.leafStatus FROM teeme_node a, teeme_leaf b, teeme_bookmark c WHERE b.id=a.leafId AND (a.predecessor='0' OR a.predecessor='') AND a.treeIds=".$treeId." AND c.node_id=a.id AND c.bookmarked=1 AND c.user_id='".$_SESSION['userId']."' ORDER BY c.bookmark_date DESC";
-				$q2 = "SELECT a.workSpaceId as workSpaceId, a.workSpaceType as workSpaceType, a.id, a.successors, a.predecessor, a.nodeOrder, b.id as leafId, b.authors, b.userId, b.contents, DATE_FORMAT(b.createdDate, '%Y-%m-%d %H:%i:%s') as TimelineCreatedDate, b.leafStatus FROM teeme_node a, teeme_leaf b, teeme_bookmark c, teeme_post_web_post_store d WHERE b.id=a.leafId AND b.id=d.post_id AND a.leafId=d.post_id AND c.node_id=d.post_id AND d.participant_id='".$_SESSION['userId']."' AND d.seen_status=0 AND (a.predecessor='0' OR a.predecessor='') AND a.treeIds=".$treeId." AND c.node_id=a.id AND c.bookmarked=1 AND c.user_id='".$_SESSION['userId']."' ORDER BY c.bookmark_date DESC";
+				$q2 = "SELECT a.workSpaceId as workSpaceId, a.workSpaceType as workSpaceType, a.id, a.successors, a.predecessor, a.nodeOrder, b.id as leafId, b.authors, b.userId, b.contents, DATE_FORMAT(b.createdDate, '%Y-%m-%d %H:%i:%s') as TimelineCreatedDate, b.leafStatus, d.post_type_id, d.post_type_object_id FROM teeme_node a, teeme_leaf b, teeme_bookmark c, teeme_post_web_post_store d WHERE b.id=a.leafId AND b.id=d.post_id AND a.leafId=d.post_id AND c.node_id=d.post_id AND d.participant_id='".$_SESSION['userId']."' AND d.seen_status=0 AND (a.predecessor='0' OR a.predecessor='') AND a.treeIds=".$treeId." AND b.leafStatus='publish' AND c.node_id=a.id AND c.bookmarked=1 AND c.user_id='".$_SESSION['userId']."' ORDER BY c.bookmark_date DESC";
 			}
 			else if ($post_type_id==7){
-				$q2 = "SELECT a.workSpaceId as workSpaceId, a.workSpaceType as workSpaceType, a.id, a.successors, a.predecessor, a.nodeOrder, b.id as leafId, b.authors, b.userId, b.contents, DATE_FORMAT(b.createdDate, '%Y-%m-%d %H:%i:%s') as TimelineCreatedDate, b.leafStatus FROM teeme_node a, teeme_leaf b, teeme_post_web_post_store c WHERE c.post_id=a.id AND c.post_type_id=7 AND c.participant_id='".$user_id."' AND b.id=a.leafId AND (a.predecessor='0' or a.predecessor='') AND a.treeIds=".$treeId." AND a.workSpaceId='0' AND a.workSpaceType='0' AND c.seen_status=0 ORDER BY b.editedDate DESC";
+				$q2 = "SELECT a.workSpaceId as workSpaceId, a.workSpaceType as workSpaceType, a.id, a.successors, a.predecessor, a.nodeOrder, b.id as leafId, b.authors, b.userId, b.contents, DATE_FORMAT(b.createdDate, '%Y-%m-%d %H:%i:%s') as TimelineCreatedDate, b.leafStatus, c.post_type_id, c.post_type_object_id FROM teeme_node a, teeme_leaf b, teeme_post_web_post_store c WHERE c.post_id=a.id AND c.post_type_id=7 AND c.participant_id='".$user_id."' AND b.id=a.leafId AND (a.predecessor='0' or a.predecessor='') AND a.treeIds=".$treeId." AND a.workSpaceId='0' AND a.workSpaceType='0' AND b.leafStatus='publish' AND c.seen_status=0 ORDER BY b.editedDate DESC";
 			}	
 			else if ($post_type_id==8){
 				//$query = $this->db->query("SELECT a.workSpaceId as workSpaceId, a.workSpaceType as workSpaceType, a.id, a.successors, a.predecessor, a.nodeOrder, b.id as leafId, b.authors, b.userId, b.contents, DATE_FORMAT(b.createdDate, '%Y-%m-%d %H:%i:%s') as TimelineCreatedDate, b.leafStatus FROM teeme_node a, teeme_leaf b WHERE b.id=a.leafId and (a.predecessor='0' or a.predecessor='') and a.treeIds=".$treeId." and a.workSpaceId='0' and a.workSpaceType='0' ORDER BY b.editedDate DESC");
-				$q2 = "SELECT a.workSpaceId as workSpaceId, a.workSpaceType as workSpaceType, a.id, a.successors, a.predecessor, a.nodeOrder, b.id as leafId, b.authors, b.userId, b.contents, DATE_FORMAT(b.createdDate, '%Y-%m-%d %H:%i:%s') as TimelineCreatedDate, b.leafStatus, c.seen_status FROM teeme_node a, teeme_leaf b, teeme_post_web_post_store c WHERE c.post_id=a.id AND c.participant_id='".$user_id."' AND b.id=a.leafId AND (a.predecessor='0' or a.predecessor='') AND a.treeIds=".$treeId." AND c.seen_status=1 ORDER BY b.editedDate DESC";
+				$q2 = "SELECT a.workSpaceId as workSpaceId, a.workSpaceType as workSpaceType, a.id, a.successors, a.predecessor, a.nodeOrder, b.id as leafId, b.authors, b.userId, b.contents, DATE_FORMAT(b.createdDate, '%Y-%m-%d %H:%i:%s') as TimelineCreatedDate, b.leafStatus, c.seen_status, c.post_type_id, c.post_type_object_id FROM teeme_node a, teeme_leaf b, teeme_post_web_post_store c WHERE c.post_id=a.id AND c.participant_id='".$user_id."' AND b.id=a.leafId AND (a.predecessor='0' or a.predecessor='') AND a.treeIds=".$treeId." AND b.leafStatus='publish' AND c.seen_status=1 ORDER BY b.editedDate DESC";
 			}
 			else if ($post_type_id==9) {
 				if ($post_type_object_id>0){
-					$q2 = "SELECT a.workSpaceId as workSpaceId, a.workSpaceType as workSpaceType, a.id, a.successors, a.predecessor, a.nodeOrder, b.id as leafId, b.authors, b.userId, b.contents, DATE_FORMAT(b.createdDate, '%Y-%m-%d %H:%i:%s') as TimelineCreatedDate, b.leafStatus FROM teeme_node a, teeme_leaf b, teeme_post_web_post_store c WHERE c.post_id=a.id AND c.post_type_id=9  AND c.participant_id='".$user_id."' AND c.post_type_object_id='".$post_type_object_id."' AND b.id=a.leafId AND (a.predecessor='0' OR a.predecessor='') AND a.treeIds=".$treeId." AND c.seen_status=0 ORDER BY b.editedDate DESC";
+					$q2 = "SELECT a.workSpaceId as workSpaceId, a.workSpaceType as workSpaceType, a.id, a.successors, a.predecessor, a.nodeOrder, b.id as leafId, b.authors, b.userId, b.contents, DATE_FORMAT(b.createdDate, '%Y-%m-%d %H:%i:%s') as TimelineCreatedDate, b.leafStatus, c.post_type_id, c.post_type_object_id FROM teeme_node a, teeme_leaf b, teeme_post_web_post_store c WHERE c.post_id=a.id AND c.post_type_id=9  AND c.participant_id='".$user_id."' AND c.post_type_object_id='".$post_type_object_id."' AND b.id=a.leafId AND (a.predecessor='0' OR a.predecessor='') AND a.treeIds=".$treeId." AND b.leafStatus='publish' AND c.seen_status=0 ORDER BY b.editedDate DESC";
 				}
 				else{
-					$q2 = "SELECT a.workSpaceId as workSpaceId, a.workSpaceType as workSpaceType, a.id, a.successors, a.predecessor, a.nodeOrder, b.id as leafId, b.authors, b.userId, b.contents, DATE_FORMAT(b.createdDate, '%Y-%m-%d %H:%i:%s') as TimelineCreatedDate, b.leafStatus FROM teeme_node a, teeme_leaf b, teeme_post_web_post_store c WHERE c.post_id=a.id AND c.post_type_id=9  AND c.participant_id='".$user_id."' AND c.sender_id='".$user_id."' AND c.post_type_object_id='".$post_type_object_id."' AND b.id=a.leafId AND (a.predecessor='0' OR a.predecessor='') AND a.treeIds=".$treeId." AND c.seen_status=0 ORDER BY b.editedDate DESC";
+					$q2 = "SELECT a.workSpaceId as workSpaceId, a.workSpaceType as workSpaceType, a.id, a.successors, a.predecessor, a.nodeOrder, b.id as leafId, b.authors, b.userId, b.contents, DATE_FORMAT(b.createdDate, '%Y-%m-%d %H:%i:%s') as TimelineCreatedDate, b.leafStatus, c.post_type_id, c.post_type_object_id FROM teeme_node a, teeme_leaf b, teeme_post_web_post_store c WHERE c.post_id=a.id AND c.post_type_id=9  AND c.participant_id='".$user_id."' AND c.sender_id='".$user_id."' AND c.post_type_object_id='".$post_type_object_id."' AND b.id=a.leafId AND (a.predecessor='0' OR a.predecessor='') AND a.treeIds=".$treeId." AND b.leafStatus='publish' AND c.seen_status=0 ORDER BY b.editedDate DESC";
 				}
 				//echo "<pre>"; print_r($query2->result());exit;
-			}		
+			}	
+			else if ($post_type_id==10){
+				$q2 = "SELECT a.workSpaceId as workSpaceId, a.workSpaceType as workSpaceType, a.id, a.successors, a.predecessor, a.nodeOrder, b.id as leafId, b.authors, b.userId, b.contents, DATE_FORMAT(b.createdDate, '%Y-%m-%d %H:%i:%s') as TimelineCreatedDate, b.leafStatus, c.post_type_id, c.post_type_object_id FROM teeme_node a, teeme_leaf b, teeme_post_web_post_store c WHERE c.post_id=a.id AND b.userId='".$user_id."' AND c.participant_id='".$user_id."' AND b.id=a.leafId AND (a.predecessor='0' OR a.predecessor='') AND a.treeIds=".$treeId." AND b.leafStatus='draft' AND c.seen_status=0 GROUP BY c.post_id";			
+				$q2 .= " ORDER BY b.editedDate DESC";
+			}	
 				$query2 = $this->db->query($q2);
-			//echo $q2;
+			//echo $q2; exit;
 			//echo "<pre>"; print_r($query2->result());exit;
 			//echo $post_object_id;exit;
 			if($query2->num_rows()>0){
@@ -1408,6 +1410,8 @@ class timeline_db_manager extends CI_Model
 					$treeData[$i]['commentWorkSpaceType']  		= $row->workSpaceType;
 					$treeData[$i]['leafStatus']  		= $row->leafStatus;
 					$treeData[$i]['seen_status']  		= $row->seen_status;	
+					$treeData[$i]['post_type_id']  		= $row->post_type_id;
+					$treeData[$i]['post_type_object_id'] = $row->post_type_object_id;
 					$i++;											
 				}
 				return $treeData;	
@@ -1511,7 +1515,7 @@ class timeline_db_manager extends CI_Model
 			
 			if($workSpaceType==1 && $active_view=='space'){
 				//$q = "SELECT post_id FROM teeme_post_web_post_store WHERE participant_id='".$userId."' AND seen_status=0 AND post_type_id=2 AND post_type_object_id=$workSpaceId ORDER BY post_id DESC";
-				$q = 'SELECT DISTINCT b.id as post_id FROM teeme_node a, teeme_leaf b, teeme_post_web_post_store c WHERE (c.post_id=a.id OR c.post_id=a.predecessor) AND c.participant_id='.$userId.' AND (b.id=a.leafId OR b.id=a.predecessor) AND a.treeIds=0 AND c.seen_status=0 AND c.post_type_id=2 AND c.post_type_object_id='.$workSpaceId.' AND c.post_type_object_id=a.workSpaceId';
+				$q = 'SELECT DISTINCT b.id as post_id FROM teeme_node a, teeme_leaf b, teeme_post_web_post_store c WHERE (c.post_id=a.id OR c.post_id=a.predecessor) AND c.participant_id='.$userId.' AND (b.id=a.leafId OR b.id=a.predecessor) AND a.treeIds=0 AND c.seen_status=0 AND c.post_type_id=2 AND c.post_type_object_id='.$workSpaceId.' AND c.post_type_object_id=a.workSpaceId AND b.leafStatus=\'publish\'';
 				if ($search!=''){
 					$q .= ' AND b.contents LIKE (\''.$search.'%\')';
 				}
@@ -1520,7 +1524,7 @@ class timeline_db_manager extends CI_Model
 			else{
 				//$q = "SELECT post_id FROM teeme_post_web_post_store WHERE participant_id='".$userId."' AND seen_status=0 ORDER BY post_id DESC";
 				
-				$q = 'SELECT DISTINCT a.post_id FROM teeme_post_web_post_store a, teeme_leaf b WHERE a.participant_id='.$userId.' AND a.seen_status=0 AND a.post_id=b.id';
+				$q = 'SELECT DISTINCT a.post_id FROM teeme_post_web_post_store a, teeme_leaf b WHERE a.participant_id='.$userId.' AND a.seen_status=0 AND a.post_id=b.id AND b.leafStatus=\'publish\'';
 				if ($search!=''){
 					$q .= ' AND b.contents LIKE (\'<p>'.$search.'%\')';
 				}
@@ -1859,6 +1863,8 @@ class timeline_db_manager extends CI_Model
 			$post_type_id=7;
 		}elseif ($postType=='parked'){
 			$post_type_id=8;
+		}elseif ($postType=='draft'){
+			$post_type_id=10;
 		}
 
 		if($workSpaceId >= 0)
@@ -1898,7 +1904,7 @@ class timeline_db_manager extends CI_Model
 							}
 						}
 					//$q = "SELECT a.id FROM teeme_node a, teeme_leaf b, teeme_post_web_post_store c WHERE c.post_id=a.id AND c.participant_id='".$_SESSION['userId']."' AND b.id=a.leafId AND (a.predecessor='0' OR a.predecessor='') AND a.treeIds=".$treeId." AND c.seen_status=0";
-					$q2 = "SELECT DISTINCT a.id FROM teeme_node a, teeme_leaf b, teeme_post_web_post_store c WHERE c.post_id=a.id AND c.participant_id='".$_SESSION['userId']."' AND b.id=a.leafId AND (a.predecessor='0' OR a.predecessor='') AND a.treeIds=".$treeId." AND c.seen_status=0";							
+					$q2 = "SELECT DISTINCT a.id FROM teeme_node a, teeme_leaf b, teeme_post_web_post_store c WHERE c.post_id=a.id AND c.participant_id='".$_SESSION['userId']."' AND b.id=a.leafId AND (a.predecessor='0' OR a.predecessor='') AND a.treeIds=".$treeId." AND b.leafStatus='publish' AND c.seen_status=0";							
 					if(count($arrPostIds)>0){
 						$postIds = implode(",",$arrPostIds);
 						$q2 .= " AND c.post_id IN ($postIds)";
@@ -1906,7 +1912,7 @@ class timeline_db_manager extends CI_Model
 					$result_count1 = $this->db->query($q2);
 				}elseif($postType=='bookmark')
 				{
-					$q = "SELECT a.id as row_count FROM teeme_node a, teeme_leaf b, teeme_bookmark c, teeme_post_web_post_store d WHERE b.id=a.leafId AND b.id=d.post_id AND a.leafId=d.post_id AND c.node_id=d.post_id AND d.participant_id='".$_SESSION['userId']."' AND d.seen_status=0 AND (a.predecessor='0' OR a.predecessor='') AND a.treeIds=".$treeId." AND c.node_id=a.id AND c.bookmarked=1 AND c.user_id='".$_SESSION['userId']."' ORDER BY c.bookmark_date DESC";
+					$q = "SELECT a.id as row_count FROM teeme_node a, teeme_leaf b, teeme_bookmark c, teeme_post_web_post_store d WHERE b.id=a.leafId AND b.id=d.post_id AND a.leafId=d.post_id AND c.node_id=d.post_id AND d.participant_id='".$_SESSION['userId']."' AND d.seen_status=0 AND (a.predecessor='0' OR a.predecessor='') AND a.treeIds=".$treeId." AND c.node_id=a.id AND c.bookmarked=1 AND c.user_id='".$_SESSION['userId']."' AND b.leafStatus='publish' ORDER BY c.bookmark_date DESC";
 					$result_count1 = $this->db->query($q);
 				}elseif($postType=='public'){
 					//$result_count1 = $this->db->query("SELECT a.id FROM teeme_node a, teeme_leaf b WHERE b.id=a.leafId AND (a.predecessor='0' or a.predecessor='') AND a.treeIds=".$treeId." AND a.workSpaceId='0' AND a.workSpaceType='0' ORDER BY b.editedDate DESC");
@@ -1916,6 +1922,9 @@ class timeline_db_manager extends CI_Model
 				}elseif($postType=='parked'){
 					$q = "SELECT a.id FROM `teeme_post_web_post_store` AS a WHERE a.participant_id='".$_SESSION['userId']."' AND a.seen_status=1 GROUP BY a.post_id";
 					$result_count1 = $this->db->query($q);
+				}elseif($postType=='draft'){
+					$q2 = "SELECT DISTINCT a.id FROM teeme_node a, teeme_leaf b, teeme_post_web_post_store c WHERE c.post_id=a.id AND b.userId='".$_SESSION['userId']."' AND c.participant_id='".$_SESSION['userId']."' AND b.id=a.leafId AND (a.predecessor='0' OR a.predecessor='') AND a.treeIds=".$treeId." AND b.leafStatus='draft' AND c.seen_status=0";							
+					$result_count1 = $this->db->query($q2);
 				}
 
 
@@ -2077,5 +2086,26 @@ class timeline_db_manager extends CI_Model
 					*/
 		}			
 		return 0;				
+	}
+
+	public function getPostParticipants($post_id=0){
+		$arrMemberParticipantIds = array();
+		$arrSpaceParticipantIds = array();
+		$arrParticipantIds = array();
+		$q = "SELECT * FROM teeme_post_web_post_store WHERE post_id='".$post_id."'";
+		$query = $this->db->query($q);
+			foreach($query->result() as $row){	
+				if($row->post_type_id==2 && $row->post_type_object_id==0 && $row->post_type_id!=7){
+					$arrMemberParticipantIds[] = $row->participant_id;
+				}
+				elseif($row->post_type_id==2 && $row->post_type_object_id>0 && $row->post_type_id!=7){
+					$arrSpaceParticipantIds[] = $row->post_type_object_id;
+				}
+			}	
+		$arrParticipantIds['memberCount'] = count(array_unique($arrMemberParticipantIds));
+		$arrParticipantIds['spaceCount'] = count(array_unique($arrSpaceParticipantIds));
+		$arrParticipantIds['members'] = array_values(array_unique($arrMemberParticipantIds));
+		$arrParticipantIds['spaces'] = array_values(array_unique($arrSpaceParticipantIds));
+		return $arrParticipantIds;
 	}
 }

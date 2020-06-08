@@ -2848,6 +2848,8 @@ class Post extends CI_Controller {
 				$post_type_id = 8;
 			}else if($post_type=='space_ex') {
 				$post_type_id = 9;
+			}else if($post_type=='drafts') {
+				$post_type_id = 10;
 			}
 
 			// Update seen status of the current object
@@ -3000,6 +3002,9 @@ class Post extends CI_Controller {
 				elseif ($post_type_id==8){
 					$arrDetails['Profiledetail'] = $this->profile_manager->getUserDetailsByUserId($post_type_object_id);
 					$arrDetails['arrTimeline']	= $this->timeline_db_manager->get_timeline_web($treeId,$arrDetails['workSpaceId'],$arrDetails['workSpaceType'],0,$_SESSION['userId'],$post_type_id,$post_type_object_id);
+				}				
+				elseif($post_type_id==10){
+					$arrDetails['arrTimeline']	= $this->timeline_db_manager->get_timeline_web($treeId,$arrDetails['workSpaceId'],$arrDetails['workSpaceType'],0,$_SESSION['userId'],$post_type_id,$post_type_object_id);
 				}
 				else{
 					$arrDetails['arrTimeline'] = '';
@@ -3134,6 +3139,12 @@ class Post extends CI_Controller {
 				}
 				else{
 					$arrDetails['totalParkedPosts'] = $this->timeline_db_manager->getPostCountTimeline($workSpaceId, $workSpaceType, 0, 'parked');
+				}	
+				if ($post_type_id==10){
+					$arrDetails['totalDraftPosts'] = count($arrDetails['arrTimeline']);
+				}
+				else{
+					$arrDetails['totalDraftPosts'] = $this->timeline_db_manager->getPostCountTimeline($workSpaceId, $workSpaceType, 0, 'draft');
 				}	
 				//echo "space my= " .$arrDetails['totalSpacePosts']; exit;
 			
@@ -4024,6 +4035,9 @@ class Post extends CI_Controller {
 				$post_type_object_id=$this->input->post('post_type_object_id');
 				$post_content=trim($this->input->post($this->input->post('editorname1')));
 				$is_forward=$this->input->post('is_forward');
+				$is_draft=$this->input->post('is_draft');
+				$post_id=$this->input->post('post_id');
+				$post_status=$this->input->post('post_status');
 				$allowAddPost=1;// If it's a space, subspace or space external post, we need this.
 
 				// If the post is made from a space, we check whether the user has privileges to post in that space, if not we convert the post to a global post
@@ -4192,8 +4206,9 @@ class Post extends CI_Controller {
 				if($post_content!='')
 				{
 					$postCreatedDate=$objTime->getGMTTime();
+					
 					//$postNodeId	= $this->timeline_db_manager->insert_timeline_web($treeId,$this->input->post($this->input->post('editorname1')),$_SESSION['userId'],$postCreatedDate,0,0,$workSpaceId,$workSpaceType,$recipients);	
-					$postNodeId	= $this->timeline_db_manager->insert_timeline_web($treeId,$post_content,$_SESSION['userId'],$postCreatedDate,0,0,$workSpaceId,$workSpaceType,$arrAllRecipientIds,'','',1,1,0,$post_type_id,$post_type_object_id,1,0,'',$is_forward);	
+					$postNodeId	= $this->timeline_db_manager->insert_timeline_web($treeId,$post_content,$_SESSION['userId'],$postCreatedDate,0,0,$workSpaceId,$workSpaceType,$arrAllRecipientIds,'','',1,1,0,$post_type_id,$post_type_object_id,1,0,'',$is_forward,$post_status,$is_draft,$post_id);	
 							
 					//echo "<li>postnodeid= " .$postNodeId; exit;
 					//$groupSharedId = $this->identity_db_manager->add_group_recipients($postNodeId,$workSpaceId,$groupRecipients,$groupUserRecipients);	
@@ -4737,6 +4752,11 @@ class Post extends CI_Controller {
 				if($workSpaceId==0){
 					$allSpace = '';
 				}
+				// If we are on draft page, these values below are reset back to draft values
+				if($is_draft==1){
+					$post_type_id = 10;
+					$post_type_object_id = '';
+				}
 				
 				redirect('/post/get_timeline_web/'.$workSpaceId.'/'.$workSpaceType.'/'.$post_type_id.'/'.$post_type_object_id, 'location');
 					
@@ -5242,6 +5262,28 @@ class Post extends CI_Controller {
 				if($result) {echo "success";} else{echo "failure";}
 			}
 		}
+	}
+
+	function get_post_participants(){
+		if(!isset($_SESSION['userName']) || $_SESSION['userName'] =='')
+		{
+			$_SESSION['errorMsg']	= 	$this->lang->line('msg_session_expire'); 
+			$this->load->model('dal/identity_db_manager');						
+			$objIdentity	= $this->identity_db_manager;	
+			$arrDetails['workPlaceDetails'] 	= $objIdentity->getWorkPlaces();	
+			$this->load->view('login', $arrDetails);
+		}
+		else{
+			$this->load->model('dal/timeline_db_manager');
+			$post_id=$this->input->post('post_id');	
+
+				if ($post_id!=0){				
+					$result = $this->timeline_db_manager->getPostParticipants($post_id);
+					//if($result) {echo "success";} else{echo "failure";}
+					//echo "<pre>"; print_r($result);
+					echo json_encode($result);
+				}	
+		}		
 	}
 
 }
