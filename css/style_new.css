@@ -8934,6 +8934,9 @@ span.reserve a
 .timelineContentDivStyle {
 	background-color: #CCFF33;
 }
+.nestedCommentsSection{
+	margin-left:10%;
+}
 /* The Modal (background) */
 .modal {
 	display: none; /* Hidden by default */

@@ -3563,13 +3563,24 @@ class Post extends CI_Controller {
 			$treeId='0';
 			$postCommentCreatedDate=$objTime->getGMTTime();
 			$postNodeId = $this->uri->segment(5);
+			//echo "reply= ".$this->input->post('reply'); exit;
 			if($this->input->post('reply') == 1){  
 				$workSpaceId	= $this->input->post('workSpaceId');
 				$workSpaceType	= $this->input->post('workSpaceType');
 				$post_type_id	= $this->input->post('post_type_id');
 				$post_type_object_id	= $this->input->post('post_type_object_id');
-				$postCommentNodeId	= $this->timeline_db_manager->insertTimelineComment($this->uri->segment(5),$this->input->post($this->input->post('editorname1')),$_SESSION['userId'],$postCommentCreatedDate,$treeId,$workSpaceId,$workSpaceType);
 				
+				$is_nested = $this->input->post('is_nested');
+					if($is_nested==1){
+						$editor = $this->input->post('replyTimelineComment'.$postNodeId);
+					}
+					else{
+						$editor = $this->input->post($this->input->post('editorname1'));
+					}
+				//echo $this->input->post($this->input->post('editorname1')); exit;
+				//echo 'this= '; exit;
+				$postCommentNodeId	= $this->timeline_db_manager->insertTimelineComment($this->uri->segment(5),$editor,$_SESSION['userId'],$postCommentCreatedDate,$treeId,$workSpaceId,$workSpaceType);
+				//echo 'res= '.$postCommentNodeId; exit;
 				//Add post comment change details start
 				if($postCommentNodeId!=0)
 				{
