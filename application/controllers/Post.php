@@ -3011,7 +3011,7 @@ class Post extends CI_Controller {
 				}
 				$arrDetails['post_type_id'] = $post_type_id;
 				$arrDetails['post_type_object_id'] = $post_type_object_id;
-			
+			//echo "<pre>"; print_r($arrDetails['arrTimeline']); exit;
 			
 			$workSpaceId_search_user= $this->uri->segment(3);	
 			$workSpaceType_search_user=$this->uri->segment(7);
@@ -4050,6 +4050,7 @@ class Post extends CI_Controller {
 				$post_id=$this->input->post('post_id');
 				$post_status=$this->input->post('post_status');
 				$allowAddPost=1;// If it's a space, subspace or space external post, we need this.
+				$disable_interactions=$this->input->post('disable_interactions');
 
 				// If the post is made from a space, we check whether the user has privileges to post in that space, if not we convert the post to a global post
 				if ($post_type_object_id>0 && ($post_type_id==2 || $post_type_id==3 || $post_type_id==9)){
@@ -4219,7 +4220,7 @@ class Post extends CI_Controller {
 					$postCreatedDate=$objTime->getGMTTime();
 					
 					//$postNodeId	= $this->timeline_db_manager->insert_timeline_web($treeId,$this->input->post($this->input->post('editorname1')),$_SESSION['userId'],$postCreatedDate,0,0,$workSpaceId,$workSpaceType,$recipients);	
-					$postNodeId	= $this->timeline_db_manager->insert_timeline_web($treeId,$post_content,$_SESSION['userId'],$postCreatedDate,0,0,$workSpaceId,$workSpaceType,$arrAllRecipientIds,'','',1,1,0,$post_type_id,$post_type_object_id,1,0,'',$is_forward,$post_status,$is_draft,$post_id);	
+					$postNodeId	= $this->timeline_db_manager->insert_timeline_web($treeId,$post_content,$_SESSION['userId'],$postCreatedDate,0,0,$workSpaceId,$workSpaceType,$arrAllRecipientIds,'','',1,1,0,$post_type_id,$post_type_object_id,1,0,'',$is_forward,$post_status,$is_draft,$post_id,$disable_interactions);	
 							
 					//echo "<li>postnodeid= " .$postNodeId; exit;
 					//$groupSharedId = $this->identity_db_manager->add_group_recipients($postNodeId,$workSpaceId,$groupRecipients,$groupUserRecipients);	

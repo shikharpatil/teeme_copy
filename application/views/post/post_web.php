@@ -1694,7 +1694,7 @@ $(document).ready(function()
 				
 				 ?>
 				 <!--Myspace select recepient code end-->
-				 
+				<input type="checkbox" name="disableInteractions" id="disableInteractions"/>Disable interactions
 				<div id="buttons"></div>
 				<div class="replyCancelButtons">
 					<?php
@@ -1714,7 +1714,7 @@ $(document).ready(function()
 					?>
 				 </div>
 				 <input type="button" id="postDraftButton" name="draftButton" value="<?php echo 'Save as draft';?>" onClick="insertTimeline('draft');" style="float:left; margin-left:1%; margin-top:-1%;" >		 
-				 <input name="reply" id="reply" type="hidden"  value="1">
+				 <input name="reply" id="reply" type="hidden" value="1">
 				 <input type="hidden" name="workSpaceId" value="<?php echo $workSpaceId;?>" id="workSpaceId">
           		 <input type="hidden" name="workSpaceType" value="<?php echo $workSpaceType;?>" id="workSpaceType">
 				 <input type="hidden" name="publicPost" value="<?php echo $_SESSION['public']; ?>" id="publicPost">
@@ -1967,9 +1967,15 @@ function insertTimeline(postStatus='publish')
 		var is_draft = document.getElementById("isDraft").value;
 		var post_id = document.getElementById("post_id").value;
 		var post_status = postStatus;
+			if($('#disableInteractions').prop('checked')==true){
+				var disable_interactions = 1;
+			}else{
+				var disable_interactions = 0;
+			}
+		//alert(disable_interactions); return false;
 		//alert (recipients); return false;
 		//data_user = data_user+'&replyDiscussion='+encodeURIComponent(getvalue)+'&recipients='+recipients+'&groupRecipients='+groupRecipients; 
-		data_user = data_user+'&replyDiscussion='+encodeURIComponent(getvalue)+'&recipients='+recipients+'&groupRecipients='+groupRecipients+'&spaceRecipients='+spaceRecipients+'&is_forward='+is_forward+'&post_status='+post_status+'&is_draft='+is_draft+'&post_id='+post_id; 
+		data_user = data_user+'&replyDiscussion='+encodeURIComponent(getvalue)+'&recipients='+recipients+'&groupRecipients='+groupRecipients+'&spaceRecipients='+spaceRecipients+'&is_forward='+is_forward+'&post_status='+post_status+'&is_draft='+is_draft+'&post_id='+post_id+'&disable_interactions='+disable_interactions; 
 		//var pnodeId=$("#pnodeId").val();
 		var request = $.ajax({
 			  url: baseUrl+"post/insert_timeline_web/",
@@ -2358,10 +2364,11 @@ function forwardPost(post_id){
 }
 //check all function start
 
-function editDraft(post_type_id,post_type_object_id,post_id){
+function editDraft(post_type_id,post_type_object_id,post_id=0,interactions=0){
 	//console.log('data= '+data);	
 	//console.log ('post type id= ' + post_type_id);
 	//console.log ('post type object id= ' + post_type_object_id);
+	//alert(interactions);
 	//return false;
 	var data = document.getElementById('post_content'+post_id).value;
 	showTimelineEditor(data,post_type_id);
@@ -2373,6 +2380,11 @@ function editDraft(post_type_id,post_type_object_id,post_id){
 	$('#post_id').prop("value", post_id);//Set post id if it's a draft 
 	$('#post_type_id').prop("value", post_type_id);
 	$('#post_type_object_id').prop("value", post_type_object_id);
+		if (interactions==1){
+			$('#disableInteractions').prop('checked',true);
+		}else{
+			$('#disableInteractions').prop('checked',false);
+		}
 
 	// Get saved participant list (members and spaces) if not a public draft
 	if (post_type_id!=7){

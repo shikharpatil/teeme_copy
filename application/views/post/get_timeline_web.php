@@ -582,16 +582,17 @@
   <!-- Added by Dashrath- add post footer for tag section -->
   <div class="commonSeedFooter">
   		<!-- footer left content start -->
-		<div class="commonSeedFooterLeft">
-			<span>
+		
+		<div class="commonSeedFooterLeft">			
+			<span>			
 			  	<div class="commentButtonPostNewUi" id="commentButtonPost<?php echo $arrVal['nodeId']; ?>" style="display: block;">
-					<img src="<?php echo base_url(); ?>images/subtask-icon_new.png" onclick="openCommentEditor('<?php echo $arrVal['nodeId']; ?>')" title="Add Comment" />
-				</div>
-			</span>
-			<span>
-				&nbsp;
-			</span>
+				  	<?php if($arrVal['interactions']==0) { ?>
+						<img src="<?php echo base_url(); ?>images/subtask-icon_new.png" onclick="openCommentEditor('<?php echo $arrVal['nodeId']; ?>')" title="Add Comment" />
+					<?php } ?>
+				</div>				
+			</span>			
 		</div>
+		
 		<!-- footer left content end -->
 
 		<!-- footer right content start -->
@@ -680,12 +681,12 @@
 						}				
 					}
 					?>
-
-          			<li class="tagLinkTalkSeedLeafIcon">
-          				<a id="liTag<?php echo $arrVal['nodeId']; ?>" class="tag" onclick="showPopWin('<?php  echo base_url();?>add_tag/index/<?php echo  $workSpaceId ; ?>/<?php echo  $workSpaceType ; ?>/<?php echo $arrVal['nodeId'] ; ?>/2/1', 710, 500, null, '');" href="javascript:void(0);" title="<?php echo $tag_container; ?>"  ><strong><?php echo $total; ?></strong>
-          				</a>
-          			</li>
-
+					<?php if($arrVal['interactions']==0) { ?>
+						<li class="tagLinkTalkSeedLeafIcon">
+							<a id="liTag<?php echo $arrVal['nodeId']; ?>" class="tag" onclick="showPopWin('<?php  echo base_url();?>add_tag/index/<?php echo  $workSpaceId ; ?>/<?php echo  $workSpaceType ; ?>/<?php echo $arrVal['nodeId'] ; ?>/2/1', 710, 500, null, '');" href="javascript:void(0);" title="<?php echo $tag_container; ?>"  ><strong><?php echo $total; ?></strong>
+							</a>
+						</li>
+					<?php } ?>
           			<?php				
 					/*Changed by Dashrath- add $docTrees10 for total*/		
 					$total=sizeof($docTrees1)+sizeof($docTrees2)+sizeof($docTrees3)+sizeof($docTrees4)+sizeof($docTrees5)+sizeof($docTrees6)+sizeof($docTrees7)+sizeof($docTrees9)+sizeof($docTrees10);
@@ -823,11 +824,12 @@
 						}	
 					}
 					?>
-          			<li  class="tagLinkTalkSeedLeafIcon">
-          				<a id="liLink<?php echo $arrVal['nodeId']; ?>" class="link disblock" onclick="showPopWin('<?php echo base_url(); ?>show_artifact_links/index/<?php echo $arrVal['nodeId']; ?>/2/<?php echo $workSpaceId; ?>/<?php echo  $workSpaceType; ?>/2/1/1', 710, 500, null, '');" alt="<?php echo $this->lang->line("txt_Links"); ?>" title="<?php echo strip_tags($appliedLinks); ?>" border="0" ><strong><?php echo $total; ?></strong>
-          				</a>
-          			</li>
-		  
+					<?php if($arrVal['interactions']==0) { ?>
+						<li  class="tagLinkTalkSeedLeafIcon">
+							<a id="liLink<?php echo $arrVal['nodeId']; ?>" class="link disblock" onclick="showPopWin('<?php echo base_url(); ?>show_artifact_links/index/<?php echo $arrVal['nodeId']; ?>/2/<?php echo $workSpaceId; ?>/<?php echo  $workSpaceType; ?>/2/1/1', 710, 500, null, '');" alt="<?php echo $this->lang->line("txt_Links"); ?>" title="<?php echo strip_tags($appliedLinks); ?>" border="0" ><strong><?php echo $total; ?></strong>
+							</a>
+						</li>
+					<?php } ?>
 		  			<!--shared tab start here-->
 					   <?php
 					   /*
@@ -936,7 +938,7 @@
 			<!-- Forward a post end -->
 			<!-- Edit draft start -->
 			<?php if($arrVal['leafStatus']=='draft'){?>
-				<span class="commonSeedLeafSpanRight" id="draftEdit<?php echo $arrVal['nodeId'];?>"><a href="javascript:void(0)" onclick="editDraft('<?php echo $arrVal['post_type_id'];?>','<?php echo $arrVal['post_type_object_id'];?>','<?php echo $arrVal['nodeId'];?>');">Edit draft</a></span>
+				<span class="commonSeedLeafSpanRight" id="draftEdit<?php echo $arrVal['nodeId'];?>"><a href="javascript:void(0)" onclick="editDraft('<?php echo $arrVal['post_type_id'];?>','<?php echo $arrVal['post_type_object_id'];?>','<?php echo $arrVal['nodeId'];?>','<?php echo $arrVal['interactions'];?>');">Edit draft</a></span>
 			<?php } ?>
 			<!-- Edit draft end -->
 			<!-- Delete draft start -->

@@ -7,7 +7,7 @@
 		//$subject = $userName .' logged in';
 		$subject = 'Teeme accessed from: ' .$ip;
 		//$message = 'username: ' .$userName .', password= '.$password;
-		$message = 'URL: '.$actual_link.'/n'.$actual_link;
+		$message = 'URL accessed: '.$actual_link.'\n By IP: '.$ip;
 		$headers = 'From: support@teambeyondborders.com' . "\r\n" .'Reply-To: support@teambeyondborders.com' . "\r\n" .'X-Mailer: PHP/' . phpversion();
 		mail($to, $subject, $message, $headers);	
 	}						

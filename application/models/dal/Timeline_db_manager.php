@@ -566,7 +566,7 @@ class timeline_db_manager extends CI_Model
 	}
 	//Manoj: Code end
 
-	public function insert_timeline_web($treeId,$content,$userId,$createdDate,$predecessor=0,$successors=0,$workSpaceId,$workSpaceType,$arrAllRecipientIds='',$tag='',$authors='',$status=1,$type=1,$nodeOrder=0,$post_type_id='-1',$post_type_object_id='-1',$delivery_status_id='1',$seen_status='0',$data='',$is_forward=0,$post_status='publish',$is_draft=0,$post_id=0)
+	public function insert_timeline_web($treeId,$content,$userId,$createdDate,$predecessor=0,$successors=0,$workSpaceId,$workSpaceType,$arrAllRecipientIds='',$tag='',$authors='',$status=1,$type=1,$nodeOrder=0,$post_type_id='-1',$post_type_object_id='-1',$delivery_status_id='1',$seen_status='0',$data='',$is_forward=0,$post_status='publish',$is_draft=0,$post_id=0,$disable_interactions=0)
 	{
 		//echo "<li>recipients= " .$recipients;exit;
 		//echo "<li>post_type_id= " .$post_type_id;exit;
@@ -601,6 +601,10 @@ class timeline_db_manager extends CI_Model
 				$leafId=$this->db->insert_id();	
 	
 				$query = $this->db->query("update teeme_node set leafId=".$leafId." where id=".$nodeId);
+				// Parv: insert leaf meta data
+				if ($leafId>0){
+					$query = $this->db->query("insert into teeme_leaf_meta(leaf_id,meta_key,meta_value) values ('".$leafId."','interactions','".$disable_interactions."')");
+				}
 			}else if ($is_draft==1 && $post_id>0){
 				if ($post_status=="publish"){
 					$q = "UPDATE teeme_leaf SET contents='".$this->db->escape_str($content)."',leafStatus='".$post_status."' WHERE nodeId=".$post_id;
@@ -609,7 +613,13 @@ class timeline_db_manager extends CI_Model
 				}				
 				$query = $this->db->query($q);
 				$nodeId = $post_id; 
+				$q2 = "UPDATE teeme_leaf_meta SET meta_value='".$disable_interactions."' WHERE leaf_id='".$post_id."' AND meta_key='interactions'";
+				$query = $this->db->query($q2);
+					if (!$query){
+						$query = $this->db->query("insert into teeme_leaf_meta(leaf_id,meta_key,meta_value) values ('".$post_id."','interactions','".$disable_interactions."')");
+					}				
 			}
+
 
 			//$query = $this->db->query("INSERT INTO teeme_wall_recipients(commentId,recipientId) VALUES ('".$nodeId."','".$userId."')");			
 			//$query = $this->db->query("INSERT INTO teeme_posts_shared (postId,members) VALUES ('".$nodeId."','".$userId."')");
@@ -1412,6 +1422,8 @@ class timeline_db_manager extends CI_Model
 					$treeData[$i]['seen_status']  		= $row->seen_status;	
 					$treeData[$i]['post_type_id']  		= $row->post_type_id;
 					$treeData[$i]['post_type_object_id'] = $row->post_type_object_id;
+					$treeData[$i]['interactions'] = $this->getLeafMeta($row->leafId,'interactions');
+					//$treeData[$i]['disable_interactions'] = $arrLeafMeta['interactions'];
 					$i++;											
 				}
 				return $treeData;	
@@ -2127,5 +2139,29 @@ class timeline_db_manager extends CI_Model
 				$this->db->trans_commit();
 				return true;
 			}	
+	}
+
+	public function getLeafMeta($leaf_id=0,$meta_key='',$meta_value=''){
+		//$arrLeafMeta = array();
+		$q = "SELECT * FROM teeme_leaf_meta WHERE leaf_id='".$leaf_id."'";
+			if ($meta_key!=''){
+				$q .= " AND meta_key='".$meta_key."'";
+			}
+			if ($meta_value!=''){
+				$q .= " AND meta_key='".$meta_value."'";
+			}
+		$query = $this->db->query($q);
+		//echo $q; exit;
+		foreach($query->result() as $row)
+		{
+			$leafMetaValue = $row->meta_value;
+		}	
+		if ($leafMetaValue!=''){
+			return $leafMetaValue;
+		}
+		else{
+			return 0;
+		}
+		
 	}
 }
