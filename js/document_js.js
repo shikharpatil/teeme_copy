@@ -4758,6 +4758,10 @@ function talkOpen(leafTreeId,workSpaceId,workSpaceType,treeId,talkTitle,talkseed
 	//setInterval("testing("+leafTreeId+","+workSpaceId+","+workSpaceType+","+treeId+")",10000);
 }
 
+function singlePostView(postId=0,workSpaceId=0,workSpaceType=0){
+  $('.otherarea3').append('<div class="post'+postId+' abs"><div class="abs_head post_head'+postId+'"><div class="talktxtTitle"><span class="shortTitle"><img src="'+baseUrl+'images/email04.png" alt="Talk" border=0 ><b>Post</b><span class="tooltip"><span id="tooltiptext'+postId+'" class="tooltiptext">Post</span></span></span></div><div class="talkChatMinClose"><span class="talk_chat_close" onclick="closeTalkChat('+leafTreeId+','+talkNodeId+','+treeId+','+workSpaceId+','+artifactType+','+treeType+','+talkseed+')"><b>x </b>&nbsp;</span><span class="talk_chat_close talk_chat_size'+leafTreeId+'" onclick="hideTalkChat('+leafTreeId+','+talkNodeId+','+treeId+','+workSpaceId+','+artifactType+','+treeType+','+talkseed+')"><b>_ </b>&nbsp;&nbsp;</span></div></div><div class="'+className+' talk_content'+postId+'">'+data+'</div></div>');
+}
+
 function openNewPostWindow(){
   if($('.newPostWindow').length){
     $(".newPostWindow").show();	
