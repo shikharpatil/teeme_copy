@@ -291,6 +291,7 @@
 					else
 					{
 						echo stripslashes($arrVal['contents']);
+						//echo "<li>predecessor4= " .$arrVal['predecessor'];
 					}
 					/*Dashrath- code end*/ 
 		        }else{ ?>
@@ -894,8 +895,7 @@
 				<!--Star button code end-->
 			</span>
 			<!-- bookmark content end-->
-
-			<!-- delete button start-->
+			<!-- delete button start 04-->
       		<span class="commonSeedLeafSpanRight" id="deleteLeafSpan<?php echo $arrVal['nodeId'];?>">
 				<?php 
 				if(($arrVal['leafStatus'] != 'deleted') && ($arrVal['userId'] == $_SESSION['userId']))
@@ -930,7 +930,7 @@
 				}
 				?>
 			</span>
-			<!-- delete button end-->
+			<!-- delete button end 04-->
 			<!-- Forward a post start -->
 			<?php if($arrVal['leafStatus']=='publish'){?>
 				<span class="commonSeedLeafSpanRight" id="draftForward<?php echo $arrVal['nodeId'];?>"><a href="javascript:void(0)" onclick="forwardPost('<?php echo $arrVal['nodeId'];?>');">Forward</a></span>
@@ -1099,7 +1099,13 @@
 									}
 									else
 									{
-										echo stripslashes($arrDiscussions['contents']);
+										if ($arrDiscussions['predecessor']>0 && $arrDiscussions['predecessor']!=$arrVal['nodeId']){
+										?>
+											<a onclick="focusComment('comment<?php echo $arrDiscussions['predecessor']; ?>');" href="javascript:void(0);">>>quoted</a>
+										<?php
+											}
+											echo stripslashes($arrDiscussions['contents']);
+											//echo "<li>predecessor1= " .$arrDiscussions['predecessor'];
 									}
 									/*Dashrath- code end*/
 						        }else{ ?>
@@ -1112,8 +1118,24 @@
 					    	</span>
 	    					<!-- Dashrath : code end -->						  
 						</div>
-
-						<!-- delete button start-->
+							<!-- Nested comment start 01 -->
+							<span class="postCommentDelete" id="nestedCommentLeafSpan<?php echo $arrDiscussions['nodeId'];?>">
+			      			<span id="nestedCommentLeafIcon<?php echo $arrDiscussions['leafId'];?>">
+								<?php 
+								if(($arrDiscussions['leafStatus'] != 'deleted'))
+								{ 
+								?>
+									
+									<a href="javascript:void(0)" onClick="openNestedCommentEditor('<?php echo $arrDiscussions['leafId']; ?>')" title="<?php echo $this->lang->line('txt_comment'); ?>" border="0" ><img src="<?php echo  base_url(); ?>images/subtask-icon_new.png" alt="<?php echo $this->lang->line("txt_comment"); ?>" title="<?php echo $this->lang->line("txt_comment"); ?>">
+									</a>
+									
+								<?php 
+								} 
+								?>
+							</span>
+							</span>
+							<!-- Nested comment end 01-->
+						<!-- delete button start 03 -->
 			      		<span class="postCommentDelete" id="deleteLeafSpan<?php echo $arrDiscussions['nodeId'];?>">
 			      			<span id="deleteLeafIcon<?php echo $arrDiscussions['leafId'];?>">
 								<?php 
@@ -1129,18 +1151,34 @@
 								?>
 							</span>
 						</span>
-						<!-- delete button end-->
+						<!-- delete button end 03-->
 
 						<div class="clr"></div>
+							<!-- Nested comment textarea start here-->
+							<div id="nestedCommentTextBox<?php echo $arrDiscussions['nodeId']; ?>" class="CommentTextBox<?php echo $arrDiscussions['nodeId']; ?> commentEditorWrapper" style="display:none;">
+								<!--Changed by Dashrath- add handCursor class in div for editor content line spacing issue-->
+								<div class="handCursor">
+								<textarea class="postCommentTextBox" name="replyTimelineComment<?php echo $arrDiscussions['nodeId']; ?>" id="replyTimelineComment<?php echo $arrDiscussions['nodeId']; ?>"></textarea>
+								</div>
+								<div style="margin-top:8px;">
+								<input type="button" name="Replybutton" value="<?php echo $this->lang->line('txt_Comment');?>" onClick="insertPostComment('<?php echo $arrDiscussions['nodeId']; ?>','<?php echo $arrVal['nodeId']; ?>','1');" style="float:left;">
+								<input type="reset" name="Cancelbutton" value="<?php echo $this->lang->line('txt_Cancel');?>" style="float:left; margin-left:1%;"  onclick="cancelPostEditor('<?php echo $arrDiscussions['nodeId']; ?>','1');">
+								<input type="hidden" id="totalTimelineCommentNodes<?php echo $arrDiscussions['nodeId']; ?>" value="<?php echo implode(',',$totalTimelineCommentNodes);?>">
+								<div class="clr"></div>
+								<div id="commentLoader<?php echo $arrDiscussions['nodeId']; ?>"></div>
+								</div>
+							</div>
+							<!--Nested comment end here-->
+							<div class="clr"></div>
 					</div>
 
 					<?php } //if ends?>
-			<div style="clear:both;"></div>
-			<?php
+				<div style="clear:both;"></div>
+				<?php
 				$counter++;
 				$j++;
-			} // while ends
-			?>
+				} // while ends
+				?>
 				</div>			
 				 <!--Condition for more than 3 comments end here-->
 				 <?php
@@ -1227,7 +1265,13 @@
 									}
 									else
 									{
+										if ($arrDiscussions['predecessor']>0 && $arrDiscussions['predecessor']!=$arrVal['nodeId']){
+									?>
+										<a onclick="focusComment('comment<?php echo $arrDiscussions['predecessor']; ?>');" href="javascript:void(0);">>>quoted</a>
+									<?php
+										}
 										echo stripslashes($arrDiscussions['contents']);
+										//echo "<li>predecessor2= " .$arrDiscussions['predecessor'];
 									}
 								}else{ ?>
 									<span class="clearedLeafContent"><?php echo $this->lang->line('txt_content_deleted'); ?></span> 
@@ -1238,11 +1282,11 @@
 								<?php echo $this->lang->line('txt_content_deleted'); ?>
 							</span>
 							</div>
-							<!-- Nested comment start-->
+							<!-- Nested comment start 01 -->
 							<span class="postCommentDelete" id="nestedCommentLeafSpan<?php echo $arrDiscussions['nodeId'];?>">
 			      			<span id="nestedCommentLeafIcon<?php echo $arrDiscussions['leafId'];?>">
 								<?php 
-								if(($arrDiscussions['leafStatus'] != 'deleted') && ($arrDiscussions['userId'] == $_SESSION['userId']))
+								if(($arrDiscussions['leafStatus'] != 'deleted'))
 								{ 
 								?>
 									
@@ -1253,9 +1297,10 @@
 								} 
 								?>
 							</span>
+
 							</span>
-							<!-- Nested comment end-->
-							<!-- delete button start-->
+							<!-- Nested comment end 01-->
+							<!-- delete button start 01 -->
 							<span class="postCommentDelete" id="deleteLeafSpan<?php echo $arrDiscussions['nodeId'];?>">
 								<span id="deleteLeafIcon<?php echo $arrDiscussions['leafId'];?>">
 									<?php 
@@ -1271,17 +1316,31 @@
 									?>
 								</span>
 							</span>
-							<!-- delete button end-->
+							<!-- delete button end 01-->
+							<div class="clr"></div>
+							<!-- Nested comment textarea start here-->
+							<div id="nestedCommentTextBox<?php echo $arrDiscussions['nodeId']; ?>" class="CommentTextBox<?php echo $arrDiscussions['nodeId']; ?> commentEditorWrapper" style="display:none;">
+								<!--Changed by Dashrath- add handCursor class in div for editor content line spacing issue-->
+								<div class="handCursor">
+								<textarea class="postCommentTextBox" name="replyTimelineComment<?php echo $arrDiscussions['nodeId']; ?>" id="replyTimelineComment<?php echo $arrDiscussions['nodeId']; ?>"></textarea>
+								</div>
+								<div style="margin-top:8px;">
+								<input type="button" name="Replybutton" value="<?php echo $this->lang->line('txt_Comment');?>" onClick="insertPostComment('<?php echo $arrDiscussions['nodeId']; ?>','<?php echo $arrVal['nodeId']; ?>','1');" style="float:left;">
+								<input type="reset" name="Cancelbutton" value="<?php echo $this->lang->line('txt_Cancel');?>" style="float:left; margin-left:1%;"  onclick="cancelPostEditor('<?php echo $arrDiscussions['nodeId']; ?>','1');">
+								<input type="hidden" id="totalTimelineCommentNodes<?php echo $arrDiscussions['nodeId']; ?>" value="<?php echo implode(',',$totalTimelineCommentNodes);?>">
+								<div class="clr"></div>
+								<div id="commentLoader<?php echo $arrDiscussions['nodeId']; ?>"></div>
+								</div>
+							</div>
+							<!--Nested comment end here-->
 							<div class="clr"></div>
            				</div>
-				<?php
+					<?php
 					// Parv: Start nested comment here
-					//$arrNestedComments	= $this->chat_db_manager->getPerentInfo($arrDiscussions['nodeId']);	
-					//echo "<pre>nodes"; print_r($arrDiscussions);
+					/*
 					$sArray2=array();
 					$sArray2=explode(',',$arrDiscussions['successors']);
 					$totalCommentsCount2=count($sArray2);
-					//echo "<pre>totalCommentsCount2= " .$totalCommentsCount2;
 					?>
 					<div id="nestedCommentsSection<?php echo $arrDiscussions['nodeId'];?>" class="nestedCommentsSection">
 						<?php
@@ -1325,10 +1384,10 @@
 										<span id="delete_content_hide_<?php echo $arrDiscussions2['leafId'];?>" style="display: inline;">
 											<?php 
 											if($arrDiscussions2['leafStatus'] !='deleted'){
-												/*Commented old code and add new code below for audio icon show when content is audio*/
+												//Commented old code and add new code below for audio icon show when content is audio
 												// echo $arrDiscussions['contents'];
 
-												/*Added by Dashrath- Add if else condition for show audio icon when content is audio*/
+												//Added by Dashrath- Add if else condition for show audio icon when content is audio
 												$audioContainsMatch1 = (bool) preg_match('/class="[^"]*\baudioRecordTxt\b[^"]*"/', $arrDiscussions2['contents']);
 												$audioContainsMatch2 = (bool) preg_match( '/<audio/', $arrDiscussions2['contents']);
 														
@@ -1344,6 +1403,7 @@
 												else
 												{
 													echo stripslashes($arrDiscussions2['contents']);
+													echo "<li>predecessor3= " .$arrDiscussions3['predecessor'];
 												}
 											}else{ ?>
 												<span class="clearedLeafContent"><?php echo $this->lang->line('txt_content_deleted'); ?></span> 
@@ -1354,7 +1414,24 @@
 											<?php echo $this->lang->line('txt_content_deleted'); ?>
 										</span>
 									</div>
-										<!-- delete button start-->
+							<!-- Nested comment start 02 -->
+							<span class="postCommentDelete" id="nestedCommentLeafSpan<?php echo $arrDiscussions2['nodeId'];?>">
+			      			<span id="nestedCommentLeafIcon<?php echo $arrDiscussions2['leafId'];?>">
+								<?php 
+								if(($arrDiscussions2['leafStatus'] != 'deleted'))
+								{ 
+								?>
+									
+									<a href="javascript:void(0)" onClick="openNestedCommentEditor('<?php echo $arrDiscussions2['leafId']; ?>')" title="<?php echo $this->lang->line('txt_comment'); ?>" border="0" ><img src="<?php echo  base_url(); ?>images/subtask-icon_new.png" alt="<?php echo $this->lang->line("txt_comment"); ?>" title="<?php echo $this->lang->line("txt_comment"); ?>">
+									</a>
+									
+								<?php 
+								} 
+								?>
+							</span>
+							</span>
+							<!-- Nested comment end 02 -->
+							<!-- delete button start 02-->
 									<div>
 										<span class="postCommentDelete" id="deleteLeafSpan<?php echo $arrDiscussions2['nodeId'];?>">
 											<span id="deleteLeafIcon<?php echo $arrDiscussions2['leafId'];?>">
@@ -1371,7 +1448,7 @@
 												?>
 											</span>
 										</span>
-										<!-- delete button end-->
+							<!-- delete button end 02 -->
 									</div>
 									<div class="clr"></div>
 								</div>									
@@ -1382,35 +1459,20 @@
 						?>
 					</div> <!-- Nested comments section end -->
 					<?php	
+					*/
 					}
-				?>
-          		<div class="clr"></div>
+					?>
+          			<div class="clr"></div>
      
- <!-- Nested comment textarea start here-->
-<div id="nestedCommentTextBox<?php echo $arrDiscussions['nodeId']; ?>" class="CommentTextBox<?php echo $arrDiscussions['nodeId']; ?> commentEditorWrapper" style="display:none;">
-	<!--Changed by Dashrath- add handCursor class in div for editor content line spacing issue-->
-	<div class="handCursor">
-	<textarea class="postCommentTextBox" name="replyTimelineComment<?php echo $arrDiscussions['nodeId']; ?>" id="replyTimelineComment<?php echo $arrDiscussions['nodeId']; ?>"></textarea>
-	</div>
-	<div style="margin-top:8px;">
-	<input type="button" name="Replybutton" value="<?php echo $this->lang->line('txt_Comment');?>" onClick="insertPostComment('<?php echo $arrDiscussions['nodeId']; ?>','<?php echo $arrVal['nodeId']; ?>','1');" style="float:left;">
-	<input type="reset" name="Cancelbutton" value="<?php echo $this->lang->line('txt_Cancel');?>" style="float:left; margin-left:1%;"  onclick="cancelPostEditor('<?php echo $arrDiscussions['nodeId']; ?>','1');">
-	<input type="hidden" id="totalTimelineCommentNodes<?php echo $arrDiscussions['nodeId']; ?>" value="<?php echo implode(',',$totalTimelineCommentNodes);?>">
-	<div class="clr"></div>
-	<div id="commentLoader<?php echo $arrDiscussions['nodeId']; ?>"></div>
-	</div>
-</div>
-<!--Nested comment end here-->
-          		<?php
+
+          			<?php
 					$counter++;
 					$j++;
 				}
 				// Latest 3 comments end
 				?>
-
-	
 				 <?php
-		}		
+			}		
 		?>
           <?php /*?><div  class="<?php echo $nodeBgColor."1"; ?>" style="float:left;height:20px; padding-left:40px;padding-bottom:10px;margin-top:-3px ; width:100%;">
             <?php if($timmer){?>
@@ -1435,7 +1497,7 @@
 		<div style="margin-top:8px;">
 		<input type="button" name="Replybutton" value="<?php echo $this->lang->line('txt_Comment');?>" onClick="insertPostComment('<?php echo $arrVal['nodeId']; ?>');" style="float:left;">
 		<input type="reset" name="Cancelbutton" value="<?php echo $this->lang->line('txt_Cancel');?>" style="float:left; margin-left:1%;"  onclick="cancelPostEditor('<?php echo $arrVal['nodeId']; ?>');">
-		
+		<input type="hidden" id="previousFocusedCommentId" name="previousFocusedCommentId" value="0">
 		<div class="clr"></div>
 		<div id="commentLoader<?php echo $arrVal['nodeId']; ?>"></div>
 		</div>

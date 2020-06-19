@@ -265,7 +265,7 @@ class timeline_db_manager extends CI_Model
 
 	}
 	
-	public function insertTimelineComment($pnodeId,$content,$userId,$createdDate,$treeId,$workSpaceId,$workSpaceType,$tag='',$authors='',$status=1,$type=1)
+	public function insertTimelineComment($pnodeId,$content,$userId,$createdDate,$treeId,$workSpaceId,$workSpaceType,$tag='',$authors='',$status=1,$type=1,$mainPostNodeId='')
 
 	{
 	
@@ -291,7 +291,7 @@ class timeline_db_manager extends CI_Model
 		$query = $this->db->query("update teeme_node set leafId=".$leafId." where id=".$nodeId);
 
 		
-		$query = $this->db->query("select * from teeme_node  where id=".$pnodeId);
+		$query = $this->db->query("select * from teeme_node where id=".$pnodeId);
 
 		foreach ($query->result() as $row)
 
@@ -324,6 +324,40 @@ class timeline_db_manager extends CI_Model
 		$query = $this->db->query("update teeme_node set successors='".$successors."' where id=".$pnodeId);
 		
 		$query = $this->db->query("update teeme_leaf set editedDate='".$createdDate."' where nodeId=".$pnodeId);
+
+			if ($mainPostNodeId>0){
+				$query = $this->db->query("select * from teeme_node where id=".$mainPostNodeId);
+
+				foreach ($query->result() as $row)
+		
+				{
+		
+					$successors=trim($row->successors);
+		
+				}
+		
+				if($successors){
+		
+					$sArray=array();
+		
+					$sArray=explode(',',$successors);
+		
+					
+		
+					$sArray[count($sArray)]=$nodeId;
+		
+					
+		
+					$successors=implode(',',$sArray);
+		
+				}else{
+		
+					$successors=$nodeId;
+		
+				}
+		
+				$query = $this->db->query("update teeme_node set successors='".$successors."' where id=".$mainPostNodeId);
+			}
 				
 		//$this->insertDiscussionLeafView($leafId, $userId);
 		

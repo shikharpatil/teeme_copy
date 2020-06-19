@@ -2182,7 +2182,7 @@ function insertPostComment(nodeId,mainPostNodeId=0,is_nested=0)
 				var data_user =$("#form"+nodeId).serialize();
 			}
 		
-		data_user = data_user+'&post_type_id='+postTypeId+'&post_type_object_id='+postTypeObjectId+'&is_nested='+is_nested;
+		data_user = data_user+'&post_type_id='+postTypeId+'&post_type_object_id='+postTypeObjectId+'&is_nested='+is_nested+'&mainPostNodeId='+mainPostNodeId;
 		data_user = data_user+'&replyDiscussion='+encodeURIComponent(getvalue); 
 		//alert('data user= '+data_user);
 		
@@ -3483,6 +3483,15 @@ function searchUserSpaces()
 			document.getElementById('showManSpaces').style.display = 'none';
 		}
 	}
+}
+
+function focusComment(commentId=0){
+	var previous = $("#previousFocusedCommentId").val();
+	alert(previous);
+	$("#"+previous).removeClass('nodeBgColorSelect');
+	$("#previousFocusedCommentId").val(commentId);
+	$("#"+commentId).focus();
+	$("#"+commentId).addClass('nodeBgColorSelect');
 }
 function searchGroups()
 {

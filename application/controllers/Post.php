@@ -3569,6 +3569,7 @@ class Post extends CI_Controller {
 				$workSpaceType	= $this->input->post('workSpaceType');
 				$post_type_id	= $this->input->post('post_type_id');
 				$post_type_object_id	= $this->input->post('post_type_object_id');
+				$mainPostNodeId = $this->input->post('mainPostNodeId');
 				
 				$is_nested = $this->input->post('is_nested');
 					if($is_nested==1){
@@ -3579,7 +3580,7 @@ class Post extends CI_Controller {
 					}
 				//echo $this->input->post($this->input->post('editorname1')); exit;
 				//echo 'this= '; exit;
-				$postCommentNodeId	= $this->timeline_db_manager->insertTimelineComment($this->uri->segment(5),$editor,$_SESSION['userId'],$postCommentCreatedDate,$treeId,$workSpaceId,$workSpaceType);
+				$postCommentNodeId	= $this->timeline_db_manager->insertTimelineComment($this->uri->segment(5),$editor,$_SESSION['userId'],$postCommentCreatedDate,$treeId,$workSpaceId,$workSpaceType,'','',1,1,$mainPostNodeId);
 				//echo 'res= '.$postCommentNodeId; exit;
 				//Add post comment change details start
 				if($postCommentNodeId!=0)
