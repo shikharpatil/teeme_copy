@@ -25,8 +25,8 @@ class Login extends CI_Controller {
 	# this function used to display the admin login form
 	function index()
 	{	
-		//echo "here"; exit;	
 		$_SESSION['contName'] = '';
+		$this->load->model('dal/identity_db_manager');
 		
 		if($_COOKIE['ismobile'])
 		{
