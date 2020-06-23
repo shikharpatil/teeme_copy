@@ -2,8 +2,8 @@
 			//print_r($realTimeTimelineDivIds);exit;
 			//$arrparent=  $this->chat_db_manager->getPerentInfo($nodeId);
 			
-			$rowColor3='rowColor3';
-			$rowColor4='rowColor4';	
+			//$rowColor3='rowColor3';
+			//$rowColor4='rowColor4';	
 			$j = 1;
 			
 			if($arrparent['successors'])
@@ -25,11 +25,18 @@
 					$checksucc 		= $this->chat_db_manager->checkSuccessors($arrDiscussions['nodeId']);				
 					$this->chat_db_manager->insertDiscussionLeafView($arrDiscussions['nodeId'],$_SESSION['userId']);				 
 					$viewCheck=$this->chat_db_manager->checkDiscussionLeafView($arrDiscussions['nodeId'],$_SESSION['userId']);
-					
+					/*
 					if ($arrDiscussions['nodeId'] == $this->uri->segment(8))
 						$nodeBgColor = 'nodeBgColorSelect';
 					else
-						$nodeBgColor = ($j % 2) ? $rowColor3 : $rowColor4;	 		
+						$nodeBgColor = ($j % 2) ? $rowColor3 : $rowColor4;
+					*/
+					if ($arrDiscussions['userId']==$_SESSION['userId']){
+						$nodeBgColor = "postWebChatBoxSelf";
+					}
+					else{
+						$nodeBgColor = "postWebChatBoxOthers";
+					}	 		
 					?>
 			<?php $realTimeTimelineCommentDivIds=explode(",",$realTimeTimelineDivIds); 
 			//print_r($realTimeTimelineCommentDivIds); echo $arrDiscussions['nodeId']; exit;
@@ -39,7 +46,7 @@
 				{
 			?>		
 			<!--<div id="<?php echo $position++;?>" style="width:94%;float:left;padding-left:0%;padding-top:20px;" onClick=""  class="<?php echo $nodeBgColor."1";?> handCursor">-->
-			<div id="comment<?php echo $arrDiscussions['nodeId'];?>" style="width:94%;float:left;padding-left:0%;padding-top:20px;" onClick=""  class="<?php echo $nodeBgColor."1";?> handCursor">
+			<div id="comment<?php echo $arrDiscussions['nodeId'];?>" class="<?php echo $nodeBgColor;?>">
 		  	
 			 <!--Add comment profile pic start-->
   <div style="width:30%;" class="commentUserName">

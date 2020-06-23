@@ -55,7 +55,8 @@
 			$postSharedMembers = $this->identity_db_manager->getPostSharedMembersByNodeId($arrVal['nodeId']);
 			
 			$postSharedMembersList = implode(",",$postSharedMembers);
-		
+			
+			/*
 			if ($arrVal['nodeId'] == $this->uri->segment(9))
 			{
 				$nodeBggreenColor = 'nodeBgColorSelect';
@@ -63,6 +64,13 @@
 			else
 			{
 				$nodeBggreenColor = '';
+			}
+			*/
+			if ($arrVal['userId']==$_SESSION['userId']){
+				$nodeBgColor = "postWebChatBoxSelf";
+			}
+			else{
+				$nodeBgColor = "postWebChatBoxOthers";
 			}
 //$this->load->helper('form'); 
 //$attributes = array('name' => 'form'.$arrVal['nodeId'], 'id' => 'form'.$arrVal['nodeId'], 'method' => 'post', 'enctype' => 'multipart/form-data');	
@@ -105,12 +113,18 @@
 			//$this->chat_db_manager->insertDiscussionLeafView($arrVal['nodeId'],$_SESSION['userId']);
 			
 			//$viewCheck=$this->chat_db_manager->checkDiscussionLeafView($arrVal['nodeId'],$_SESSION['userId']);
-			
+			/*
 			if ($arrVal['nodeId'] == $this->uri->segment(8))
 				$nodeBgColor = 'nodeBgColorSelect';
 			else
 				$nodeBgColor = ($i % 2) ? $rowColor1 : $rowColor2;
-				
+			*/
+			if ($arrVal['userId']==$_SESSION['userId']){
+				$nodeBgColor = "postWebChatBoxSelf";
+			}
+			else{
+				$nodeBgColor = "postWebChatBoxOthers";
+			}	
 			if ($arrVal['chatSession']==0)
 			{?>
   
@@ -265,7 +279,7 @@
   <?php $viewTags 	= $this->tag_db_manager->getTags(2, $_SESSION['userId'], $arrVal['nodeId'], 2); ?>
   	<!-- Changed by Dashrath- remove inline css -->
     <!-- <div class="<?php echo $nodeBgColor."1"; ?> handCursor" style="border-bottom: 1px solid #ccc; padding: 10px 0;" > -->
-    <div class="<?php echo $nodeBgColor."1"; ?> handCursor">
+    <div>
       <div>
         <div>
           <div id='leaf_contents<?php echo $arrVal['nodeId'];?>'   class="contentContainer <?php echo ($viewTags[0]['systemTag']==1)?$viewTags[0]['tagName']."_systemTag":"";?> TimelineLeafContents" style="word-wrap:break-word; overflow:hidden;" >
@@ -975,7 +989,7 @@
 
       <!-- Changed by Dashrath- change padding-left:0px; to padding:0px; in inline css for new ui-->
       <!--<div id="<?php echo $position++;?>" style=" width:100%; padding:0px;"  class="<?php echo $nodeBgColor."1";?> handCursor">-->
-	  <div id="comment<?php echo $arrVal['nodeId'];?>" style=" width:100%; padding:0px;"  class="<?php echo $nodeBgColor."1";?> handCursor">
+	  <div id="comment<?php echo $arrVal['nodeId'];?>" style=" width:100%; padding:0px;">
 	   	<div style="width:80%; float:left;"> </div>
         <span id="spanArtifactLinks<?php echo $arrVal['nodeId'];?>" style="display:none;"></span> <span id="spanTagView<?php echo $arrVal['nodeId'];?>" style="display:none;"> <span id="spanTagViewInner<?php echo $arrVal['nodeId'];?>"> </span>
         <div style="width:80%; float:left;">
@@ -1009,8 +1023,8 @@
         <div id="commentRefreshDiv<?php echo $arrVal['nodeId']; ?>">
           <?php
 			
-			$rowColor3='chatBgColor1';
-			$rowColor4='rowColor4';	
+			//$rowColor3='chatBgColor1';
+			//$rowColor4='rowColor4';	
 			$j = 1;
 			
 			if($arrparent['successors'])
@@ -1034,11 +1048,18 @@
 					$checksucc 		= $this->chat_db_manager->checkSuccessors($arrDiscussions['nodeId']);				
 					$this->chat_db_manager->insertDiscussionLeafView($arrDiscussions['nodeId'],$_SESSION['userId']);				 
 					$viewCheck=$this->chat_db_manager->checkDiscussionLeafView($arrDiscussions['nodeId'],$_SESSION['userId']);
-					
+					/*
 					if ($arrDiscussions['nodeId'] == $this->uri->segment(8))
 						$nodeBgColor = 'nodeBgColorSelect';
 					else
-						$nodeBgColor = ($j % 2) ? $rowColor3 : $rowColor4;	 		
+						$nodeBgColor = ($j % 2) ? $rowColor3 : $rowColor4;	 
+					*/		
+					if ($arrDiscussions['userId']==$_SESSION['userId']){
+						$nodeBgColor = "postWebChatBoxSelf";
+					}
+					else{
+						$nodeBgColor = "postWebChatBoxOthers";
+					}
 
 					//if($counter<3)
 					//if($counter>2)
@@ -1046,7 +1067,7 @@
 					 { ?>
 					 	<!--Changed by Dashrath- change width 94% to 100% in inline css-->		
 						<!--<div id="<?php echo $position++;?>" style="width:100%;float:left;padding-left:0%;padding-top:20px;" onClick=""  class="<?php echo $nodeBgColor."1";?> handCursor">-->
-						<div id="comment<?php echo $arrDiscussions['nodeId'];?>" style="width:100%;float:left;padding-left:0%;padding-top:20px;" onClick=""  class="<?php echo $nodeBgColor."1";?> handCursor">
+						<div id="comment<?php echo $arrDiscussions['nodeId'];?>" class="<?php echo $nodeBgColor;?> handCursor">
 							<!--Add comment profile pic start-->
 							<div style="width:30%;" class="commentUserName">
 								<div style="float:left;">
@@ -1200,11 +1221,18 @@
 					$checksucc 		= $this->chat_db_manager->checkSuccessors($arrDiscussions['nodeId']);				
 					$this->chat_db_manager->insertDiscussionLeafView($arrDiscussions['nodeId'],$_SESSION['userId']);				 
 					$viewCheck=$this->chat_db_manager->checkDiscussionLeafView($arrDiscussions['nodeId'],$_SESSION['userId']);
-					
+					/*
 					if ($arrDiscussions['nodeId'] == $this->uri->segment(8))
 						$nodeBgColor = 'nodeBgColorSelect';
 					else
-						$nodeBgColor = ($j % 2) ? $rowColor3 : $rowColor4;	 		
+						$nodeBgColor = ($j % 2) ? $rowColor3 : $rowColor4;	 	
+					*/	
+					if ($arrDiscussions['userId']==$_SESSION['userId']){
+						$nodeBgColor = "postWebChatBoxSelf";
+					}
+					else{
+						$nodeBgColor = "postWebChatBoxOthers";
+					}
 					?>
 					<?php //if($counter<3)
 					//if($counter>2)
@@ -1212,7 +1240,7 @@
 					{ ?>
 						<!--Changed by Dashrath- change width 94% to 100% in inline css-->
           				<!--<div id="<?php echo $position++;?>" style="width:100%;float:left;padding-left:0%;padding-top:20px;" onClick=""  class="<?php echo $nodeBgColor."1";?> handCursor">-->
-						<div id="comment<?php echo $arrDiscussions['nodeId'];?>" style="width:100%;float:left;padding-left:0%;padding-top:20px;" onClick=""  class="<?php echo $nodeBgColor."1";?>">
+						<div id="comment<?php echo $arrDiscussions['nodeId'];?>" class="<?php echo $nodeBgColor;?>">
 							<!--Add comment profile pic start-->					
 							<div style="width:30%;" class="commentUserName">
 							<div style="float:left;">

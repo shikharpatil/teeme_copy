@@ -1,4 +1,4 @@
-<?php /*Copyright © 2008-2014. Team Beyond Borders Pty Ltd. All rights reserved.*/ 
+<?php /*Copyright ï¿½ 2008-2014. Team Beyond Borders Pty Ltd. All rights reserved.*/ 
 
 	/***********************************************************************************************************
 	*  *  *  *  *  *  *  *  *  *  *   I D E AV A T E   S O L U T I O N S   *  *  *  *  *  *  *  *   *
@@ -642,8 +642,7 @@ class Create_tag1 extends CI_Controller
 										
 										
 										if(count($workSpaceMembers)!=0)
-										{
-											
+										{	
 											foreach($workSpaceMembers as $user_data)
 											{
 												if(in_array($user_data['userId'], $reservedUsers) || $reservedUsers=='' || count($reservedUsers)==0)
@@ -832,7 +831,7 @@ class Create_tag1 extends CI_Controller
 												//Summarized feature start here
 												//Summarized feature end here 
 												
-												}
+													}
 												}//reserve check end
 											}
 											
@@ -840,6 +839,28 @@ class Create_tag1 extends CI_Controller
 											//Insert summarized notification end
 										}
 										//Set notification dispatch data end
+			// Parv: Add a system generated comment in the post
+			$post_id = $node_id;
+			//$comment_data = $notificationContent['data'];
+
+															//get notification template using object and action id
+															$getNotificationTemplate=$this->notification_db_manager->get_notification_template($notificationDetails['object_id'], $notificationDetails['action_id']);
+															$getNotificationTemplate=trim($getNotificationTemplate);
+															$getUserName = $this->identity_db_manager->getUserDetailsByUserId($_SESSION['userId']);
+															$recepientUserName = $getUserName['firstName'].' '.$getUserName['lastName'];
+															$tree_type = 'post';
+															$user_template = array("{username}", "{treeType}", "{spacename}");
+															$user_translate_template   = array($recepientUserName, $tree_type, $work_space_name);															
+															//Serialize notification data
+															$notificationContent=array();
+															$comment_data=str_replace($user_template, $user_translate_template,$this->lang->line($getNotificationTemplate));
+
+			$comment_originator_id = $_SESSION['userId'];
+			$postCommentCreatedDate=$objTime->getGMTTime();
+			$treeId =0;
+			$mainPostNodeId = 0;
+			$postCommentNodeId	= $this->timeline_db_manager->insertTimelineComment($post_id,$comment_data,$comment_originator_id,$postCommentCreatedDate,$treeId,$workSpaceId,$workSpaceType,'','',1,1,$mainPostNodeId);
+			//$_SESSION['errorMsg'] = "commentid=".$postCommentNodeId;
 									}
 								/*}*/	
 								//Manoj: Insert simple tag apply notification end
@@ -3967,6 +3988,8 @@ class Create_tag1 extends CI_Controller
 								/*}*/	
 								
 								//Manoj: Insert contact tag delete notification end
+
+			
 				
 			$tags = $this->tag_db_manager->getTags(5, $_SESSION['userId'], $artifactId, $artifactType);	
 			$viewTags2 = array(); 

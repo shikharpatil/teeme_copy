@@ -7359,7 +7359,7 @@ input:checked + .slider:before {
 }
 .commentEditorWrapper
 {
-	width:50%;
+	width:60%;
 	margin-top: 15px;
 }
 .commentEditorWrapper .fr-wrapper
@@ -8936,6 +8936,29 @@ span.reserve a
 }
 .nestedCommentsSection{
 	margin-left:10%;
+}
+.postWebChatBoxSelf{
+	background-color:#dcf8c6;
+	width:50%;
+	float:right;
+	padding:10px;
+	margin:2px;
+}
+.postWebChatBoxOthers{
+	background-color:#f0f0f0;
+	width:50%;
+	float:left;
+	padding:10px;
+	margin:2px;
+}
+.nodeBgColorSelect
+{
+	background-color:#CCFF33;
+	/*padding: 5px 15px 5px 15px; */ /*Dashrath- change padding 9px 15px 0; to 5px 15px 5px 15px;*/
+	padding:10px;
+  /*border: solid 1px #DDDFE2;*/
+  /*border-radius: 8px;*/
+	/*border-bottom:#e3e0e0 solid 1px;*/
 }
 /* The Modal (background) */
 .modal {

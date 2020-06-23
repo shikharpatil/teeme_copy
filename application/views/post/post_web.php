@@ -2220,7 +2220,7 @@ function insertPostComment(nodeId,mainPostNodeId=0,is_nested=0)
 					$("#nestedCommentTextBox"+nodeId).css("display", "none");
 					$("#nestedCommentLeafSpan"+nodeId).css("display", "block");
 				}
-
+				
 			}
 			});
 	}
@@ -3487,11 +3487,14 @@ function searchUserSpaces()
 
 function focusComment(commentId=0){
 	var previous = $("#previousFocusedCommentId").val();
-	alert(previous);
 	$("#"+previous).removeClass('nodeBgColorSelect');
-	$("#previousFocusedCommentId").val(commentId);
-	$("#"+commentId).focus();
+	$("#previousFocusedCommentId").val(commentId);	
 	$("#"+commentId).addClass('nodeBgColorSelect');
+	$("#"+commentId).focus();
+
+    $('html, body').animate({
+        scrollTop: $("#"+commentId).offset().top + 'px'
+    }, 'fast');
 }
 function searchGroups()
 {
