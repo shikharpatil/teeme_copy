@@ -679,6 +679,7 @@ class Create_tag1 extends CI_Controller
 															
 															//get notification template using object and action id
 															$getNotificationTemplate=$this->notification_db_manager->get_notification_template($notificationDetails['object_id'], $notificationDetails['action_id']);
+															$com_dat = $notificationDetails['object_id'].', '.$notificationDetails['action_id'];
 															$getNotificationTemplate=trim($getNotificationTemplate);
 															$getUserName = $this->identity_db_manager->getUserDetailsByUserId($_SESSION['userId']);
 															$recepientUserName = $getUserName['firstName'].' '.$getUserName['lastName'];
@@ -844,16 +845,17 @@ class Create_tag1 extends CI_Controller
 			//$comment_data = $notificationContent['data'];
 
 															//get notification template using object and action id
-															$getNotificationTemplate=$this->notification_db_manager->get_notification_template($notificationDetails['object_id'], $notificationDetails['action_id']);
-															$getNotificationTemplate=trim($getNotificationTemplate);
+															//$getNotificationTemplate=trim($this->notification_db_manager->get_notification_template($notificationDetails['object_id'], $notificationDetails['action_id']));
 															$getUserName = $this->identity_db_manager->getUserDetailsByUserId($_SESSION['userId']);
 															$recepientUserName = $getUserName['firstName'].' '.$getUserName['lastName'];
-															$tree_type = 'post';
-															$user_template = array("{username}", "{treeType}", "{spacename}");
-															$user_translate_template   = array($recepientUserName, $tree_type, $work_space_name);															
+															//$tree_type = 'post';
+															//$user_template = array("{username}", "{treeType}", "{spacename}");
+														//	$user_translate_template   = array($recepientUserName, $tree_type, $work_space_name);															
 															//Serialize notification data
-															$notificationContent=array();
-															$comment_data=str_replace($user_template, $user_translate_template,$this->lang->line($getNotificationTemplate));
+															//$notificationContent=array();
+															//$comment_data=str_replace($user_template, $user_translate_template,$this->lang->line($getNotificationTemplate));
+															$comment_data = $notificationData['data']." tag(s) applied by " .$recepientUserName;
+															
 
 			$comment_originator_id = $_SESSION['userId'];
 			$postCommentCreatedDate=$objTime->getGMTTime();
