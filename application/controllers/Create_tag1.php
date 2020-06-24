@@ -857,7 +857,7 @@ class Create_tag1 extends CI_Controller
 															$comment_data = $notificationData['data']." tag(s) applied by " .$recepientUserName;
 															
 
-			$comment_originator_id = $_SESSION['userId'];
+			$comment_originator_id = 0;
 			$postCommentCreatedDate=$objTime->getGMTTime();
 			$treeId =0;
 			$mainPostNodeId = 0;

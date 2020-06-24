@@ -69,8 +69,11 @@
 			if ($arrVal['userId']==$_SESSION['userId']){
 				$nodeBgColor = "postWebChatBoxSelf";
 			}
-			else{
+			elseif ($arrVal['userId']>0){
 				$nodeBgColor = "postWebChatBoxOthers";
+			}
+			else{
+				$nodeBgColor = "postWebChatBoxSystem";
 			}
 //$this->load->helper('form'); 
 //$attributes = array('name' => 'form'.$arrVal['nodeId'], 'id' => 'form'.$arrVal['nodeId'], 'method' => 'post', 'enctype' => 'multipart/form-data');	
