@@ -33,9 +33,12 @@
 					if ($arrDiscussions['userId']==$_SESSION['userId']){
 						$nodeBgColor = "postWebChatBoxSelf";
 					}
-					else{
+					elseif ($arrDiscussions['userId']>0){
 						$nodeBgColor = "postWebChatBoxOthers";
-					}		
+					}
+					else{
+						$nodeBgColor = "postWebChatBoxSystem";
+					}	
 					?>
 			<?php $realTimeTimelineCommentDivIds=explode(",",$realTimeTimelineDivIds); 
 			//print_r($realTimeTimelineCommentDivIds); echo $arrDiscussions['nodeId']; exit;
@@ -53,7 +56,7 @@
   <div>
   <div style="float:left;">
 							<?php
-								if ($TimelineProfileCommentdetail['photo']!='noimage.jpg')
+								if ($TimelineProfileCommentdetail['photo']!='')
 								{
 							?>
 									<img class="rounded_profile_pic" src="<?php echo base_url();?>workplaces/<?php echo $workPlaceDetails['companyName'];?>/user_profile_pics/<?php echo $TimelineProfileCommentdetail['photo'];?>" border="0"  width="35" height="35" id="imgName"> 
@@ -62,7 +65,7 @@
 								else
 								{
 							?>
-									<img class="rounded_profile_pic" src="<?php echo base_url();?>images/<?php echo $TimelineProfileCommentdetail['photo'];?>" border="0"  width="35" height="35" id="imgName"> 
+									<img class="rounded_profile_pic" src="<?php echo base_url();?>images/noimage.jpg" border="0"  width="35" height="35" id="imgName"> 
 							<?php
 								}
 							?>

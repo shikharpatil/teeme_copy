@@ -125,9 +125,12 @@
 			if ($arrVal['userId']==$_SESSION['userId']){
 				$nodeBgColor = "postWebChatBoxSelf";
 			}
-			else{
+			elseif ($arrVal['userId']>0){
 				$nodeBgColor = "postWebChatBoxOthers";
-			}	
+			}
+			else{
+				$nodeBgColor = "postWebChatBoxSystem";
+			}
 			if ($arrVal['chatSession']==0)
 			{?>
   
@@ -237,7 +240,7 @@
   <div class="postLeftBox">
   <div style="float:left;">
 							<?php
-								if ($TimelineProfiledetail['photo']!='noimage.jpg')
+								if ($TimelineProfiledetail['photo']!='')
 								{
 							?>
 									<img class="rounded_profile_pic" src="<?php echo base_url();?>workplaces/<?php echo $workPlaceDetails['companyName'];?>/user_profile_pics/<?php echo $TimelineProfiledetail['photo'];?>" border="0"  width="35" height="35" id="imgName" style="margin-top:0px;"> 
@@ -246,7 +249,7 @@
 								else
 								{
 							?>
-									<img class="rounded_profile_pic" src="<?php echo base_url();?>images/<?php echo $TimelineProfiledetail['photo'];?>" border="0"  width="35" height="35" id="imgName" style="margin-top:0px;"> 
+									<img class="rounded_profile_pic" src="<?php echo base_url();?>images/noimage.jpg" border="0"  width="35" height="35" id="imgName" style="margin-top:0px;"> 
 							<?php
 								}
 							?>
@@ -1023,7 +1026,7 @@
 				}
 			}
 		?>
-        <div id="commentRefreshDiv<?php echo $arrVal['nodeId']; ?>">
+        <div id="commentRefreshDiv<?php echo $arrVal['nodeId']; ?>" style="display:flex;flex-direction:column;">
           <?php
 			
 			//$rowColor3='chatBgColor1';
@@ -1060,8 +1063,11 @@
 					if ($arrDiscussions['userId']==$_SESSION['userId']){
 						$nodeBgColor = "postWebChatBoxSelf";
 					}
-					else{
+					elseif ($arrDiscussions['userId']>0){
 						$nodeBgColor = "postWebChatBoxOthers";
+					}
+					else{
+						$nodeBgColor = "postWebChatBoxSystem";
 					}
 
 					//if($counter<3)
@@ -1075,7 +1081,7 @@
 							<div style="width:30%;" class="commentUserName">
 								<div style="float:left;">
 									<?php
-										if ($TimelineProfileCommentdetail['photo']!='noimage.jpg')
+										if ($TimelineProfileCommentdetail['photo']!='')
 										{
 									?>
 											<img class="rounded_profile_pic" src="<?php echo base_url();?>workplaces/<?php echo $workPlaceDetails['companyName'];?>/user_profile_pics/<?php echo $TimelineProfileCommentdetail['photo'];?>" border="0"  width="35" height="35" id="imgName"> 
@@ -1084,7 +1090,7 @@
 										else
 										{
 									?>
-											<img class="rounded_profile_pic" src="<?php echo base_url();?>images/<?php echo $TimelineProfileCommentdetail['photo'];?>" border="0"  width="35" height="35" id="imgName"> 
+											<img class="rounded_profile_pic" src="<?php echo base_url();?>images/noimage.jpg" border="0"  width="35" height="35" id="imgName"> 
 									<?php
 										}
 									?>
@@ -1233,8 +1239,11 @@
 					if ($arrDiscussions['userId']==$_SESSION['userId']){
 						$nodeBgColor = "postWebChatBoxSelf";
 					}
-					else{
+					elseif ($arrDiscussions['userId']>0){
 						$nodeBgColor = "postWebChatBoxOthers";
+					}
+					else{
+						$nodeBgColor = "postWebChatBoxSystem";
 					}
 					?>
 					<?php //if($counter<3)
@@ -1248,7 +1257,7 @@
 							<div style="width:30%;" class="commentUserName">
 							<div style="float:left;">
 								<?php
-									if ($TimelineProfileCommentdetail['photo']!='noimage.jpg')
+									if ($TimelineProfileCommentdetail['photo']!='')
 									{
 								?>
 										<img class="rounded_profile_pic" src="<?php echo base_url();?>workplaces/<?php echo $workPlaceDetails['companyName'];?>/user_profile_pics/<?php echo $TimelineProfileCommentdetail['photo'];?>" border="0"  width="35" height="35" id="imgName"> 
@@ -1257,7 +1266,7 @@
 									else
 									{
 								?>
-										<img class="rounded_profile_pic" src="<?php echo base_url();?>images/<?php echo $TimelineProfileCommentdetail['photo'];?>" border="0"  width="35" height="35" id="imgName"> 
+										<img class="rounded_profile_pic" src="<?php echo base_url();?>images/noimage.jpg" border="0"  width="35" height="35" id="imgName"> 
 								<?php
 									}
 								?>
