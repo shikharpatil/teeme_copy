@@ -180,12 +180,12 @@ $(document).ready(function()
 			<div class="post_web_sidebar_col1">
 				<div class="post_web_sidebar_profile_pic">					
 				<?php
-					if ($myProfileDetail['photo']!='noimage.jpg') {?>
+					if ($myProfileDetail['photo']!='noimage.jpg' && $myProfileDetail['photo']!='') {?>
 						<img class="rounded_profile_pic" alt="image" src="<?php echo base_url();?>workplaces/<?php echo $workPlaceDetails['companyName'];?>/user_profile_pics/<?php echo $myProfileDetail['photo'];?>" border="0"  width="49px" height="49px" id="imgName"> 
                           	<?php
 					}
 					else {?>
-						<img alt="image" src="<?php echo base_url();?>images/<?php echo $myProfileDetail['photo'];?>" border="0"  width="45" height="45" id="imgName"> 
+						<img alt="image" src="<?php echo base_url();?>images/noimage.jpg" border="0"  width="45" height="45" id="imgName"> 
 						<?php
 					} ?>
 				</div>
@@ -326,12 +326,12 @@ $(document).ready(function()
 												<div class="post_web_sidebar_col1">
 													<div class="post_web_sidebar_profile_pic">					
 													<?php
-														if ($arrVal['photo']!='noimage.jpg') {?>
+														if ($arrVal['photo']!='noimage.jpg' && $arrVal['photo']!='') {?>
 															<img class="rounded_profile_pic" alt="image" src="<?php echo base_url();?>workplaces/<?php echo $workPlaceDetails['companyName'];?>/user_profile_pics/<?php echo $arrVal['photo'];?>" border="0"  width="49px" height="49px" id="imgName"> 
 																<?php
 														}
 														else {?>
-															<img class="rounded_profile_pic" alt="image" src="<?php echo base_url();?>images/<?php echo $arrVal['photo'];?>" border="0"  width="45" height="45" id="imgName"> 
+															<img class="rounded_profile_pic" alt="image" src="<?php echo base_url();?>images/noimage.jpg" border="0"  width="45" height="45" id="imgName"> 
 															<?php
 														} ?>
 													</div>
@@ -421,12 +421,12 @@ $(document).ready(function()
 												<div class="post_web_sidebar_col1">
 													<div class="post_web_sidebar_profile_pic">					
 													<?php
-														if ($arrVal['photo']!='noimage.jpg') {?>
+														if ($arrVal['photo']!='noimage.jpg' && $arrVal['photo']!='') {?>
 															<img class="rounded_profile_pic" alt="image" src="<?php echo base_url();?>workplaces/<?php echo $workPlaceDetails['companyName'];?>/user_profile_pics/<?php echo $arrVal['photo'];?>" border="0"  width="49px" height="49px" id="imgName"> 
 																<?php
 														}
 														else {?>
-															<img class="rounded_profile_pic" alt="image" src="<?php echo base_url();?>images/<?php echo $arrVal['photo'];?>" border="0"  width="45" height="45" id="imgName"> 
+															<img class="rounded_profile_pic" alt="image" src="<?php echo base_url();?>images/noimage.jpg" border="0"  width="45" height="45" id="imgName"> 
 															<?php
 														} ?>
 													</div>
@@ -736,12 +736,12 @@ $(document).ready(function()
 												<div class="post_web_sidebar_col1">
 													<div class="post_web_sidebar_profile_pic">					
 													<?php
-														if ($arrVal['photo']!='noimage.jpg') {?>
+														if ($arrVal['photo']!='noimage.jpg' && $arrVal['photo']!='') {?>
 															<img class="rounded_profile_pic" alt="image" src="<?php echo base_url();?>workplaces/<?php echo $workPlaceDetails['companyName'];?>/user_profile_pics/<?php echo $arrVal['photo'];?>" border="0"  width="49px" height="49px" id="imgName"> 
 																<?php
 														}
 														else {?>
-															<img class="rounded_profile_pic" alt="image" src="<?php echo base_url();?>images/<?php echo $arrVal['photo'];?>" border="0"  width="45" height="45" id="imgName"> 
+															<img class="rounded_profile_pic" alt="image" src="<?php echo base_url();?>images/noimage.jpg" border="0"  width="45" height="45" id="imgName"> 
 															<?php
 														} ?>
 													</div>
@@ -819,12 +819,12 @@ $(document).ready(function()
 											<div class="post_web_sidebar_col1">
 												<div class="post_web_sidebar_profile_pic">					
 													<?php
-														if ($arrVal['photo']!='noimage.jpg') {?>
+														if ($arrVal['photo']!='noimage.jpg' && $arrVal['photo']!='') {?>
 															<img class="rounded_profile_pic" alt="image" src="<?php echo base_url();?>workplaces/<?php echo $workPlaceDetails['companyName'];?>/user_profile_pics/<?php echo $arrVal['photo'];?>" border="0"  width="49px" height="49px" id="imgName"> 
 																<?php
 														}
 														else {?>
-															<img class="rounded_profile_pic" alt="image" src="<?php echo base_url();?>images/<?php echo $arrVal['photo'];?>" border="0"  width="45" height="30" id="imgName"> 
+															<img class="rounded_profile_pic" alt="image" src="<?php echo base_url();?>images/noimage.jpg" border="0"  width="45" height="30" id="imgName"> 
 															<?php
 														} ?>
 												</div>
@@ -1179,7 +1179,7 @@ $(document).ready(function()
 			?>
 			<div class="timelineProfImg">
 				<?php
-				if ($Profiledetail['photo']!='noimage.jpg')
+				if ($Profiledetail['photo']!='noimage.jpg' && $Profiledetail['photo']!='')
 				{
 				?>
 					<img class="rounded_profile_pic" alt="image" src="<?php echo base_url();?>workplaces/<?php echo $workPlaceDetails['companyName'];?>/user_profile_pics/<?php echo $Profiledetail['photo'];?>" width="65" height="65" id="imgName"> 
@@ -1188,7 +1188,7 @@ $(document).ready(function()
 				else
 				{
 				?>
-					<img class="rounded_profile_pic" alt="image" src="<?php echo base_url();?>images/<?php echo $Profiledetail['photo'];?>" width="65" height="65" id="imgName"> 
+					<img class="rounded_profile_pic" alt="image" src="<?php echo base_url();?>images/noimage.jpg" width="65" height="65" id="imgName"> 
 				<?php
 				}
 				?>					
@@ -1490,12 +1490,12 @@ $(document).ready(function()
 								<div class="post_web_sidebar_col1">
 									<div class="post_web_sidebar_profile_pic">					
 										<?php
-										if ($arrVal['photo']!='noimage.jpg') {?>
+										if ($arrVal['photo']!='noimage.jpg' && $arrVal['photo']!='') {?>
 											<img class="rounded_profile_pic" alt="image" src="<?php echo base_url();?>workplaces/<?php echo $workPlaceDetails['companyName'];?>/user_profile_pics/<?php echo $arrVal['photo'];?>" border="0"  width="49px" height="49px" id="imgName"> 
 										<?php
 										}
 										else {?>
-											<img class="rounded_profile_pic" alt="image" src="<?php echo base_url();?>images/<?php echo $arrVal['photo'];?>" width="45" height="45" id="imgName"> 
+											<img class="rounded_profile_pic" alt="image" src="<?php echo base_url();?>images/noimage.jpg" width="45" height="45" id="imgName"> 
 										<?php
 										} ?>
 									</div>

@@ -2414,7 +2414,8 @@ class Contact extends CI_Controller {
 					
 						$cardinfo=$this->contact_vcard_parse->fromFile($this->config->item('root_dir').DIRECTORY_SEPARATOR.$uploadPath);
 						
-						$fullname = ($cardinfo[0][FN][0][value][0][0]);
+						$fullname = ($cardinfo[0]['FN'][0]['value'][0][0]);
+						
 		 
 						$name=explode(" ",$fullname);
 						$firstname=$name[0];
