@@ -1046,7 +1046,8 @@ $(document).ready(function()
 		<div class="leftTabUl">
 			<!--Parv: Uncomment this for tab menu instead. Also disable the javascript for the dropdown in the scripts section at the bottom. Search by 'drop_down_menu'.
 			<ul class="tab_menu_new">
-				-->
+			-->
+			<?php if ($_SESSION['active_view']!='space' && $post_type_id!=2 && $post_type_id!=3 && $post_type_id!=9){ ?>
 			<ul class="drop_menu_new">
 			<li><a href="javascript:void(0);">--Select--</a><li>
 			<?php if($workSpaceDetails['workSpaceName']!="Try Teeme"){ ?>
@@ -1163,6 +1164,7 @@ $(document).ready(function()
 
 		
 			</ul>
+			<?php } ?>
 		</div>
 		<div class="clr"></div>
 	</div>
