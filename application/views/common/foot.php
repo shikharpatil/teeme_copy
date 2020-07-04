@@ -904,7 +904,7 @@ function leftMenuHideShow()
 		// document.getElementById("leftSideBar").style.width = "180px";
 		// document.getElementById("left-menu-nav1").style.display = "inline";
 		document.getElementById("leftSideBar").style.display = "inline";
-		document.getElementById("postArea").style.width = '64%';
+		document.getElementById("postArea").style.width = '60%';
 		//$('.post_web_tab_menu_tab').css('width', '22%');
 
 		if(myDataTypeValue1=='notification' || myDataTypeValue1=='timeline' || myDataTypeValue1=='draftleaf')

@@ -1783,7 +1783,7 @@ $(document).ready(function(){
 		$("#multiSend").hide();
 		leftMenuHideShow();
 		<?php if(!isset($_SESSION['public'])){?>
-			document.getElementById("postArea").style.width = '62%';
+			document.getElementById("postArea").style.width = '60%';
 			//$('.post_web_tab_menu_tab').css('width', '22%');
 		<?php }?>
 	<?php }else{?>
