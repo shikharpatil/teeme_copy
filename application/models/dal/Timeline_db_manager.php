@@ -1666,8 +1666,8 @@ class timeline_db_manager extends CI_Model
 										}else{
 											$userActivePostsDetails[$i]['change_detail'] = 'New post';
 										}
-									$userActivePostsDetails[$i]['url'] = 'post/web/'.$workSpaceId.'/'.$workSpaceType.'/one/'.$row->post_type_object_id.'#form'.$userActivePostsDetails[$i]['last_post_id'];
-
+									//$userActivePostsDetails[$i]['url'] = 'post/web/'.$workSpaceId.'/'.$workSpaceType.'/one/'.$row->post_type_object_id.'#form'.$userActivePostsDetails[$i]['last_post_id'];
+									$userActivePostsDetails[$i]['url'] = 'post/web/'.$workSpaceId.'/'.$workSpaceType.'/home#form'.$userActivePostsDetails[$i]['last_post_id'];
 								}
 								if ($row->post_type_id==2){
 									$userActivePostsDetails[$i]['post_type_id']=$row->post_type_id;
@@ -1699,7 +1699,8 @@ class timeline_db_manager extends CI_Model
 										}else{
 											$userActivePostsDetails[$i]['change_detail'] = 'New post';
 										}
-									$userActivePostsDetails[$i]['url'] = 'post/web/'.$workSpaceId.'/'.$workSpaceType.'/space/'.$row->post_type_object_id.'#form'.$userActivePostsDetails[$i]['last_post_id'];
+									//$userActivePostsDetails[$i]['url'] = 'post/web/'.$workSpaceId.'/'.$workSpaceType.'/space/'.$row->post_type_object_id.'#form'.$userActivePostsDetails[$i]['last_post_id'];
+									$userActivePostsDetails[$i]['url'] = 'post/web/'.$workSpaceId.'/'.$workSpaceType.'/home#form'.$userActivePostsDetails[$i]['last_post_id'];
 								}
 								if ($row->post_type_id==3){
 									$userActivePostsDetails[$i]['post_type_id']=$row->post_type_id;
@@ -1725,7 +1726,8 @@ class timeline_db_manager extends CI_Model
 										}else{
 											$userActivePostsDetails[$i]['change_detail'] = 'New post';
 										}
-										$userActivePostsDetails[$i]['url'] = 'post/web/'.$workSpaceId.'/'.$workSpaceType.'/subspace/'.$row->post_type_object_id.'#form'.$userActivePostsDetails[$i]['last_post_id'];
+										//$userActivePostsDetails[$i]['url'] = 'post/web/'.$workSpaceId.'/'.$workSpaceType.'/subspace/'.$row->post_type_object_id.'#form'.$userActivePostsDetails[$i]['last_post_id'];
+										$userActivePostsDetails[$i]['url'] = 'post/web/'.$workSpaceId.'/'.$workSpaceType.'/home#form'.$userActivePostsDetails[$i]['last_post_id'];
 
 								}
 								if ($row->post_type_id==7){
@@ -1751,8 +1753,8 @@ class timeline_db_manager extends CI_Model
 										}else{
 											$userActivePostsDetails[$i]['change_detail'] = 'New post';
 										}
-									$userActivePostsDetails[$i]['url'] = 'post/web/'.$workSpaceId.'/'.$workSpaceType.'/public/'.$row->post_type_object_id.'#form'.$userActivePostsDetails[$i]['last_post_id'];
-
+									//$userActivePostsDetails[$i]['url'] = 'post/web/'.$workSpaceId.'/'.$workSpaceType.'/public/'.$row->post_type_object_id.'#form'.$userActivePostsDetails[$i]['last_post_id'];
+									$userActivePostsDetails[$i]['url'] = 'post/web/'.$workSpaceId.'/'.$workSpaceType.'/home#form'.$userActivePostsDetails[$i]['last_post_id'];
 								}
 								if($row->post_type_id==9){
 									$objectFollowStatus=$this->identity_db_manager->get_follow_status($row->participant_id,$row->post_type_object_id,'',10);
@@ -1780,8 +1782,8 @@ class timeline_db_manager extends CI_Model
 											}else{
 												$userActivePostsDetails[$i]['change_detail'] = 'New post';
 											}
-										$userActivePostsDetails[$i]['url'] = 'post/web/'.$workSpaceId.'/'.$workSpaceType.'/space_ex/'.$row->post_type_object_id.'#form'.$userActivePostsDetails[$i]['last_post_id'];
-
+										//$userActivePostsDetails[$i]['url'] = 'post/web/'.$workSpaceId.'/'.$workSpaceType.'/space_ex/'.$row->post_type_object_id.'#form'.$userActivePostsDetails[$i]['last_post_id'];
+										$userActivePostsDetails[$i]['url'] = 'post/web/'.$workSpaceId.'/'.$workSpaceType.'/home#form'.$userActivePostsDetails[$i]['last_post_id'];
 									}
 								}
 							//}
