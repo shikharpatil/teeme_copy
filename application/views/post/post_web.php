@@ -1781,8 +1781,9 @@ $(document).ready(function(){
 	$("#showManSpaces").hide();
 	<?php if($_SESSION['active_view']=='space' || isset($_SESSION['public'])){?>
 		$("#multiSend").hide();
+		leftMenuHideShow();
 		<?php if(!isset($_SESSION['public'])){?>
-			document.getElementById("postArea").style.width = '64%';
+			document.getElementById("postArea").style.width = '62%';
 			//$('.post_web_tab_menu_tab').css('width', '22%');
 		<?php }?>
 	<?php }else{?>

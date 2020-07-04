@@ -8942,6 +8942,7 @@ span.reserve a
 	width:50%;
 	/*float:right;*/
 	display:flex;
+	flex-direction: column;
 	align-self: flex-end;
 	padding:10px;
 	margin:2px;
@@ -8952,6 +8953,7 @@ span.reserve a
 	/*float:left;*/
 	display:flex;
 	align-self: flex-start;
+	flex-direction: column;
 	padding:10px;
 	margin:2px;
 }

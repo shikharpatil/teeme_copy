@@ -1148,41 +1148,42 @@
 					    	</span>
 	    					<!-- Dashrath : code end -->						  
 						</div>
+						<div>
 							<!-- Nested comment start 01 -->
-							<span class="postCommentDelete" id="nestedCommentLeafSpan<?php echo $arrDiscussions['nodeId'];?>">
-			      			<span id="nestedCommentLeafIcon<?php echo $arrDiscussions['leafId'];?>">
-								<?php 
-								if(($arrDiscussions['leafStatus'] != 'deleted'))
-								{ 
-								?>
-									
-									<a href="javascript:void(0)" onClick="openNestedCommentEditor('<?php echo $arrDiscussions['leafId']; ?>')" title="<?php echo $this->lang->line('txt_comment'); ?>" border="0" ><img src="<?php echo  base_url(); ?>images/subtask-icon_new.png" alt="<?php echo $this->lang->line("txt_comment"); ?>" title="<?php echo $this->lang->line("txt_comment"); ?>">
-									</a>
-									
-								<?php 
-								} 
-								?>
-							</span>
+							<span id="nestedCommentLeafSpan<?php echo $arrDiscussions['nodeId'];?>">
+								<span id="nestedCommentLeafIcon<?php echo $arrDiscussions['leafId'];?>">
+									<?php 
+									if(($arrDiscussions['leafStatus'] != 'deleted'))
+									{ 
+									?>
+										
+										<a href="javascript:void(0)" onClick="openNestedCommentEditor('<?php echo $arrDiscussions['leafId']; ?>')" title="<?php echo $this->lang->line('txt_comment'); ?>" border="0" ><img src="<?php echo  base_url(); ?>images/subtask-icon_new.png" alt="<?php echo $this->lang->line("txt_comment"); ?>" title="<?php echo $this->lang->line("txt_comment"); ?>">
+										</a>
+										
+									<?php 
+									} 
+									?>
+								</span>
 							</span>
 							<!-- Nested comment end 01-->
-						<!-- delete button start 03 -->
-			      		<span class="postCommentDelete" id="deleteLeafSpan<?php echo $arrDiscussions['nodeId'];?>">
-			      			<span id="deleteLeafIcon<?php echo $arrDiscussions['leafId'];?>">
-								<?php 
-								if(($arrDiscussions['leafStatus'] != 'deleted') && ($arrDiscussions['userId'] == $_SESSION['userId']))
-								{
-								?>
-									
-									<a href="javascript:void(0)" onClick="deleteLeaf('<?php echo $arrDiscussions['leafId']; ?>','<?php echo $workSpaceId; ?>','<?php echo $workSpaceType; ?>','<?php echo $treeId; ?>', 'post_comment')" title="<?php echo $this->lang->line('txt_delete'); ?>" border="0" ><img src="<?php echo  base_url(); ?>images/trash.gif" alt="<?php echo $this->lang->line("txt_del"); ?>" title="<?php echo $this->lang->line("txt_delete"); ?>" border="0">
-									</a>
-									
-								<?php 
-								} 
-								?>
+							<!-- delete button start 03 -->
+							<span class="postCommentDelete" id="deleteLeafSpan<?php echo $arrDiscussions['nodeId'];?>">
+								<span id="deleteLeafIcon<?php echo $arrDiscussions['leafId'];?>">
+									<?php 
+									if(($arrDiscussions['leafStatus'] != 'deleted') && ($arrDiscussions['userId'] == $_SESSION['userId']))
+									{
+									?>
+										
+										<a href="javascript:void(0)" onClick="deleteLeaf('<?php echo $arrDiscussions['leafId']; ?>','<?php echo $workSpaceId; ?>','<?php echo $workSpaceType; ?>','<?php echo $treeId; ?>', 'post_comment')" title="<?php echo $this->lang->line('txt_delete'); ?>" border="0" ><img src="<?php echo  base_url(); ?>images/trash.gif" alt="<?php echo $this->lang->line("txt_del"); ?>" title="<?php echo $this->lang->line("txt_delete"); ?>" border="0">
+										</a>
+										
+									<?php 
+									} 
+									?>
+								</span>
 							</span>
-						</span>
-						<!-- delete button end 03-->
-
+							<!-- delete button end 03-->
+						</div>
 						<div class="clr"></div>
 							<!-- Nested comment textarea start here-->
 							<div id="nestedCommentTextBox<?php echo $arrDiscussions['nodeId']; ?>" class="CommentTextBox<?php echo $arrDiscussions['nodeId']; ?> commentEditorWrapper" style="display:none;">
@@ -1317,46 +1318,49 @@
 									<span class="clearedLeafContent"><?php echo $this->lang->line('txt_content_deleted'); ?></span> 
 									<?php 
 								} ?>
-							</span>
-							<span id="delete_content_show_<?php echo $arrDiscussions['leafId'];?>" style="display: none;" class="clearedLeafContent">
-								<?php echo $this->lang->line('txt_content_deleted'); ?>
-							</span>
-							</div>
-							<!-- Nested comment start 01 -->
-							<span class="postCommentDelete" id="nestedCommentLeafSpan<?php echo $arrDiscussions['nodeId'];?>">
-			      			<span id="nestedCommentLeafIcon<?php echo $arrDiscussions['leafId'];?>">
-								<?php 
-								if(($arrDiscussions['leafStatus'] != 'deleted'))
-								{ 
-								?>
-									
-									<a href="javascript:void(0)" onClick="openNestedCommentEditor('<?php echo $arrDiscussions['leafId']; ?>')" title="<?php echo $this->lang->line('txt_comment'); ?>" border="0" ><img src="<?php echo  base_url(); ?>images/subtask-icon_new.png" alt="<?php echo $this->lang->line("txt_comment"); ?>" title="<?php echo $this->lang->line("txt_comment"); ?>">
-									</a>
-									
-								<?php 
-								} 
-								?>
-							</span>
-
+									</span>
+									<span id="delete_content_show_<?php echo $arrDiscussions['leafId'];?>" style="display: none;" class="clearedLeafContent">
+										<?php echo $this->lang->line('txt_content_deleted'); ?>
+									</span>
+								</div>
+								<!-- Nested comment start 01 -->
+								<div>
+									<!-- comment button start 01 -->	
+									<span id="nestedCommentLeafIcon<?php echo $arrDiscussions['leafId'];?>">
+										<?php 
+										if(($arrDiscussions['leafStatus'] != 'deleted'))
+										{ 
+										?>
+											
+											<a href="javascript:void(0)" onClick="openNestedCommentEditor('<?php echo $arrDiscussions['leafId']; ?>')" title="<?php echo $this->lang->line('txt_comment'); ?>" border="0" ><img src="<?php echo  base_url(); ?>images/subtask-icon_new.png" alt="<?php echo $this->lang->line("txt_comment"); ?>" title="<?php echo $this->lang->line("txt_comment"); ?>">
+											</a>
+											
+										<?php 
+										} 
+										?>
+									</span>
+									<!-- comment button end 01-->
+									<!-- delete button start 01 -->								
+									<span class="postCommentDelete" id="deleteLeafSpan<?php echo $arrDiscussions['nodeId'];?>">
+										<span id="deleteLeafIcon<?php echo $arrDiscussions['leafId'];?>">
+											<?php 
+											if(($arrDiscussions['leafStatus'] != 'deleted') && ($arrDiscussions['userId'] == $_SESSION['userId']))
+											{ 
+											?>
+													
+												<a href="javascript:void(0)" onClick="deleteLeaf('<?php echo $arrDiscussions['leafId']; ?>','<?php echo $workSpaceId; ?>','<?php echo $workSpaceType; ?>','<?php echo $treeId; ?>', 'post_comment')" title="<?php echo $this->lang->line('txt_delete'); ?>" border="0" ><img src="<?php echo  base_url(); ?>images/trash.gif" alt="<?php echo $this->lang->line("txt_del"); ?>" title="<?php echo $this->lang->line("txt_delete"); ?>" border="0">
+													</a>
+												
+											<?php 
+											} 
+											?>
+										</span>
+									</span>									
+									<!-- delete button end 01-->
+								</div>
 							</span>
 							<!-- Nested comment end 01-->
-							<!-- delete button start 01 -->
-							<span class="postCommentDelete" id="deleteLeafSpan<?php echo $arrDiscussions['nodeId'];?>">
-								<span id="deleteLeafIcon<?php echo $arrDiscussions['leafId'];?>">
-									<?php 
-									if(($arrDiscussions['leafStatus'] != 'deleted') && ($arrDiscussions['userId'] == $_SESSION['userId']))
-									{ 
-									?>
-										
-										<a href="javascript:void(0)" onClick="deleteLeaf('<?php echo $arrDiscussions['leafId']; ?>','<?php echo $workSpaceId; ?>','<?php echo $workSpaceType; ?>','<?php echo $treeId; ?>', 'post_comment')" title="<?php echo $this->lang->line('txt_delete'); ?>" border="0" ><img src="<?php echo  base_url(); ?>images/trash.gif" alt="<?php echo $this->lang->line("txt_del"); ?>" title="<?php echo $this->lang->line("txt_delete"); ?>" border="0">
-										</a>
-										
-									<?php 
-									} 
-									?>
-								</span>
-							</span>
-							<!-- delete button end 01-->
+
 							<div class="clr"></div>
 							<!-- Nested comment textarea start here-->
 							<div id="nestedCommentTextBox<?php echo $arrDiscussions['nodeId']; ?>" class="CommentTextBox<?php echo $arrDiscussions['nodeId']; ?> commentEditorWrapper" style="display:none;">
