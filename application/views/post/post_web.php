@@ -1047,14 +1047,16 @@ $(document).ready(function()
 			<!--Parv: Uncomment this for tab menu instead. Also disable the javascript for the dropdown in the scripts section at the bottom. Search by 'drop_down_menu'.
 			<ul class="tab_menu_new">
 			-->
-			<?php if ($_SESSION['active_view']!='space' && $post_type_id!=2 && $post_type_id!=3 && $post_type_id!=9){ ?>
+			<?php //if ($_SESSION['active_view']!='space' && $post_type_id!=2 && $post_type_id!=3 && $post_type_id!=9){ ?>
+			<?php if ((($post_type_id!=2 && $post_type_id!=3 && $post_type_id!=9) || $post_type_object_id==0)){ ?>
 			<ul class="drop_menu_new">
 			<li><a href="javascript:void(0);">--Select--</a><li>
 			<?php if($workSpaceDetails['workSpaceName']!="Try Teeme"){ ?>
 			<li>
 				<?php /*?> <a href="javascript:void(0);" id="profile" style="padding-left:12px;margin-left:17px;" title="profile" class="<?php if($profileForm=='1' && $passwordForm!='1'){ ?> active <?php } ?>" onclick="$('#profile').addClass('active');$('#passwordForm').removeClass('active');$('#notification').removeClass('active');$('#password_form').hide();$('#notificationSection').hide();$('#profileForm').show(); clearSessionMsg();"><?php echo $this->lang->line('profile_txt'); ?></a><?php */?>
 				
-				<?php if ($workSpaceDetails['workSpaceName']!="Try Teeme" && $_SESSION['active_view']!='space') { ?>
+				<?php // if ($workSpaceDetails['workSpaceName']!="Try Teeme" && $_SESSION['active_view']!='space') { ?>
+				<?php if ($workSpaceDetails['workSpaceName']!="Try Teeme") { ?>
 				<!--<a href="<?php echo base_url(); ?>post/web/<?php echo $workSpaceId; ?>/<?php echo $workSpaceType; ?>/0/1/all<?php if($this->uri->segment(10)!=''){ echo '/0/'.$userPostSearch; }?>" style="padding-left:12px;margin-left:17px; <?php if($_SESSION['all']) { ?>" class="active <?php } ?>" id="all"><?php echo $this->lang->line('all_post_txt').' ('.$allPosts.')'; ?></a>-->
 				<a href="<?php echo base_url(); ?>post/web/<?php echo $workSpaceId; ?>/<?php echo $workSpaceType; ?>/home" style="padding-left:12px; <?php if($_SESSION['all']) { ?>" class="active <?php } ?>" id="all"><?php echo $this->lang->line('all_post_txt').' ('.$allPosts.')'; ?></a>				
 				<?php } ?>
@@ -1115,7 +1117,9 @@ $(document).ready(function()
 
         	</li>	
 		
-				<?php if($workSpaceDetails['workSpaceName']!="Try Teeme" && $_SESSION['active_view']!='space'){ ?>
+				<?php //if($workSpaceDetails['workSpaceName']!="Try Teeme" && $_SESSION['active_view']!='space'){ ?>
+				<?php if($workSpaceDetails['workSpaceName']!="Try Teeme"){ ?>
+
 				<?php if($myProfileDetail['userGroup']>0){ ?>
 				<li>
 
@@ -1139,11 +1143,11 @@ $(document).ready(function()
 					<a href="<?php echo base_url(); ?>post/web/<?php echo $workSpaceId; ?>/<?php echo $workSpaceType; ?>/one/<?php echo $_SESSION['userId']?>" style="padding-left:12px;margin-left:17px;<?php if($this->uri->segment(5)=='one' && $this->uri->segment(6)==$_SESSION['userId']) { ?>" class="active <?php } ?>"><?php echo 'My Posts'.' ('.$totalMyPosts.')'; ?></a>
 				</li>
 				-->
-				<?php if($_SESSION['active_view']!='space'){?>
+				<?php //if($_SESSION['active_view']!='space'){?>
 				<li>			
 					<a href="<?php echo base_url(); ?>post/web/<?php echo $workSpaceId; ?>/<?php echo $workSpaceType; ?>/parked/<?php echo $_SESSION['userId']?>" style="padding-left:12px;margin-left:17px;<?php if($this->uri->segment(5)=='parked' && $this->uri->segment(6)==$_SESSION['userId']) { ?>" class="active <?php } ?>"><?php echo 'Parked'.' ('.$totalParkedPosts.')'; ?></a>
 				</li>
-				<?php } ?>
+				<?php //} ?>
 				<li>
 					<a href="<?php echo base_url(); ?>post/web/<?php echo $workSpaceId; ?>/<?php echo $workSpaceType; ?>/drafts" style="padding-left:12px; <?php if($this->uri->segment(5)=='drafts') { ?>" class="active <?php } ?>" id="drafts"><?php echo 'Drafts ('.$totalDraftPosts.')'; ?></a>	
 				</li>
@@ -1779,21 +1783,16 @@ $(document).ready(function(){
 	}
 	$("#showMan").hide();
 	$("#showManSpaces").hide();
-	<?php if($_SESSION['active_view']=='space' || isset($_SESSION['public'])){?>
-		$("#multiSend").hide();
-		leftMenuHideShow();
-		<?php if(!isset($_SESSION['public'])){?>
-			document.getElementById("postArea").style.width = '60%';
-			//$('.post_web_tab_menu_tab').css('width', '22%');
-		<?php }?>
-	<?php }else{?>
-		document.getElementById("postArea").style.width = '73%';
-		//$('.post_web_tab_menu_tab').css('width', '25%');	
-		setLeftMenuSideBarCookie(1);	
+	<?php 
+		if($_SESSION['active_view']=='space'){?>
+			setLeftMenuSideBarCookie(1);
+			leftMenuHideShow();
+	<?php }
+		if (isset($_SESSION['public']))  {?>
+			$("#multiSend").hide();	
+			document.getElementById("postArea").style.width = '73%';
 	<?php } ?>
 
-
-	
 	$(window).scroll(function(){
       if ($(this).scrollTop() > 60) {
           	$('#postTabUI').addClass('postTabUIFixed');

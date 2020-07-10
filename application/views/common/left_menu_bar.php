@@ -395,7 +395,7 @@ if ($userGroup==0 && $workSpaceId==0)
 				<!--<a title="<?php echo $this->lang->line('txt_Post'); ?>" href="<?php echo base_url();?>post/index/<?php echo $workSpaceId;?>/type/<?php echo $workSpaceType; ?>/<?php echo $workSpaceId; ?>/<?php echo $workSpaceType; ?>" >-->
 				<?php if ($workSpaceType==1){
 					?>
-									<a title="<?php echo $this->lang->line('txt_Post'); ?>" href="<?php echo base_url(); ?>post/web/<?php echo $workSpaceId;?>/<?php echo $workSpaceType; ?>/space/<?php echo $workSpaceId;?>" >
+						<a title="<?php echo $this->lang->line('txt_Post'); ?>" href="<?php echo base_url(); ?>post/web/<?php echo $workSpaceId;?>/<?php echo $workSpaceType; ?>/space/<?php echo $workSpaceId;?>" >
 					<?php
 					}else{
 						?>
@@ -405,18 +405,22 @@ if ($userGroup==0 && $workSpaceId==0)
 
 				
 					<?php 
+					
 					if($typeForActive=='post')
 					{ 
 					?>
-						<img src="<?php echo base_url();?>images/history-icon-sel.png" class="left-menu-icon" /><?php echo $this->lang->line('txt_Post')." <span class='clsCountTrees' id='postCount'>".$temp."</span>";?>
+						<!-- Commented by Parv <img src="<?php echo base_url();?>images/history-icon-sel.png" class="left-menu-icon" /><?php echo $this->lang->line('txt_Post')." <span class='clsCountTrees' id='postCount'>".$temp."</span>";?> -->
+						<img src="<?php echo base_url();?>images/history-icon-sel.png" class="left-menu-icon" /><?php echo $this->lang->line('txt_Post')."";?>
 					<?php
 					}
 					else
 					{
 					?>
-						<img src="<?php echo base_url();?>images/history-icon.png" class="left-menu-icon" /><?php echo $this->lang->line('txt_Post')." <span class='clsCountTrees' id='postCount'>".$temp."</span>";?>
+						<!-- <img src="<?php echo base_url();?>images/history-icon.png" class="left-menu-icon" /><?php echo $this->lang->line('txt_Post')." <span class='clsCountTrees' id='postCount'>".$temp."</span>";?> -->
+						<img src="<?php echo base_url();?>images/history-icon.png" class="left-menu-icon" /><?php echo $this->lang->line('txt_Post')."";?>
 					<?php
 					}
+					
 					?>
 				</a>
 				</h1>

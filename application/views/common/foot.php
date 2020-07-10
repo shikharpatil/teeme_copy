@@ -352,7 +352,7 @@ function showNotificationCount(){
 				url: baseUrl+'notifications/showNotificationCount',
 				success:function(result)
 				{
-					//alert(result);
+	
 					if(result!='' && result!=0)
 					{
 						$('#notificationCount').show();
@@ -393,7 +393,7 @@ function checkOfflineMode(){
 
 				success:function(result)
 				{
-					//alert(result.trim());
+				
 					if(result.trim()!='online')
 					{
 						$('body').html(result);
@@ -438,7 +438,7 @@ function changeFollowStatusOut(seedId)
 
 function add_object_follow(seedId,followStatus,object_id=1)
 {
-		//alert(workSpaceId+'==='+workSpaceType);
+
 		if(followStatus=='unfollow')
 		{
 			msg= '<?php echo $this->lang->line('txt_confirm_unfollow'); ?>';
@@ -454,7 +454,7 @@ function add_object_follow(seedId,followStatus,object_id=1)
 				url: baseUrl+"notifications/add_follow_status/"+seedId+"/0/"+workSpaceId+"/"+workSpaceType+"/"+object_id,
 				cache: false,
 				success:  function(result){
-				  //alert(nodeId);
+	
 				  if(result==1)
 				  {
 					if(followStatus=='unfollow')
@@ -818,8 +818,6 @@ function leftMenuHideShow()
 
 	//get data type is notification or timeline (used for check condition)
 	var myDataTypeValue1 = getRightSidebarDataType();
-
-	///alert('left menu= '+isLeftMenu);
 	
 	if(isLeftMenu=='')
 	{
