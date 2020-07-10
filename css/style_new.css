@@ -8958,11 +8958,12 @@ span.reserve a
 	margin:2px;
 }
 .postWebChatBoxSystem{
-	background-color:#8DC5E6;
+	background-color:#d1e5f1;
 	width:50%;
 	/*float:left;*/
 	display:flex;
 	align-self: center;
+	flex-direction: column;
 	padding:10px;
 	margin:2px;
 }
@@ -8974,6 +8975,9 @@ span.reserve a
   /*border: solid 1px #DDDFE2;*/
   /*border-radius: 8px;*/
 	/*border-bottom:#e3e0e0 solid 1px;*/
+}
+.commentUserName{
+	margin:0 0 10px 0;
 }
 /* The Modal (background) */
 .modal {

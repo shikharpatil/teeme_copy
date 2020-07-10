@@ -255,8 +255,8 @@
 							?>
 	</div>
 	<div style="float:left; margin-left:5px; ">
-		<p style="margin:0; font-size:0.8em;"><a style="color:#000;" href="<?php echo base_url();?>post/index/<?php echo $workSpaceId;?>/type/<?php echo $workSpaceType; ?>/<?php echo $workSpaceId; ?>/<?php echo $workSpaceType; ?>/0/0/<?php echo $arrVal['userId']; ?>"><b><?php echo strip_tags($TimelineProfiledetail['userTagName'],'<b><em><span><img>'); ?></b></a></p>
-		<p class="postTimeStamp" style="margin:2px 0 15px;"><?php echo $this->time_manager->getUserTimeFromGMTTime($arrVal['TimelineCreatedDate'],$this->config->item('date_format')); ?></p>
+		<span style="margin:0; font-size:0.8em;"><a style="color:#000;" href="<?php echo base_url();?>post/index/<?php echo $workSpaceId;?>/type/<?php echo $workSpaceType; ?>/<?php echo $workSpaceId; ?>/<?php echo $workSpaceType; ?>/0/0/<?php echo $arrVal['userId']; ?>"><b><?php echo strip_tags($TimelineProfiledetail['userTagName'],'<b><em><span><img>'); ?></b></a></span>
+		<span class="postTimeStamp" style="margin:2px 0 15px;"><?php echo $this->time_manager->getUserTimeFromGMTTime($arrVal['TimelineCreatedDate'],$this->config->item('date_format')); ?></span>
 	</div>
 	</div>
 	<!--Showing all posts section space name start-->
@@ -1078,8 +1078,8 @@
 						<!--<div id="<?php echo $position++;?>" style="width:100%;float:left;padding-left:0%;padding-top:20px;" onClick=""  class="<?php echo $nodeBgColor."1";?> handCursor">-->
 						<div id="comment<?php echo $arrDiscussions['nodeId'];?>" class="<?php echo $nodeBgColor;?> handCursor">
 							<!--Add comment profile pic start-->
-							<div style="width:30%;" class="commentUserName">
-								<div style="float:left;">
+							<div class="commentUserName">
+								<div class="flLt">
 									<?php
 										if ($TimelineProfileCommentdetail['photo']!='noimage.jpg' && $TimelineProfileCommentdetail['photo']!='')
 										{
@@ -1096,8 +1096,8 @@
 									?>
 								</div>
 								<div style="float:left; margin-left:5px; font-size:0.8em;">
-									<p><a style="color:#000;" href="<?php echo base_url();?>post/index/<?php echo $workSpaceId;?>/type/<?php echo $workSpaceType; ?>/<?php echo $workSpaceId; ?>/<?php echo $workSpaceType; ?>/0/0/<?php echo $TimelineProfileCommentdetail['userId']; ?>"><b><?php echo strip_tags($TimelineProfileCommentdetail['userTagName'],'<b><em><span><img>'); ?></b></a></p>
-									<p class="postCommentTimeStamp"><?php echo $this->time_manager->getUserTimeFromGMTTime($arrDiscussions['DiscussionCreatedDate'],$this->config->item('date_format')); ?></p>
+									<div><a style="color:#000;" href="<?php echo base_url();?>post/index/<?php echo $workSpaceId;?>/type/<?php echo $workSpaceType; ?>/<?php echo $workSpaceId; ?>/<?php echo $workSpaceType; ?>/0/0/<?php echo $TimelineProfileCommentdetail['userId']; ?>"><b><?php echo strip_tags($TimelineProfileCommentdetail['userTagName'],'<b><em><span><img>'); ?></b></a></div>
+									<div class="postCommentTimeStamp"><?php echo $this->time_manager->getUserTimeFromGMTTime($arrDiscussions['DiscussionCreatedDate'],$this->config->item('date_format')); ?></div>
 								</div>
 							</div>
 							<!--Added by Dashrath- clr div for image stretch issue-->
@@ -1255,8 +1255,8 @@
           				<!--<div id="<?php echo $position++;?>" style="width:100%;float:left;padding-left:0%;padding-top:20px;" onClick=""  class="<?php echo $nodeBgColor."1";?> handCursor">-->
 						<div id="comment<?php echo $arrDiscussions['nodeId'];?>" class="<?php echo $nodeBgColor;?>">
 							<!--Add comment profile pic start-->					
-							<div style="width:30%;" class="commentUserName">
-							<div style="float:left;">
+							<div class="commentUserName">
+							<div class="flLt">
 								<?php
 									if ($TimelineProfileCommentdetail['photo']!='noimage.jpg' && $TimelineProfileCommentdetail['photo']!='')
 									{
@@ -1272,9 +1272,9 @@
 									}
 								?>
 								</div>
-								<div style="float:left; margin-left:5px; font-size:0.8em;">
-									<p><a style="color:#000;" href="<?php echo base_url();?>post/index/<?php echo $workSpaceId;?>/type/<?php echo $workSpaceType; ?>/<?php echo $workSpaceId; ?>/<?php echo $workSpaceType; ?>/0/0/<?php echo $TimelineProfileCommentdetail['userId']; ?>"><b><?php echo strip_tags($TimelineProfileCommentdetail['userTagName'],'<b><em><span><img>'); ?></b></a></p>
-									<p class="postCommentTimeStamp"><?php echo $this->time_manager->getUserTimeFromGMTTime($arrDiscussions['DiscussionCreatedDate'],$this->config->item('date_format')); ?></p>
+								<div style="float:left; margin-left:5px; font-size:0.8em;">								
+									<div><a style="color:#000;" href="<?php echo base_url();?>post/index/<?php echo $workSpaceId;?>/type/<?php echo $workSpaceType; ?>/<?php echo $workSpaceId; ?>/<?php echo $workSpaceType; ?>/0/0/<?php echo $TimelineProfileCommentdetail['userId']; ?>"><b><?php echo strip_tags($TimelineProfileCommentdetail['userTagName'],'<b><em><span><img>'); ?></b></a></div>
+									<div class="postCommentTimeStamp"><?php echo $this->time_manager->getUserTimeFromGMTTime($arrDiscussions['DiscussionCreatedDate'],$this->config->item('date_format')); ?></div>
 								</div>
 							</div>
 							<!--Added by Dashrath- clr div for image stretch issue-->

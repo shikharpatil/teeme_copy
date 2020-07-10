@@ -49,9 +49,9 @@
 			<div id="comment<?php echo $arrDiscussions['nodeId'];?>" class="<?php echo $nodeBgColor;?>">
 		  	
 			 <!--Add comment profile pic start-->
-  <div style="width:30%;" class="commentUserName">
+  <div class="commentUserName">
   <div>
-  <div style="float:left;">
+  <div class="flLt">
 							<?php
 								if ($TimelineProfileCommentdetail['photo']!='noimage.jpg' && $TimelineProfileCommentdetail['photo']!='')
 								{
@@ -68,8 +68,8 @@
 							?>
 	</div>
 	<div style="float:left; margin-left:5px; font-size:0.8em;">
-		<p><b><?php echo strip_tags($TimelineProfileCommentdetail['userTagName'],'<b><em><span><img>'); ?></b></p>
-		<p class="postCommentTimeStamp"><?php echo $this->time_manager->getUserTimeFromGMTTime($arrDiscussions['DiscussionCreatedDate'],$this->config->item('date_format')); ?></p>
+		<div><b><?php echo strip_tags($TimelineProfileCommentdetail['userTagName'],'<b><em><span><img>'); ?></b></div>
+		<div class="postCommentTimeStamp"><?php echo $this->time_manager->getUserTimeFromGMTTime($arrDiscussions['DiscussionCreatedDate'],$this->config->item('date_format')); ?></div>
 	</div>
 	</div>
 	<div>
@@ -79,11 +79,46 @@
 	
   	<!--Add comment profile pic end-->
 		  	
-		  <div id='leaf_contents<?php echo $arrDiscussions['nodeId'];?>' class="contentContainer <?php //echo ($viewTags[0]['systemTag']==1)?$viewTags[0]['tagName']."_systemTag":"";?>  commentUserNameContents"  style="font-size:0.8em;text-align:justify; width:68%; overflow:hidden;" >
+		<div id='leaf_contents<?php echo $arrDiscussions['nodeId'];?>' class="contentContainer <?php //echo ($viewTags[0]['systemTag']==1)?$viewTags[0]['tagName']."_systemTag":"";?>  commentUserNameContents"  style="font-size:0.8em;text-align:justify; width:68%; overflow:hidden;" >
               <?php  echo $arrDiscussions['contents'];?>
-            </div>
-            <!-- display none -->
-            <div class="clr"></div>
+        </div>
+		<div>
+							<!-- Nested comment start 01 -->
+							<span id="nestedCommentLeafSpan<?php echo $arrDiscussions['nodeId'];?>">
+								<span id="nestedCommentLeafIcon<?php echo $arrDiscussions['leafId'];?>">
+									<?php 
+									if(($arrDiscussions['leafStatus'] != 'deleted'))
+									{ 
+									?>
+										
+										<a href="javascript:void(0)" onClick="openNestedCommentEditor('<?php echo $arrDiscussions['leafId']; ?>')" title="<?php echo $this->lang->line('txt_comment'); ?>" border="0" ><img src="<?php echo  base_url(); ?>images/subtask-icon_new.png" alt="<?php echo $this->lang->line("txt_comment"); ?>" title="<?php echo $this->lang->line("txt_comment"); ?>">
+										</a>
+										
+									<?php 
+									} 
+									?>
+								</span>
+							</span>
+							<!-- Nested comment end 01-->
+							<!-- delete button start 03 -->
+							<span class="postCommentDelete" id="deleteLeafSpan<?php echo $arrDiscussions['nodeId'];?>">
+								<span id="deleteLeafIcon<?php echo $arrDiscussions['leafId'];?>">
+									<?php 
+									if(($arrDiscussions['leafStatus'] != 'deleted') && ($arrDiscussions['userId'] == $_SESSION['userId']))
+									{
+									?>
+										
+										<a href="javascript:void(0)" onClick="deleteLeaf('<?php echo $arrDiscussions['leafId']; ?>','<?php echo $workSpaceId; ?>','<?php echo $workSpaceType; ?>','<?php echo $treeId; ?>', 'post_comment')" title="<?php echo $this->lang->line('txt_delete'); ?>" border="0" ><img src="<?php echo  base_url(); ?>images/trash.gif" alt="<?php echo $this->lang->line("txt_del"); ?>" title="<?php echo $this->lang->line("txt_delete"); ?>" border="0">
+										</a>
+										
+									<?php 
+									} 
+									?>
+								</span>
+							</span>
+							<!-- delete button end 03-->
+		</div>
+        <div class="clr"></div>
             
 			
 		 
