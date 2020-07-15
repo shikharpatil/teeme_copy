@@ -255,7 +255,9 @@
 							?>
 	</div>
 	<div style="float:left; margin-left:5px; ">
-		<span style="margin:0; font-size:0.8em;"><a style="color:#000;" href="<?php echo base_url();?>post/index/<?php echo $workSpaceId;?>/type/<?php echo $workSpaceType; ?>/<?php echo $workSpaceId; ?>/<?php echo $workSpaceType; ?>/0/0/<?php echo $arrVal['userId']; ?>"><b><?php echo strip_tags($TimelineProfiledetail['userTagName'],'<b><em><span><img>'); ?></b></a></span>
+	<!-- Commented by Shikhar : this old link gives error therefore commented and new link added below it -->
+		<!-- <span style="margin:0; font-size:0.8em;"><a style="color:#000;" href="<?php echo base_url();?>post/index/<?php echo $workSpaceId;?>/type/<?php echo $workSpaceType; ?>/<?php echo $workSpaceId; ?>/<?php echo $workSpaceType; ?>/0/0/<?php echo $arrVal['userId']; ?>"><b><?php echo strip_tags($TimelineProfiledetail['userTagName'],'<b><em><span><img>'); ?></b></a></span> -->
+		<span style="margin:0; font-size:0.8em;"><a style="color:#000;" href="<?php echo base_url();?>post/web/<?php echo $workSpaceId;?>/<?php echo $workSpaceType; ?>/one/<?php echo $arrVal['userId']; ?>"><b><?php echo strip_tags($TimelineProfiledetail['userTagName'],'<b><em><span><img>'); ?></b></a></span>
 		<span class="postTimeStamp" style="margin:2px 0 15px;"><?php echo $this->time_manager->getUserTimeFromGMTTime($arrVal['TimelineCreatedDate'],$this->config->item('date_format')); ?></span>
 	</div>
 	</div>

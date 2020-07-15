@@ -8,7 +8,7 @@ class Installation extends CI_Controller {
 	{
 		//echo "Begin installation"; exit;
 
-		//$this->load->model('dal/identity_db_manager');
+		$this->load->model('dal/identity_db_manager');
 /*		$out = '';
 		$data = '';
 		$pattern = '$config[\'base_url\']';

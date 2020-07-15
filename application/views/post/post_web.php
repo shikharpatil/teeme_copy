@@ -1049,6 +1049,8 @@ $(document).ready(function()
 			-->
 			<?php //if ($_SESSION['active_view']!='space' && $post_type_id!=2 && $post_type_id!=3 && $post_type_id!=9){ ?>
 			<?php if ((($post_type_id!=2 && $post_type_id!=3 && $post_type_id!=9) || $post_type_object_id==0)){ ?>
+			<!-- Shikhar : added div with id="dropCount" below, for updating the post count in the dropdown after the post is created.  -->
+			<div id="dropCount">
 			<ul class="drop_menu_new">
 			<li><a href="javascript:void(0);">--Select--</a><li>
 			<?php if($workSpaceDetails['workSpaceName']!="Try Teeme"){ ?>
@@ -1168,6 +1170,7 @@ $(document).ready(function()
 
 		
 			</ul>
+			</div>
 			<?php } ?>
 		</div>
 		<div class="clr"></div>
@@ -2024,6 +2027,13 @@ function insertTimeline(postStatus='publish')
 						$('#post_type_object_id').prop("value", "<?php echo $post_type_object_id;?>");
 					 }
 					 closeNewPostWindow();
+
+					/** Added by Shikhar : this function call 'get_dropdown_post_count();' is for getting the post count */ 
+					// this if case checks for the #dropCount exists or not.This #dropCount not visible on internal nad external post interface 
+					 if($('#dropCount').length)
+						{
+							get_dropdown_post_count();
+						}
 					//alert ('Here');
 					return true;
 				 }
@@ -2049,6 +2059,28 @@ function insertTimeline(postStatus='publish')
 	{
 		jAlert(error);
 	}	
+}
+
+function get_dropdown_post_count()
+{
+	var workSpaceId		= '<?php echo $workSpaceId;?>';
+		var workSpaceType	= '<?php echo $workSpaceType;?>';
+		var post_type     ='<?php echo $this->uri->segment(5);?>';
+		var post_type_object_id='<?php echo $this->uri->segment(6);?>';
+	
+    $.ajax({
+			  url: baseUrl+"post/get_dropdown_post_count/",
+			  type: "POST",
+			  data:{workSpaceId:workSpaceId,workSpaceType:workSpaceType,post_type_object_id:post_type_object_id,post_type:post_type},
+			  dataType: "html",
+              success:function(result)
+              {
+                if(result!='' && result!='0')
+				 {
+                     $("#dropCount").html(result);
+                 }
+              }
+            });
 }
 
 function insertTimelineComment(nodeId)
@@ -2423,6 +2455,7 @@ function deleteDraft(post_type_id,post_type_object_id,post_id){
 			dataType: "html",
 			  	success:function(result){
 					$("#form"+post_id).hide();
+					get_dropdown_post_count();
 				}
 		});
 	}
@@ -3130,6 +3163,7 @@ function add_bookmark(nodeId,$bookmarkStatus)
 					if($bookmarkStatus=='unbookmark')
 					{
 						$('.bookmarkBtn'+nodeId).html('<a class="bookmark" onclick="add_bookmark('+nodeId+',\'bookmark\')"><img style="cursor:pointer;height:18px;border:0px;"  src="<?php echo base_url();?>images/bookmark.png"><?php //echo $this->lang->line('txt_object_follow'); ?></a>');
+						get_dropdown_post_count();
 					}
 				  }
 				}
@@ -3157,6 +3191,7 @@ function add_bookmark(nodeId,$bookmarkStatus)
 						if($bookmarkStatus=='bookmark')
 						{
 							$('.bookmarkBtn'+nodeId).html('<a class="bookmarked marked'+nodeId+'" onclick="add_bookmark('+nodeId+',\'unbookmark\')"><img style="cursor:pointer;height:18px;border:0px;"  src="<?php echo base_url();?>images/bookmarked.png"><?php //echo $this->lang->line('txt_object_following'); ?></a>');
+							get_dropdown_post_count();
 						}
 					  }
 					}

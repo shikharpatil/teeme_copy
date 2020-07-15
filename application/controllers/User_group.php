@@ -1,4 +1,4 @@
-<?php /*Copyright © 2008-2014. Team Beyond Borders Pty Ltd. All rights reserved.*/ 
+<?php /*Copyright ï¿½ 2008-2014. Team Beyond Borders Pty Ltd. All rights reserved.*/ 
 	
 class User_group extends CI_Controller 
 {
@@ -26,7 +26,8 @@ class User_group extends CI_Controller
 			$arrDetails['workPlaceMembers'] = $objIdentity->getWorkPlaceMembersByWorkPlaceId($_SESSION['workPlaceId']);	
 			$arrDetails['currentUserDetails']	= 	$objIdentity->getUserDetailsByUserId($_SESSION['userId']);	
 			
-			$arrDetails['userGroupDetails']	= 	$objIdentity->getUserGroupDetails();	
+			/*Commented by Shikhar- this user group feature is deprecated therefore the below function call not required */
+			// $arrDetails['userGroupDetails']	= 	$objIdentity->getUserGroupDetails();	
 			
 			if($_COOKIE['ismobile_place'] || $_COOKIE['ismobile'])
 			{										

@@ -8430,8 +8430,10 @@ function split_sql_file($sql, $delimiter)
 					}
 				}
 				*/
-				//$command='mysql -h' .$server .' -u' .$server_username .' -p' .$server_password .' ' .$place_db_name .' < ' .$place_db;				
-				$command='gunzip < '.$place_db.' | mysql -h' .$server .' -u' .$server_username .' -p' .$server_password .' ' .$place_db_name .' < ' .$place_db;
+				
+				/**Commented by Shikhar : the below command does not work in mac(Darwin os), therefore added the one which worked below for mac, you can uncomment the command if works another OS.  */
+				// $command='gunzip < '.$place_db.' | mysql -h' .$server .' -u' .$server_username .' -p' .$server_password .' ' .$place_db_name .' < ' .$place_db;
+				$command='/Applications/XAMPP/xamppfiles/bin/mysql -h' .$server .' -u' .$server_username .' -p' .$server_password .' ' .$place_db_name .' < ' .$place_db;				
 				
 					if (exec($command)==0){
 						$placedb->query("UPDATE `teeme_tag_types` SET workPlaceId = '".$workPlaceId."'") or die($this->db->error());
@@ -17007,7 +17009,7 @@ $q = 'select * from(SELECT a.id, a.name, a.type, b.artifactId, b.artifactType ,b
 			$userId = $_SESSION['userId'];
 		}
 
-		if (PHP_OS=='Linux')
+		if (PHP_OS=='Linux'||'Darwin')
 		{
 			$workPlaceRootDir   = $this->config->item('absolute_path').'workplaces';			
 			$workPlaceDir		= $this->config->item('absolute_path').'workplaces'.DIRECTORY_SEPARATOR.$workPlaceName;

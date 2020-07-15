@@ -424,7 +424,7 @@ class Home extends CI_Controller
 								/*Dashrath- code end*/
 								
 								/* Start Andy - Create place directory for external documents storage */
-									if (PHP_OS=='Linux')
+									if (PHP_OS=='Linux'||'Darwin')
 									{
 										$workPlaceRootDir   = $this->config->item('absolute_path').'workplaces'; // Main workplaces root directory		
 										$workPlaceDir		= $this->config->item('absolute_path').'workplaces'.DIRECTORY_SEPARATOR.$placeName;	// New workplace directory
