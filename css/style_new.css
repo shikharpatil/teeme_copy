@@ -8858,12 +8858,14 @@ span.reserve a
 	height:100%;
 	overflow-y:scroll;
 	*/
-	height:100%;
+	position:fixed;
+	overflow-y: scroll;
+	height:calc(100% - 170px);
 }
 #postArea{
 	position:fixed;
 	width:73%;
-	height:100%;
+	height:calc(100% - 150px);
 	overflow-y:scroll;	
 }
 .loader{
@@ -8940,7 +8942,7 @@ span.reserve a
 .postWebChatBoxSelf{
 	background-color:#dcf8c6;
 	width:50%;
-	/*float:right;*/
+	float:right;
 	display:flex;
 	flex-direction: column;
 	align-self: flex-end;
@@ -8962,10 +8964,10 @@ span.reserve a
 	width:50%;
 	/*float:left;*/
 	display:flex;
-	align-self: center;
+	/* align-self: center; */
 	flex-direction: column;
 	padding:10px;
-	margin:2px;
+	margin:2px auto;
 }
 .nodeBgColorSelect
 {

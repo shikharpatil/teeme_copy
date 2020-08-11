@@ -602,6 +602,10 @@ class timeline_db_manager extends CI_Model
 
 	public function insert_timeline_web($treeId,$content,$userId,$createdDate,$predecessor=0,$successors=0,$workSpaceId,$workSpaceType,$arrAllRecipientIds='',$tag='',$authors='',$status=1,$type=1,$nodeOrder=0,$post_type_id='-1',$post_type_object_id='-1',$delivery_status_id='1',$seen_status='0',$data='',$is_forward=0,$post_status='publish',$is_draft=0,$post_id=0,$disable_interactions=0)
 	{
+		$nodeIds=array();
+		$leafIds=array();
+		$nodeIdsRecipients=array();
+		$leafIdsRecipients=array();
 		//echo "<li>recipients= " .$recipients;exit;
 		//echo "<li>post_type_id= " .$post_type_id;exit;
 		//echo "<li>workspaceid= " .$workSpaceId;exit;
@@ -621,24 +625,92 @@ class timeline_db_manager extends CI_Model
 		if(!empty($userId)){
 			$this->db->trans_begin();
 			if ($is_draft!=1){
-				if ($nodeOrder==0){
-					$query = $this->db->query("insert into teeme_node(predecessor,successors,treeIds,workSpaceId,workSpaceType) values ('".$predecessor."','".$successors."',".$treeId.",'".$workSpaceId."',".$workSpaceType.")");
+				if($is_forward==1)
+				{
+					// for multiple users recipients
+					if(count($arrAllRecipientIds['recipientIds']>0))
+					{
+						$i=0;
+						foreach($arrAllRecipientIds['recipientIds'] as $recipientsUserId)
+						{
+							// forwarded post in every user's myspace is added as new post in their myspace
+							if ($nodeOrder==0){
+								$query = $this->db->query("insert into teeme_node(predecessor,successors,treeIds,workSpaceId,workSpaceType) values ('".$predecessor."','".$successors."',".$treeId.",'".$workSpaceId."',".$workSpaceType.")");
+							}
+							else{
+								$query = $this->db->query("insert into teeme_node(predecessor,successors,treeIds,nodeOrder,workSpaceId,workSpaceType) values ('".$predecessor."','".$successors."',".$treeId.",".$nodeOrder.",'".$spaceId."',".$workSpaceType.")");
+							}		
+							$nodeId=$this->db->insert_id();
+				
+							$query = $this->db->query("insert into teeme_leaf  (type,authors,status,userId,createdDate,editedDate,contents,nodeId,leafStatus) values 
+							(".$type.",'".addslashes ($authors)."',".$status.",".$userId.",'".$createdDate."','".$createdDate."','".$this->db->escape_str($content)."',".$nodeId.",'".$post_status."')");
+				
+							$leafId=$this->db->insert_id();	
+				
+							$query = $this->db->query("update teeme_node set leafId=".$leafId." where id=".$nodeId);
+							// Parv: insert leaf meta data
+							if ($leafId>0){
+								$query = $this->db->query("insert into teeme_leaf_meta(leaf_id,meta_key,meta_value) values ('".$leafId."','interactions','".$disable_interactions."')");
+							}
+							$nodeIdsRecipients[$i]=$nodeId;
+							$leafIdsRecipients[$i]=$leafId;
+							$i++;
+						}
+					}
+					// For multiple spaces
+					if(count($arrAllRecipientIds['spaceIds'])>0)
+					{	
+						$i=0;
+						foreach($arrAllRecipientIds['spaceIds'] as $spaceId)
+						{
+							// forwarded post in every space is added as new post in that space
+							if ($nodeOrder==0){
+								$query = $this->db->query("insert into teeme_node(predecessor,successors,treeIds,workSpaceId,workSpaceType) values ('".$predecessor."','".$successors."',".$treeId.",'".$spaceId."',".$workSpaceType.")");
+							}
+							else{
+								$query = $this->db->query("insert into teeme_node(predecessor,successors,treeIds,nodeOrder,workSpaceId,workSpaceType) values ('".$predecessor."','".$successors."',".$treeId.",".$nodeOrder.",'".$spaceId."',".$workSpaceType.")");
+							}		
+							$nodeId=$this->db->insert_id();
+				
+							$query = $this->db->query("insert into teeme_leaf  (type,authors,status,userId,createdDate,editedDate,contents,nodeId,leafStatus) values 
+							(".$type.",'".addslashes ($authors)."',".$status.",".$userId.",'".$createdDate."','".$createdDate."','".$this->db->escape_str($content)."',".$nodeId.",'".$post_status."')");
+				
+							$leafId=$this->db->insert_id();	
+				
+							$query = $this->db->query("update teeme_node set leafId=".$leafId." where id=".$nodeId);
+							// Parv: insert leaf meta data
+							if ($leafId>0){
+								$query = $this->db->query("insert into teeme_leaf_meta(leaf_id,meta_key,meta_value) values ('".$leafId."','interactions','".$disable_interactions."')");
+							}
+							$nodeIds[$i]=$nodeId;
+							$leafIds[$i]=$leafId;
+							$i++;
+								
+						}
+					}
 				}
-				else{
-					$query = $this->db->query("insert into teeme_node(predecessor,successors,treeIds,nodeOrder,workSpaceId,workSpaceType) values ('".$predecessor."','".$successors."',".$treeId.",".$nodeOrder.",'".$workSpaceId."',".$workSpaceType.")");
-				}		
-				$nodeId=$this->db->insert_id();
-	
-				$query = $this->db->query("insert into teeme_leaf  (type,authors,status,userId,createdDate,editedDate,contents,nodeId,leafStatus) values 
-				(".$type.",'".addslashes ($authors)."',".$status.",".$userId.",'".$createdDate."','".$createdDate."','".$this->db->escape_str($content)."',".$nodeId.",'".$post_status."')");
-	
-				$leafId=$this->db->insert_id();	
-	
-				$query = $this->db->query("update teeme_node set leafId=".$leafId." where id=".$nodeId);
-				// Parv: insert leaf meta data
-				if ($leafId>0){
-					$query = $this->db->query("insert into teeme_leaf_meta(leaf_id,meta_key,meta_value) values ('".$leafId."','interactions','".$disable_interactions."')");
+				else
+				{
+					if ($nodeOrder==0){
+						$query = $this->db->query("insert into teeme_node(predecessor,successors,treeIds,workSpaceId,workSpaceType) values ('".$predecessor."','".$successors."',".$treeId.",'".$workSpaceId."',".$workSpaceType.")");
+					}
+					else{
+						$query = $this->db->query("insert into teeme_node(predecessor,successors,treeIds,nodeOrder,workSpaceId,workSpaceType) values ('".$predecessor."','".$successors."',".$treeId.",".$nodeOrder.",'".$workSpaceId."',".$workSpaceType.")");
+					}		
+					$nodeId=$this->db->insert_id();
+		
+					$query = $this->db->query("insert into teeme_leaf  (type,authors,status,userId,createdDate,editedDate,contents,nodeId,leafStatus) values 
+					(".$type.",'".addslashes ($authors)."',".$status.",".$userId.",'".$createdDate."','".$createdDate."','".$this->db->escape_str($content)."',".$nodeId.",'".$post_status."')");
+		
+					$leafId=$this->db->insert_id();	
+		
+					$query = $this->db->query("update teeme_node set leafId=".$leafId." where id=".$nodeId);
+					// Parv: insert leaf meta data
+					if ($leafId>0){
+						$query = $this->db->query("insert into teeme_leaf_meta(leaf_id,meta_key,meta_value) values ('".$leafId."','interactions','".$disable_interactions."')");
+					}
 				}
+				
 			}else if ($is_draft==1 && $post_id>0){
 				if ($post_status=="publish"){
 					$q = "UPDATE teeme_leaf SET contents='".$this->db->escape_str($content)."',leafStatus='".$post_status."' WHERE nodeId=".$post_id;
@@ -853,36 +925,41 @@ class timeline_db_manager extends CI_Model
 						//if ($workSpaceId>0){
 						if ($post_type_object_id>0){
 							$arrPlaceUsers = $this->profile_manager->getAllUsersByWorkPlaceId($_SESSION['workPlaceId']);
+							$i=0;
 							foreach($arrPlaceUsers  as $keyVal=>$arrVal){
 								if(in_array($arrVal['userId'],$arrAllRecipientIds['recipientIds'])){
 									if ($workSpaceId>0){
-										$values[] = "('".$nodeId."','".$post_type_id."','".$arrVal['userId']."','".$arrVal['userId']."','".$userId."','".$delivery_status_id."','".$seen_status."','".$createdDate."','".$this->db->escape_str($data)."')"; 	
+										$values[] = "('".$nodeIdsRecipients[$i]."','".$post_type_id."','".$arrVal['userId']."','".$arrVal['userId']."','".$userId."','".$delivery_status_id."','".$seen_status."','".$createdDate."','".$this->db->escape_str($data)."')"; 	
 									}
 									else {
-										$values[] = "('".$nodeId."','".$post_type_id."','0','".$arrVal['userId']."','".$userId."','".$delivery_status_id."','".$seen_status."','".$createdDate."','".$this->db->escape_str($data)."')"; 	
+										$values[] = "('".$nodeIdsRecipients[$i]."','".$post_type_id."','0','".$arrVal['userId']."','".$userId."','".$delivery_status_id."','".$seen_status."','".$createdDate."','".$this->db->escape_str($data)."')"; 	
 									}
 								}
 								else if ((!in_array($arrVal['userId'],$arrAllRecipientIds['recipientIds'])) && (!in_array($arrVal['userId'],$arrSpaceRecipientIds))) {
 									if ($workSpaceId>0){
-										$values[] = "('".$nodeId."','".$post_type_id."','".$userId."','".$arrVal['userId']."','".$userId."','".$delivery_status_id."','".$seen_status."','".$createdDate."','".$this->db->escape_str($data)."')"; 							
+										$values[] = "('".$nodeIdsRecipients[$i]."','".$post_type_id."','".$userId."','".$arrVal['userId']."','".$userId."','".$delivery_status_id."','".$seen_status."','".$createdDate."','".$this->db->escape_str($data)."')"; 							
 									}
 									else{
-										$values[] = "('".$nodeId."','".$post_type_id."','0','".$arrVal['userId']."','".$userId."','".$delivery_status_id."','".$seen_status."','".$createdDate."','".$this->db->escape_str($data)."')"; 	
+										$values[] = "('".$nodeIdsRecipients[$i]."','".$post_type_id."','0','".$arrVal['userId']."','".$userId."','".$delivery_status_id."','".$seen_status."','".$createdDate."','".$this->db->escape_str($data)."')"; 	
 									}
 								}
+								$i++;
 							}							
 						}
 						else{
+							$i=0;
 							foreach($arrAllRecipientIds['recipientIds'] as $recipientsUserId){
 								if($recipientsUserId['userId']>0 && $recipientsUserId['userId']!=$userId){
-									$values[] = "('".$nodeId."','".$post_type_id."','0','".$recipientsUserId['userId']."','".$userId."','".$delivery_status_id."','".$seen_status."','".$createdDate."','".$this->db->escape_str($data)."')"; 								
+									$values[] = "('".$nodeIdsRecipients[$i]."','".$post_type_id."','0','".$recipientsUserId['userId']."','".$userId."','".$delivery_status_id."','".$seen_status."','".$createdDate."','".$this->db->escape_str($data)."')"; 								
 								}
+								$i++;
 							}
 						}
 					}
 					// For multiple spaces
 					if(count($arrAllRecipientIds['spaceIds'])>0){
 						$this->load->model('dal/identity_db_manager');	
+						$i=0;
 						foreach($arrAllRecipientIds['spaceIds'] as $spaceId){
 							$arrSpaceRecipients = array();
 							$arrSpaceRecipients = $this->identity_db_manager->getWorkSpaceMembersByWorkSpaceId($spaceId);
@@ -891,9 +968,10 @@ class timeline_db_manager extends CI_Model
 							{ 
 								//if($recipientsUserId['userId']>0 && $recipientsUserId['userId']!=$_SESSION['userId']){
 								if($recipientsUserId['userId']>0){
-									$values[] = "('".$nodeId."','".$post_type_id."','".$spaceId."','".$recipientsUserId['userId']."','".$userId."','".$delivery_status_id."','".$seen_status."','".$createdDate."','".$this->db->escape_str($data)."')"; 	
+									$values[] = "('".$nodeIds[$i]."','".$post_type_id."','".$spaceId."','".$recipientsUserId['userId']."','".$userId."','".$delivery_status_id."','".$seen_status."','".$createdDate."','".$this->db->escape_str($data)."')"; 	
 								}	
-							}	
+							}
+							$i++;	
 						}
 					}
 					$val = implode(',', $values);
@@ -1563,7 +1641,7 @@ class timeline_db_manager extends CI_Model
 				//$q = "SELECT post_id FROM teeme_post_web_post_store WHERE participant_id='".$userId."' AND seen_status=0 AND post_type_id=2 AND post_type_object_id=$workSpaceId ORDER BY post_id DESC";
 				$q = 'SELECT DISTINCT b.id as post_id FROM teeme_node a, teeme_leaf b, teeme_post_web_post_store c WHERE (c.post_id=a.id OR c.post_id=a.predecessor) AND c.participant_id='.$userId.' AND (b.id=a.leafId OR b.id=a.predecessor) AND a.treeIds=0 AND c.seen_status=0 AND c.post_type_id=2 AND c.post_type_object_id='.$workSpaceId.' AND c.post_type_object_id=a.workSpaceId AND b.leafStatus=\'publish\'';
 				if ($search!=''){
-					$q .= ' AND b.contents LIKE (\''.$search.'%\')';
+					$q .= ' AND b.contents LIKE (\'<p>'.$search.'%\')';
 				}
 				$q .= ' ORDER BY b.editedDate DESC';
 			}

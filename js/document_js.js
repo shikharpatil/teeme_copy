@@ -4766,14 +4766,14 @@ function openNewPostWindow(){
   if($('.newPostWindow').length){
     $(".newPostWindow").show();	
   }else{
-    $('.otherarea2').append('<div class="newPostWindow abs2"><div class="abs_head post_head"><div class="talktxtTitle"><span class="shortTitle"><b>New post</b></div><div class="talkChatMinClose"><span class="talk_chat_close" onclick="showTimelineEditor();"><b>&times;</b>&nbsp;</span><span class="talk_chat_close post_chat_size" onclick="minimizeMaximizeNewPostWindow()"><b>_ </b>&nbsp;&nbsp;</span></div></div><div id="newPostAdd" class="abs_content2 post_content"></div></div>');
+    $('.otherarea2').append('<div class="newPostWindow abs2"><div class="abs_head post_head"><div class="talktxtTitle"><span class="shortTitle"><b>New post</b></div><div class="talkChatMinClose"><span class="talk_chat_close" onclick="showTimelineEditor('+"'close'"+');"><b>&times;</b>&nbsp;</span><span class="talk_chat_close post_chat_size" onclick="minimizeMaximizeNewPostWindow()"><b>_ </b>&nbsp;&nbsp;</span></div></div><div id="newPostAdd" class="abs_content2 post_content"></div></div>');
   }
   $('#TimelineEditor').appendTo('#newPostAdd');
   //$('#newPostAdd').append($('#TimelineEditor').clone());
 }
 function closeNewPostWindow(){
   //$(".talkLoader"+leafTreeId).html("");
-  //$(".newPostWindow").remove();	 
+  //$(".newPostWindow").remove();	
   $(".newPostWindow").hide();	
   $("#myBtn").show();
 }
@@ -5781,6 +5781,8 @@ function deleteLeaf(leafId, workSpaceId, workSpaceType, treeId, treeType)
                 document.getElementById('deleteLeafIcon'+leafId).style.display = "none";
                 document.getElementById('delete_content_hide_'+leafId).style.display = "none"; 
                 document.getElementById('delete_content_show_'+leafId).style.display = "inline";
+                // Added by Shikhar : for changing the display to none of the nested comment icon after that comment is deleted.
+                document.getElementById('nestedCommentLeafIcon'+leafId).style.display= "none";
               }
               else
               {

@@ -613,7 +613,10 @@
 						<img src="<?php echo base_url(); ?>images/subtask-icon_new.png" onclick="openCommentEditor('<?php echo $arrVal['nodeId']; ?>')" title="Add Comment" />
 					<?php } ?>
 				</div>				
-			</span>			
+			</span>
+			<span>
+			&nbsp;
+			</span>		
 		</div>
 		
 		<!-- footer left content end -->
@@ -1133,7 +1136,7 @@
 									{
 										if ($arrDiscussions['predecessor']>0 && $arrDiscussions['predecessor']!=$arrVal['nodeId']){
 										?>
-											<a onclick="focusComment('comment<?php echo $arrDiscussions['predecessor']; ?>');" href="javascript:void(0);">>>quoted</a>
+											<a onclick="focusComment('comment<?php echo $arrDiscussions['predecessor']; ?>',<?php echo $arrVal['nodeId'];?>);" href="javascript:void(0);">>>quoted</a>
 										<?php
 											}
 											echo stripslashes($arrDiscussions['contents']);
@@ -1310,7 +1313,7 @@
 									{
 										if ($arrDiscussions['predecessor']>0 && $arrDiscussions['predecessor']!=$arrVal['nodeId']){
 									?>
-										<a onclick="focusComment('comment<?php echo $arrDiscussions['predecessor']; ?>');" href="javascript:void(0);">>>quoted</a>
+										<a onclick="focusComment('comment<?php echo $arrDiscussions['predecessor']; ?>',<?php echo $arrVal['nodeId'];?>);" href="javascript:void(0);">>>quoted</a>
 									<?php
 										}
 										echo stripslashes($arrDiscussions['contents']);
@@ -1579,7 +1582,7 @@
 <input type="hidden" name="workSpaceId" value="<?php echo $workSpaceId;?>" id="workSpaceId">
 <input type="hidden" name="workSpaceType" value="<?php echo $workSpaceType;?>" id="workSpaceType">
 <input type="hidden" id="totalTimelineCommentNodes<?php echo $arrVal['nodeId']; ?>" value="<?php echo implode(',',$totalTimelineCommentNodes);?>">
-<input name="post_content<?php echo $arrVal['nodeId']; ?>" type="hidden" id="post_content<?php echo $arrVal['nodeId']; ?>" value="<?php echo stripslashes($arrVal['contents']); ?>">
+<input name="post_content<?php echo $arrVal['nodeId']; ?>" type="hidden" id="post_content<?php echo $arrVal['nodeId']; ?>" value="<?php echo base64_encode(stripslashes($arrVal['contents'])); ?>">
 </form>
 <?php		
 		}//post search by user end

@@ -140,52 +140,51 @@
 					<span style="margin:0 5px;"><a target="_blank" href="<?php echo base_url(); ?>post/web/<?php echo $workSpaceId;?>/<?php echo $workSpaceType; ?>/home" style="color:#fff; cursor: pointer;"><img title="<?php echo $this->lang->line('txt_Post'); ?>" src="<?php echo base_url();?>images/email04.png"  class="left-menu-icon" /></a>
 </span>
 					<div class="notify_box">
-					<a id="notificationLink" onclick="seenAllNotification()">
-				  	<img src="<?php echo base_url();?>images/notification.png"  title="Notification" style="margin-top:19px;cursor:pointer;height:21px;border:0px;" />  
-				  	</a>	
+						<a id="notificationLink" onclick="seenAllNotification()">
+						<img src="<?php echo base_url();?>images/notification.png"  title="Notification" style="margin-top:19px;cursor:pointer;height:21px;border:0px;" />  
+						</a>	
 					<span class="button__badge" id='notificationCount' style="display:none;"><?php //echo $temp; ?></span>
-					</div>				
 					<div id="notificationContainer">
-					<div id="notificationTitle"><?php echo $this->lang->line('txt_notifications'); ?></div>
-					<div id="allNotificationData">
-					<div id="notificationsBody" class="notifications">
-						<div class="notificationContent">
-							<div class="notifyLoader"></div>
-							<?php if(count($notificationData)>0)
-							/*{ 
-							 	foreach($notificationData as $notification)
-								{	
-									?>
-									<div class="notification_url">
-										<?php echo $notification['notification_data']; ?>
+						<div id="notificationTitle"><?php echo $this->lang->line('txt_notifications'); ?></div>
+							<div id="allNotificationData">
+								<div id="notificationsBody" class="notifications">
+									<div class="notificationContent">
+										<div class="notifyLoader"></div>
+										<?php if(count($notificationData)>0)
+										/*{ 
+											foreach($notificationData as $notification)
+											{	
+												?>
+												<div class="notification_url">
+													<?php echo $notification['notification_data']; ?>
+												</div>
+												<?php
+											}
+										?>
+										<?php }
+										else { ?>
+										<?php echo $this->lang->line('txt_notification_not_found');
+										}*/
+										?>
 									</div>
-									<?php
-								}
-							?>
-							<?php }
-							else { ?>
-							<?php echo $this->lang->line('txt_notification_not_found');
-							}*/
-							 ?>
-						</div>
-					</div>
-					<!-- Added by Dashrath- Add div for scroll loader-->
-					<div class="scrollNotifyLoader"></div>
+								</div>
+								<!-- Added by Dashrath- Add div for scroll loader-->
+								<div class="scrollNotifyLoader"></div>
 
-					<?php /*?><span id="loading"><img src="<?php echo base_url();?>images/loader-64x/ajax-loader.gif"  style="margin:4px; cursor:pointer; height:12px; border:0px;" /> </span><?php */?>
-					</div>
-					
-					<!--Commented by Dashrath- comment this code and add new code below-->
-					<!-- <div id="notificationFooter"><a href="<?php echo base_url(); ?>notifications/setDispatchNotification/<?php echo $workSpaceId;?>/<?php echo $workSpaceType; ?>" style="color:#000;"><?php echo $this->lang->line('txt_see_all'); ?></a>
-					</div> -->
-					
-					<!--Added by Dashrath- replace below code-->
-					<div id="notificationFooter"><a onclick="seeAllNotificationData('<?php echo $workSpaceId;?>','<?php echo $workSpaceType; ?>')" style="color:#000; cursor: pointer;"><?php echo $this->lang->line('txt_see_all'); ?></a>
-					</div>
-					<!--Dashrath- code end-->
+							<?php /*?><span id="loading"><img src="<?php echo base_url();?>images/loader-64x/ajax-loader.gif"  style="margin:4px; cursor:pointer; height:12px; border:0px;" /> </span><?php */?>
+							</div>
+						
+							<!--Commented by Dashrath- comment this code and add new code below-->
+							<!-- <div id="notificationFooter"><a href="<?php echo base_url(); ?>notifications/setDispatchNotification/<?php echo $workSpaceId;?>/<?php echo $workSpaceType; ?>" style="color:#000;"><?php echo $this->lang->line('txt_see_all'); ?></a>
+							</div> -->
+							
+							<!--Added by Dashrath- replace below code-->
+							<div id="notificationFooter"><a onclick="seeAllNotificationData('<?php echo $workSpaceId;?>','<?php echo $workSpaceType; ?>')" style="color:#000; cursor: pointer;"><?php echo $this->lang->line('txt_see_all'); ?></a>
+							</div>
+							<!--Dashrath- code end-->
 
 					</div>
-
+					</div>
 					<!--Notification icon end-->
 					
 					

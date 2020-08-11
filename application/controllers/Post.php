@@ -3341,7 +3341,7 @@ class Post extends CI_Controller {
 				unset($_SESSION['allPublicSpace']);
 			}	
 
-			//$arrDetails['bookmarkedPosts']= $this->timeline_db_manager->get_bookmark_by_user($_SESSION['userId']);
+			$arrDetails['bookmarkedPosts']= $this->timeline_db_manager->get_bookmark_by_user($_SESSION['userId']);
 			$arrDetails['totalSpacePosts'] = $this->timeline_db_manager->getPostCountTimeline($workSpaceId, $workSpaceType, 0, 'space');
 				if ($post_type_id==1 && $this->uri->segment(6)==$_SESSION['userId']){
 					$arrDetails['totalMyPosts'] = count($arrDetails['arrTimeline']);
@@ -3506,6 +3506,9 @@ class Post extends CI_Controller {
 
 	function getPostUserStatusWeb()
 	{
+		// print_r($_POST);
+		// // print_r($this->uri->segment());
+		// die();
 		if(!isset($_SESSION['userName']) || $_SESSION['userName'] =='')
 		{
 			$_SESSION['errorMsg']	= 	$this->lang->line('msg_session_expire'); 
@@ -3604,6 +3607,9 @@ class Post extends CI_Controller {
 
 			if ($this->input->post('search')!='')
 			{
+				// echo "working";
+				// print_r($this->input->post('search'));
+				// die();
 				$arrDetails['search']=$this->input->post('search',true);
 				if ($workSpaceType==2)
 				{
@@ -4245,6 +4251,8 @@ class Post extends CI_Controller {
 	//this function used for insert timeline
 	function insert_timeline_web()
 	{
+		// print_r($this->input->post());
+		// die();
 		if(!isset($_SESSION['userName']) || $_SESSION['userName'] =='')
 		{
 			$_SESSION['errorMsg']	= 	$this->lang->line('msg_session_expire'); 
@@ -4277,6 +4285,7 @@ class Post extends CI_Controller {
 				$recipients=$this->input->post('recipients');
 				$spaceRecipients=$this->input->post('spaceRecipients');
 				$post_type_id=$this->input->post('post_type_id');
+				$post_type=$this->input->post('post_type');
 				$post_type_object_id=$this->input->post('post_type_object_id');
 				$post_content=trim($this->input->post($this->input->post('editorname1')));
 				$is_forward=$this->input->post('is_forward');
@@ -5004,7 +5013,7 @@ class Post extends CI_Controller {
 					$post_type_object_id = '';
 				}
 				
-				redirect('/post/get_timeline_web/'.$workSpaceId.'/'.$workSpaceType.'/'.$post_type_id.'/'.$post_type_object_id, 'location');
+				redirect('/post/get_timeline_web/'.$workSpaceId.'/'.$workSpaceType.'/'.$post_type.'/'.$post_type_object_id, 'location');
 					
 			}
 		}		
@@ -5012,6 +5021,14 @@ class Post extends CI_Controller {
 
 	function get_timeline_web()
 	{
+		// print_r($this->uri->segment(3));
+		// echo ",";
+		// print_r($this->uri->segment(4));
+		// echo ",";
+		// print_r($this->uri->segment(5));
+		// echo ",";
+		// print_r($this->uri->segment(6));
+		// die("hello");
 	
 		if(!isset($_SESSION['userName']) || $_SESSION['userName'] =='')
 		{
@@ -5044,7 +5061,7 @@ class Post extends CI_Controller {
 			$treeId 	= 0;
 			$workSpaceId 	= $this->uri->segment(3);
 			$workSpaceType  = $this->uri->segment(4);
-			$post_type_id = $this->uri->segment(5);
+			$post_type = $this->uri->segment(5);
 			$post_type_object_id = $this->uri->segment(6);
 			if($this->uri->segment(7)=='2')
 			{
@@ -5060,10 +5077,79 @@ class Post extends CI_Controller {
 				$allSpace=0;
 			}
 			
+			if($post_type_object_id== '')
+			{
+				// if this case is true then it means post is forwarded
+				if ($post_type=='one'){
+					$post_type_id = 1;
+					$post_type_object_id=$_SESSION['userId'];
+				} else if($post_type=='space') {
+					$post_type_id = 2;
+					if($workSpaceId=='0')
+					{
+						$post_type_object_id=0;
+					}
+					else
+					{
+						$post_type_object_id=$workSpaceId;
+					}
+				} else if($post_type=='subspace') {
+					$post_type_id = 3;
+				} else if($post_type=='group') {
+					$post_type_id = 4;
+				}
+				else if($post_type=='home') {
+					$post_type_id = 5;
+				}
+				else if($post_type=='bookmark') {
+					$post_type_id = 6;
+				}
+				else if($post_type=='public') {
+					$post_type_id = 7;
+				}		
+				else if($post_type=='parked') {
+					$post_type_id = 8;
+				}else if($post_type=='space_ex') {
+					$post_type_id = 9;
+					$post_type_object_id=$workSpaceId;
+				}else if($post_type=='drafts') {
+					$post_type_id = 10;
+				}
+			}
+			else
+			{
+				if ($post_type=='one'){
+					$post_type_id = 1;
+				} else if($post_type=='space') {
+					$post_type_id = 2;
+				} else if($post_type=='subspace') {
+					$post_type_id = 3;
+				} else if($post_type=='group') {
+					$post_type_id = 4;
+				}
+				else if($post_type=='home') {
+					$post_type_id = 5;
+				}
+				else if($post_type=='bookmark') {
+					$post_type_id = 6;
+				}
+				else if($post_type=='public') {
+					$post_type_id = 7;
+				}		
+				else if($post_type=='parked') {
+					$post_type_id = 8;
+				}else if($post_type=='space_ex') {
+					$post_type_id = 9;
+				}else if($post_type=='drafts') {
+					$post_type_id = 10;
+				}
+			}
 			//$arrTimeline1		= $this->timeline_db_manager->get_timeline_web($treeId,$workSpaceId,$workSpaceType,$allSpace);
 			//echo "<li>posttypeid= " .$post_type_id; echo "<li>posttypeobjectid= " .$post_type_object_id; exit;
 			$arrTimeline1	= $this->timeline_db_manager->get_timeline_web($treeId,$workSpaceId,$workSpaceType,0,$_SESSION['userId'],$post_type_id,$post_type_object_id);
 
+			// print_r($arrTimeline1);
+			// die();
 			$arrTimelineViewPage['workSpaceId'] = $workSpaceId;
 			$arrTimelineViewPage['workSpaceType'] = $workSpaceType;
 			$arrTimelineViewPage['arrTimeline']=$arrTimeline1;

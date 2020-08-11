@@ -26,7 +26,7 @@ $(document).ready(function()
 });
 </script>
 <!--Manoj: Back to top scroll script-->
-<?php $this->load->view('common/scroll_to_top'); ?>
+<?php //$this->load->view('common/scroll_to_top'); ?>
 <!--Manoj: code end-->
 </head>
 <body>
@@ -568,7 +568,7 @@ $(document).ready(function()
 									</div>
 									-->
 									<div class="post_web_sidebar_data">
-										<span class="post_web_sidebar_secondary post_web_sidebar_username_data"><a onclick="postHighlight('<?php echo $arrVal['last_post_id'];?>','<?php echo $arrVal['last_post_id'];?>','<?php echo $active_view;?>');" href="<?php echo base_url().$arrVal['url'];?>"><?php echo $arrVal['last_post_data']; ?></a></span>
+										<span class="post_web_sidebar_secondary post_web_sidebar_username_data" style="width:50%;"><a onclick="postHighlight('<?php echo $arrVal['last_post_id'];?>','<?php echo $arrVal['last_post_id'];?>','<?php echo $active_view;?>');" href="<?php echo base_url().$arrVal['url'];?>"><?php echo $arrVal['last_post_data']; ?></a></span>
 										<?php if($arrVal['unseen_post_count']>0){?>
 										<div><span class="post_web_post_count"><?php echo $arrVal['unseen_post_count']; ?></span></div>
 										<?php } ?>
@@ -592,7 +592,7 @@ $(document).ready(function()
 					}
 			?>
 		</div>
-		<div id="divSpaces" name="divSpaces" class="post_web_tab_menu_tab" style="display:none;">
+		<div id="divSpaces" name="divSpaces" class="post_web_tab_menu_tab" style="display:none;width:25%;">
 			<?php 	
 					if (count($userAllSpaces)>0) {
 						foreach($userAllSpaces as $keyVal=>$arrVal){
@@ -663,7 +663,7 @@ $(document).ready(function()
 
 						?>
 
-						  <div id="divSearchUser" name="divSearchUser" class="post_web_tab_menu_tab" style="display:none;">
+						  <div id="divSearchUser" name="divSearchUser" class="post_web_tab_menu_tab" style="display:none;width:25%;">
 						  
 
         				<?php
@@ -1598,7 +1598,7 @@ $(document).ready(function()
 								<?php
 								//echo "Send to multiple spaces: "; 
 								?>
-								<input type="text" id="searchSpaces" name="searchSpaces" onKeyUp="searchUserSpaces()" size="50" placeholder="Send to multiple spaces..."/>						
+								<input type="text" id="searchSpaces" name="searchSpaces" onclick="searchUserSpaces()" onkeyup="searchUserSpaces()" size="50" placeholder="Send to multiple spaces..."/>						
 								<div id="showManSpaces">
 									<?php if(count($userAllSpaces)>0){ ?>			
 									<input type="checkbox" name="checkAllSpaces" id="checkAllSpaces" onclick="checkAllUserSpaces();" />		
@@ -1635,7 +1635,7 @@ $(document).ready(function()
 								//echo $this->lang->line('txt_Search')." : "; 
 								//echo "Send to multiple users: "; 
 								?>
-								<input type="text" id="searchTags" name="searchTags" onKeyUp="showTags()" size="50" placeholder="Send to multiple users..."/>
+								<input type="text" id="searchTags" name="searchTags" onKeyUp="showTags()" onclick="showTags()" size="50" placeholder="Send to multiple users..."/>
 							
 								<div id="showMan">
 							
@@ -1717,7 +1717,7 @@ $(document).ready(function()
 					else
 					{ ?>
 					<input type="button" id="postSubmitButton" name="Replybutton" value="<?php echo $this->lang->line('txt_Post');?>" onClick="insertTimeline('publish');" style="float:left; margin-top:-1%;" >		 
-					<input type="button" name="Replybutton" value="<?php echo $this->lang->line('txt_Cancel');?>" onClick="showTimelineEditor();" style="float:left; margin-left:1%;margin-top:-1%;" >	
+					<input type="button" name="Replybutton" value="<?php echo $this->lang->line('txt_Cancel');?>" onClick="showTimelineEditor('close');" style="float:left; margin-left:1%;margin-top:-1%;" >	
 					<?php
 					}
 					?>
@@ -1926,6 +1926,26 @@ list.remove();
 			dateFormat: "dd-mm-yy"
 
 	});*/
+	var post_type     ='<?php echo $this->uri->segment(5);?>';
+	if(post_type=='space_ex')
+	{
+		document.getElementById('postArea').style.height='calc(100% - 394px)';
+	}
+	else if(post_type=='public')
+	{
+		document.getElementById('postArea').style.height='calc(100% - 194px)';
+	}
+	else if(post_type=='one')
+	{
+		document.getElementById('postArea').style.height='calc(100% - 214px)';
+	}
+	else if(post_type=='space')
+	{
+		if(workSpaceId!=='0')
+		{
+			document.getElementById('postArea').style.height='calc(100% - 254px)';
+		}
+	}
 
 });
 
@@ -1939,6 +1959,7 @@ function insertTimeline(postStatus='publish')
 	var error	= '';
 	var replyDiscussion = 'replyDiscussion'; 
     var INSTANCE_NAME = $("#replyDiscussion").attr('name');
+	var post_type     ='<?php echo $this->uri->segment(5);?>';
 	
 	var getvalue = getvaluefromEditor('replyDiscussion');
 	
@@ -1969,6 +1990,16 @@ function insertTimeline(postStatus='publish')
 			var spaceRecipients=document.getElementById("listSpaces").value.split(",");
 		}
 		var is_forward = document.getElementById("isForward").value;
+		if(is_forward =="1")
+		{
+			// alert("is");
+			if(recipients=="" && spaceRecipients=="" )
+			{
+				// alert("Select space or user to forward the post");
+				$("#buttons").html("<p style='color:red;'>Select space or user to forward the post</p>");
+				return false;
+			}
+		}
 		var is_draft = document.getElementById("isDraft").value;
 		var post_id = document.getElementById("post_id").value;
 		var post_status = postStatus;
@@ -1980,7 +2011,7 @@ function insertTimeline(postStatus='publish')
 		//alert(disable_interactions); return false;
 		//alert (recipients); return false;
 		//data_user = data_user+'&replyDiscussion='+encodeURIComponent(getvalue)+'&recipients='+recipients+'&groupRecipients='+groupRecipients; 
-		data_user = data_user+'&replyDiscussion='+encodeURIComponent(getvalue)+'&recipients='+recipients+'&groupRecipients='+groupRecipients+'&spaceRecipients='+spaceRecipients+'&is_forward='+is_forward+'&post_status='+post_status+'&is_draft='+is_draft+'&post_id='+post_id+'&disable_interactions='+disable_interactions; 
+		data_user = data_user+'&replyDiscussion='+encodeURIComponent(getvalue)+'&recipients='+recipients+'&groupRecipients='+groupRecipients+'&spaceRecipients='+spaceRecipients+'&is_forward='+is_forward+'&post_status='+post_status+'&is_draft='+is_draft+'&post_id='+post_id+'&disable_interactions='+disable_interactions+'&post_type='+post_type; 
 		//var pnodeId=$("#pnodeId").val();
 		var request = $.ajax({
 			  url: baseUrl+"post/insert_timeline_web/",
@@ -2190,6 +2221,16 @@ function insertPostComment(nodeId,mainPostNodeId=0,is_nested=0)
 	else if(postType=='subspace'){
 		postTypeId = 3;
 	}
+	else if(postType=='drafts'){
+		postTypeId = 10;
+	}
+	else if(postType=='bookmark'){
+		postTypeId = 6;
+	}
+	else if(postType=='space_ex')
+	{
+		postTypeId = 9;
+	}
 	var postTypeObjectId = '<?php echo $this->uri->segment(6)?>';
 	//console.log('postTypeId= '+postTypeId);
 	//console.log('postTypeObjectId= '+postTypeObjectId);
@@ -2311,8 +2352,10 @@ function writeSearh()
 
 function showTimelineEditor(data='',post_type_id=0)
 {
-	if($('#TimelineEditor').is(':visible'))
+	if(data=='close')
 	{
+		if($('#TimelineEditor').is(':visible'))
+		{
 		$("#TimelineEditor").hide();
 		$("#searchTags").val("");
 		showTags();
@@ -2336,7 +2379,39 @@ function showTimelineEditor(data='',post_type_id=0)
 		$('#post_id').prop("value", "0");
 		$('#post_type_id').prop("value", "<?php echo $post_type_id;?>");
 		$('#post_type_object_id').prop("value", "<?php echo $post_type_object_id;?>");
+		$("#buttons").html("");
 		closeNewPostWindow();
+		}
+		else
+		{
+			
+			$("#searchTags").val("");
+		showTags();
+		$(".fr-element").html("");
+		document.getElementById('formTimeline').reset();
+		$('#checkAll').prop("checked",false);
+		$('#checkAllSpaces').prop("checked",false);
+		$('.clsChecks').prop("checked",false);
+		$('.clsCheckSpace').prop("checked",false);
+		$('.sol-current-selection').html('');
+		$('.sol-current-selection-spaces').html('');
+		$("#showMan").hide();
+		$("#showManSpaces").hide();
+		$("#multipleRecipientArea").hide();
+		$("#multipleSpaceRecipientArea").hide();
+		$("#list").val('');
+		$("#listSpaces").val('');
+		$("#listSubSpaces").val('');
+		$('#isForward').prop("value", "0");
+		$('#isDraft').prop("value", "0");
+		$('#post_id').prop("value", "0");
+		$('#post_type_id').prop("value", "<?php echo $post_type_id;?>");
+		$('#post_type_object_id').prop("value", "<?php echo $post_type_object_id;?>");
+		$("#buttons").html("");
+		closeNewPostWindow();
+		$(".post_chat_size").html('<b>_ </b>&nbsp;&nbsp;');
+			$(".post_content").show();
+		}
 	}
 	else
 	{
@@ -2386,7 +2461,7 @@ function forwardPost(post_id){
 	//alert(document.getElementById('post_content'+post_id).value);
 	//return false;
 	var data = document.getElementById('post_content'+post_id).value;
-	showTimelineEditor(data);
+	showTimelineEditor(atob(data));
 	$("#replyDiscussion").froalaEditor('edit.off');
 	$("#replyDiscussion").froalaEditor('toolbar.hide');
 	$("#postFormHeader").html('<b>Forward post</b>');	
@@ -2698,6 +2773,7 @@ function showTags()
 		//if(1){
 			var count = '';
 			var sectionChecked = '';
+			var gotMatch=0;
 			<?php
 			$i=1;
 			foreach($workSpaceMembers_search_user as $keyVal=>$workPlaceMemberData)
@@ -2718,6 +2794,7 @@ function showTags()
 					var pattern = new RegExp('\^'+toMatch, 'gi');
 					if (str.match(pattern)) {
 						val +=  '<input class="clsChecks remove<?php echo $workPlaceMemberData['userId'];?>" type="checkbox" id="recipients_<?php echo $i;?>" name="recipients[]" value="<?php echo $workPlaceMemberData['userId'];?>"  data-myval="<?php echo $workPlaceMemberData['tagName'];?>" /><?php echo $workPlaceMemberData['tagName'];?><br>';
+						gotMatch=1;
 					}
 					<?php
 					$i++;	
@@ -2725,6 +2802,10 @@ function showTags()
 				?>
 				<?php
 			}?>
+			if(gotMatch==0)
+			{
+				val ='<div class="dashboard_fee_right_title">No Users found</div>';
+			}
 			document.getElementById('showMan').innerHTML = val;
 			document.getElementById('showMan').style.display = 'block';
 
@@ -2788,11 +2869,15 @@ function showSearchUser()
 			/*$('#divSearchUser').html(res[0]);*/
 			//console.log('results= '+res[2]);
 
+            $('#divChats').hide();
+			$('.post_web_tab_menu').hide();
 			$('#divSearchResult').html('<b>Search results</b><br>'+res[2]);
 		}
 		});
 	}
 	else{
+		$('#divChats').show();
+		$('.post_web_tab_menu').show();
 		$('#divSearchResult').html('');
 	}
 
@@ -2947,6 +3032,13 @@ function postCommentUpdate()
 	else if(postType=='home'){
 		postTypeId = 5;
 	}
+	else if(postType=='bookmark'){
+		postTypeId = 6;
+	}
+	else if(postType=='space_ex')
+	{
+		postTypeId = 9;
+	}
 	var postTypeObjectId = '<?php echo $this->uri->segment(6)?>';
 	
 	$.ajax({
@@ -2997,6 +3089,13 @@ function findNewPostComment()
 	}	
 	else if(postType=='drafts'){
 		postTypeId = 10;
+	}
+	else if(postType=='bookmark'){
+		postTypeId = 6;
+	}
+	else if(postType=='space_ex')
+	{
+		postTypeId = 9;
 	}	
 	//var userPostSearch = '<?php echo $this->uri->segment(10)?>';
 	var postTypeObjectId = '<?php echo $this->uri->segment(6)?>';
@@ -3489,6 +3588,7 @@ function searchUserSpaces()
 		{
 			var count = '';
 			var sectionChecked = '';
+			var gotMatch= 0;
 			<?php
 			$i=1;
 			foreach($userAllSpaces as $keyVal=>$arrVal)
@@ -3499,12 +3599,21 @@ function searchUserSpaces()
 					if (str.match(pattern))
 					{
 						val +=  '<input class="clsCheckSpace removeSpace<?php echo $arrVal['workSpaceId'];?>" type="checkbox" id="spaceRecipients_<?php echo $i;?>" name="spaceRecipients[]" value="<?php echo $arrVal['workSpaceId'];?>"  data-myval="<?php echo $arrVal['workSpaceName'];?>"/><?php echo $arrVal['workSpaceName'];?><br>';
+						gotMatch=1;
 					}
+					// else
+					// {
+					// 	val= '<div class="dashboard_fee_right_title"> No Spaces found</div>'
+					// }
 					<?php
 					$i++;	
 				?>
 				<?php
 			}?>
+			if(gotMatch==0)
+			{
+				val= '<div class="dashboard_fee_right_title"> No Spaces found</div>';
+			}
 			document.getElementById('showManSpaces').innerHTML = val;
 			document.getElementById('showManSpaces').style.display = 'block';
 			var list = $("#listSpaces").val();
@@ -3522,16 +3631,54 @@ function searchUserSpaces()
 	}
 }
 
-function focusComment(commentId=0){
-	var previous = $("#previousFocusedCommentId").val();
+function focusComment(commentId=0,nodeId){
+
+	var parent = $('#'+commentId).parent().attr('id');
+	// alert(parent);
+	if(parent=="moreComments"+nodeId)
+	{
+		// alert("hidden");
+			var previous = $("#previousFocusedCommentId").val();
+		$("#"+previous).removeClass('nodeBgColorSelect');
+		$("#previousFocusedCommentId").val(commentId);	
+		$("#"+commentId).addClass('nodeBgColorSelect');
+		$("#"+commentId).focus();
+
+		// $('html, body').animate({
+		// 	scrollTop: $("#"+commentId).offset().top + 'px'
+		// }, 'fast');
+
+		var checkDisplay=document.getElementById('moreComments'+nodeId).style.display;
+		if(checkDisplay=='none')
+		{
+			showAllTimelineComments(nodeId);
+
+					var myElement = document.getElementById(commentId);
+var topPos = myElement.offsetTop;
+document.getElementById('postArea').scrollTop = topPos;
+		}
+
+		var myElement = document.getElementById(commentId);
+var topPos = myElement.offsetTop;
+document.getElementById('postArea').scrollTop = topPos;
+		
+	}
+	else{
+		// alert("visible");
+		var previous = $("#previousFocusedCommentId").val();
 	$("#"+previous).removeClass('nodeBgColorSelect');
 	$("#previousFocusedCommentId").val(commentId);	
 	$("#"+commentId).addClass('nodeBgColorSelect');
 	$("#"+commentId).focus();
 
-    $('html, body').animate({
-        scrollTop: $("#"+commentId).offset().top + 'px'
-    }, 'fast');
+    // $('html, body').animate({
+    //     scrollTop: $("#"+commentId).offset().top + 'px'
+	// }, 'fast');
+	var myElement = document.getElementById(commentId);
+var topPos = myElement.offsetTop;
+document.getElementById('postArea').scrollTop = topPos;
+	}
+	
 }
 function searchGroups()
 {

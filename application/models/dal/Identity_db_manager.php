@@ -21068,7 +21068,7 @@ $q = 'select * from(SELECT a.id, a.name, a.type, b.artifactId, b.artifactType ,b
 	public function folderRename($oldFolderName, $newFolderName, $workSpaceId, $workSpaceType, $workPlaceName)
 	{
 
-		if (PHP_OS=='Linux')
+		if (PHP_OS=='Linux'|| 'Darwin')
 		{
 			$workPlaceRootDir   = $this->config->item('absolute_path').'workplaces';			
 			$workPlaceDir		= $this->config->item('absolute_path').'workplaces'.DIRECTORY_SEPARATOR.$workPlaceName;
